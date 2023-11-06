@@ -1,24 +1,47 @@
 <script setup>
-  import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
-  import { onMounted } from 'vue'; 
-  // import HelloWorld from './components/HelloWorld.vue'
- let msg = 'Hello'
-  onMounted(() => { 
-    console.log('mounted!'); 
-  });
-  const router = useRouter();
-  const route = useRoute();
-  console.log('当前路由：', route)
-  // router.push({ path: "/home" });
+import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
+import { onMounted } from "vue";
+import Header from "../src/components/Header.vue";
+import Footer from "../src/components/Footer.vue";
+import Wx from "../src/components/Wx.vue";
+let msg = "Hello";
+onMounted(() => {
+  console.log("mounted!");
+});
+const router = useRouter();
+const route = useRoute();
+console.log("当前路由：", route);
+// router.push({ path: "/home" });
 </script>
 
 <template>
-  <header v-if="msg == 'Hello'">
-  </header>
-  <RouterView />
+  <Header></Header>
+  <div class="wrap">
+    <RouterView class="wrap-l f-fl" />
+    <div class="wrap-r f-fr">
+      <Wx />
+    </div>
+  </div>
+  <Footer></Footer>
 </template>
 
 <style scoped>
+#app{
+  height: 100%;
+}
+.wrap-l {
+  width: 970px;
+}
+.wrap-r {
+  width: 220px;
+}
+.wrap {
+  width: 1280px;
+  margin: 0 auto;
+  /* padding: 2rem; */
+  font-weight: normal;
+  overflow: hidden;
+}
 header {
   line-height: 1.5;
   max-height: 100vh;
