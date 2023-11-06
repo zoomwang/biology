@@ -1,22 +1,20 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+  import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+  import { onMounted } from 'vue'; 
+  // import HelloWorld from './components/HelloWorld.vue'
+ let msg = 'Hello'
+  onMounted(() => { 
+    console.log('mounted!'); 
+  });
+  const router = useRouter();
+  const route = useRoute();
+  console.log('当前路由：', route)
+  // router.push({ path: "/home" });
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+  <header v-if="msg == 'Hello'">
   </header>
-
   <RouterView />
 </template>
 
