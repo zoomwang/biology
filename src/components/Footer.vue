@@ -16,5 +16,5 @@ import SupportIcon from './icons/IconSupport.vue'
 </script>
 
 <template>
-  <div>ssss</div>
+  <div>sssssss</div>
 </template>
