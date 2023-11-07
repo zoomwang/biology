@@ -2,14 +2,30 @@
 defineProps({
   msg: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 </script>
 
 <template>
-  <div class="greetings">
-    <h1 class="logo">这里是尾部部样式</h1>
+  <div class="login-footer" style="font-size: 14px; padding-bottom: 30px">
+    <p
+      style="
+        font-weight: bold;
+        margin-bottom: 16px;
+        text-align: center;
+        line-height: 20px;
+        color: rgba(0, 0, 0, 0.65);
+      "
+    >
+      —— 科学指南针·中国大型科研服务机构 ——
+    </p>
+    <p
+      style="text-align: center; color: rgba(0, 0, 0, 0.45); line-height: 20px"
+    >
+      Copyright 杭州研趣信息技术有限公司 All Rights Reserved
+      <span style="margin-left: 8px">服务热线：400-831-0631</span>
+    </p>
   </div>
 </template>
 

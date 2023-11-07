@@ -1,6 +1,4 @@
 <script setup>
-import HeaderContent from "./HeaderContent.vue";
-import Logo from "../assets/logo.png";
 defineProps({
   msg: {
     type: String,
@@ -11,28 +9,11 @@ defineProps({
 
 <template>
   <div class="header d-flex">
-    <div class="logo">
-      <img :src="Logo" />
-    </div>
-    <HeaderContent />
+  
   </div>
 </template>
 
-<style scoped lang="scss">
-.header{
-  width: 1200px;
-  margin: 0 auto;
-  padding-top: 30px;
-}
-.header .logo{
-  width: 258px;
-  height: 45px;
-  img{
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-}
+<style scoped>
 h1 {
   font-weight: 500;
   font-size: 2.6rem;

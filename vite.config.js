@@ -14,5 +14,11 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  }
+  },
+  rules: [
+    {
+      test: /\.scss$/,
+      loaders: ['style', 'css', 'sass']
+    },
+  ]  
 })
