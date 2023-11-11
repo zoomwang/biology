@@ -8,19 +8,26 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/login/Login.vue';
+// import Register from '../views/login/Register.vue';
+// import FindPassword from '../views/login/FindPassword.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/home/login',
-      name: 'home',
+      name: 'login',
       component: Login
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/home/register',
+      name: 'register',
       component: () => import('../views/login/Register.vue')
+    },
+    {
+      path: '/home/find-password',
+      name: 'find-password',
+      component: () => import('../views/login/FindPassword.vue')
     }
   ]
 })

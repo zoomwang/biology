@@ -1,6 +1,8 @@
 <script setup>
 import HeaderContent from "./HeaderContent.vue";
 import Logo from "../assets/logo.png";
+// import SecondLogo from "../assets/secondLogo.jpg";
+import SecondLogo from "../assets/secondLogo.jpg";
 defineProps({
   msg: {
     type: String,
@@ -12,8 +14,13 @@ defineProps({
 <template>
   <div class="header d-flex">
     <div class="logo">
-      <img :src="Logo" />
+      <img :src="Logo" style="width: 258px; 
+    height: auto;"/>
     </div>
+    <!-- <div class="second-logo">
+      <img :src="SecondLogo" style="width: 238px;
+    height: 60px; "/> 
+    </div> -->
     <HeaderContent />
   </div>
 </template>
@@ -24,9 +31,38 @@ defineProps({
   margin: 0 auto;
   padding-top: 30px;
 }
+.head-link{
+  display: inline-block;
+}
+.header {
+  // overflow: hidden;
+  .logo{
+    // float: left;
+    width: 258px; 
+    height: auto;
+    margin: 0 24px 0 0;
+    img{
+      //display: block;
+      width: 100%;
+      height: 100%;
+      vertical-align: middle;
+    }
+  }
+  .second-logo{
+    // display: inline-block;
+    // float: left;
+    width: 238px;
+    height: 60px;
+    img{
+      //display: block;
+      width: 100%;
+      height: 100%;
+      vertical-align: middle;
+    }
+  }
+}
+
 .header .logo{
-  width: 258px;
-  height: 45px;
   img{
     display: block;
     width: 100%;

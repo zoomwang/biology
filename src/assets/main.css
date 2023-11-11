@@ -4,7 +4,7 @@
   width: 100%;
 }
 body{
-  background: #F9F9F9 !important;
+  background: #F9F9F9;
   color: #000;
 }
 .wrap {
@@ -39,4 +39,9 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
+}
+
+
+.ant-form-item-control-input{
+  /* border: 10px solid red; */
 }

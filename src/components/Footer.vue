@@ -30,6 +30,10 @@ defineProps({
 </template>
 
 <style scoped>
+.login-footer{
+  min-width: 1280px;
+  margin: 0 auto;
+}
 h1 {
   font-weight: 500;
   font-size: 2.6rem;

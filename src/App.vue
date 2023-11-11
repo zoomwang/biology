@@ -17,8 +17,8 @@ console.log("当前路由：", route);
 <template>
   <Header></Header>
   <div class="wrap">
-    <RouterView class="wrap-l f-fl" />
-    <div class="wrap-r f-fr">
+    <RouterView class="wrap-l" />
+    <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
     <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
       <Wx />
     </div>
@@ -32,6 +32,7 @@ console.log("当前路由：", route);
 }
 .wrap-l {
   width: 970px;
+  margin: 0 auto;
 }
 .wrap-r {
   width: 220px;
@@ -43,6 +44,7 @@ console.log("当前路由：", route);
   font-weight: normal;
   overflow: hidden;
   min-height: 500px;
+  display: flex;
 }
 header {
   line-height: 1.5;

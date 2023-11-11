@@ -92,7 +92,78 @@ body {
 .f-fr{
   float: right;
 }
-
+.clear{
+  overflow: hidden; 
+}
 .d-flex{
   display: flex;
+}
+.t-center{
+  text-align: center;
+}
+.t-left{
+  text-align: left;
+}
+.t-grey{
+  color: rgba(0, 0, 0, 0.45)
+}
+.t-red{
+  color: #FF4D4F;
+}
+.b-base {
+  display: block;
+  float: right;
+  width: 120px;
+  height: 54px;
+  line-height: 44px;
+  border-radius: 4px;
+  cursor: pointer;
+  /* border: 1px solid #56BEB2!important;
+  color: #56BEB2; */
+}
+.b-base:hover {
+  /* background-color: #56BEB2;
+  color: #fff!important; */
+}
+
+.b-submit {
+  width: 230px;
+  height: 42px;
+  line-height: 32px;
+  text-align: center;
+  /* background: #56BEB2; */
+  border-radius: 4px !important;
+  /* color: #FFF; */
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  /* border: 1px solid #56BEB2!important; */
+}
+.b-submit{
+  /* width: 400px!important; */
+}
+.b-submit:hover {
+  /* background: #18B799;
+  font-weight: bold;
+  color: #fff!important; */
+}
+a{
+  cursor: pointer;
+  color: #1677ff!important;
+}
+a:hover{
+  color: #1677ff!important;
+  background-color: transparent!important;
+}
+
+.c-blue{
+  color: #1677ff;
+}
+
+.wechatLogin{
+  width: 400px;
+  background: #fff;
+  box-shadow: 0px 4px 8px 0px rgb(86 190 178 / 19%);
+  border-radius: 10px;
+  padding-top: 30px;
 }
