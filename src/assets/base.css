@@ -160,6 +160,10 @@ a:hover{
   color: #1677ff;
 }
 
+.c-white{
+  color: #fff;
+}
+
 .wechatLogin{
   width: 400px;
   background: #fff;

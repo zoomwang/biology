@@ -5,10 +5,11 @@ import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
 import CodePosition from "../../assets/login/code-position.jpeg";
 import WechatLogo from "../../assets/login/wechat-logo.jpg";
+import WxScan from "../../components/WxScan.vue";
+
 const show = ref(true);
 const activeKey = ref("1");
 function change(boo) {
-  console.log(show);
   if (typeof boo == "booelan") {
     show.value;
     return;
@@ -16,10 +17,19 @@ function change(boo) {
     show.value = !show.value;
   }
 }
+
+function getVerifiCode() {
+  if (!formState.phone) {
+    notification[type]({
+      message: '错误',
+      description: '请填写手机号',
+    });
+  }
+}
 const formState = reactive({
   layout: "horizontal",
-  fieldA: "",
-  fieldB: "",
+  phone: "",
+  verifi: "",
 });
 const formItemLayout = computed(() => {
   const { layout } = formState;
@@ -53,13 +63,11 @@ const buttonItemLayout = computed(() => {
       <!-- 微信扫码登录 -->
       <div class="title">微信登录</div>
       <img :src="PcPosition" class="login-type" @click="change" />
-      <div class="erCode">
-        <img />
-      </div>
+      <WxScan></WxScan>
       <div class="t-center t-title">
         微信扫码<span class="t-time c-blue">1</span>秒登录
       </div>
-      <div class="t-center green">
+      <div class="t-center c-blue">
         <a
           @click="
             () => {
@@ -68,7 +76,7 @@ const buttonItemLayout = computed(() => {
           "
           >手机号登录</a
         >｜
-        <a>立即注册</a>
+        <a href="/home/register">立即注册</a>
       </div>
     </div>
     <div class="main-content">
@@ -106,7 +114,7 @@ const buttonItemLayout = computed(() => {
             >
               <a-form-item>
                 <a-input
-                  v-model:value="formState.fieldA"
+                  v-model:value="formState.phone"
                   placeholder="请输入手机号"
                 />
               </a-form-item>
@@ -114,11 +122,11 @@ const buttonItemLayout = computed(() => {
                 <div class="code-content clear">
                   <a-input
                     style="width: 210px"
-                    v-model:value="formState.fieldB"
+                    v-model:value="formState.verifi"
                     placeholder="验证码"
                     class="t-gaincode f-fl"
                   />
-                  <a-button class="b-base b-gaincode f-fl">获取验证码</a-button>
+                  <a-button class="b-base b-gaincode f-fl" @click="getVerifiCode">获取验证码</a-button>
                 </div>
               </a-form-item>
               <a-button type="primary" class="btn-login b-submit"

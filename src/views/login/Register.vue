@@ -2,6 +2,8 @@
 import { ref, computed, defineComponent, reactive } from "vue";
 import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import Phone from "../../assets/phone.webp";
+import WxScan from "../../components/WxScan.vue";
+import { notification } from 'ant-design-vue';
 
 const activeKey = ref("1");
 // import TheWelcome from '@/components/Wx.vue';
@@ -11,6 +13,8 @@ const formState = reactive({
   fieldB: "",
 });
 const show = ref(true);
+// const expired = ref(false);
+// const wxUrl = ref("");
 function change(boo) {
   console.log(show);
   if (typeof boo == "booelan") {
@@ -20,6 +24,17 @@ function change(boo) {
     show.value = !show.value;
   }
 }
+function getVerifiCode() {
+  if (!formState.phone) {
+    notification.error({
+      message: '错误',
+      description: '请填写手机号',
+    });
+  }
+}
+// function getWxUrl() {
+//   return `https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQF47zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZkF0dnB3cERkUjQxbXkxZ2hCY0gAAgTyPFBlAwSwBAAA`
+// }
 const formItemLayout = computed(() => {
   const { layout } = formState;
   return layout === "horizontal"
@@ -44,6 +59,7 @@ const buttonItemLayout = computed(() => {
       }
     : {};
 });
+
 </script>
 
 <template>
@@ -61,14 +77,14 @@ const buttonItemLayout = computed(() => {
           <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span>手机号：</div>
             <a-form-item class="f-fl">
-              <a-select
+              <!-- <a-select
                 v-model:value="value2"
                 style="width: 120px; margin-right: 10px"
               >
                 <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
+              </a-select> -->
               <a-input
-                style="width: 270px"
+                style="width: 403px"
                 v-model:value="formState.fieldA"
                 placeholder="请输入手机号"
               />
@@ -84,14 +100,20 @@ const buttonItemLayout = computed(() => {
                   placeholder="请填写验证码"
                   class="t-gaincode f-fl"
                 />
-                <!-- <a-button type="primary" ghost>Primary</a-button> -->
                 <a-button
+                  @click="getVerifiCode"
                   type="primary"
                   ghost
                   class="b-base b-gaincode f-fl"
-                  style="width: 120px; text-align: center; padding: 0"
-                  >获取验证码</a-button
+                  style="width: 120px; text-align: center; padding: 0;"
+                  >
+                  <span class="s-gauncode">获取验证码</span>
+                  <span class="t-countdown">重新获取()s</span>
+                  </a-button
                 >
+                <!-- <div class="t-againcode b-base f-fl" style="width: 120px; text-align: center; padding: 0">
+                  重新获取（<span class="t-countdown">0</span>S）
+                </div> -->
               </div>
             </a-form-item>
           </div>
@@ -112,20 +134,17 @@ const buttonItemLayout = computed(() => {
           <div style="margin-top: 20px; text-align: right">
             已有账号，<a href="/home/login">马上登录</a>
           </div>
-          <!-- <p>微信扫码快速注册</p>
-          <img :src="WechatLogo" class="i-weichat" /> -->
           <div class="weichat-tip">
             <a-divider>微信扫码快速注册</a-divider>
-            <!-- <div class="t-grey">微信扫码快速注册</div> -->
-            <img
-              @click="
-                () => {
-                  change(false);
-                }
-              "
-              :src="WechatLogo"
-              class="i-weichat"
-            />
+              <img
+                @click="
+                  () => {
+                    change(false);
+                  }
+                "
+                :src="WechatLogo"
+                class="i-weichat"
+              />
           </div>
         </div>
       </a-form>
@@ -137,11 +156,9 @@ const buttonItemLayout = computed(() => {
         已有账号，<a href="/home/login">马上登录</a>
       </div>
       <!-- <img :src="PcPosition" class="login-type" @click="change" /> -->
-      <div class="erCode">
-        <img />
-      </div>
+      <WxScan></WxScan>
       <div class="t-center t-title">微信扫码快速注册</div>
-      <div class="t-center green">
+      <div class="t-center c-blue">
         <a-divider>手机号注册</a-divider>
         <!-- <div class="t-grey">微信扫码快速注册</div> -->
         <a class="phone-login">
@@ -257,7 +274,38 @@ const buttonItemLayout = computed(() => {
   margin-top: 5px;
   cursor: pointer;
 }
+.erCode{
+.wx-scan{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .m-mask{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.9);
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .c-white{
+      margin-bottom: 10px;
+    }
+  }
+}
 .weichat-tip {
+  position: relative;
   margin: 40px auto;
+}
+.t-againcode{
+  height: 36px;
+    line-height: 36px;
+    padding: 0 0 0 12px;
+  color: #1677ff;
+  border: 1px solid #1677ff;
+    // box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
 }
 </style>
