@@ -5,6 +5,7 @@ import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
 import CodePosition from "../../assets/login/code-position.jpeg";
 import WechatLogo from "../../assets/login/wechat-logo.jpg";
+import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
 
 const show = ref(true);
@@ -78,6 +79,20 @@ const buttonItemLayout = computed(() => {
         >｜
         <a href="/home/register">立即注册</a>
       </div>
+    </div>
+    <!-- 微信扫码成功后提示 -->
+    <div class="scan-success public-login wechatLogin">
+      <div class="title">微信注册</div>
+      <div class="wechatLogin-title1">请根据提示在手机上完成操作</div>
+      <div class="i-img">
+        <img :src="PhoneLogo">
+      </div>
+      <div class="wechatLogin-title2">
+        首次扫码需要绑定手机号，
+        <br>下次扫码可实现1秒登录哦~
+      </div>
+      <div class="scan-again b-again">重新扫码</div>
+      <div class="register-again b-again">手机号注册</div>
     </div>
     <div class="main-content">
       <div class="public-login phone-login" v-show="!show">
@@ -162,7 +177,6 @@ const buttonItemLayout = computed(() => {
 .tabs-extra-demo-button {
   margin-right: 16px;
 }
-
 .ant-row-rtl .tabs-extra-demo-button {
   margin-right: 0;
   margin-left: 16px;
@@ -187,7 +201,6 @@ const buttonItemLayout = computed(() => {
   line-height: 20px;
   border: 1px solid rgba(0, 0, 0, 0.15);
 }
-
 .btn-login.b-submit {
   font-weight: bold;
   margin-left: 0;
@@ -247,21 +260,16 @@ body {
   }
 }
 .t-gaincode {
-  // display: flex;
-  // float: left;
   width: 205px;
-  // margin-right: 20px;
 }
 .code-content {
   width: 400px;
 }
 .login .b-gaincode {
-  // float: right;
   width: 100px;
   height: 54px;
   line-height: 34px;
   left: -85px;
-  // margin-left: 20px;
   color: rgba(0, 0, 0, 0.45);
 }
 .weichat-tip {
@@ -272,5 +280,42 @@ body {
   height: 42px;
   margin-top: 5px;
   cursor: pointer;
+}
+.scan-success{
+  .wechatLogin-title1{
+    font-size: 16px;
+    font-family: PingFang-SC-Bold, PingFang-SC;
+    font-weight: bold;
+    color: #555;
+    margin-top: 35px;
+  }
+  .wechatLogin-title2{
+    width: 284px;
+    padding: 12px 50px;
+    margin: 0 auto;
+    border: 1px solid #1677ff;
+    border-bottom: 3px solid #1677ff;
+    border-radius: 3px;
+    margin-bottom: 36px;
+    font-size: 13px;
+    font-family: PingFang-SC-Bold, PingFang-SC;
+    font-weight: bold;
+    color: #555;
+    line-height: 24px;
+  }
+  .i-img{
+    width: 88px;
+    height: 121px;
+    margin: 25px auto;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .b-again{
+    margin: 0 auto;
+    margin-top: 10px;
+    color:#1677ff;
+  }
 }
 </style>

@@ -13,6 +13,11 @@ const formState = reactive({
   fieldB: "",
 });
 const show = ref(true);
+// data(){
+//   return{
+
+//   }
+// };
 // const expired = ref(false);
 // const wxUrl = ref("");
 function change(boo) {
@@ -31,6 +36,9 @@ function getVerifiCode() {
       description: '请填写手机号',
     });
   }
+}
+function getCode(){
+  
 }
 // function getWxUrl() {
 //   return `https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQF47zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZkF0dnB3cERkUjQxbXkxZ2hCY0gAAgTyPFBlAwSwBAAA`
@@ -106,9 +114,9 @@ const buttonItemLayout = computed(() => {
                   ghost
                   class="b-base b-gaincode f-fl"
                   style="width: 120px; text-align: center; padding: 0;"
-                  >
-                  <span class="s-gauncode">获取验证码</span>
-                  <span class="t-countdown">重新获取()s</span>
+                   v-bind:disabled="dis" >
+                  <span class="s-gauncode" v-if="show">获取验证码</span>
+                  <span class="t-countdown" v-else>重新获取()s</span>
                   </a-button
                 >
                 <!-- <div class="t-againcode b-base f-fl" style="width: 120px; text-align: center; padding: 0">
