@@ -9,10 +9,50 @@ const activeKey = ref("1");
 // import TheWelcome from '@/components/Wx.vue';
 const formState = reactive({
   layout: "horizontal",
-  fieldA: "",
-  fieldB: "",
+  phone: "",
+  verification: "",
+});
+const state = reactive({
+  checked: false,
+  age: 20,
 });
 const show = ref(true);
+const isSendCode = ref(false);
+const countdown = ref(6);
+
+function countDown() {
+  sendCode(true);
+  let se = setInterval(() => {
+    if (countdown.value <= 1) {
+      clearInterval(se);
+      sendCode(false);
+    }
+    --countdown.value;
+  }, 1000)
+}
+
+function sendCode(boo) {
+  if (typeof boo == "booelan") {
+    isSendCode.value = boo;
+    return;
+  } else {
+    isSendCode.value = !isSendCode.value;
+  }
+}
+
+// 检查是否选择以同意
+function nextTick() {
+  // console.log("checked===", state)
+  if (!state.checked) {
+    notification.error({
+      message: '',
+      description: '请同意并勾选协议',
+    });
+    return;
+  }
+  // api调用
+  console.log("执行下一步逻辑")
+}
 // data(){
 //   return{
 
@@ -23,22 +63,28 @@ const show = ref(true);
 function change(boo) {
   console.log(show);
   if (typeof boo == "booelan") {
-    show.value;
+    show.value = boo;
     return;
   } else {
     show.value = !show.value;
   }
 }
 function getVerifiCode() {
-  if (!formState.phone) {
+  const pattern =/^1[3456789]\d{1}$/; 
+  if (!formState.phone || pattern.test(formState.phone)) {
     notification.error({
-      message: '错误',
-      description: '请填写手机号',
+      message: '',
+      description: '请填写正确的手机号',
     });
+    return;
   }
+  // 请求接口判断是否已登录，是的话提示去登录
+
+  // 请求后端接口逻辑
+   countDown();
 }
 function getCode(){
-  
+
 }
 // function getWxUrl() {
 //   return `https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQF47zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZkF0dnB3cERkUjQxbXkxZ2hCY0gAAgTyPFBlAwSwBAAA`
@@ -85,15 +131,9 @@ const buttonItemLayout = computed(() => {
           <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span>手机号：</div>
             <a-form-item class="f-fl">
-              <!-- <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select> -->
               <a-input
                 style="width: 403px"
-                v-model:value="formState.fieldA"
+                v-model:value="formState.phone"
                 placeholder="请输入手机号"
               />
             </a-form-item>
@@ -112,11 +152,12 @@ const buttonItemLayout = computed(() => {
                   @click="getVerifiCode"
                   type="primary"
                   ghost
+                  :disabled="isSendCode"
                   class="b-base b-gaincode f-fl"
                   style="width: 120px; text-align: center; padding: 0;"
-                   v-bind:disabled="dis" >
-                  <span class="s-gauncode" v-if="show">获取验证码</span>
-                  <span class="t-countdown" v-else>重新获取()s</span>
+                  >
+                  <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
+                  <span class="t-countdown" v-else>重新获取({{countdown}})s</span>
                   </a-button
                 >
                 <!-- <div class="t-againcode b-base f-fl" style="width: 120px; text-align: center; padding: 0">
@@ -128,7 +169,7 @@ const buttonItemLayout = computed(() => {
         </div>
         <div class="register-tip" style="width: 400px">
           <div style="overflow: hidden">
-            <a-checkbox class="f-fl" v-model:checked="checked"> </a-checkbox>
+            <a-checkbox class="f-fl" v-model:checked="state.checked"> </a-checkbox>
             <span class="readme" style="text-align: left">
               <span style="margin-left: 10px">我已阅读并同意</span>
               <a>《科学指南针服务协议》、</a><a>《隐私政策》、</a>
@@ -137,7 +178,7 @@ const buttonItemLayout = computed(() => {
           </div>
 
           <div style="height: 42px; margin-left: 15px; margin-top: 10px">
-            <a-button class="b-base b-next" type="primary">下一步</a-button>
+            <a-button class="b-base b-next" type="primary" @click="nextTick">下一步</a-button>
           </div>
           <div style="margin-top: 20px; text-align: right">
             已有账号，<a href="/home/login">马上登录</a>

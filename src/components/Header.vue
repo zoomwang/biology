@@ -6,16 +6,28 @@ import SecondLogo from "../assets/secondLogo.jpg";
 defineProps({
   msg: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 </script>
 
 <template>
+  <div class="header-title">
+    <!-- <ul class="u-header-title">
+        <li class="l-header-title l-phone-num"><a href="">热线: 400-831-0631</a></li>
+        <li class="l-header-title"><a href="">进入企业版</a></li>
+        <li class="l-header-title"><a href="">我的订单</a></li>
+        <li class="l-header-title"><a href="">指南针会员</a></li>
+        <li class="l-header-title"><a href="">合作入驻</a></li>
+        <li class="l-header-title"><a href="">关于我们</a></li>
+        <li class="l-header-title"><a href="">人才招聘</a></li>
+        <li class="l-header-title"><a href="">科研文库</a></li>
+        <li class="l-header-title"><a href="">公众号合作</a></li>
+      </ul>         -->
+  </div>
   <div class="header d-flex">
     <div class="logo">
-      <img :src="Logo" style="width: 258px; 
-    height: auto;"/>
+      <img :src="Logo" style="width: 258px; height: auto" />
     </div>
     <!-- <div class="second-logo">
       <img :src="SecondLogo" style="width: 238px;
@@ -26,34 +38,50 @@ defineProps({
 </template>
 
 <style scoped lang="scss">
-.header{
+.header-title {
+  width: 100%;
+  height: 34px;
+  background: #2e3130;
+  color: #fff;
+  .u-header-title {
+    overflow: hidden;
+    .l-header-title {
+      float: left;
+      margin: 30px 0;
+    }
+    .l-phone-num {
+      margin-right: 200px;
+    }
+  }
+}
+.header {
   width: 1200px;
   margin: 0 auto;
   padding-top: 30px;
 }
-.head-link{
+.head-link {
   display: inline-block;
 }
 .header {
   // overflow: hidden;
-  .logo{
+  .logo {
     // float: left;
-    width: 258px; 
+    width: 258px;
     height: auto;
     margin: 0 24px 0 0;
-    img{
+    img {
       //display: block;
       width: 100%;
       height: 100%;
       vertical-align: middle;
     }
   }
-  .second-logo{
+  .second-logo {
     // display: inline-block;
     // float: left;
     width: 238px;
     height: 60px;
-    img{
+    img {
       //display: block;
       width: 100%;
       height: 100%;
@@ -62,8 +90,8 @@ defineProps({
   }
 }
 
-.header .logo{
-  img{
+.header .logo {
+  img {
     display: block;
     width: 100%;
     height: 100%;

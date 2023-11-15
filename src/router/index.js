@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('../views/login/Userinfo.vue')
     },
     {
+      path: '/home/order-reservation',
+      name: 'ordereservation',
+      component: () => import('../views/login/OrderReservation.vue')
+    },
+    {
       path: '/home/find-password',
       name: 'find-password',
       component: () => import('../views/login/FindPassword.vue')

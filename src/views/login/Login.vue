@@ -22,7 +22,7 @@ function change(boo) {
 function getVerifiCode() {
   if (!formState.phone) {
     notification[type]({
-      message: '错误',
+      message: '',
       description: '请填写手机号',
     });
   }
@@ -81,7 +81,7 @@ const buttonItemLayout = computed(() => {
       </div>
     </div>
     <!-- 微信扫码成功后提示 -->
-    <div class="scan-success public-login wechatLogin">
+    <div class="scan-success public-login wechatLogin" v-show="!show">
       <div class="title">微信注册</div>
       <div class="wechatLogin-title1">请根据提示在手机上完成操作</div>
       <div class="i-img">
@@ -91,8 +91,12 @@ const buttonItemLayout = computed(() => {
         首次扫码需要绑定手机号，
         <br>下次扫码可实现1秒登录哦~
       </div>
-      <div class="scan-again b-again">重新扫码</div>
-      <div class="register-again b-again">手机号注册</div>
+      <div class="scan-again b-again">
+        <a href="/home/registry">重新扫码</a>
+      </div>
+      <div class="register-again b-again">
+        <a href="/home/registry">手机号注册</a>
+      </div>
     </div>
     <div class="main-content">
       <div class="public-login phone-login" v-show="!show">
