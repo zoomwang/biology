@@ -8,6 +8,7 @@ import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
 import { notification } from "ant-design-vue";
+import { useCountDown } from "../../hooks/common";
 
 const show = ref(true);
 const activeKey = ref("1");
@@ -32,17 +33,17 @@ function sendCode(boo) {
   }
 }
 
-function countDown() {
-  sendCode(true);
-  let se = setInterval(() => {
-    if (countdown.value <= 1) {
-      clearInterval(se);
-      countdown.value = 6;
-      sendCode(false);
-    }
-    --countdown.value;
-  }, 1000)
-}
+// function countDown() {
+//   sendCode(true);
+//   let se = setInterval(() => {
+//     if (countdown.value <= 1) {
+//       clearInterval(se);
+//       countdown.value = 6;
+//       sendCode(false);
+//     }
+//     --countdown.value;
+//   }, 1000)
+// }
 
 function getVerifiCode() {
   const pattern =/^1[3456789]\d{1}$/; 
@@ -56,7 +57,7 @@ function getVerifiCode() {
   // 请求接口判断是否已登录，是的话提示去登录
 
   // 请求后端接口逻辑
-   countDown();
+  countdown.value = useCountDown();
 }
 const formState = reactive({
   layout: "horizontal",

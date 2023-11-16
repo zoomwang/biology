@@ -4,6 +4,37 @@ import { Form } from "ant-design-vue";
 const useForm = Form.useForm;
 const show = ref(true);
 const activeKey = ref("1");
+const isSendCode = ref(false);
+
+function change(boo) {
+  if (typeof boo == "booelan") {
+    show.value;
+    return;
+  } else {
+    show.value = !show.value;
+  }
+}
+
+function sendCode(boo) {
+  if (typeof boo == "booelan") {
+    isSendCode.value = boo;
+    return;
+  } else {
+    isSendCode.value = !isSendCode.value;
+  }
+}
+
+function countDown() {
+  sendCode(true);
+  let se = setInterval(() => {
+    if (countdown.value <= 1) {
+      clearInterval(se);
+      countdown.value = 6;
+      sendCode(false);
+    }
+    --countdown.value;
+  }, 1000)
+}
 const formState = reactive({
   layout: "horizontal",
   fieldA: "",
@@ -93,7 +124,14 @@ const { resetFields, validate, validateInfos } = useForm(
       </a-form-item>
       <a-form-item label="验证码" v-bind="validateInfos.verifi">
         <a-input class="f-fl" style="width: 280px" v-model:value="modelRef.verifi" placeholder="请输入验证码" />
-        <a-button style="width:130px" class="f-fr">获取验证码</a-button>
+        <a-button style="width:130px" class="f-fr">
+          <span class="s-gauncode" v-if="!isSendCode"
+            >获取验证码</span
+          >
+          <span class="t-countdown" v-else
+            >重新获取({{ countdown }})s</span
+          >
+        </a-button>
       </a-form-item>
       <a-form-item label="新密码" v-bind="validateInfos.oldPassword">
         <a-input v-model:value="modelRef.oldPassword" placeholder="请填写您的新密码" />
