@@ -4,9 +4,9 @@ import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import Phone from "../../assets/phone.webp";
 import WxScan from "../../components/WxScan.vue";
 import { notification } from 'ant-design-vue';
+import config from "../../utils/config";
 
 const activeKey = ref("1");
-// import TheWelcome from '@/components/Wx.vue';
 const formState = reactive({
   layout: "horizontal",
   phone: "",
@@ -17,7 +17,7 @@ const state = reactive({
 });
 const show = ref(true);
 const isSendCode = ref(false);
-const countdown = ref(6);
+const countdown = ref(config.timeCount);
 
 function countDown() {
   sendCode(true);
@@ -53,13 +53,7 @@ function nextTick() {
   // api调用
   console.log("执行下一步逻辑")
 }
-// data(){
-//   return{
 
-//   }
-// };
-// const expired = ref(false);
-// const wxUrl = ref("");
 function change(boo) {
   console.log(show);
   if (typeof boo == "booelan") {
@@ -86,33 +80,6 @@ function getVerifiCode() {
 function getCode(){
 
 }
-// function getWxUrl() {
-//   return `https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQF47zwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyZkF0dnB3cERkUjQxbXkxZ2hCY0gAAgTyPFBlAwSwBAAA`
-// }
-const formItemLayout = computed(() => {
-  const { layout } = formState;
-  return layout === "horizontal"
-    ? {
-        labelCol: {
-          span: 4,
-        },
-        wrapperCol: {
-          span: 14,
-        },
-      }
-    : {};
-});
-const buttonItemLayout = computed(() => {
-  const { layout } = formState;
-  return layout === "horizontal"
-    ? {
-        wrapperCol: {
-          span: 14,
-          offset: 4,
-        },
-      }
-    : {};
-});
 
 </script>
 
@@ -183,7 +150,7 @@ const buttonItemLayout = computed(() => {
           <div style="margin-top: 20px; text-align: right">
             已有账号，<a href="/home/login">马上登录</a>
           </div>
-          <div class="weichat-tip">
+          <!-- <div class="weichat-tip">
             <a-divider>微信扫码快速注册</a-divider>
               <img
                 @click="
@@ -194,7 +161,7 @@ const buttonItemLayout = computed(() => {
                 :src="WechatLogo"
                 class="i-weichat"
               />
-          </div>
+          </div> -->
         </div>
       </a-form>
     </div>

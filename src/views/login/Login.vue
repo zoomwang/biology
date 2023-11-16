@@ -8,12 +8,14 @@ import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
 import { notification } from "ant-design-vue";
-import { useCountDown } from "../../hooks/common";
+import config from "../../utils/config";
+// import { useCountDown } from "../../hooks/common";
 
-const show = ref(true);
+const show = ref(false);
 const activeKey = ref("1");
-const countdown = ref(6);
+const countdown = ref(config.timeCount);
 const isSendCode = ref(false);
+console.log(import.meta.env)
 
 function change(boo) {
   if (typeof boo == "booelan") {
@@ -33,17 +35,17 @@ function sendCode(boo) {
   }
 }
 
-// function countDown() {
-//   sendCode(true);
-//   let se = setInterval(() => {
-//     if (countdown.value <= 1) {
-//       clearInterval(se);
-//       countdown.value = 6;
-//       sendCode(false);
-//     }
-//     --countdown.value;
-//   }, 1000)
-// }
+function countDown() {
+  sendCode(true);
+  let se = setInterval(() => {
+    if (countdown.value <= 1) {
+      clearInterval(se);
+      countdown.value = 6;
+      sendCode(false);
+    }
+    --countdown.value;
+  }, 1000)
+}
 
 function getVerifiCode() {
   const pattern =/^1[3456789]\d{1}$/; 
@@ -57,7 +59,7 @@ function getVerifiCode() {
   // 请求接口判断是否已登录，是的话提示去登录
 
   // 请求后端接口逻辑
-  countdown.value = useCountDown();
+  countDown();
 }
 const formState = reactive({
   layout: "horizontal",
@@ -101,30 +103,6 @@ const checkVerfiLogin = function () {
   //后端api逻辑
 };
 
-const formItemLayout = computed(() => {
-  const { layout } = formState;
-  return layout === "horizontal"
-    ? {
-        labelCol: {
-          span: 4,
-        },
-        wrapperCol: {
-          span: 14,
-        },
-      }
-    : {};
-});
-const buttonItemLayout = computed(() => {
-  const { layout } = formState;
-  return layout === "horizontal"
-    ? {
-        wrapperCol: {
-          span: 14,
-          offset: 4,
-        },
-      }
-    : {};
-});
 </script>
 
 <template>
@@ -169,13 +147,12 @@ const buttonItemLayout = computed(() => {
     </div>
     <div class="main-content">
       <div class="public-login phone-login" v-show="!show">
-        <img :src="CodePosition" class="login-type" @click="change" />
+        <!-- <img :src="CodePosition" class="login-type" @click="change" /> -->
         <a-tabs v-model:activeKey="activeKey">
           <a-tab-pane key="1" tab="密码登录">
             <a-form
               :layout="formState.layout"
               :model="formState"
-              v-bind="formItemLayout"
             >
               <a-form-item>
                 <a-input
@@ -201,7 +178,6 @@ const buttonItemLayout = computed(() => {
             <a-form
               :layout="formState.layout"
               :model="formState"
-              v-bind="formItemLayout"
             >
               <a-form-item>
                 <a-input
@@ -212,7 +188,7 @@ const buttonItemLayout = computed(() => {
               <a-form-item>
                 <div class="code-content clear">
                   <a-input
-                    style="width: 210px"
+                    style="width: 180px"
                     v-model:value="formState.verifi"
                     placeholder="验证码"
                     class="t-gaincode f-fl"
@@ -220,7 +196,7 @@ const buttonItemLayout = computed(() => {
                   <a-button
                     type="primary"
                     ghost
-                     :disabled="isSendCode"
+                    :disabled="isSendCode"
                     class="b-base b-gaincode f-fl"
                     @click="getVerifiCode"
                   >
@@ -248,7 +224,7 @@ const buttonItemLayout = computed(() => {
           </div>
           <div class="f-fr"><a href="/home/find-password">忘记密码？</a></div>
         </div>
-        <div class="weichat-tip" style="margin-top: 20px">
+        <!-- <div class="weichat-tip" style="margin-top: 20px">
           <div class="t-grey">—— 第三方账号登录 ——</div>
           <img
             @click="
@@ -259,7 +235,7 @@ const buttonItemLayout = computed(() => {
             :src="WechatLogo"
             class="i-weichat"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -306,6 +282,11 @@ const buttonItemLayout = computed(() => {
 body {
   background: url("../../assets/login/bgLogin.jpg") no-repeat;
   background-size: 100% 100%;
+  height: auto!important;
+  min-height: 100%;
+}
+#app{
+  height: auto;
 }
 .container .public-login {
   position: relative;
@@ -360,7 +341,7 @@ body {
   width: 400px;
 }
 .login .b-gaincode {
-  width: 100px;
+  width: 130px;
   height: 54px;
   line-height: 34px;
   left: -85px;

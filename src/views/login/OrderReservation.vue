@@ -7,7 +7,7 @@ import { ref, computed, reactive,defineComponent } from "vue";
 <template>
 <!--  订单预约 OrderReservation -->
   <main>
-
+    <div class="">
     <!-- <TheWelcome /> -->
   </main>
 </template>
