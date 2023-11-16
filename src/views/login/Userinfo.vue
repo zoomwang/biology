@@ -3,8 +3,9 @@
 import { ref, computed, reactive,defineComponent } from "vue";
 const formState = reactive({
   layout: "horizontal",
-  fieldA: "",
-  fieldB: "",
+  identity: "2",
+  no: "",
+  name: "",
 });
 
 </script>
@@ -19,6 +20,7 @@ const formState = reactive({
           <div class="t-title f-fl">登录账号：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="formState.no"
               style="width: 303px"
               placeholder="请输入手机号"
             />
@@ -28,6 +30,7 @@ const formState = reactive({
           <div class="t-title f-fl">姓名：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="formState.name"
               style="width: 203px"
               placeholder="请姓名"
             />
@@ -36,12 +39,12 @@ const formState = reactive({
         <div class="l-item clear l-identity" >
           <div class="t-title f-fl">身份：</div>
           <div class="">
-            <a-radio-group name="radioGroup" v-model:value="value">
-    <a-radio value="1">A</a-radio>
-    <a-radio value="2">B</a-radio>
-    <a-radio value="3">C</a-radio>
-    <a-radio value="4">D</a-radio>
-  </a-radio-group>
+           <a-radio-group name="identity" v-model:value="formState.identity">
+            <a-radio value="1">A</a-radio>
+            <a-radio value="2">B</a-radio>
+            <a-radio value="3">C</a-radio>
+            <a-radio value="4">D</a-radio>
+          </a-radio-group>
           </div>
         </div>
         <div class="l-item clear">

@@ -10,11 +10,10 @@ const activeKey = ref("1");
 const formState = reactive({
   layout: "horizontal",
   phone: "",
-  verification: "",
+  verifi: "",
 });
 const state = reactive({
   checked: false,
-  age: 20,
 });
 const show = ref(true);
 const isSendCode = ref(false);
@@ -25,6 +24,7 @@ function countDown() {
   let se = setInterval(() => {
     if (countdown.value <= 1) {
       clearInterval(se);
+      countdown.value = 6;
       sendCode(false);
     }
     --countdown.value;
@@ -144,7 +144,7 @@ const buttonItemLayout = computed(() => {
               <div class="code-content clear">
                 <a-input
                   style="width: 265px !important"
-                  v-model:value="formState.fieldB"
+                  v-model:value="formState.verifi"
                   placeholder="请填写验证码"
                   class="t-gaincode f-fl"
                 />

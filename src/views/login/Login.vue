@@ -7,9 +7,13 @@ import CodePosition from "../../assets/login/code-position.jpeg";
 import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
+import { notification } from "ant-design-vue";
 
 const show = ref(true);
 const activeKey = ref("1");
+const countdown = ref(6);
+const isSendCode = ref(false);
+
 function change(boo) {
   if (typeof boo == "booelan") {
     show.value;
@@ -19,19 +23,83 @@ function change(boo) {
   }
 }
 
-function getVerifiCode() {
-  if (!formState.phone) {
-    notification[type]({
-      message: '',
-      description: '请填写手机号',
-    });
+function sendCode(boo) {
+  if (typeof boo == "booelan") {
+    isSendCode.value = boo;
+    return;
+  } else {
+    isSendCode.value = !isSendCode.value;
   }
+}
+
+function countDown() {
+  sendCode(true);
+  let se = setInterval(() => {
+    if (countdown.value <= 1) {
+      clearInterval(se);
+      countdown.value = 6;
+      sendCode(false);
+    }
+    --countdown.value;
+  }, 1000)
+}
+
+function getVerifiCode() {
+  const pattern =/^1[3456789]\d{1}$/; 
+  if (!formState.phone || pattern.test(formState.phone)) {
+    notification.error({
+      message: '',
+      description: '请填写正确的手机号',
+    });
+    return;
+  }
+  // 请求接口判断是否已登录，是的话提示去登录
+
+  // 请求后端接口逻辑
+   countDown();
 }
 const formState = reactive({
   layout: "horizontal",
   phone: "",
   verifi: "",
+  password: "",
 });
+
+const checkPasswordLogin = function () {
+  if (!formState.phone) {
+    notification.error({
+      description: "请填写正确的手机号",
+    });
+  }
+
+  if (!formState.password) {
+    notification.error({
+      message: "",
+      description: "请填写正确的密码",
+    });
+  }
+
+  //后端api逻辑
+};
+
+const checkVerfiLogin = function () {
+  if (!formState.phone) {
+    notification.error({
+      message: "",
+      description: "请填写正确的手机号",
+    });
+  }
+
+  if (!formState.verifi) {
+    notification.error({
+      message: "",
+      description: "请填写正确的验证码",
+    });
+  }
+
+  //后端api逻辑
+};
+
 const formItemLayout = computed(() => {
   const { layout } = formState;
   return layout === "horizontal"
@@ -81,15 +149,15 @@ const buttonItemLayout = computed(() => {
       </div>
     </div>
     <!-- 微信扫码成功后提示 -->
-    <div class="scan-success public-login wechatLogin" v-show="!show">
+    <div class="scan-success public-login wechatLogin" v-show="show">
       <div class="title">微信注册</div>
       <div class="wechatLogin-title1">请根据提示在手机上完成操作</div>
       <div class="i-img">
-        <img :src="PhoneLogo">
+        <img :src="PhoneLogo" />
       </div>
       <div class="wechatLogin-title2">
         首次扫码需要绑定手机号，
-        <br>下次扫码可实现1秒登录哦~
+        <br />下次扫码可实现1秒登录哦~
       </div>
       <div class="scan-again b-again">
         <a href="/home/registry">重新扫码</a>
@@ -110,17 +178,20 @@ const buttonItemLayout = computed(() => {
             >
               <a-form-item>
                 <a-input
-                  v-model:value="formState.fieldA"
+                  v-model:value="formState.phone"
                   placeholder="请输入手机号"
                 />
               </a-form-item>
               <a-form-item>
                 <a-input
-                  v-model:value="formState.fieldB"
+                  v-model:value="formState.password"
                   placeholder="请输入密码"
                 />
               </a-form-item>
-              <a-button type="primary" class="btn-login b-submit"
+              <a-button
+                type="primary"
+                class="btn-login b-submit"
+                @click="checkPasswordLogin"
                 >登录</a-button
               >
             </a-form>
@@ -145,20 +216,38 @@ const buttonItemLayout = computed(() => {
                     placeholder="验证码"
                     class="t-gaincode f-fl"
                   />
-                  <a-button class="b-base b-gaincode f-fl" @click="getVerifiCode">获取验证码</a-button>
+                  <a-button
+                    type="primary"
+                    ghost
+                     :disabled="isSendCode"
+                    class="b-base b-gaincode f-fl"
+                    @click="getVerifiCode"
+                  >
+                    <span class="s-gauncode" v-if="!isSendCode"
+                      >获取验证码</span
+                    >
+                    <span class="t-countdown" v-else
+                      >重新获取({{ countdown }})s</span
+                    >
+                  </a-button>
                 </div>
               </a-form-item>
-              <a-button type="primary" class="btn-login b-submit"
+              <a-button
+                type="primary"
+                class="btn-login b-submit"
+                @click="checkVerfiLogin"
                 >登录</a-button
               >
             </a-form>
           </a-tab-pane>
         </a-tabs>
-        <div class="login-tip" style="overflow: hidden;">
-          <div class="t-left f-fl">还没账号？<a href="/home/register">立即注册</a></div>
+        <div class="login-tip" style="overflow: hidden">
+          <div class="t-left f-fl">
+            还没账号？<a href="/home/register">立即注册</a>
+          </div>
           <div class="f-fr"><a href="/home/find-password">忘记密码？</a></div>
         </div>
-        <div class="weichat-tip" style="margin-top:20px">
+        <div class="weichat-tip" style="margin-top: 20px">
           <div class="t-grey">—— 第三方账号登录 ——</div>
           <img
             @click="
@@ -274,7 +363,7 @@ body {
   height: 54px;
   line-height: 34px;
   left: -85px;
-  color: rgba(0, 0, 0, 0.45);
+  // color: rgba(0, 0, 0, 0.45);
 }
 .weichat-tip {
   padding: 5px 0;
@@ -285,15 +374,15 @@ body {
   margin-top: 5px;
   cursor: pointer;
 }
-.scan-success{
-  .wechatLogin-title1{
+.scan-success {
+  .wechatLogin-title1 {
     font-size: 16px;
     font-family: PingFang-SC-Bold, PingFang-SC;
     font-weight: bold;
     color: #555;
     margin-top: 35px;
   }
-  .wechatLogin-title2{
+  .wechatLogin-title2 {
     width: 284px;
     padding: 12px 50px;
     margin: 0 auto;
@@ -307,19 +396,19 @@ body {
     color: #555;
     line-height: 24px;
   }
-  .i-img{
+  .i-img {
     width: 88px;
     height: 121px;
     margin: 25px auto;
-    img{
+    img {
       width: 100%;
       height: 100%;
     }
   }
-  .b-again{
+  .b-again {
     margin: 0 auto;
     margin-top: 10px;
-    color:#1677ff;
+    color: #1677ff;
   }
 }
 </style>
