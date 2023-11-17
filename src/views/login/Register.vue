@@ -3,14 +3,17 @@ import { ref, computed, defineComponent, reactive } from "vue";
 import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import Phone from "../../assets/phone.webp";
 import WxScan from "../../components/WxScan.vue";
-import { notification } from 'ant-design-vue';
+import { notification, Form } from "ant-design-vue";
 import config from "../../utils/config";
 
+const useForm = Form.useForm;
 const activeKey = ref("1");
 const formState = reactive({
   layout: "horizontal",
   phone: "",
-  verifi: "",
+  verifiCode: "",
+  password: "",
+  checked: false,
 });
 const state = reactive({
   checked: false,
@@ -28,7 +31,7 @@ function countDown() {
       sendCode(false);
     }
     --countdown.value;
-  }, 1000)
+  }, 1000);
 }
 
 function sendCode(boo) {
@@ -40,19 +43,21 @@ function sendCode(boo) {
   }
 }
 
-// 检查是否选择以同意
-function nextTick() {
-  // console.log("checked===", state)
-  if (!state.checked) {
-    notification.error({
-      message: '',
-      description: '请同意并勾选协议',
+const onSubmit = () => {
+  validate()
+    .then((res) => {
+      if (!formState.checked) {
+        notification.error({
+          message: "",
+          description: "请同意并勾选协议",
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      console.log("error", err);
     });
-    return;
-  }
-  // api调用
-  console.log("执行下一步逻辑")
-}
+};
 
 function change(boo) {
   console.log(show);
@@ -64,23 +69,42 @@ function change(boo) {
   }
 }
 function getVerifiCode() {
-  const pattern =/^1[3456789]\d{1}$/; 
+  const pattern = /^1[3456789]\d{1}$/;
   if (!formState.phone || pattern.test(formState.phone)) {
     notification.error({
-      message: '',
-      description: '请填写正确的手机号',
+      message: "",
+      description: "请填写正确的手机号",
     });
     return;
   }
   // 请求接口判断是否已登录，是的话提示去登录
 
   // 请求后端接口逻辑
-   countDown();
+  countDown();
 }
-function getCode(){
-
-}
-
+const { resetFields, validate, validateInfos } = useForm(
+  formState,
+  reactive({
+    phone: [
+      {
+        required: true,
+        message: "请输入手机号",
+      },
+    ],
+    verifiCode: [
+      {
+        required: true,
+        message: "请输入验证码",
+      },
+    ],
+    password: [
+      {
+        required: true,
+        message: "请输入密码",
+      },
+    ],
+  })
+);
 </script>
 
 <template>
@@ -97,7 +121,7 @@ function getCode(){
         <div class="register-form-item">
           <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span>手机号：</div>
-            <a-form-item class="f-fl">
+            <a-form-item class="f-fl" v-bind="validateInfos.phone">
               <a-input
                 style="width: 403px"
                 v-model:value="formState.phone"
@@ -107,36 +131,54 @@ function getCode(){
           </div>
           <div class="l-item">
             <div class="t-item f-fl"><span class="t-red">*</span> 验证码：</div>
-            <a-form-item>
-              <div class="code-content clear">
-                <a-input
-                  style="width: 265px !important"
-                  v-model:value="formState.verifi"
-                  placeholder="请填写验证码"
-                  class="t-gaincode f-fl"
-                />
+            <a-form-item style="height: 40px">
+              <div class="code-content clear" style="overflow: hidden; height: 60px">
+                <a-form-item v-bind="validateInfos.verifiCode" class="f-fl">
+                    <a-input
+                      style="width: 265px !important"
+                      v-model:value="formState.verifiCode"
+                      placeholder="请填写验证码"
+                      class="t-gaincode f-fl"
+                  />
+                </a-form-item>
                 <a-button
                   @click="getVerifiCode"
                   type="primary"
                   ghost
                   :disabled="isSendCode"
                   class="b-base b-gaincode f-fl"
-                  style="width: 120px; text-align: center; padding: 0;"
-                  >
-                  <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
-                  <span class="t-countdown" v-else>重新获取({{countdown}})s</span>
-                  </a-button
+                  style="width: 120px; text-align: center; padding: 0"
                 >
+                  <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
+                  <span class="t-countdown" v-else
+                    >重新获取({{ countdown }})s</span
+                  >
+                </a-button>
                 <!-- <div class="t-againcode b-base f-fl" style="width: 120px; text-align: center; padding: 0">
                   重新获取（<span class="t-countdown">0</span>S）
                 </div> -->
               </div>
             </a-form-item>
           </div>
+          <div class="l-item clear">
+            <div class="t-item f-fl" style="width: 76px; text-align: right">
+              <span class="t-red">*</span>密码：
+            </div>
+            <div class="f-fl">
+              <a-form-item v-bind="validateInfos.password">
+                <a-input
+                  style="width: 403px"
+                  v-model:value="formState.password"
+                  placeholder="请输入密码"
+                />
+              </a-form-item>
+            </div>
+          </div>
         </div>
         <div class="register-tip" style="width: 400px">
           <div style="overflow: hidden">
-            <a-checkbox class="f-fl" v-model:checked="state.checked"> </a-checkbox>
+            <a-checkbox class="f-fl" v-model:checked="formState.checked">
+            </a-checkbox>
             <span class="readme" style="text-align: left">
               <span style="margin-left: 10px">我已阅读并同意</span>
               <a>《科学指南针服务协议》、</a><a>《隐私政策》、</a>
@@ -145,7 +187,12 @@ function getCode(){
           </div>
 
           <div style="height: 42px; margin-left: 15px; margin-top: 10px">
-            <a-button class="b-base b-next" type="primary" @click="nextTick">下一步</a-button>
+            <a-button
+              class="b-base b-next"
+              type="primary"
+              @click.prevent="onSubmit"
+              >下一步</a-button
+            >
           </div>
           <div style="margin-top: 20px; text-align: right">
             已有账号，<a href="/home/login">马上登录</a>
@@ -168,7 +215,9 @@ function getCode(){
     <div class="wechatLogin public-login" v-show="!show">
       <!-- 微信扫码注册 -->
       <div class="title">微信注册</div>
-      <div style="position: absolute; top: 42px; right: 40px; text-align: right">
+      <div
+        style="position: absolute; top: 42px; right: 40px; text-align: right"
+      >
         已有账号，<a href="/home/login">马上登录</a>
       </div>
       <!-- <img :src="PcPosition" class="login-type" @click="change" /> -->
@@ -290,24 +339,24 @@ function getCode(){
   margin-top: 5px;
   cursor: pointer;
 }
-.erCode{
-.wx-scan{
+.erCode {
+  .wx-scan {
     position: relative;
     width: 100%;
     height: 100%;
   }
-  .m-mask{
+  .m-mask {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0, 0, 0, 0.9);
     flex-direction: column;
     display: flex;
     align-items: center;
     justify-content: center;
-    .c-white{
+    .c-white {
       margin-bottom: 10px;
     }
   }
@@ -316,12 +365,12 @@ function getCode(){
   position: relative;
   margin: 40px auto;
 }
-.t-againcode{
+.t-againcode {
   height: 36px;
-    line-height: 36px;
-    padding: 0 0 0 12px;
+  line-height: 36px;
+  padding: 0 0 0 12px;
   color: #1677ff;
   border: 1px solid #1677ff;
-    // box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
+  // box-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);
 }
 </style>

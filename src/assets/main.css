@@ -49,3 +49,7 @@ a,
 .ant-form-item-control-input{
   /* border: 10px solid red; */
 }
+
+.ant-form-item-explain-error{
+  text-align: left;
+}

@@ -1,20 +1,27 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, defineComponent, reactive } from "vue";
-import Logo from "../../assets/login/login_test.jpg";
+// import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
-import CodePosition from "../../assets/login/code-position.jpeg";
-import WechatLogo from "../../assets/login/wechat-logo.jpg";
+// import CodePosition from "../../assets/login/code-position.jpeg";
+// import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
 import { notification } from "ant-design-vue";
 import config from "../../utils/config";
+import { sysLogin } from "../../services/user";
 // import { useCountDown } from "../../hooks/common";
 
 const show = ref(false);
-const activeKey = ref("1");
+const activeKey = ref("password");
 const countdown = ref(config.timeCount);
 const isSendCode = ref(false);
+const formState = reactive({
+  layout: "horizontal",
+  phone: "",
+  verifiCode: "",
+  password: "",
+});
 console.log(import.meta.env)
 
 function change(boo) {
@@ -61,46 +68,38 @@ function getVerifiCode() {
   // 请求后端接口逻辑
   countDown();
 }
-const formState = reactive({
-  layout: "horizontal",
-  phone: "",
-  verifi: "",
-  password: "",
-});
 
-const checkPasswordLogin = function () {
+const checkLogin = async function (type) {
   if (!formState.phone) {
     notification.error({
       description: "请填写正确的手机号",
     });
   }
 
-  if (!formState.password) {
+  if (type == 'password' && !formState.password) {
     notification.error({
       message: "",
       description: "请填写正确的密码",
     });
   }
 
-  //后端api逻辑
-};
-
-const checkVerfiLogin = function () {
-  if (!formState.phone) {
-    notification.error({
-      message: "",
-      description: "请填写正确的手机号",
-    });
-  }
-
-  if (!formState.verifi) {
+  if (type == 'verfiCode' && !formState.verifiCode) {
     notification.error({
       message: "",
       description: "请填写正确的验证码",
     });
   }
-
+  console.log(formState.verifiCode, formState.password)
   //后端api逻辑
+  try {
+    const res = await sysLogin(formState);
+  } catch (err) {
+    console.log(err)
+    notification.error({
+      message: "错误",
+      description: "未知错误",
+    });
+  }
 };
 
 </script>
@@ -149,7 +148,7 @@ const checkVerfiLogin = function () {
       <div class="public-login phone-login" v-show="!show">
         <!-- <img :src="CodePosition" class="login-type" @click="change" /> -->
         <a-tabs v-model:activeKey="activeKey">
-          <a-tab-pane key="1" tab="密码登录">
+          <a-tab-pane key="password" tab="密码登录">
             <a-form
               :layout="formState.layout"
               :model="formState"
@@ -169,12 +168,12 @@ const checkVerfiLogin = function () {
               <a-button
                 type="primary"
                 class="btn-login b-submit"
-                @click="checkPasswordLogin"
+                @click="checkLogin('password')"
                 >登录</a-button
               >
             </a-form>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="验证码登录">
+          <a-tab-pane key="verfiCode" tab="验证码登录">
             <a-form
               :layout="formState.layout"
               :model="formState"
@@ -189,7 +188,7 @@ const checkVerfiLogin = function () {
                 <div class="code-content clear">
                   <a-input
                     style="width: 180px"
-                    v-model:value="formState.verifi"
+                    v-model:value="formState.verifiCode"
                     placeholder="验证码"
                     class="t-gaincode f-fl"
                   />
@@ -212,7 +211,7 @@ const checkVerfiLogin = function () {
               <a-button
                 type="primary"
                 class="btn-login b-submit"
-                @click="checkVerfiLogin"
+                @click="checkLogin('verfiCode')"
                 >登录</a-button
               >
             </a-form>
@@ -256,6 +255,7 @@ const checkVerfiLogin = function () {
   text-align: center;
   position: relative;
   width: 400px;
+  box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08);
 }
 .ant-tabs-tab-btn {
   cursor: pointer;

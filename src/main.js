@@ -1,15 +1,17 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/reset.css'
+import 'ant-design-vue/dist/reset.css';
+import axios from 'axios';
 // Vue.use(Antd)
 
-const app = createApp(App)
+const app = createApp(App);
+app.config.globalProperties.$http = axios;
 
-app.use(router)
+app.use(router);
 app.use(Antd).mount('#app');
 
 // app.mount('#app')
