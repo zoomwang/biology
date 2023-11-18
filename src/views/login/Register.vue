@@ -5,13 +5,15 @@ import Phone from "../../assets/phone.webp";
 import WxScan from "../../components/WxScan.vue";
 import { notification, Form } from "ant-design-vue";
 import config from "../../utils/config";
+import { sendSysCode, regitry, isLogged } from "../../services/user";
+import router from '../../router';
 
 const useForm = Form.useForm;
 const activeKey = ref("1");
 const formState = reactive({
   layout: "horizontal",
-  phone: "",
-  verifiCode: "",
+  mobile: "",
+  code: "",
   password: "",
   checked: false,
 });
@@ -45,13 +47,28 @@ function sendCode(boo) {
 
 const onSubmit = () => {
   validate()
-    .then((res) => {
+    .then(async(res) => {
       if (!formState.checked) {
         notification.error({
           message: "",
           description: "请同意并勾选协议",
         });
         return;
+      }
+      try {
+        const data = await regitry({
+          ...formState
+        });
+        if (data?.code == 0) {
+          notification.success({
+            description: "注册成功",
+          });
+          setTimeout(() => {
+            router.push({name: "userinfo"})
+          }, 400);
+        }
+      } catch(err) {
+        alert(err);
       }
     })
     .catch((err) => {
@@ -68,9 +85,9 @@ function change(boo) {
     show.value = !show.value;
   }
 }
-function getVerifiCode() {
+async function getVerifiCode() {
   const pattern = /^1[3456789]\d{1}$/;
-  if (!formState.phone || pattern.test(formState.phone)) {
+  if (!formState.mobile || pattern.test(formState.mobile)) {
     notification.error({
       message: "",
       description: "请填写正确的手机号",
@@ -78,20 +95,35 @@ function getVerifiCode() {
     return;
   }
   // 请求接口判断是否已登录，是的话提示去登录
-
-  // 请求后端接口逻辑
-  countDown();
+  try {
+    const res = isLogged();
+    if (res?.code == 0) {
+      notification.error({
+        description: '手机号已注册，请登录',
+      });
+    }
+  } catch(err){}
+  try {
+    const res = sendSysCode({
+      mobile: formState.mobile
+    });
+    if (res?.code == 0) countDown();
+  } catch(err) {
+    alert(err);
+  }
+  
 }
 const { resetFields, validate, validateInfos } = useForm(
   formState,
   reactive({
-    phone: [
+    mobile: [
       {
         required: true,
         message: "请输入手机号",
+        pattern: /^1[3456789]\d{9}$/
       },
     ],
-    verifiCode: [
+    code: [
       {
         required: true,
         message: "请输入验证码",
@@ -121,10 +153,10 @@ const { resetFields, validate, validateInfos } = useForm(
         <div class="register-form-item">
           <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span>手机号：</div>
-            <a-form-item class="f-fl" v-bind="validateInfos.phone">
+            <a-form-item class="f-fl" v-bind="validateInfos.mobile">
               <a-input
                 style="width: 403px"
-                v-model:value="formState.phone"
+                v-model:value="formState.mobile"
                 placeholder="请输入手机号"
               />
             </a-form-item>
@@ -133,10 +165,10 @@ const { resetFields, validate, validateInfos } = useForm(
             <div class="t-item f-fl"><span class="t-red">*</span> 验证码：</div>
             <a-form-item style="height: 40px">
               <div class="code-content clear" style="overflow: hidden; height: 60px">
-                <a-form-item v-bind="validateInfos.verifiCode" class="f-fl">
+                <a-form-item v-bind="validateInfos.code" class="f-fl">
                     <a-input
                       style="width: 265px !important"
-                      v-model:value="formState.verifiCode"
+                      v-model:value="formState.code"
                       placeholder="请填写验证码"
                       class="t-gaincode f-fl"
                   />

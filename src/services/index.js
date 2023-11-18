@@ -22,12 +22,19 @@ api.interceptors.request.use((config) => {
 这里用的是element-ui 里面的提示
 **/
 api.interceptors.response.use((res) => {
-    const { data: result, meta: { msg, status } } = res.data
-    notification.success({
-        message: '成功',
-        description: msg,
-    });
-    return result
+    const { code, msg } = res.data
+    if (code == 0) {
+        // notification.success({
+        //     message: '成功',
+        //     description: msg || res?.data?.message,
+        // });
+    } else {
+        notification.error({
+            message: '失败',
+            description: msg ,
+        });
+    }
+    return res?.data;
 }, error => {
     Promise.reject(error)
 })

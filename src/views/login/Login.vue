@@ -1,5 +1,4 @@
 <script setup>
-// import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, defineComponent, reactive } from "vue";
 // import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
@@ -7,19 +6,20 @@ import PcPosition from "../../assets/login/pc-position.png";
 // import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
-import { notification } from "ant-design-vue";
+import { notification, Form } from "ant-design-vue";
 import config from "../../utils/config";
-import { sysLogin } from "../../services/user";
-// import { useCountDown } from "../../hooks/common";
+import { sendSysCode, mobileLogin, login } from "../../services/user";
+import router from '../../router';
 
+const useForm = Form.useForm;
 const show = ref(false);
 const activeKey = ref("password");
 const countdown = ref(config.timeCount);
 const isSendCode = ref(false);
 const formState = reactive({
   layout: "horizontal",
-  phone: "",
-  verifiCode: "",
+  mobile: "",
+  code: "",
   password: "",
 });
 console.log(import.meta.env)
@@ -56,51 +56,109 @@ function countDown() {
 
 function getVerifiCode() {
   const pattern =/^1[3456789]\d{1}$/; 
-  if (!formState.phone || pattern.test(formState.phone)) {
+  if (!formState.mobile || pattern.test(formState.mobile)) {
     notification.error({
-      message: '',
       description: '请填写正确的手机号',
     });
     return;
+  }  
+  try {
+    const res = sendSysCode({
+      mobile: formState.mobile
+    });
+    if (res?.code == 0) countDown();
+  } catch(err) {
+    alert(err);
   }
-  // 请求接口判断是否已登录，是的话提示去登录
-
-  // 请求后端接口逻辑
-  countDown();
 }
 
 const checkLogin = async function (type) {
-  if (!formState.phone) {
-    notification.error({
-      description: "请填写正确的手机号",
+  if (type == 'password') {
+    validate()
+    .then(async(res) => {
+      try {
+        const data = await login({
+          mobile: formState.mobile,
+          password: formState.password
+        });
+        if (data?.code == 0) {
+          notification.success({
+            description: "登录成功",
+          });
+          router.push({name: "userinfo"})
+        }
+      } catch(err) {
+        alert(err);
+      }
+    })
+    .catch((err) => {
+      console.log("error", err);
     });
   }
 
-  if (type == 'password' && !formState.password) {
-    notification.error({
-      message: "",
-      description: "请填写正确的密码",
-    });
-  }
-
-  if (type == 'verfiCode' && !formState.verifiCode) {
-    notification.error({
-      message: "",
-      description: "请填写正确的验证码",
-    });
-  }
-  console.log(formState.verifiCode, formState.password)
-  //后端api逻辑
-  try {
-    const res = await sysLogin(formState);
-  } catch (err) {
-    console.log(err)
-    notification.error({
-      message: "错误",
-      description: "未知错误",
+  if (type == 'verfiCode') {
+    validatep()
+    .then(async(res) => {
+      try {
+        const data = await mobileLogin({
+          mobile: formState.mobile,
+          code: formState.code
+        });
+        if (data?.code == 0) {
+          notification.success({
+            description: "登录成功",
+          });
+          setTimeout(() => {
+            router.push({name: "userinfo"})
+          }, 400);
+        }
+      } catch(err) {
+        alert(err);
+      }
+    })
+    .catch((err) => {
+      console.log("error", err);
     });
   }
 };
+
+const { resetFields, validate, validateInfos } = useForm(
+  formState,
+  reactive({
+    mobile: [
+      {
+        required: true,
+        message: "请输入手机号",
+        pattern: /^1[3456789]\d{9}$/
+      },
+    ],
+    password: [
+      {
+        required: true,
+        message: "请输入密码",
+      },
+    ],
+  })
+);
+
+const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateInfosp } = useForm(
+  formState,
+  reactive({
+    mobile: [
+      {
+        required: true,
+        message: "请输入手机号",
+        pattern: /^1[3456789]\d{9}$/
+      },
+    ],
+    code: [
+      {
+        required: true,
+        message: "请输入验证码",
+      },
+    ],
+  })
+);
 
 </script>
 
@@ -153,13 +211,13 @@ const checkLogin = async function (type) {
               :layout="formState.layout"
               :model="formState"
             >
-              <a-form-item>
+              <a-form-item v-bind="validateInfos.mobile">
                 <a-input
-                  v-model:value="formState.phone"
+                  v-model:value="formState.mobile"
                   placeholder="请输入手机号"
                 />
               </a-form-item>
-              <a-form-item>
+              <a-form-item v-bind="validateInfos.password">
                 <a-input
                   v-model:value="formState.password"
                   placeholder="请输入密码"
@@ -178,20 +236,22 @@ const checkLogin = async function (type) {
               :layout="formState.layout"
               :model="formState"
             >
-              <a-form-item>
+              <a-form-item v-bind="validateInfosp.mobile">
                 <a-input
-                  v-model:value="formState.phone"
+                  v-model:value="formState.mobile"
                   placeholder="请输入手机号"
                 />
               </a-form-item>
-              <a-form-item>
-                <div class="code-content clear">
-                  <a-input
-                    style="width: 180px"
-                    v-model:value="formState.verifiCode"
-                    placeholder="验证码"
-                    class="t-gaincode f-fl"
-                  />
+              <a-form-item style="height: 54px;">
+                <div class="code-content">
+                  <a-form-item v-bind="validateInfosp.code" class="f-fl">
+                    <a-input
+                      style="width: 180px;"
+                      v-model:value="formState.code"
+                      placeholder="验证码"
+                      class="t-gaincode f-fl"
+                    />
+                  </a-form-item>
                   <a-button
                     type="primary"
                     ghost
