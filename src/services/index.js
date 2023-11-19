@@ -1,6 +1,7 @@
 // 首先先引入aixos
 import axios from 'axios'
 import { notification } from "ant-design-vue";
+import $localStorage from "../hooks/localStorage";
 
 console.log(import.meta.env);
 // 创建一个axios 实例
@@ -10,7 +11,7 @@ const api = axios.create({
 })
 // 请求拦截
 api.interceptors.request.use((config) => {
-    config.headers.Authorization = localStorage.access_token;
+    config.headers.Authorization = $localStorage.access_token;
     return config      
 }, error => {
     Promise.reject(error)
@@ -29,6 +30,7 @@ api.interceptors.response.use((res) => {
         //     description: msg || res?.data?.message,
         // });
     } else {
+        if (code == 400) return;
         notification.error({
             message: '失败',
             description: msg ,

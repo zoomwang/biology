@@ -1,12 +1,30 @@
 <script setup>
 import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, onBeforeMount } from "vue";
 import Header from "../src/components/Header.vue";
 import Footer from "../src/components/Footer.vue";
 import Wx from "../src/components/Wx.vue";
-let msg = "Hello";
-onMounted(() => {
-  console.log("mounted!");
+import { isLogged } from "../src/services/user";
+import $localStorage from "./hooks/localStorage";
+import router from './router';
+
+const checkIslogged = async function() {
+  try {
+      const res = await isLogged();
+    if (res?.code == 0) {
+      $localStorage.setItem("access_token", res?.access_token);
+      $localStorage.setItem("isLogin", true);
+    } else {
+      router.push({name: "login"})
+    }
+  } catch (err) {}
+}
+
+onBeforeMount(async () => {
+  // console.log("mounted!");
+  console.log("his==", this)
+  await checkIslogged();
+
 });
 const router = useRouter();
 const route = useRoute();

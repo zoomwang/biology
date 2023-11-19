@@ -28,3 +28,9 @@ api.post(`/sys/auth/isLogged`, {
   refreshToken: localStorage.refresh_token
 });
 
+/** 登出 */
+export const logout = (param) =>
+api.post(`/sys/auth/logout`, {
+  refreshToken: localStorage.refresh_token
+});
+

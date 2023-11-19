@@ -1,40 +1,30 @@
 <script setup>
 import HeaderContent from "./HeaderContent.vue";
 import Logo from "../assets/logo.png";
+import { useRoute } from "vue-router";
 // import SecondLogo from "../assets/secondLogo.jpg";
 import SecondLogo from "../assets/secondLogo.jpg";
+import LoginComponent from "../components/LoginComponent.vue";
+
 defineProps({
   msg: {
     type: String,
     required: true,
   },
 });
+const route = useRoute();
 </script>
 
 <template>
-  <div class="header-title">
-    <!-- <ul class="u-header-title">
-        <li class="l-header-title l-phone-num"><a href="">热线: 400-831-0631</a></li>
-        <li class="l-header-title"><a href="">进入企业版</a></li>
-        <li class="l-header-title"><a href="">我的订单</a></li>
-        <li class="l-header-title"><a href="">指南针会员</a></li>
-        <li class="l-header-title"><a href="">合作入驻</a></li>
-        <li class="l-header-title"><a href="">关于我们</a></li>
-        <li class="l-header-title"><a href="">人才招聘</a></li>
-        <li class="l-header-title"><a href="">科研文库</a></li>
-        <li class="l-header-title"><a href="">公众号合作</a></li>
-      </ul>         -->
-  </div>
+  <!-- <div class="header-title">
+  </div> -->
   <div class="header d-flex">
     <div class="logo">
       <img :src="Logo" style="width: 258px; height: auto" />
     </div>
-    <!-- <div class="second-logo">
-      <img :src="SecondLogo" style="width: 238px;
-    height: 60px; "/> 
-    </div> -->
-    <HeaderContent />
+    <LoginComponent class="f-fr" style="flex: 1" />
   </div>
+  <HeaderContent v-if="!route?.fullPath.includes('home')" />
 </template>
 
 <style scoped lang="scss">

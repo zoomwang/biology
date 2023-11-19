@@ -63,6 +63,9 @@ const onSubmit = () => {
           notification.success({
             description: "注册成功",
           });
+          localStorage.setItem("access_token", data?.data?.access_token);
+          localStorage.setItem("refresh_token", data?.data?.refresh_token);
+          localStorage.setItem("isLogin", true);
           setTimeout(() => {
             router.push({name: "userinfo"})
           }, 400);

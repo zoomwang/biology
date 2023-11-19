@@ -10,6 +10,7 @@ import { notification, Form } from "ant-design-vue";
 import config from "../../utils/config";
 import { sendSysCode, mobileLogin, login } from "../../services/user";
 import router from '../../router';
+import $localStorage from "../../hooks/localStorage";
 
 const useForm = Form.useForm;
 const show = ref(false);
@@ -88,9 +89,12 @@ const checkLogin = async function (type) {
           notification.success({
             description: "登录成功",
           });
-          localStorage.setItem("access_token", data?.data?.access_token);
-          localStorage.setItem("refresh_token", data?.data?.refresh_token);
-          router.push({name: "userinfo"})
+          $localStorage.setItem("access_token", data?.data?.access_token);
+          $localStorage.setItem("refresh_token", data?.data?.refresh_token);
+          $localStorage.setItem("isLogin", true);
+          setTimeout(() => {
+            router.push({name: "userinfo"})
+          }, 400);
         }
       } catch(err) {
         alert(err);
@@ -113,9 +117,9 @@ const checkLogin = async function (type) {
           notification.success({
             description: "登录成功",
           });
-          setTimeout(() => {
-            router.push({name: "userinfo"})
-          }, 400);
+          $localStorage.setItem("access_token", data?.data?.access_token);
+          $localStorage.setItem("refresh_token", data?.data?.refresh_token);
+          $localStorage.setItem("isLogin", true);
         }
       } catch(err) {
         alert(err);

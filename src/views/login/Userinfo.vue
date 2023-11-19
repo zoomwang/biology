@@ -9,11 +9,11 @@ const formState = reactive({
   name: "",
 });
 
-try {
-  const data = isLogged();
-} catch(err) {
-  alert(err);
-}
+// try {
+//   const data = isLogged();
+// } catch(err) {
+//   alert(err);
+// }
 
 </script>
 
