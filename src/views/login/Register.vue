@@ -29,7 +29,7 @@ function countDown() {
   let se = setInterval(() => {
     if (countdown.value <= 1) {
       clearInterval(se);
-      countdown.value = 6;
+      countdown.value = config.timeCount;
       sendCode(false);
     }
     --countdown.value;
@@ -95,19 +95,21 @@ async function getVerifiCode() {
     return;
   }
   // 请求接口判断是否已登录，是的话提示去登录
+  // try {
+  //   const res = isLogged();
+  //   if (res?.code == 0) {
+  //     notification.error({
+  //       description: '手机号已注册，请登录',
+  //     });
+  //   }
+  // } catch(err){}
   try {
-    const res = isLogged();
-    if (res?.code == 0) {
-      notification.error({
-        description: '手机号已注册，请登录',
-      });
-    }
-  } catch(err){}
-  try {
-    const res = sendSysCode({
+    const res = await sendSysCode({
       mobile: formState.mobile
     });
-    if (res?.code == 0) countDown();
+    if (res?.code == 0) {
+      countDown();
+    }
   } catch(err) {
     alert(err);
   }

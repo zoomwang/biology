@@ -10,8 +10,8 @@ const api = axios.create({
 })
 // 请求拦截
 api.interceptors.request.use((config) => {
-    return config      // 请求拦截里面的需求可以自己写，有的项目需要配置很多，有的很少，这里就                                                                                        
-                       // 不放了
+    config.headers.Authorization = localStorage.access_token;
+    return config      
 }, error => {
     Promise.reject(error)
 })

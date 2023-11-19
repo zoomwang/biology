@@ -1,12 +1,19 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive,defineComponent } from "vue";
+import { isLogged } from "../../services/user";
 const formState = reactive({
   layout: "horizontal",
   identity: "2",
   no: "",
   name: "",
 });
+
+try {
+  const data = isLogged();
+} catch(err) {
+  alert(err);
+}
 
 </script>
 

@@ -47,14 +47,14 @@ function countDown() {
   let se = setInterval(() => {
     if (countdown.value <= 1) {
       clearInterval(se);
-      countdown.value = 6;
+      countdown.value = config.timeCount;
       sendCode(false);
     }
     --countdown.value;
   }, 1000)
 }
 
-function getVerifiCode() {
+async function getVerifiCode() {
   const pattern =/^1[3456789]\d{1}$/; 
   if (!formState.mobile || pattern.test(formState.mobile)) {
     notification.error({
@@ -63,10 +63,13 @@ function getVerifiCode() {
     return;
   }  
   try {
-    const res = sendSysCode({
+    const res = await sendSysCode({
       mobile: formState.mobile
     });
-    if (res?.code == 0) countDown();
+    debugger
+    if (res?.code == 0) {
+      countDown();
+    }
   } catch(err) {
     alert(err);
   }
@@ -85,6 +88,8 @@ const checkLogin = async function (type) {
           notification.success({
             description: "登录成功",
           });
+          localStorage.setItem("access_token", data?.data?.access_token);
+          localStorage.setItem("refresh_token", data?.data?.refresh_token);
           router.push({name: "userinfo"})
         }
       } catch(err) {

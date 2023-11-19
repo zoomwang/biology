@@ -24,5 +24,7 @@ api.post(`/sys/auth/resetPassword`, param);
 
 /** 重置密码 */
 export const isLogged = (param) =>
-api.post(`/sys/auth/isLogged`, param);
+api.post(`/sys/auth/isLogged`, {
+  refreshToken: localStorage.refresh_token
+});
 
