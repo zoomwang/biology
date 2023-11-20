@@ -16,7 +16,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: { name: 'login' } 
+      // redirect: { name: 'login' } 
     },
     {
       path: '/home/login',
@@ -42,6 +42,16 @@ const router = createRouter({
       path: '/home/find-password',
       name: 'find-password',
       component: () => import('../views/login/FindPassword.vue')
+    },
+    {
+      path: '/home/WXScan',
+      name: 'WXScan',
+      component: () => import('../views/login/WXScan.vue')
+    },
+    {
+      path: '/home/prestore',
+      name: 'prestore',
+      component: () => import('../views/prestore/Prestore.vue')
     }
   ]
 })

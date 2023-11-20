@@ -86,7 +86,7 @@ const onSubmit = () => {
             description: "修改密码成功成功",
           });
           setTimeout(() => {
-            router.push({name: "login"});
+            // router.push({name: "login"});
           }, 400);
           
         }

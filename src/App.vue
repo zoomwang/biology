@@ -22,11 +22,11 @@ const checkIslogged = async function() {
 
 onBeforeMount(async () => {
   // console.log("mounted!");
-  console.log("his==", this)
+  // console.log("this==", this)
   await checkIslogged();
 
 });
-const router = useRouter();
+const routers = useRouter();
 const route = useRoute();
 console.log("当前路由：", route);
 // router.push({ path: "/home" });

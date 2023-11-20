@@ -40,7 +40,7 @@ watch(key, async (newdata, olddata) => {
 
 const setLogout = async function () {
   localStorage.clear();
-  router.push({name: "login"});
+  // router.push({name: "login"});
   location.reload();
   // const res = await logout();
   // if (res?.code == 0 || res?.code == 401) {
@@ -52,7 +52,7 @@ const setLogout = async function () {
 
 <template>
   <div class="login-component d-flex">
-    <a-button type="primary" class="预存">预存</a-button>
+    <a-button type="primary" class="预存" >预存</a-button>
     <a-button class="">发布需求</a-button>
     <div class="new-login" v-if="!islogged">
       <a href="/home/login">登录</a> |
