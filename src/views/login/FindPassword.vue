@@ -37,7 +37,7 @@ const onSubmit = () => {
         });
         if (data?.code == 0) {
           notification.success({
-            description: "修改密码成功成功",
+            description: "修改密码成功",
           });
           setTimeout(() => {
             // router.push({name: "login"});
