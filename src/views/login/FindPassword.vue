@@ -1,63 +1,17 @@
 <script setup>
-import { ref, computed, defineComponent, reactive } from "vue";
-import config from "../../utils/config";
+import { ref, reactive } from "vue";
 import { notification, Form } from "ant-design-vue";
-import { sendSysCode, resetPassword } from "../../services/user";
+import { resetPassword } from "../../services/user";
+import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
 const show = ref(true);
-const countdown = ref(config.timeCount);
-const isSendCode = ref(false);
-
-function change(boo) {
-  if (typeof boo == "booelan") {
-    show.value;
-    return;
-  } else {
-    show.value = !show.value;
-  }
-}
-
-function sendCode(boo) {
-  if (typeof boo == "booelan") {
-    isSendCode.value = boo;
-    return;
-  } else {
-    isSendCode.value = !isSendCode.value;
-  }
-}
-
-function countDown() {
-  sendCode(true);
-  let se = setInterval(() => {
-    if (countdown.value <= 1) {
-      clearInterval(se);
-      countdown.value = config.timeCount;
-      sendCode(false);
-    }
-    --countdown.value;
-  }, 1000)
-}
-async function getVerifiCode() {
-  const pattern =/^1[3456789]\d{1}$/; 
-  if (!formState.mobile || pattern.test(formState.mobile)) {
-    notification.error({
-      message: '',
-      description: '请填写正确的手机号',
-    });
-    return;
-  }
-  try {
-    const res = await sendSysCode({
-      mobile: formState.mobile
-    });
-    if (res?.code == 0) {
-      countDown();
-    }
-  } catch(err) {
-    alert(err);
-  }
-}
+const { isSendCode, changeSt } = useSendCode();
+const countDown = useCountDown(changeSt);
+const { getVerifiCode } = useGetVerifiCode(formState, () => {
+  changeSt(true);
+  countDown.countDown();
+});
 const formState = reactive({
   layout: "horizontal",
   code: "",
@@ -148,7 +102,7 @@ const { resetFields, validate, validateInfos } = useForm(
             >获取验证码</span
           >
           <span class="t-countdown" v-else
-            >重新获取({{ countdown }})s</span
+            >重新获取({{ countDown.count }})s</span
           >
         </a-button>
       </a-form-item>

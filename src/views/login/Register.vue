@@ -4,9 +4,9 @@ import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import Phone from "../../assets/phone.webp";
 import WxScan from "../../components/WxScan.vue";
 import { notification, Form } from "ant-design-vue";
-import config from "../../utils/config";
-import { sendSysCode, regitry, isLogged } from "../../services/user";
+import { regitry } from "../../services/user";
 import router from '../../router';
+import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
 const activeKey = ref("1");
@@ -21,29 +21,12 @@ const state = reactive({
   checked: false,
 });
 const show = ref(true);
-const isSendCode = ref(false);
-const countdown = ref(config.timeCount);
-
-function countDown() {
-  sendCode(true);
-  let se = setInterval(() => {
-    if (countdown.value <= 1) {
-      clearInterval(se);
-      countdown.value = config.timeCount;
-      sendCode(false);
-    }
-    --countdown.value;
-  }, 1000);
-}
-
-function sendCode(boo) {
-  if (typeof boo == "booelan") {
-    isSendCode.value = boo;
-    return;
-  } else {
-    isSendCode.value = !isSendCode.value;
-  }
-}
+const { isSendCode, changeSt } = useSendCode();
+const countDown = useCountDown(changeSt);
+const { getVerifiCode } = useGetVerifiCode(formState, () => {
+  changeSt(true);
+  countDown.countDown();
+});
 
 const onSubmit = () => {
   validate()
@@ -79,45 +62,15 @@ const onSubmit = () => {
     });
 };
 
-function change(boo) {
-  console.log(show);
-  if (typeof boo == "booelan") {
-    show.value = boo;
-    return;
-  } else {
-    show.value = !show.value;
-  }
-}
-async function getVerifiCode() {
-  const pattern = /^1[3456789]\d{1}$/;
-  if (!formState.mobile || pattern.test(formState.mobile)) {
-    notification.error({
-      message: "",
-      description: "请填写正确的手机号",
-    });
-    return;
-  }
-  // 请求接口判断是否已登录，是的话提示去登录
-  // try {
-  //   const res = isLogged();
-  //   if (res?.code == 0) {
-  //     notification.error({
-  //       description: '手机号已注册，请登录',
-  //     });
-  //   }
-  // } catch(err){}
-  try {
-    const res = await sendSysCode({
-      mobile: formState.mobile
-    });
-    if (res?.code == 0) {
-      countDown();
-    }
-  } catch(err) {
-    alert(err);
-  }
-  
-}
+// function change(boo) {
+//   console.log(show);
+//   if (typeof boo == "booelan") {
+//     show.value = boo;
+//     return;
+//   } else {
+//     show.value = !show.value;
+//   }
+// }
 const { resetFields, validate, validateInfos } = useForm(
   formState,
   reactive({
@@ -188,7 +141,7 @@ const { resetFields, validate, validateInfos } = useForm(
                 >
                   <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
                   <span class="t-countdown" v-else
-                    >重新获取({{ countdown }})s</span
+                    >重新获取({{ countDown.count }})s</span
                   >
                 </a-button>
                 <!-- <div class="t-againcode b-base f-fl" style="width: 120px; text-align: center; padding: 0">
@@ -267,7 +220,7 @@ const { resetFields, validate, validateInfos } = useForm(
           <img
             @click="
               () => {
-                change(false);
+                // change(false);
               }
             "
             :src="Phone"
