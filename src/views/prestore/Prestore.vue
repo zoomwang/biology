@@ -90,7 +90,7 @@ const formState = reactive({
               <a-textarea
                 placeholder="1，若以下没有您需要的发票类型，请备注所需发票类型；2，若需要加急开票，请填写【加急】字样；3，其它需要留言"
                 class="custom"
-                style="height: 50px"
+                maxlength="200"
               />
               <div id="charCount">当前已输入0字 / 最多200字</div>
             </li>
@@ -256,6 +256,13 @@ const formState = reactive({
   min-height: 40px;
   height: 50px;
   margin-top: 15px;
+}
+.t-unil{
+  line-height: 34px;
+    // padding: 10px 22px 10px 0;
+    padding-left: 5px;
+    font-size: 14px;
+    color: #000;
 }
 .lfirst-payment {
   position: relative;
