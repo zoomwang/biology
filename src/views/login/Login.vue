@@ -7,23 +7,26 @@ import PcPosition from "../../assets/login/pc-position.png";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
 import { notification, Form } from "ant-design-vue";
-import config from "../../utils/config";
-import { sendSysCode, mobileLogin, login } from "../../services/user";
-import router from '../../router';
+import { mobileLogin, login } from "../../services/user";
+import router from "../../router";
 import $localStorage from "../../hooks/localStorage";
+import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
 const show = ref(false);
 const activeKey = ref("password");
-const countdown = ref(config.timeCount);
-const isSendCode = ref(false);
 const formState = reactive({
   layout: "horizontal",
   mobile: "",
   code: "",
   password: "",
 });
-console.log(import.meta.env)
+const { isSendCode, changeSt } = useSendCode();
+const countDown = useCountDown(changeSt);
+const { getVerifiCode } = useGetVerifiCode(formState, () => {
+  changeSt(true);
+  countDown.countDown();
+});
 
 function change(boo) {
   if (typeof boo == "booelan") {
@@ -34,103 +37,61 @@ function change(boo) {
   }
 }
 
-function sendCode(boo) {
-  if (typeof boo == "booelan") {
-    isSendCode.value = boo;
-    return;
-  } else {
-    isSendCode.value = !isSendCode.value;
-  }
-}
-
-function countDown() {
-  sendCode(true);
-  let se = setInterval(() => {
-    if (countdown.value <= 1) {
-      clearInterval(se);
-      countdown.value = config.timeCount;
-      sendCode(false);
-    }
-    --countdown.value;
-  }, 1000)
-}
-
-async function getVerifiCode() {
-  const pattern =/^1[3456789]\d{1}$/; 
-  if (!formState.mobile || pattern.test(formState.mobile)) {
-    notification.error({
-      description: '请填写正确的手机号',
-    });
-    return;
-  }  
-  try {
-    const res = await sendSysCode({
-      mobile: formState.mobile
-    });
-    debugger
-    if (res?.code == 0) {
-      countDown();
-    }
-  } catch(err) {
-    alert(err);
-  }
-}
-
 const checkLogin = async function (type) {
-  if (type == 'password') {
+  if (type == "password") {
     validate()
-    .then(async(res) => {
-      try {
-        const data = await login({
-          mobile: formState.mobile,
-          password: formState.password
-        });
-        if (data?.code == 0) {
-          notification.success({
-            description: "登录成功",
+      .then(async (res) => {
+        try {
+          const data = await login({
+            mobile: formState.mobile,
+            password: formState.password,
           });
-          $localStorage.setItem("access_token", data?.data?.access_token);
-          $localStorage.setItem("refresh_token", data?.data?.refresh_token);
-          $localStorage.setItem("isLogin", true);
-          setTimeout(() => {
-            router.push({name: "userinfo"})
-          }, 400);
+          if (data?.code == 0) {
+            notification.success({
+              description: "登录成功",
+            });
+            $localStorage.setItem("access_token", data?.data?.access_token);
+            $localStorage.setItem("refresh_token", data?.data?.refresh_token);
+            $localStorage.setItem("isLogin", true);
+            setTimeout(() => {
+              router.push({ name: "userinfo" });
+            }, 400);
+          }
+        } catch (err) {
+          alert(err);
         }
-      } catch(err) {
-        alert(err);
-      }
-    })
-    .catch((err) => {
-      console.log("error", err);
-    });
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
   }
 
-  if (type == 'verfiCode') {
+  if (type == "verfiCode") {
     validatep()
-    .then(async(res) => {
-      try {
-        const data = await mobileLogin({
-          mobile: formState.mobile,
-          code: formState.code
-        });
-        if (data?.code == 0) {
-          notification.success({
-            description: "登录成功",
+      .then(async (res) => {
+        try {
+          const data = await mobileLogin({
+            mobile: formState.mobile,
+            code: formState.code,
           });
-          $localStorage.setItem("access_token", data?.data?.access_token);
-          $localStorage.setItem("refresh_token", data?.data?.refresh_token);
-          $localStorage.setItem("isLogin", true);
-          setTimeout(() => {
-            router.push({name: "userinfo"})
-          }, 400);
+          if (data?.code == 0) {
+            notification.success({
+              description: "登录成功",
+            });
+            $localStorage.setItem("access_token", data?.data?.access_token);
+            $localStorage.setItem("refresh_token", data?.data?.refresh_token);
+            $localStorage.setItem("isLogin", true);
+            setTimeout(() => {
+              router.push({ name: "userinfo" });
+            }, 400);
+          }
+        } catch (err) {
+          alert(err);
         }
-      } catch(err) {
-        alert(err);
-      }
-    })
-    .catch((err) => {
-      console.log("error", err);
-    });
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
   }
 };
 
@@ -141,7 +102,7 @@ const { resetFields, validate, validateInfos } = useForm(
       {
         required: true,
         message: "请输入手机号",
-        pattern: /^1[3456789]\d{9}$/
+        pattern: /^1[3456789]\d{9}$/,
       },
     ],
     password: [
@@ -153,14 +114,18 @@ const { resetFields, validate, validateInfos } = useForm(
   })
 );
 
-const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateInfosp } = useForm(
+const {
+  resetFields: resetFieldsp,
+  validate: validatep,
+  validateInfos: validateInfosp,
+} = useForm(
   formState,
   reactive({
     mobile: [
       {
         required: true,
         message: "请输入手机号",
-        pattern: /^1[3456789]\d{9}$/
+        pattern: /^1[3456789]\d{9}$/,
       },
     ],
     code: [
@@ -171,7 +136,6 @@ const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateI
     ],
   })
 );
-
 </script>
 
 <template>
@@ -219,10 +183,7 @@ const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateI
         <!-- <img :src="CodePosition" class="login-type" @click="change" /> -->
         <a-tabs v-model:activeKey="activeKey">
           <a-tab-pane key="password" tab="密码登录">
-            <a-form
-              :layout="formState.layout"
-              :model="formState"
-            >
+            <a-form :layout="formState.layout" :model="formState">
               <a-form-item v-bind="validateInfos.mobile">
                 <a-input
                   v-model:value="formState.mobile"
@@ -244,21 +205,18 @@ const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateI
             </a-form>
           </a-tab-pane>
           <a-tab-pane key="verfiCode" tab="验证码登录">
-            <a-form
-              :layout="formState.layout"
-              :model="formState"
-            >
+            <a-form :layout="formState.layout" :model="formState">
               <a-form-item v-bind="validateInfosp.mobile">
                 <a-input
                   v-model:value="formState.mobile"
                   placeholder="请输入手机号"
                 />
               </a-form-item>
-              <a-form-item style="height: 54px;">
+              <a-form-item style="height: 54px">
                 <div class="code-content">
                   <a-form-item v-bind="validateInfosp.code" class="f-fl">
                     <a-input
-                      style="width: 180px;"
+                      style="width: 180px"
                       v-model:value="formState.code"
                       placeholder="验证码"
                       class="t-gaincode f-fl"
@@ -275,7 +233,7 @@ const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateI
                       >获取验证码</span
                     >
                     <span class="t-countdown" v-else
-                      >重新获取({{ countdown }})s</span
+                      >重新获取({{ countDown.count }})s</span
                     >
                   </a-button>
                 </div>
@@ -354,10 +312,10 @@ const { resetFields: resetFieldsp, validate: validatep, validateInfos: validateI
 body {
   background: url("../../assets/login/bgLogin.jpg") no-repeat;
   background-size: 100% 100%;
-  height: auto!important;
+  height: auto !important;
   min-height: 100%;
 }
-#app{
+#app {
   height: auto;
 }
 .container .public-login {
