@@ -15,16 +15,13 @@ const checkIslogged = async function() {
       $localStorage.setItem("access_token", res?.access_token);
       $localStorage.setItem("isLogin", true);
     } else {
-      router.push({name: "login"})
+      // router.push({name: "login"})
     }
   } catch (err) {}
 }
 
 onBeforeMount(async () => {
-  // console.log("mounted!");
-  // console.log("this==", this)
   await checkIslogged();
-
 });
 const routers = useRouter();
 const route = useRoute();

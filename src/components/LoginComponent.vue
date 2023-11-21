@@ -1,10 +1,12 @@
 <script setup>
-import { isLogged, logout } from "../services/user";
+// import { isLogged, logout } from "../services/user";
 import { ref, computed, defineComponent, reactive } from "vue";
+import { useRoute } from "vue-router";
 import { onMounted, onUpdated, watch} from "vue";
 import { DownOutlined } from '@ant-design/icons-vue';
 import router from '../router';
 import { useStorage } from "../hooks/useStorage";
+import { notification } from "ant-design-vue";
 
 const key = useStorage("isLogin");
 defineProps({
@@ -13,6 +15,7 @@ defineProps({
     required: true,
   },
 });
+const route = useRoute();
 const islogged= ref(false);
 watch(key, async (newdata, olddata) => {
   if (newdata == true) {
@@ -20,7 +23,6 @@ watch(key, async (newdata, olddata) => {
   } else {
     islogged.value = false;
   }
-  debugger
   console.log('localStorage.isLogin==', localStorage.isLogin)
 })
 
@@ -40,8 +42,13 @@ watch(key, async (newdata, olddata) => {
 
 const setLogout = async function () {
   localStorage.clear();
-  // router.push({name: "login"});
-  location.reload();
+  notification.success({
+    description: '退出成功',
+  });
+  setTimeout(() => {
+    router.push({name: "login"});
+  }, 400)
+  // location.reload();
   // const res = await logout();
   // if (res?.code == 0 || res?.code == 401) {
   //   islogged.value = false;
@@ -51,7 +58,7 @@ const setLogout = async function () {
 </script>
 
 <template>
-  <div class="login-component d-flex">
+  <div class="login-component d-flex" v-if="route?.fullPath.includes('userinfo')">
     <a-button type="primary" class="预存" >预存</a-button>
     <a-button class="">发布需求</a-button>
     <div class="new-login" v-if="!islogged">

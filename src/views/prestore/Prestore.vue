@@ -3,6 +3,7 @@ import { ref, computed, defineComponent, reactive } from "vue";
 import Payment from "../../assets/order/payment.png";
 import Add from "../../assets/order/i-add.png";
 import { notification, Form } from "ant-design-vue";
+import { UserOutlined, InfoCircleOutlined } from '@ant-design/icons-vue';
 
 const formState = reactive({
   // layout: "horizontal",
@@ -42,14 +43,14 @@ const formState = reactive({
                 <span class="t-red"> *</span>
                 <span>预存账户：</span>
               </div>
-              <a-button type="primary" class="个人账户">个人账户</a-button>
+              <a-button type="primary" class="b-base-button">个人账户</a-button>
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
                 <span class="t-red"> *</span>
                 <span>预存福利：</span>
               </div>
-              <a-button type="primary" class="测试费">测试费</a-button>
+              <a-button type="primary" class="b-base-button">测试费</a-button>
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
@@ -58,12 +59,15 @@ const formState = reactive({
               </div>
               <a-form-item class="f-fl">
                 <a-input
-                  style="width: 180px"
+                  style="width: 250px;height: 40px;
+    padding-left: 12px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;"
                   placeholder="请输入预存金额(开票金额)"
                   class="t-gaincode f-fl"
                 />
               </a-form-item>
-              <span>元</span>
+              <span class="t-unil">元</span>
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
@@ -77,9 +81,9 @@ const formState = reactive({
                   class="t-gaincode f-fl"
                 />
               </a-form-item>
-              <span>元</span>
+              <span class="t-unil">元</span>
             </li>
-            <li class="clear l-payment">
+            <li class="clear l-payment l-remark">
               <div class="t-title f-fl">
                 <span>预存备注：</span>
               </div>
@@ -132,9 +136,22 @@ const formState = reactive({
             <li class="clear">
               <div class="t-title f-fl">需方名称：</div>
               <div class="f-fl">
-                <a-form-item>
+                <!-- <a-form-item>
                   <a-input placeholder="请输入手机号" />
-                </a-form-item>
+                </a-form-item> -->
+                <a-form-item class="f-fl">
+                <a-input
+                  style="width: 180px"
+                  placeholder="请输入手机号"
+                  class="t-gaincode f-fl"
+                >
+      <template #suffix>
+        <a-tooltip title="Extra information">
+          <a>修改</a>
+        </a-tooltip>
+      </template>
+                </a-input>
+              </a-form-item>
                 <span class="tips"
                   >需方名称是指您的清单、合同等文件中注明的需方单位名称</span
                 >
@@ -191,7 +208,13 @@ const formState = reactive({
                   style="width: 180px"
                   placeholder="请输入邮箱"
                   class="t-gaincode f-fl"
-                />
+                >
+      <template #suffix>
+        <a-tooltip title="Extra information">
+          <a>修改</a>
+        </a-tooltip>
+      </template>
+                </a-input>
               </a-form-item>
           </div>
         </div>
@@ -224,20 +247,27 @@ const formState = reactive({
 .t-title{
   width: 134px;
     line-height: 20px;
-    padding: 10px 32px 10px 0;
+    padding: 10px 22px 10px 0;
     font-size: 14px;
     color: #000;
     text-align: right;
 }
+.l-payment{
+  min-height: 40px;
+  height: 50px;
+  margin-top: 15px;
+}
 .lfirst-payment {
   position: relative;
-  margin: 40px 0;
+  height: 80px;
+  margin-top: 40px;
   .i-img {
     position: absolute;
+    display: block;
     width: 154px;
     height: 38px;
     top: 40px;
-    left: 14px;
+    left: 240px;
     z-index: 9;
     .i-payment{
       width: 100%;
