@@ -111,6 +111,9 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
 .t-red{
   color: #FF4D4F;
 }
+.t-orange{
+  color:#FEA000;
+}
 .b-base {
   display: block;
   float: right;
