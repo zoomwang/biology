@@ -49,7 +49,7 @@ const router = createRouter({
       component: () => import('../views/login/WXScan.vue')
     },
     {
-      path: '/home/prestore',
+      path: '/account/prestore',
       name: 'prestore',
       component: () => import('../views/prestore/Prestore.vue')
     }

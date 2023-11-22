@@ -2,7 +2,7 @@
 import { ref, computed, defineComponent, reactive } from "vue";
 // import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
-import CodePosition from "../../assets/login/code-position.jpg";
+// import CodePosition from "../../assets/login/code-position.jpg";
 // import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
@@ -180,7 +180,7 @@ const {
     </div>
     <div class="main-content">
       <div class="public-login phone-login" v-show="!show">
-        <img :src="CodePosition" class="login-type" @click="change" />
+        <!-- <img :src="CodePosition" class="login-type" @click="change" /> -->
         <a-tabs v-model:activeKey="activeKey">
           <a-tab-pane key="password" tab="密码登录">
             <a-form :layout="formState.layout" :model="formState">
