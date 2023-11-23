@@ -114,6 +114,9 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
 .t-orange{
   color:#FEA000;
 }
+.t-blue{
+  color:#1677ff;
+}
 .b-base {
   display: block;
   float: right;
@@ -162,14 +165,6 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
   cursor: pointer;
   font-size: 16px;
   /* border: 1px solid #56BEB2!important; */
-}
-.b-submit{
-  /* width: 400px!important; */
-}
-.b-submit:hover {
-  /* background: #18B799;
-  font-weight: bold;
-  color: #fff!important; */
 }
 a{
   cursor: pointer;

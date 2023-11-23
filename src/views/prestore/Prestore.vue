@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, defineComponent, reactive} from "vue";
 import Payment from "../../assets/order/payment.png";
-import Add from "../../assets/order/i-add.png";
+// import Add from "../../assets/order/i-add.png";
 import IconRecomends from "../../assets/order/i-ecommend.png";
 import { notification, Form } from "ant-design-vue";
 import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
@@ -13,12 +13,12 @@ const formState = reactive({
   // no: "",
   name: "",
 });
-const visible = ref(false);
+const visible= ref(false);
 const checked = ref(false);
 
 const showModal = () => {
-  visible.value = true;
-  cancelText="取消";
+  visible = visible.value = true;
+  // cancelText="取消";
   // Modal.method() =>{
   //    Modal.cancelText:"新增发票信息";
 
@@ -261,12 +261,7 @@ const showModal = () => {
         <div class="content-invoice clear">
           <div class="h3 f-fl">发票抬头</div>
           <div class="invoice-add f-fl">
-            <div class="m-add">
-              <img class="i-add" :src="Add" />
-
-            </div>
-            <div class="t-new-add">新增发票抬头</div>
-            <!-- <span>新增发票抬头</span> -->
+            <div class="t-new-add t-blue"><span class="text-add">+</span><span class="">新增发票抬头</span></div>
             <a-button type="primary" @click="showModal" class="t-add"></a-button>
           </div>
           <div></div>
@@ -569,10 +564,8 @@ const showModal = () => {
   content: "";
   width: 4px;
   height: 20px;
-
-  background: #56beb2;
+  background: #1677ff;
   margin-right: 8px;
-  // margin-top:3px;
 }
 .app_tips {
   margin-bottom: 17px;
@@ -589,47 +582,45 @@ const showModal = () => {
 }
 .invoice-add {
   position: relative;
-  width: 966px;
+  width: 904px;
   height: 44px;
   background: #ffffff;
   border-radius: 2px;
-  // border: 1px dashed #98d3cc;
+  border: 1px dashed #1677ff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  cursor: pointer; 
+  
   .t-add{
-    width: 100% !important;
+    width: 900px !important;
   height: 40px !important;
   background: #ffffff !important;
+  // border-radius: 2px !important;
   border-radius: 2px !important;
-  border: 1px dashed #98d3cc !important;
+  border: 1px dashed #1677ff !important;
+  // border:none;
   box-shadow:none;
-      color: #56BEB2;
-
+      color: #1677ff;
+   cursor: pointer; 
+   z-index: 999;
+   opacity: 0;
   }
 }
-.m-add{
-   position:absolute;
-  top:8px;
-  left: 420px;
-  display: block;
-  width: 16px;
-  height: 16px;
-  z-index: 99;
-}
-.i-add {
-  width: 100%;
-  height: 100%;
-  // position:absolute;
-  // top:5px;
-  // left: 200px;
-  // display: block;
-  // width: 32px;
-  // height: 32px;
-  // z-index: 99;
-  // margin-right: 8px;
-}
+// .m-add{
+//    position:absolute;
+//   top:8px;
+//   left: 390px;
+//   display: block;
+//   width: 16px;
+//   height: 16px;
+//   z-index: 99;
+// }
+// .i-add {
+//   width: 100%;
+//   height: 100%;
+// }
 .mail-tips {
   line-height: 20px;
   font-size: 12px;
@@ -651,7 +642,7 @@ const showModal = () => {
   .submit-button {
     width: 140px;
     height: 48px;
-    background: #56beb2;
+    background: #1677ff;
     line-height: 48px;
     color: #fff;
     text-align: center;
@@ -679,5 +670,20 @@ const showModal = () => {
   margin-left: 134px;
   margin-top:5px;
   color: #606266;
+}
+.t-new-add{
+  position: absolute;
+  top:10px;
+  left: 420px;
+  width: 100px;
+  height: 20px;
+  line-height: 20px;
+  color: #1677ff !important;
+  z-index: 999;
+  font-size: 14px;
+  .text-add{
+    padding-right: 4px;
+    font-size: 18px;
+  }
 }
 </style>
