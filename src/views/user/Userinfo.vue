@@ -159,5 +159,4 @@ const formState = reactive({
   </main>
 </template>
 <style lang="scss">
-
 </style>

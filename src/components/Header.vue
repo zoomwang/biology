@@ -18,16 +18,33 @@ const route = useRoute();
 <template>
   <!-- <div class="header-title">
   </div> -->
-  <div class="header d-flex">
-    <div class="logo">
-      <img :src="Logo" style="width: 258px; height: auto" />
+  <div class="header-wrap">
+    <div class="header d-flex">
+      <div class="logo">
+        <img :src="Logo" style="width: 258px; height: auto" />
+      </div>
+      <LoginComponent class="f-fr" style="flex: 1" />
     </div>
-    <LoginComponent class="f-fr" style="flex: 1" />
   </div>
+  <div class="bg">
   <HeaderContent v-if="!route?.fullPath.includes('home')" />
+  </div>
 </template>
 
 <style scoped lang="scss">
+.header-wrap{
+  background: #fff;
+}
+.bg{
+  z-index: 9999;
+	width: 100%;
+	height: 59px;
+	background: #FFF;
+	// padding-top: 29px;
+	transition: all .8s linear;
+	overflow: hidden;
+  box-shadow: 3px 3px 4px 0px rgba(0, 0, 0, 0.1);
+}
 .header-title {
   width: 100%;
   height: 34px;

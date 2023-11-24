@@ -315,9 +315,6 @@ body {
   height: auto !important;
   min-height: 100%;
 }
-#app {
-  height: auto;
-}
 .container .public-login {
   position: relative;
   width: 400px;

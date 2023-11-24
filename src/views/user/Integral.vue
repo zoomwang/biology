@@ -159,5 +159,27 @@ const formState = reactive({
   </main>
 </template>
 <style lang="scss">
-
+.container-userinfo{
+  width: 980px;
+  margin: 30px auto;
+  background-color: #fff;
+  .h2{
+    padding-left: 50px;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    margin-bottom: 30px;
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+  .l-item {
+    width: 500px;
+  }
+  .t-title{
+    width: 150px;
+    text-align: right;
+  }
+  .l-identity{
+    margin-bottom: 20px;
+  }
+}
 </style>

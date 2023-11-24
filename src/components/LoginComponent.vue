@@ -26,20 +26,6 @@ watch(key, async (newdata, olddata) => {
   console.log('localStorage.isLogin==', localStorage.isLogin)
 })
 
-// const islogged = ref(false);
-// const checkIsLogged = async function() {
-//   // console.log(localStorage.isLogin);
-//   // if (localStorage.isLogin) {
-//   //   islogged.value = true;
-//   // } else {
-//   //   islogged.value = false;
-//   // }
-//   // debugger
-// }
-// onMounted(() => {
-//   checkIsLogged();
-// });
-
 const setLogout = async function () {
   localStorage.clear();
   notification.success({
@@ -48,11 +34,7 @@ const setLogout = async function () {
   setTimeout(() => {
     router.push({name: "login"});
   }, 400)
-  // location.reload();
-  // const res = await logout();
-  // if (res?.code == 0 || res?.code == 401) {
-  //   islogged.value = false;
-  // } 
+
 }
 
 </script>

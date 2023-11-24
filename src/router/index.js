@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../views/login/Login.vue';
+// import Login from '../views/login/Login.vue';
 // import Register from '../views/login/Register.vue';
 // import FindPassword from '../views/login/FindPassword.vue';
 
@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: '/home/login',
       name: 'login',
-      component: Login
+      component: import('../views/login/Login.vue')
     },
     {
       path: '/home/register',
@@ -31,7 +31,7 @@ const router = createRouter({
     {
       path: '/user/userinfo',
       name: 'userinfo',
-      component: () => import('../views/login/Userinfo.vue')
+      component: () => import('../views/user/Index.vue')
     },
     {
       path: '/home/order-reservation',
@@ -55,5 +55,4 @@ const router = createRouter({
     }
   ]
 })
-
 export default router

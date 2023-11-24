@@ -42,19 +42,16 @@ console.log("当前路由：", route);
 </template>
 
 <style scoped>
-#app{
-  height: 100%;
-}
 .wrap-l {
-  width: 970px;
-  margin: 0 auto;
+  width: 1080px;
+  margin: 0 auto 20px;
 }
 .wrap-r {
   width: 220px;
 }
 .wrap {
   width: 1280px;
-  margin: 0 auto;
+  margin: 20px auto;
   /* padding: 2rem; */
   font-weight: normal;
   overflow: hidden;
