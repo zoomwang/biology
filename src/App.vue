@@ -42,8 +42,11 @@ console.log("当前路由：", route);
 </template>
 
 <style scoped>
+.user-wrap{
+  width: 1080px!important;
+}
 .wrap-l {
-  width: 1080px;
+  width: 970px;
   margin: 0 auto 20px;
 }
 .wrap-r {

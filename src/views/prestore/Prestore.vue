@@ -15,7 +15,6 @@ const formState = reactive({
 });
 const visible= ref(false);
 const checked = ref(false);
-
 const showModal = () => {
   visible = visible.value = true;
   // cancelText="取消";
@@ -43,7 +42,7 @@ const showModal = () => {
 </script>
 
 <template>
-  <main>
+  <main class="wrap-prestore">
     <!-- 预存信息html -->
     <form class="content-prestore">
       <div class="payment">
@@ -219,7 +218,7 @@ const showModal = () => {
                   <span class="t-red">*</span>
                   <span>需要几张发票：</span>
                 </div>
-                <div class="total-ticket f-fl">
+                <div class="total-ticket ticket f-fl">
                   <a-radio-group
                     name="identity"
                     v-model:value="formState.identity"
@@ -228,6 +227,18 @@ const showModal = () => {
                     <a-radio value="2">多张发票</a-radio>
                   </a-radio-group>
                 </div>
+                <a-form-item class="f-fl">
+                    <a-input
+                      placeholder="请输入数量"
+                      style="
+                        width: 100px;
+                        height: 40px;
+                        padding-left: 12px;
+                        border: 1px solid rgba(0, 0, 0, 0.15);
+                        border-radius: 4px;
+                      "
+                    />
+                  </a-form-item>
               </div>
               <div class="clear item-detection">
                 <div class="t-title f-fl">项目检测：</div>
@@ -276,7 +287,7 @@ const showModal = () => {
             <a-form-item class="f-fl">
               <a-input
                 style="
-                  width: 200px;
+                  width: 300px;
                   height: 40px;
                   padding-left: 12px;
                   margin-bottom: 0px;
@@ -411,6 +422,10 @@ const showModal = () => {
   </main>
 </template>
 <style lang="scss">
+.wrap-prestore{
+  padding: 8px 30px 70px;
+  background: #fff;
+}
 .h3 {
   line-height: 22px;
   padding: 16px 0;
@@ -451,7 +466,7 @@ const showModal = () => {
 .lfirst-payment {
   position: relative;
   height: 80px;
-  margin-top: 40px;
+  // margin-top: 40px;
   .i-img {
     position: absolute;
     display: block;
@@ -527,6 +542,9 @@ const showModal = () => {
     display: inline;
     line-height: 20px;
   }
+}
+.ticket{
+  margin-top:6px;
 }
 .attached-files-li {
   height: 50px;
@@ -658,7 +676,11 @@ const showModal = () => {
   margin-bottom: 0px;
 }
 .invoice-mail {
-  margin-top: 10px;
+  // margin-top: 10px;
+  .t-title{
+    text-align: left;
+    width: 100px;
+  }
 }
 .m-mask{
   margin-bottom: 20px;

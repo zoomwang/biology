@@ -34,6 +34,11 @@ const router = createRouter({
       component: () => import('../views/user/Index.vue')
     },
     {
+      path: '/user/postdemand',
+      name: 'postdemand',
+      component: () => import('../views/user/PostDemand.vue')
+    },
+    {
       path: '/home/order-reservation',
       name: 'ordereservation',
       component: () => import('../views/login/OrderReservation.vue')
