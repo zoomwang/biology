@@ -7,6 +7,7 @@ const formState = reactive({
   identity: "2",
   no: "",
   name: "",
+  month: ""
 });
 
 // try {
@@ -112,6 +113,9 @@ const formState = reactive({
         <div class="l-item clear">
            <div class="t-title f-fl">入学年份：</div>
            <a-form-item class="f-fl">
+             <a-space direction="vertical">
+    <a-month-picker v-model:value="formState.month" placeholder="Select month" />
+  </a-space>
             <a-select
                 v-model:value="value2"
                 style="width: 120px; margin-right: 10px"

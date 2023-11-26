@@ -2,9 +2,10 @@
 import { ref, computed, defineComponent, reactive } from "vue";
 import Payment from "../../assets/order/payment.png";
 import IconRecomends from "../../assets/order/i-ecommend.png";
+import checkIcon from "../../assets/prestore/bill67.png";
+import uncheckIcon from "../../assets/prestore/bill66.png";
+import defaultIcon from "../../assets/prestore/bill73.png";
 import { Form } from "ant-design-vue";
-// import { notification, Form } from "ant-design-vue";
-// import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -17,23 +18,90 @@ const formState = reactive({
   amount: 0, //预存金额
   rebate: "", //预存返利
   remind: "", //预存备注
-  addition: [], //附加文件
+  addition: ['电子合同', '电子版测试清单', '电子报告'], //附加文件
   canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
   demand: "", //需求方名称
   detection: "", //项目检测
   mailBox: "", //收件邮箱
+  invoiceTitle: [{
+    "invoiceid": 174304,
+    "title": "广东工业大学",
+    "registrationo": "12330000470003281H",
+    "depositbank": "招商银行",
+    "banksn": "",
+    "registaddress": "阿时间考虑的",
+    "registphone": "15086726356",
+    "isdefault": 1,
+    "checked": true,
+  },{
+    "invoiceid": 174304,
+    "title": "广东工业大学111",
+    "registrationo": "12330000470003281H",
+    "depositbank": "招商银行111",
+    "banksn": "",
+    "registaddress": "阿时间考虑的",
+    "registphone": "15086726356",
+    "isdefault": 1,
+    // "checked": true,
+  }],
 });
 const formOptions = reactive({
   plainOptions: ['电子合同', '电子版测试清单', '电子报告']
 });
+const defaultInvoice = {
+  "invoiceid": "",
+  "title": "",
+  "registrationo": "",
+  "depositbank": "",
+  "banksn": "",
+  "registaddress": "",
+  "registphone": "",
+};
+let modelRef = reactive({
+    "invoiceid": "",
+    "title": "广东工业大学222",
+    "registrationo": "12330000470003281H",
+    "depositbank": "招商银行2",
+    "banksn": "441782783288",
+    "registaddress": "阿时间考虑的",
+    "registphone": "15086726356",
+    "isdefault": 1,
+  });
 const visible = ref(false);
 const checked = ref(false);
+const editInvoice = reactive({
+  isEditInvoice: false,
+  editIndex: 0,
+});
+const replaceChecked = (index) => {
+  formState.invoiceTitle.forEach((item) => {
+    item.isdefault = 0;
+    item.checked = false;
+  })
+  formState.invoiceTitle[index].isdefault = true; 
+  formState.invoiceTitle[index].checked = 1;  
+}
+
 const showModal = () => {
   visible = visible.value = true;
 };
+
+const hideModal = () => {
+  visible = visible.value = false;
+};
+
 const changeField = (type, value) => {
   formState[type] = value || !formState[type];
 };
+
+const handleOk = () => {
+  if(!editInvoice.isEditInvoice) {
+    formState.invoiceTitle.push(modelRef);
+  } else {
+    formState.invoiceTitle.splice(editInvoice.editIndex, 1, modelRef);
+  }
+  hideModal()
+}
 
 const { resetFields, validate, validateInfos } = useForm(
   formState,
@@ -57,6 +125,26 @@ const { resetFields, validate, validateInfos } = useForm(
   })
 );
 
+const onSubmit = () => {
+  validate()
+    .then(async(res) => {
+      try {
+        const data = await regitry({
+          ...formState
+        });
+        if (data?.code == 0) {
+          notification.success({
+            description: "注册成功",
+          });
+        }
+      } catch(err) {
+        alert(err);
+      }
+    })
+    .catch((err) => {
+      console.log("error", err);
+    });
+};
 // 预存页面prestore
 </script>
 
@@ -124,7 +212,7 @@ const { resetFields, validate, validateInfos } = useForm(
                 <span class="t-red"> *</span>
                 <span>预存金额：</span>
               </div>
-              <a-form-item class="f-fl" v-bind="validateInfos.mobile">
+              <a-form-item class="f-fl" v-bind="validateInfos.amount">
                 <a-input
                   placeholder="请输入预存金额(开票金额)"
                   class="t-gaincode f-fl prestore-input"
@@ -142,6 +230,7 @@ const { resetFields, validate, validateInfos } = useForm(
               <a-form-item class="f-fl">
                 <a-input
                   placeholder="0"
+                  disabled
                   class="t-gaincode f-fl prestore-input"
                   style="width: 250px"
                   v-model:value="formState.rebate"
@@ -158,6 +247,7 @@ const { resetFields, validate, validateInfos } = useForm(
                   placeholder="1，若以下没有您需要的发票类型，请备注所需发票类型；2，若需要加急开票，请填写【加急】字样；3，其它需要留言"
                   class="custom f-fl"
                   style="min-height: 80px"
+                  :maxlength="200"
                   v-model:value="formState.remind"
                 />
               </div>
@@ -285,14 +375,94 @@ const { resetFields, validate, validateInfos } = useForm(
           </div>
         </div>
         <div class="content-invoice clear">
-          <div class="h3 f-fl">发票抬头</div>
-          <div class="invoice-add f-fl">
+          <div class="h3">发票抬头</div>
+          <div class="card-wrap card-checked" v-for="(item, index) in formState.invoiceTitle" v-bind:key="item" v-show="item.checked" @click="() => {
+              replaceChecked(index)
+            }">
+            <a-descriptions class="card-list card-list-active" :column="2">
+              <a-descriptions-item label="发票抬头"><span>{{item.title}}</span><img width="40" height="18" class="default-icon" style="" :src="defaultIcon" /></a-descriptions-item>
+              <a-descriptions-item label="企业税号">{{item.registrationo}}</a-descriptions-item>
+              <a-descriptions-item label="开户行名称">{{item.depositbank}}</a-descriptions-item>
+              <a-descriptions-item label="开户行帐号">{{item.banksn}}</a-descriptions-item>
+              <a-descriptions-item label="注册地址">
+                {{item.registaddress}}
+              </a-descriptions-item>
+              <a-descriptions-item label="注册电话">
+                {{item.registphone}}
+              </a-descriptions-item>
+            </a-descriptions>
+            <div class="edit-btn-wrap">
+              <a class="b-edit" @click="() => {
+                editInvoice.isEditInvoice = true;
+                editInvoice.editIndex = index;
+                modelRef = formState.invoiceTitle[index];
+                showModal();
+              }">修改</a>
+              <a-popconfirm
+                title="你确定要删除吗？"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="() => {
+                  formState.invoiceTitle.splice(index, 1);
+                }"
+              >
+                <a class="b-delete" @click="() => {
+                  formState.invoiceTitle.splice(index, 1);
+                }">删除</a>
+              </a-popconfirm>
+            </div>
+            <img :src="checkIcon" class="card-icon icon-check" />
+          </div>
+          <a-collapse v-model:activeKey="activeKey" accordion expandIconPosition="right" :bordered="false">
+            <a-collapse-panel key="1" header="使用其他抬头">
+              <div class="card-wrap card-uncheck" v-for="(item, index) in formState.invoiceTitle" v-bind:key="item" v-show="!item.checked" @click="() => {
+                replaceChecked(index)
+                }">
+                <a-descriptions class="card-list" :column="2">
+                  <a-descriptions-item label="发票抬头">{{item.title}}</a-descriptions-item>
+                  <a-descriptions-item label="企业税号">{{item.registrationo}}</a-descriptions-item>
+                  <a-descriptions-item label="开户行名称">{{item.depositbank}}</a-descriptions-item>
+                  <a-descriptions-item label="开户行帐号">{{item.banksn}}</a-descriptions-item>
+                  <a-descriptions-item label="注册地址">
+                    {{item.registaddress}}
+                  </a-descriptions-item>
+                  <a-descriptions-item label="注册电话">
+                    {{item.registphone}}
+                  </a-descriptions-item>
+                </a-descriptions>
+                <div class="edit-btn-wrap">
+                  <a class="b-edit" @click="() => {
+                    editInvoice.isEditInvoice = true;
+                    editInvoice.editIndex = index;
+                    modelRef = formState.invoiceTitle[index];
+                    showModal();
+                  }">修改</a>
+                  <a-popconfirm
+                    title="你确定要删除吗？"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="() => {
+                      formState.invoiceTitle.splice(index, 1);
+                    }"
+                  >
+                    <a class="b-delete">删除</a>
+                  </a-popconfirm>
+                </div>
+                <img :src="checkIcon" class="card-icon icon-check" />
+                <img :src="uncheckIcon" class="card-icon icon-uncheck" />
+              </div>
+            </a-collapse-panel>
+          </a-collapse>
+          <div class="invoice-add">
             <div class="t-new-add t-blue">
               <span class="text-add">+</span><span class="">新增发票抬头</span>
             </div>
             <a-button
               type="primary"
-              @click="showModal"
+              @click="() => {
+                editInvoice.isEditInvoice = false;
+                showModal();
+              }"
               class="t-add"
             ></a-button>
           </div>
@@ -305,7 +475,7 @@ const { resetFields, validate, validateInfos } = useForm(
               <span class="t-red">*</span>
               <span>收件邮箱：</span>
             </div>
-            <a-form-item class="f-fl">
+            <a-form-item class="f-fl" v-bind="validateInfos.mailBox">
               <a-input
                 placeholder="请输入邮箱"
                 class="t-gaincode f-fl prestore-input"
@@ -319,17 +489,21 @@ const { resetFields, validate, validateInfos } = useForm(
       </div>
       <div class="m-button">
         <div class="m-submit">
-          <a-button type="primary" class="submit-button">提交预存申请</a-button>
+          <a-button type="primary" class="submit-button" @click.prevent="onSubmit">提交预存申请</a-button>
         </div>
       </div>
     </form>
     <!-- 弹层 -->
     <a-modal
+      class="prestore-modal-wrap"
       v-model:visible="visible"
-      title="新增发票信息"
+      :title="editInvoice.isEditInvoice? '编辑发票信息':'新增发票信息'"
       cancelText="取消"
       okText="确定"
       @ok="handleOk"
+      @cancel="() => {
+        modelRef = defaultInvoice;
+      }"
     >
       <form>
         <!-- <h3>新增发票信息</h3> -->
@@ -340,6 +514,7 @@ const { resetFields, validate, validateInfos } = useForm(
             </div>
             <a-form-item class="f-fl">
               <a-input
+                v-model:value="modelRef.title"
                 placeholder="仅填写开票抬头即可，例：浙江大学"
                 class="t-gaincode f-fl prestore-input"
               />
@@ -352,6 +527,7 @@ const { resetFields, validate, validateInfos } = useForm(
               </div>
               <a-form-item class="f-fl clear">
                 <a-input
+                  v-model:value="modelRef.registrationo"
                   placeholder="请输入"
                   class="t-gaincode f-fl prestore-input"
                 />
@@ -366,6 +542,7 @@ const { resetFields, validate, validateInfos } = useForm(
           <div class="t-title f-fl">开户行名称：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="modelRef.depositbank"
               placeholder="请输入"
               class="t-gaincode f-fl prestore-input"
             />
@@ -375,6 +552,7 @@ const { resetFields, validate, validateInfos } = useForm(
           <div class="t-title f-fl">开户行账号：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="modelRef.banksn"
               placeholder="请输入"
               class="t-gaincode f-fl prestore-input"
             />
@@ -384,6 +562,7 @@ const { resetFields, validate, validateInfos } = useForm(
           <div class="t-title f-fl">注册地址：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="modelRef.registaddress"
               placeholder="请输入"
               class="t-gaincode f-fl prestore-input"
             />
@@ -393,6 +572,7 @@ const { resetFields, validate, validateInfos } = useForm(
           <div class="t-title f-fl">注册电话：</div>
           <a-form-item class="f-fl">
             <a-input
+              v-model:value="modelRef.registphone"
               placeholder="请输入"
               class="t-gaincode f-fl prestore-input"
             />
@@ -404,9 +584,62 @@ const { resetFields, validate, validateInfos } = useForm(
   </main>
 </template>
 <style lang="scss">
+.prestore-modal-wrap{
+  width: 600px!important;
+}
+.card-list{
+  padding: 15px;
+  // background: #FBFFFF;
+	border: 1px solid #EEEEEE;
+  cursor: pointer;
+}
+.card-list-active,.card-list:hover{
+  background:  #FBFFFF;
+  border-color: #4096ff;
+}
+.card-wrap{
+  position: relative;
+  .card-icon{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 36px;
+    height: 36px;
+  }
+  .default-icon{
+position:relative;top:4px;margin-left: 3px;
+  }
+}
+.card-wrap:hover{
+  .icon-uncheck{
+    display: none;
+  }
+  .edit-btn-wrap{
+    display: block;
+  }
+}
+.card-checked{
+  padding: 16px;
+  padding-bottom: 0;
+  .card-icon{
+    right: 16px;
+    bottom: 0;
+  }
+}
+.card-uncheck{
+  margin-bottom: 10px;
+}
+.content-invoice{
+  .ant-descriptions-item-content{
+
+  }
+}
 .wrap-prestore {
-  padding: 8px 30px 70px;
+  padding: 8px 30px 0;
   background: #fff;
+  .ant-collapse{
+    background: transparent;
+  }
 }
 .h3 {
   line-height: 22px;
@@ -435,8 +668,8 @@ const { resetFields, validate, validateInfos } = useForm(
 }
 .l-payment {
   min-height: 40px;
-  height: 50px;
-  margin-top: 15px;
+  height: 60px;
+  margin-bottom: 5px;
 }
 .t-unil {
   line-height: 34px;
@@ -580,9 +813,21 @@ const { resetFields, validate, validateInfos } = useForm(
   padding: 20px 0 10px 44px;
   box-sizing: border-box;
 }
+.content-invoice{
+  position: relative;
+  .edit-btn-wrap{
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    .b-delete{
+      margin-left: 10px;
+    }
+  }
+}
 .invoice-add {
   position: relative;
-  width: 904px;
+  width: 850px;
   height: 44px;
   background: #ffffff;
   border-radius: 2px;
@@ -608,19 +853,6 @@ const { resetFields, validate, validateInfos } = useForm(
     opacity: 0;
   }
 }
-// .m-add{
-//    position:absolute;
-//   top:8px;
-//   left: 390px;
-//   display: block;
-//   width: 16px;
-//   height: 16px;
-//   z-index: 99;
-// }
-// .i-add {
-//   width: 100%;
-//   height: 100%;
-// }
 .mail-tips {
   line-height: 20px;
   font-size: 12px;
@@ -628,14 +860,16 @@ const { resetFields, validate, validateInfos } = useForm(
   padding-top: 3px;
 }
 .m-button {
-  width: 1200px;
+  // width: 1200px;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
+  box-shadow: 0px -3px 6px 0px rgba(0, 0, 0, 0.08);
   .m-submit {
     width: 100%;
     height: 80px;
     background: #ffffff;
-    box-shadow: 0px -3px 6px 0px rgba(0, 0, 0, 0.08);
+    // box-shadow: 0px -3px 6px 0px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     box-sizing: border-box;
   }
@@ -665,13 +899,21 @@ const { resetFields, validate, validateInfos } = useForm(
   }
 }
 .m-mask {
+  width: 700px;
   margin-bottom: 20px;
   .t-title {
+    width: 120px;
     color: #606266;
+  }
+  .ant-form-item{
+    width: 430px;
+  }
+  .prestore-input{
+    width: 430px;
   }
 }
 .checkbox {
-  margin-left: 134px;
+  margin-left: 124px;
   margin-top: 5px;
   color: #606266;
 }
