@@ -1,43 +1,62 @@
 <script setup>
-import { ref, computed, defineComponent, reactive} from "vue";
+import { ref, computed, defineComponent, reactive } from "vue";
 import Payment from "../../assets/order/payment.png";
-// import Add from "../../assets/order/i-add.png";
 import IconRecomends from "../../assets/order/i-ecommend.png";
-import { notification, Form } from "ant-design-vue";
-import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
+import { Form } from "ant-design-vue";
+// import { notification, Form } from "ant-design-vue";
+// import { UserOutlined, InfoCircleOutlined } from "@ant-design/icons-vue";
 
+const useForm = Form.useForm;
 const formState = reactive({
   // layout: "horizontal",
-  identity: "1",
-  identitys: "1",
-  // no: "",
-  name: "",
+  payType: 0, //支付类型，0、1表示
+  invoiceNum: 1, // 发票数量
+  payAccount: 0,//预存账户，0、1表示
+  welfare: 0, //福利
+  invoiceType: 0, //发票类型
+  amount: 0, //预存金额
+  rebate: "", //预存返利
+  remind: "", //预存备注
+  addition: [], //附加文件
+  canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
+  demand: "", //需求方名称
+  detection: "", //项目检测
+  mailBox: "", //收件邮箱
 });
-const visible= ref(false);
+const formOptions = reactive({
+  plainOptions: ['电子合同', '电子版测试清单', '电子报告']
+});
+const visible = ref(false);
 const checked = ref(false);
 const showModal = () => {
   visible = visible.value = true;
-  // cancelText="取消";
-  // Modal.method() =>{
-  //    Modal.cancelText:"新增发票信息";
-
-  // }
-  // Modal.cancelText:"新增发票信息";
 };
-// const modal = Modal.info();
+const changeField = (type, value) => {
+  formState[type] = value || !formState[type];
+};
 
-// modal.destroy();
-// const handleOk = (e: MouseEvent) => {
-//   console.log(e);
-//   visible.value = false;
-// };
-// return {
-//   visible,
-//   showModal,
-//   handleOk,
-// };
+const { resetFields, validate, validateInfos } = useForm(
+  formState,
+  reactive({
+    amount: [
+      {
+        required: true,
+        message: "预存金额不能少于1000",
+        pattern: (num) => {
+          return num > 1000;
+        }
+      },
+    ],
+    mailBo: [
+      {
+        required: true,
+        message: "请输入正确格式邮箱",
+        pattern: /\w[-.\w]*\@[-a-z0-9]+(\.[-a-z0-9]+)*\.(com|cn|edu|uk)/ig
+      },
+    ],
+  })
+);
 
-// import TheWelcome from '@/components/Wx.vue';
 // 预存页面prestore
 </script>
 
@@ -57,15 +76,22 @@ const showModal = () => {
                 <span class="t-red"> *</span>
                 <span>支付方式：</span>
               </div>
-              <button type="primary" class="payway b-base-button">
-                对公转账
-              </button>
-              <button
+              <a-button
                 type="primary"
-                class="payway b-base-button-active b-base-button"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': !formState.payType }"
+                @click="changeField('payType', 0)"
+              >
+                对公转账
+              </a-button>
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': formState.payType }"
+                @click="changeField('payType', 1)"
               >
                 扫码支付
-              </button>
+              </a-button>
               <div class="i-img">
                 <img :src="Payment" class="i-payment" />
               </div>
@@ -75,31 +101,35 @@ const showModal = () => {
                 <span class="t-red"> *</span>
                 <span>预存账户：</span>
               </div>
-              <a-button type="primary" class="b-base-button">个人账户</a-button>
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': !formState.payAccount }"
+                >个人账户</a-button
+              >
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
                 <span class="t-red"> *</span>
                 <span>预存福利：</span>
               </div>
-              <a-button type="primary" class="b-base-button">测试费</a-button>
+              <a-button 
+              type="primary" 
+              class="b-base-button"
+              :class="{ 'b-base-button-active': !formState.welfare }"
+              >测试费</a-button>
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
                 <span class="t-red"> *</span>
                 <span>预存金额：</span>
               </div>
-              <a-form-item class="f-fl">
+              <a-form-item class="f-fl" v-bind="validateInfos.mobile">
                 <a-input
-                  style="
-                    width: 250px;
-                    height: 40px;
-                    padding-left: 12px;
-                    border: 1px solid rgba(0, 0, 0, 0.15);
-                    border-radius: 4px;
-                  "
                   placeholder="请输入预存金额(开票金额)"
-                  class="t-gaincode f-fl"
+                  class="t-gaincode f-fl prestore-input"
+                  style="width: 250px"
+                  v-model:value="formState.amount"
                 />
               </a-form-item>
               <span class="t-unil">元</span>
@@ -111,15 +141,10 @@ const showModal = () => {
               </div>
               <a-form-item class="f-fl">
                 <a-input
-                  style="
-                    width: 250px;
-                    height: 40px;
-                    padding-left: 12px;
-                    border: 1px solid rgba(0, 0, 0, 0.15);
-                    border-radius: 4px;
-                  "
                   placeholder="0"
-                  class="t-gaincode f-fl"
+                  class="t-gaincode f-fl prestore-input"
+                  style="width: 250px"
+                  v-model:value="formState.rebate"
                 />
               </a-form-item>
               <span class="t-unil">元</span>
@@ -133,6 +158,7 @@ const showModal = () => {
                   placeholder="1，若以下没有您需要的发票类型，请备注所需发票类型；2，若需要加急开票，请填写【加急】字样；3，其它需要留言"
                   class="custom f-fl"
                   style="min-height: 80px"
+                  v-model:value="formState.remind"
                 />
               </div>
               <div id="charCount" class="remark-tips">
@@ -153,13 +179,19 @@ const showModal = () => {
                 <span>发票类型：</span>
               </div>
               <div
-                class="electronic-invoices invoices-style-l invoices-style-active"
+                class="electronic-invoices invoices-style-l"
+                :class="{ 'invoices-style-active': !formState.invoiceType }"
+                @click="changeField('invoiceType', 0)"
               >
                 <p>电子增值税普通发票</p>
                 <p>最快5分钟开具</p>
                 <img :src="IconRecomends" class="i-payment" />
               </div>
-              <div class="paper-invoices invoices-style-l">
+              <div 
+              class="paper-invoices invoices-style-l"
+              :class="{ 'invoices-style-active': formState.invoiceType }"
+              @click="changeField('invoiceType', 1)"
+              >
                 <p>纸质增值税专用发票</p>
                 <p>预计7天内送达</p>
               </div>
@@ -170,40 +202,31 @@ const showModal = () => {
                 <span>开票总额：</span>
               </div>
               <div class="total-ticket f-fl">
-                <span class="">0</span>
+                <span class="">{{formState.amount}}</span>
                 <span>元</span>
               </div>
             </div>
             <div class="clear attached-files-li">
               <div class="t-title f-fl">附加文件：</div>
               <div class="attached-files f-fl">
-                <a-radio-group
-                  name="identitys"
-                  v-model:value="formState.identitys"
-                  style="height: 50px; line-height: 50px"
-                >
-                  <a-radio value="1">电子合同</a-radio>
-                  <a-radio value="2">电子版测试清单</a-radio>
-                  <a-radio value="3">电子报告</a-radio>
-                </a-radio-group>
+                <a-checkbox-group name="addition" v-model:value="formState.addition" :options="formOptions.plainOptions" />
               </div>
             </div>
             <div class="clear">
               <div class="t-title f-fl">需方名称：</div>
               <div class="f-fl">
-                <!-- <a-form-item>
-                  <a-input placeholder="请输入手机号" />
-                </a-form-item> -->
                 <a-form-item class="f-fl">
                   <a-input
                     style="width: 180px"
                     placeholder=""
                     class="t-gaincode f-fl"
+                    :disabled="!formState.canEdit"
+                    v-model:value="formState.demand"
                   >
                     <template #suffix>
-                      <a-tooltip title="Extra information">
-                        <a>修改</a>
-                      </a-tooltip>
+                      <a @click="() => {
+                        formState.canEdit = !formState.canEdit;
+                      }">{{!formState.canEdit ? "修改" : "确定"}}</a>
                     </template>
                   </a-input>
                 </a-form-item>
@@ -220,25 +243,21 @@ const showModal = () => {
                 </div>
                 <div class="total-ticket ticket f-fl">
                   <a-radio-group
-                    name="identity"
-                    v-model:value="formState.identity"
+                    name="invoiceNum"
+                    v-model:value="formState.invoiceNum"
                   >
-                    <a-radio value="1">一张发票</a-radio>
-                    <a-radio value="2">多张发票</a-radio>
+                    <a-radio :value=1>一张发票</a-radio>
+                    <a-radio :value=2>多张发票</a-radio>
                   </a-radio-group>
                 </div>
                 <a-form-item class="f-fl">
-                    <a-input
-                      placeholder="请输入数量"
-                      style="
-                        width: 100px;
-                        height: 40px;
-                        padding-left: 12px;
-                        border: 1px solid rgba(0, 0, 0, 0.15);
-                        border-radius: 4px;
-                      "
-                    />
-                  </a-form-item>
+                  <a-input
+                    placeholder="请输入数量"
+                    class="prestore-input"
+                    style="width: 100px"
+                    v-model:value="formState.invoiceNum"
+                  />
+                </a-form-item>
               </div>
               <div class="clear item-detection">
                 <div class="t-title f-fl">项目检测：</div>
@@ -246,13 +265,9 @@ const showModal = () => {
                   <a-form-item>
                     <a-input
                       placeholder="写于清单合同中的测试项目(可添加多个)"
-                      style="
-                        width: 550px;
-                        height: 40px;
-                        padding-left: 12px;
-                        border: 1px solid rgba(0, 0, 0, 0.15);
-                        border-radius: 4px;
-                      "
+                      class="prestore-input"
+                      style="width: 550px"
+                      v-model:value="formState.detection"
                     />
                   </a-form-item>
                 </div>
@@ -272,8 +287,14 @@ const showModal = () => {
         <div class="content-invoice clear">
           <div class="h3 f-fl">发票抬头</div>
           <div class="invoice-add f-fl">
-            <div class="t-new-add t-blue"><span class="text-add">+</span><span class="">新增发票抬头</span></div>
-            <a-button type="primary" @click="showModal" class="t-add"></a-button>
+            <div class="t-new-add t-blue">
+              <span class="text-add">+</span><span class="">新增发票抬头</span>
+            </div>
+            <a-button
+              type="primary"
+              @click="showModal"
+              class="t-add"
+            ></a-button>
           </div>
           <div></div>
         </div>
@@ -286,16 +307,9 @@ const showModal = () => {
             </div>
             <a-form-item class="f-fl">
               <a-input
-                style="
-                  width: 300px;
-                  height: 40px;
-                  padding-left: 12px;
-                  margin-bottom: 0px;
-                  border: 1px solid rgba(0, 0, 0, 0.15);
-                  border-radius: 4px;
-                "
                 placeholder="请输入邮箱"
-                class="t-gaincode f-fl"
+                class="t-gaincode f-fl prestore-input"
+                v-model:value="formState.mailBox"
               >
               </a-input>
             </a-form-item>
@@ -305,28 +319,29 @@ const showModal = () => {
       </div>
       <div class="m-button">
         <div class="m-submit">
-          <button class="submit-button">提交预存申请</button>
+          <a-button type="primary" class="submit-button">提交预存申请</a-button>
         </div>
       </div>
     </form>
     <!-- 弹层 -->
-    <a-modal v-model:visible="visible" title="新增发票信息" cancelText="取消" okText="确定" @ok="handleOk">
+    <a-modal
+      v-model:visible="visible"
+      title="新增发票信息"
+      cancelText="取消"
+      okText="确定"
+      @ok="handleOk"
+    >
       <form>
         <!-- <h3>新增发票信息</h3> -->
         <div class="content-mask">
           <div class="m-mask clear">
-            <div class="t-title f-fl"><span class="t-red">*</span>发票抬头：</div>
+            <div class="t-title f-fl">
+              <span class="t-red">*</span>发票抬头：
+            </div>
             <a-form-item class="f-fl">
               <a-input
-                style="
-                  width: 250px;
-                  height: 40px;
-                  padding-left: 12px;
-                  border: 1px solid rgba(0, 0, 0, 0.15);
-                  border-radius: 4px;
-                "
                 placeholder="仅填写开票抬头即可，例：浙江大学"
-                class="t-gaincode f-fl"
+                class="t-gaincode f-fl prestore-input"
               />
             </a-form-item>
           </div>
@@ -337,34 +352,22 @@ const showModal = () => {
               </div>
               <a-form-item class="f-fl clear">
                 <a-input
-                  style="
-                    width: 250px;
-                    height: 40px;
-                    padding-left: 12px;
-                    border: 1px solid rgba(0, 0, 0, 0.15);
-                    border-radius: 4px;
-                  "
                   placeholder="请输入"
-                  class="t-gaincode f-fl"
+                  class="t-gaincode f-fl prestore-input"
                 />
               </a-form-item>
             </div>
-            <a-checkbox v-model:checked="checked" class="checkbox">无税号单位</a-checkbox>
+            <a-checkbox v-model:checked="checked" class="checkbox"
+              >无税号单位</a-checkbox
+            >
           </div>
         </div>
-        <div class="m-mask clear ">
+        <div class="m-mask clear">
           <div class="t-title f-fl">开户行名称：</div>
           <a-form-item class="f-fl">
             <a-input
-              style="
-                width: 250px;
-                height: 40px;
-                padding-left: 12px;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                border-radius: 4px;
-              "
               placeholder="请输入"
-              class="t-gaincode f-fl"
+              class="t-gaincode f-fl prestore-input"
             />
           </a-form-item>
         </div>
@@ -372,15 +375,8 @@ const showModal = () => {
           <div class="t-title f-fl">开户行账号：</div>
           <a-form-item class="f-fl">
             <a-input
-              style="
-                width: 250px;
-                height: 40px;
-                padding-left: 12px;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                border-radius: 4px;
-              "
               placeholder="请输入"
-              class="t-gaincode f-fl"
+              class="t-gaincode f-fl prestore-input"
             />
           </a-form-item>
         </div>
@@ -388,15 +384,8 @@ const showModal = () => {
           <div class="t-title f-fl">注册地址：</div>
           <a-form-item class="f-fl">
             <a-input
-              style="
-                width: 250px;
-                height: 40px;
-                padding-left: 12px;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                border-radius: 4px;
-              "
               placeholder="请输入"
-              class="t-gaincode f-fl"
+              class="t-gaincode f-fl prestore-input"
             />
           </a-form-item>
         </div>
@@ -404,15 +393,8 @@ const showModal = () => {
           <div class="t-title f-fl">注册电话：</div>
           <a-form-item class="f-fl">
             <a-input
-              style="
-                width: 250px;
-                height: 40px;
-                padding-left: 12px;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                border-radius: 4px;
-              "
               placeholder="请输入"
-              class="t-gaincode f-fl"
+              class="t-gaincode f-fl prestore-input"
             />
           </a-form-item>
         </div>
@@ -422,7 +404,7 @@ const showModal = () => {
   </main>
 </template>
 <style lang="scss">
-.wrap-prestore{
+.wrap-prestore {
   padding: 8px 30px 70px;
   background: #fff;
 }
@@ -543,8 +525,8 @@ const showModal = () => {
     line-height: 20px;
   }
 }
-.ticket{
-  margin-top:6px;
+.ticket {
+  margin-top: 6px;
 }
 .attached-files-li {
   height: 50px;
@@ -609,21 +591,21 @@ const showModal = () => {
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  cursor: pointer; 
-  
-  .t-add{
+  cursor: pointer;
+
+  .t-add {
     width: 900px !important;
-  height: 40px !important;
-  background: #ffffff !important;
-  // border-radius: 2px !important;
-  border-radius: 2px !important;
-  border: 1px dashed #1677ff !important;
-  // border:none;
-  box-shadow:none;
-      color: #1677ff;
-   cursor: pointer; 
-   z-index: 999;
-   opacity: 0;
+    height: 40px !important;
+    background: #ffffff !important;
+    // border-radius: 2px !important;
+    border-radius: 2px !important;
+    border: 1px dashed #1677ff !important;
+    // border:none;
+    box-shadow: none;
+    color: #1677ff;
+    cursor: pointer;
+    z-index: 999;
+    opacity: 0;
   }
 }
 // .m-add{
@@ -660,8 +642,8 @@ const showModal = () => {
   .submit-button {
     width: 140px;
     height: 48px;
-    background: #1677ff;
-    line-height: 48px;
+    // background: #1677ff;
+    // line-height: 48px;
     color: #fff;
     text-align: center;
     border-radius: 4px;
@@ -677,25 +659,25 @@ const showModal = () => {
 }
 .invoice-mail {
   // margin-top: 10px;
-  .t-title{
+  .t-title {
     text-align: left;
     width: 100px;
   }
 }
-.m-mask{
+.m-mask {
   margin-bottom: 20px;
-  .t-title{
+  .t-title {
     color: #606266;
   }
 }
-.checkbox{
+.checkbox {
   margin-left: 134px;
-  margin-top:5px;
+  margin-top: 5px;
   color: #606266;
 }
-.t-new-add{
+.t-new-add {
   position: absolute;
-  top:10px;
+  top: 10px;
   left: 420px;
   width: 100px;
   height: 20px;
@@ -703,9 +685,16 @@ const showModal = () => {
   color: #1677ff !important;
   z-index: 999;
   font-size: 14px;
-  .text-add{
+  .text-add {
     padding-right: 4px;
     font-size: 18px;
   }
+}
+.prestore-input {
+  width: 250px;
+  height: 40px;
+  padding-left: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
 }
 </style>
