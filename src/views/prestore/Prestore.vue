@@ -827,7 +827,8 @@ position:relative;top:4px;margin-left: 3px;
 }
 .invoice-add {
   position: relative;
-  width: 850px;
+  width: 835px;
+  margin-left: 15px;
   height: 44px;
   background: #ffffff;
   border-radius: 2px;
@@ -860,11 +861,8 @@ position:relative;top:4px;margin-left: 3px;
   padding-top: 3px;
 }
 .m-button {
-  // width: 1200px;
   width: 100%;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  box-shadow: 0px -3px 6px 0px rgba(0, 0, 0, 0.08);
+  margin: 0 auto 20px 20px;
   .m-submit {
     width: 100%;
     height: 80px;
