@@ -26,8 +26,11 @@ const route = useRoute();
       <LoginComponent class="f-fr" style="flex: 1" />
     </div>
   </div>
-  <div class="bg">
-  <HeaderContent v-if="!route?.fullPath.includes('home')" />
+  <div v-if="!route?.fullPath.includes('home')">
+    <div class="bg" >
+    <HeaderContent />
+  </div>
+  
   </div>
 </template>
 

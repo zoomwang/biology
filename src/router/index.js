@@ -29,23 +29,13 @@ const router = createRouter({
       component: () => import('../views/login/Register.vue')
     },
     {
-      path: '/user/userinfo',
-      name: 'userinfo',
-      component: () => import('../views/user/Index.vue')
-    },
-    {
-      path: '/user/postdemand',
-      name: 'postdemand',
-      component: () => import('../views/user/PostDemand.vue')
-    },
-    {
       path: '/home/order-reservation',
       name: 'ordereservation',
       component: () => import('../views/login/OrderReservation.vue')
     },
     {
       path: '/home/find-password',
-      name: 'find-password',
+      name: 'findPassword',
       component: () => import('../views/login/FindPassword.vue')
     },
     {
@@ -54,9 +44,19 @@ const router = createRouter({
       component: () => import('../views/login/WXScan.vue')
     },
     {
-      path: '/account/prestore',
-      name: 'prestore',
+      path: '/user/prestore',
+      name: 'publishPrestore',
       component: () => import('../views/prestore/Prestore.vue')
+    },
+    {
+      path: '/user/userinfo',
+      name: 'userinfo',
+      component: () => import('../views/user/Index.vue')
+    },
+    {
+      path: '/user/publish-demand',
+      name: 'publishDemand',
+      component: () => import('../views/user/PostDemand.vue')
     }
   ]
 })

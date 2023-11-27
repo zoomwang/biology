@@ -34,15 +34,26 @@ const setLogout = async function () {
   setTimeout(() => {
     router.push({name: "login"});
   }, 400)
+}
 
+const toPublishPrestore = () => {
+  router.push({name: "publishPrestore"});
+}
+
+const toPublish = () => {
+  router.push({name: "publishPrestore"});
+}
+
+const toDemand = () => {
+  router.push({name: "publishDemand"});
 }
 
 </script>
 
 <template>
-  <div class="login-component d-flex" v-if="route?.fullPath.includes('userinfo')">
-    <a-button type="primary" class="预存" >预存</a-button>
-    <a-button class="">发布需求</a-button>
+  <div class="login-component d-flex" v-if="!route?.fullPath.includes('home')">
+    <a-button type="primary" class="预存" @click="toPublishPrestore">预存</a-button>
+    <a-button class="" @click="toDemand">发布需求</a-button>
     <div class="new-login" v-if="!islogged">
       <a href="/home/login">登录</a> |
       <a href="/home/register" class="schoolRegister">注册</a>
