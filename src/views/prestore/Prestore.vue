@@ -67,7 +67,7 @@ let modelRef = reactive({
     "registphone": "15086726356",
     "isdefault": 1,
   });
-const visible = ref(false);
+let visible = ref(false);
 const checked = ref(false);
 const editInvoice = reactive({
   isEditInvoice: false,
