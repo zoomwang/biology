@@ -3,23 +3,16 @@
 import { ref, computed, reactive, defineComponent } from "vue";
 import { isLogged } from "../../services/user";
 import { identity } from "./config";
+import areaData from "../../public/area.js";
 const formState = reactive({
-  layout: "horizontal",
-  identity: "2",
-  no: "",
-  name: "",
-  month: "",
+  address: ""
 });
+console.log("aeraData==", areaData)
 
 const onSubmit = () => {
   console.log(formState);
 };
 
-// try {
-//   const data = isLogged();
-// } catch(err) {
-//   alert(err);
-// }
 </script>
 
 <template>
@@ -28,7 +21,10 @@ const onSubmit = () => {
     <div class="l-item clear">
       <div class="t-label f-fl">登录账号：</div>
       <a-form-item class="f-fl">
-        <a-input v-model:value="formState.no" placeholder="请输入手机号" />
+        <!-- <a-input v-model:value="formState.no" placeholder="请输入手机号" /> -->
+        <a-button type="primary" class="b-submit-button f-fl" @click.prevent="onSubmit"
+          >点击查看联系方式</a-button
+        >
       </a-form-item>
     </div>
     <div class="l-item clear">
@@ -59,9 +55,11 @@ const onSubmit = () => {
     <div class="l-item clear">
       <div class="t-label f-fl">地区：</div>
       <a-form-item class="f-fl">
-        <a-select v-model:value="value2">
-          <a-select-option value="lucy">Lucy</a-select-option>
-        </a-select>
+        <a-cascader
+          showSearch
+          :options="areaData"
+          v-model="formState.address"
+        />
       </a-form-item>
     </div>
     <div class="l-item clear">
@@ -103,7 +101,7 @@ const onSubmit = () => {
           <a-month-picker
             style="width:300px"
             v-model:value="formState.month"
-            placeholder="Select month"
+            placeholder="请选择入学年份"
           />
         </a-space>
       </a-form-item>
@@ -115,7 +113,7 @@ const onSubmit = () => {
           <a-month-picker
             style="width:300px"
             v-model:value="formState.month"
-            placeholder="Select month"
+            placeholder="请选择毕业年份"
           />
         </a-space>
       </a-form-item>

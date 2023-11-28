@@ -8,6 +8,9 @@ import 'ant-design-vue/dist/reset.css';
 import axios from 'axios';
 // import localStorage from "./hooks/localStorage.js";
 // Vue.use(Antd)
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+dayjs.locale('zh-cn');
 
 const app = createApp(App);
 app.config.globalProperties.$http = axios;

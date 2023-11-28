@@ -51,6 +51,7 @@ const map = reactive({
 </template>
 <style lang="scss">
 .user-wrap{
+  margin-bottom: 0!important;
   .content{
     flex: 1;
     // margin-left: 15px;
@@ -61,7 +62,7 @@ const map = reactive({
   width: 150px;
   height: 100%;
   padding: 10px 0;
-  margin-left: 40px;
+  // margin-left: 40px;
   .ant-menu-item {
     padding-left: 0!important;
     padding-right: 0!important;

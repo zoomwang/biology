@@ -10,11 +10,9 @@ const formState = reactive({
   month: ""
 });
 
-// try {
-//   const data = isLogged();
-// } catch(err) {
-//   alert(err);
-// }
+const handerChange = (data) => {
+  console.log(data);
+}
 
 </script>
 

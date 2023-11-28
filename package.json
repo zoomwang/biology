@@ -12,11 +12,13 @@
     "ant-design-vue": "^4.0.0-rc.6",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
+    "dayjs": "^1.11.10",
     "node-sass": "^9.0.0",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "scss": "^0.2.4",
     "vue": "^3.3.4",
+    "vue-area-cascader": "^1.0.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {

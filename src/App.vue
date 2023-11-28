@@ -7,6 +7,7 @@ import Wx from "../src/components/Wx.vue";
 import { isLogged } from "../src/services/user";
 import $localStorage from "./hooks/localStorage";
 import router from './router';
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
 
 const checkIslogged = async function() {
   try {
@@ -29,16 +30,18 @@ console.log("当前路由：", route);
 // router.push({ path: "/home" });
 </script>
 
-<template>
-  <Header></Header>
-  <div class="wrap">
-    <RouterView class="wrap-l" />
-    <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
-    <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
-      <Wx />
+<template :locale="zhCN">
+  <a-config-provider :locale="zhCN">
+    <Header></Header>
+    <div class="wrap">
+      <RouterView class="wrap-l" />
+      <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
+      <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
+        <Wx />
+      </div>
     </div>
-  </div>
-  <Footer></Footer>
+    <Footer></Footer>
+  </a-config-provider>
 </template>
 
 <style scoped>
