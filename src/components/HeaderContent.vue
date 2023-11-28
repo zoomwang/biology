@@ -329,14 +329,15 @@ h3 {
   text-align: center;
 }
 .ant-dropdown-link{
-  /* display: inline-block;
-    height: 30px;
-    line-height: 22px;
-    padding: 0 0 8px; */
-  margin-right: 20px;
+
+    padding: 0 0 8px;
+  margin-right:40px;
   font-size: 16px;
     color: #424242 !important;
     font-weight: bold;
+}
+.ant-dropdown-link:last-child{
+  margin-right: 0;
 }
 @media (min-width: 1024px) {
   .greetings h1,

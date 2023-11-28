@@ -65,9 +65,9 @@ const route = useRoute();
   }
 }
 .header {
-  width: 1200px;
+  width: 1280px;
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: 22px;
 }
 .head-link {
   display: inline-block;
