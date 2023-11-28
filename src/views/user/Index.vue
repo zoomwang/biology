@@ -1,6 +1,7 @@
 <script setup>
 import UserInfo from './Userinfo.vue';
 import { ref, computed, reactive, defineComponent } from "vue";
+import { menus } from './config';
 const state = reactive({
   mode: "inline",
   theme: "light",
@@ -18,24 +19,33 @@ const map = reactive({
   <main class="d-flex user-wrap">
     <a-menu
       class="user-menu"
-      v-model:openKeys="state.openKeys"
       v-model:selectedKeys="state.selectedKeys"
       :mode="state.mode"
       :theme="state.theme"
+      @select="() => {
+        console.log(state.selectedKeys)
+      }"
     >
       <h2>账号管理</h2>
-      <a-menu-item key="userData">
-        <template #icon> </template>
-        个人资料
-      </a-menu-item>
-      <a-menu-item key="userIntegral">
-        <template #icon> </template>
-        我的积分
-      </a-menu-item>
+      <template v-for="item in menus" :key="item.value">
+        <a-menu-item  v-if="item.type == 'userMenu'" :key="item.value">
+          <template #icon> </template>
+          {{ item.label }}
+        </a-menu-item>
+      </template>
       <h2>订单管理</h2>
+      <template v-for="item in menus" :key="item.value">
+        <a-menu-item  v-if="item.type == 'orderMenu'" :key="item.value">
+          <template #icon> </template>
+          {{ item.label }}
+        </a-menu-item>
+      </template>
+      
     </a-menu>
     <div class="content">
-      <UserInfo v-show="state.selectedKeys == 'userData'" />
+      <a-card title="用户资料" :bordered="false">
+        <UserInfo v-if="state.selectedKeys.includes('userData')" />
+      </a-card>
     </div>
   </main>
 </template>
@@ -43,7 +53,7 @@ const map = reactive({
 .user-wrap{
   .content{
     flex: 1;
-    margin-left: 15px;
+    // margin-left: 15px;
     background: #fff;
   }
 }

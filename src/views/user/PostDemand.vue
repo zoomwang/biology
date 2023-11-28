@@ -149,7 +149,7 @@ const { resetFields, validate, validateInfos } = useForm(
             <span class="remind">需求尽量详细，以便更精确的匹配到合适的测试项目</span>
           </a-form-item>
         </div>
-        <a-button type="primary" class="submit-button f-fl" @click.prevent="onSubmit"
+        <a-button type="primary" class="b-submit-button f-fl" @click.prevent="onSubmit"
           >提交需求</a-button
         >
         </a-form>
@@ -185,7 +185,7 @@ const { resetFields, validate, validateInfos } = useForm(
   .postdemand-item {
     width: 700px;
     margin: 0 auto;
-    .submit-button{
+    .b-submit-button{
       width: 100px;
       text-align: center;
       height: 40px;

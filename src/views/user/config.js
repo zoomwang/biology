@@ -36,3 +36,38 @@ export const demandOptions = [
     value: 'Orange',
   },
 ]
+
+export const menus = [{
+  label: "个人资料",
+  value: "userData",
+  type: "userMenu"
+},{
+  label: "我的积分",
+  value: "userIntegral",
+  type: "userMenu"
+},{
+  label: "订单情况",
+  value: "order",
+  type: "orderMenu"
+}];
+
+export const identity = [{
+  label: "学生",
+  value: "students",
+},{
+  label: "教职工",
+  value: "teacher",
+},{
+  label: "企业",
+  value: "company",
+},{
+  label: "医院",
+  value: "hospitor",
+},{
+  label: "个人",
+  value: "personer",
+}]
+
+// export const getLabelFromVal = (value) => {
+//   const 
+// }
