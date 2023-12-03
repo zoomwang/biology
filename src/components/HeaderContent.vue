@@ -1,318 +1,76 @@
 <script setup>
+import { ref } from "vue";
+import router from '../router';
+
+const dropdown = ref(null);
 defineProps({
   msg: {
     type: String,
-    required: true
-  }
-})
+    required: true,
+  },
+});
+const activeKey = ref("index");
+const nav = ref([{
+  key: "index",
+  title: "首页"
+},{
+  key: "high",
+  title: "高端测试"
+},{
+  key: "material",
+  title: "材料测试"
+},{
+  key: "biology",
+  title: "生物服务"
+},{
+  key: "env",
+  title: "环境监测"
+},{
+  key: "industry",
+  title: "行业服务"
+},{
+  key: "science",
+  title: "科研绘图"
+},{
+  key: "calculate",
+  title: "模拟计算"
+},{
+  key: "analysis",
+  title: "数据分析"
+},{
+  key: "service",
+  title: "论文服务"
+},{
+  key: "reagent",
+  title: "试剂耗材"
+}]);
+const select = (nav) => {
+  activeKey.value = nav;
+  router.push({ path: `/process/${nav}` });
+};
 </script>
 
 <template>
   <div class="header d-flex">
-    <!-- 
-      统一使用antd下拉菜单组件 -->
-      <!-- 首页 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        首页
-        <DownOutlined />
+    <a-dropdown ref="dropdown" v-for="item in nav"
+        :key="item.key">
+      <a
+        
+        :class="activeKey == item.key ? 'active' : ''"
+        @click.prevent="select(item.key)"
+      >
+        {{item.title}}
       </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
     </a-dropdown>
-    <!-- 云现场 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        云现场
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 高端测试 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        高端测试
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 材料测试 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        材料测试
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 生物服务 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        生物服务
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 环境监测 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        环境监测
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 环境监测 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        环境监测
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 行业服务 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        行业服务
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 科研绘图 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        科研绘图
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 模拟计算 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        模拟计算
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 数据分析 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        数据分析
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 论文服务 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        论文服务
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- 试剂耗材 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        试剂耗材
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- <ul class="u-header">
-      <li class="l-header">
-        <a href="">云现场</a>
-      </li>
-      <li class="l-header">
-        <a href="">高端测试</a>
-      </li>
-      <li class="l-header">
-        <a href="">材料测试</a>
-      </li>
-      <li class="l-header">
-        <a href="">生物服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">环境监测</a>
-      </li>
-      <li class="l-header">
-        <a href="">行业服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">科研绘图</a>
-      </li>
-      <li class="l-header">
-        <a href="">模拟计算</a>
-      </li>
-      <li class="l-header">
-        <a href="">数据分析</a>
-      </li>
-      <li class="l-header">
-        <a href="">论文服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">试剂耗材</a>
-      </li>
-      <li class="l-header">
-        <a href="">指南针学院</a>
-      </li>
-    </ul> -->
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.header {
+  .ant-tabs-tab-btn {
+    padding: 0 0 8px !important;
+  }
+}
 h1 {
   font-weight: 500;
   font-size: 2.6rem;
@@ -328,16 +86,32 @@ h3 {
 .greetings h3 {
   text-align: center;
 }
-.ant-dropdown-link{
-
+.header {
+  a {
     padding: 0 0 8px;
-  margin-right:40px;
-  font-size: 16px;
+    margin-right: 40px;
+    font-size: 16px;
     color: #424242 !important;
     font-weight: bold;
-}
-.ant-dropdown-link:last-child{
-  margin-right: 0;
+  }
+  a.active {
+    position: relative;
+    color: #1890ff !important;
+    text-shadow: 0 0 0.25px #1890ff;
+  }
+  a.active:before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #1890ff;
+  }
+  a:last-child {
+    margin-right: 0;
+  }
 }
 @media (min-width: 1024px) {
   .greetings h1,
