@@ -6,6 +6,7 @@ import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
 import { Form } from "ant-design-vue";
+import Pay from "./Pay.vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -68,6 +69,7 @@ let modelRef = reactive({
     "isdefault": 1,
   });
 let visible = ref(false);
+let payVisible = ref(true);
 const checked = ref(false);
 const editInvoice = reactive({
   isEditInvoice: false,
@@ -500,6 +502,7 @@ const onSubmit = () => {
       :title="editInvoice.isEditInvoice? '编辑发票信息':'新增发票信息'"
       cancelText="取消"
       okText="确定"
+      width="600px"
       @ok="handleOk"
       @cancel="() => {
         modelRef = defaultInvoice;
@@ -579,6 +582,16 @@ const onSubmit = () => {
           </a-form-item>
         </div>
       </form>
+    </a-modal>
+    <!-- 支付弹层 -->
+    <a-modal
+      class="prestore-modal-wrap"
+      v-model:visible="payVisible"
+      title="在线支付"
+      width="400px"
+      :footer="null"
+    >
+      <Pay />
     </a-modal>
     <TheWelcome />
   </main>

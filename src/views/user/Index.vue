@@ -49,7 +49,7 @@ const map = reactive({
     </div>
   </main>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .user-wrap{
   margin-bottom: 0!important;
   .content{
