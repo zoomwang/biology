@@ -99,6 +99,10 @@ const onSubmit = () => {
   // top: 82px;
   text-align: center;
   width: 100%;
+  span{
+    color: red;
+    font-size: 22px;
+  }
 }
 #cmbPayDialog #cmbPayDialog_img {
   display: block;
