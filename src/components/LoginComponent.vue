@@ -67,7 +67,7 @@ const toDemand = () => {
         <template #overlay>
           <a-menu class="menu">
             <a-menu-item>
-              <a href="javascript:;">个人中心</a>
+              <a href="/user/userinfo">个人中心</a>
             </a-menu-item>
             <a-menu-item>
               <a href="javascript:;">我的发票</a>
