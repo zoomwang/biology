@@ -42,43 +42,57 @@ const onSubmit = () => {
 
 <template>
   <div class="pay-wrap d-flex" id="cmbPayDialog">
-    <div class="unionPayMoney">
-      应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
+    <div v-show="false">
+      <div class="unionPayMoney">
+        应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
+      </div>
+      <img id="cmbPayDialog_img" alt="聚合二扫码支付" src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700" />
+      <div class="cmbPayDialog_img_smegma_refresh">
+        <img
+          class="cmbPayDialog_img_smegma_refresh_icon"
+          src="../../assets/prestore/6.png"
+          alt=""
+        />点击刷新二维码
+      </div>
+      <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
+      <div class="crmbpay_tips_img_box">
+        <div>
+          <img
+            class="ali_icon"
+            src="../../assets/prestore/3.png"
+            alt=""
+          />
+          <div class="payment_text" style="margin-left: -8px">支付宝</div>
+        </div>
+        <div>
+          <img
+            class="wx_icon"
+            src="../../assets/prestore/2.png"
+            alt=""
+          />
+          <div class="payment_text" style="margin-left: 30px">微信</div>
+        </div>
+        <div>
+          <img
+            class="unionpay_icon"
+            src="../../assets/prestore/9.png"
+            alt=""
+          />
+          <div class="payment_text" style="margin-left: 30px">银联</div>
+        </div>
+      </div>
     </div>
-    <img id="cmbPayDialog_img" alt="聚合二扫码支付" src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700" />
-    <div class="cmbPayDialog_img_smegma_refresh">
-      <img
-        class="cmbPayDialog_img_smegma_refresh_icon"
-        src="../../assets/prestore/6.png"
-        alt=""
-      />点击刷新二维码
-    </div>
-    <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
-    <div class="crmbpay_tips_img_box">
-      <div>
-        <img
-          class="ali_icon"
-          src="../../assets/prestore/3.png"
-          alt=""
-        />
-        <div class="payment_text" style="margin-left: -8px">支付宝</div>
-      </div>
-      <div>
-        <img
-          class="wx_icon"
-          src="../../assets/prestore/2.png"
-          alt=""
-        />
-        <div class="payment_text" style="margin-left: 30px">微信</div>
-      </div>
-      <div>
-        <img
-          class="unionpay_icon"
-          src="../../assets/prestore/9.png"
-          alt=""
-        />
-        <div class="payment_text" style="margin-left: 30px">银联</div>
-      </div>
+    <div>
+      <a-result
+        status="success"
+        title="支付成功!"
+        sub-title="请关注公众号."
+      >
+        <template #extra>
+          <a-button key="console" type="primary">确定</a-button>
+          <a-button key="buy">关闭</a-button>
+        </template>
+      </a-result>
     </div>
   </div>
 </template>

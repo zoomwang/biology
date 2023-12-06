@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed, reactive, defineComponent } from "vue";
 // import { menus } from './config';
+import Menu from "./components/menu.vue";
+
 const state = reactive({
   mode: "inline",
   theme: "light",
@@ -16,7 +18,7 @@ const map = reactive({
 <template>
   <!-- 用户注册资料 -->
   <main class="d-flex home-wrap">
-    
+    <Menu type="1" />
   </main>
 </template>
 <style lang="scss">
