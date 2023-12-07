@@ -8,14 +8,22 @@ import { isLogged } from "../src/services/user";
 import $localStorage from "./hooks/localStorage";
 import router from './router';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import { blackList } from "@/utils/index.js";
+
+const routers = useRouter();
+const route = useRoute();
+console.log("当前路由：", route);
 
 const checkIslogged = async function() {
   try {
       const res = await isLogged();
     if (res?.code == 0) {
-      $localStorage.setItem("access_token", res?.access_token);
+      $localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("isLogin", true);
     } else {
+      if (blackList.includes(route?.fullPath)) {
+        router.push({name: "login"})
+      }
       // router.push({name: "login"})
     }
   } catch (err) {}
@@ -24,9 +32,7 @@ const checkIslogged = async function() {
 onBeforeMount(async () => {
   await checkIslogged();
 });
-const routers = useRouter();
-const route = useRoute();
-console.log("当前路由：", route);
+
 // router.push({ path: "/home" });
 </script>
 

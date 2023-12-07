@@ -52,6 +52,7 @@ const checkLogin = async function (type) {
             });
             $localStorage.setItem("access_token", data?.data?.access_token);
             $localStorage.setItem("refresh_token", data?.data?.refresh_token);
+            debugger
             $localStorage.setItem("isLogin", true);
             setTimeout(() => {
               router.push({ name: "userinfo" });

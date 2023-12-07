@@ -3,25 +3,35 @@
 import { ref, computed, reactive, defineComponent } from "vue";
 import { demandOptions } from "./config";
 import { UploadOutlined } from "@ant-design/icons-vue";
-import { Form } from "ant-design-vue";
+import { publish } from "@/services/prestore";
+import { notification, Form } from "ant-design-vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
-  type: "",
-  contact: "2",
+  type: "1",
+  contacts: "",
   phone: "",
   email: "",
-  num: "",
-  budget: "",
-  time: "",
-  file: "",
-  describe: ""
+  samplesNumber: "",
+  budgetRange: "",
+  completionCycle: "",
+  fileUrl: "",
+  demandDesc: ""
 });
 
 const onSubmit = () => {
   validate()
     .then(async(res) => {
-      
+      try {
+          const data = await publish(formState);
+          if (data?.code == 0) {
+            notification.success({
+              description: "需求发布成功",
+            });
+          }
+        } catch (err) {
+          alert(err);
+        }
     })
     .catch((err) => {
       console.log("error", err);
@@ -51,13 +61,13 @@ const { resetFields, validate, validateInfos } = useForm(
         message: "请选择类型",
       },
     ],
-    contact: [
+    contacts: [
       {
         required: true,
         message: "请输入联系人",
       },
     ],
-    describe: [
+    demandDesc: [
       {
         required: true,
         message: "需求描述不能为空",
@@ -88,38 +98,38 @@ const { resetFields, validate, validateInfos } = useForm(
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl"><span class="t-red">*</span>联系人：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.contact">
-            <a-input v-model:value="formState.contact" placeholder="请姓名" />
+          <a-form-item class="f-fl" v-bind="validateInfos.contacts">
+            <a-input v-model:value="formState.contacts" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear l-identity">
           <div class="t-title f-fl"><span class="t-red">*</span>联系号码：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.phone">
-            <a-input v-model:value="formState.phone" placeholder="请姓名" />
+            <a-input v-model:value="formState.phone" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl"><span class="t-red">*</span>电子邮箱：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.email">
-            <a-input v-model:value="formState.email" placeholder="请姓名" />
+            <a-input v-model:value="formState.email" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl">样品数量：</div>
           <a-form-item class="f-fl">
-            <a-input v-model:value="formState.name" placeholder="请姓名" />
+            <a-input v-model:value="formState.name" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl">预算范围：</div>
           <a-form-item class="f-fl">
-            <a-input v-model:value="formState.budget" placeholder="请姓名" />
+            <a-input v-model:value="formState.budget" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl">完成周期：</div>
           <a-form-item class="f-fl">
-            <a-input v-model:value="formState.time" placeholder="请姓名" />
+            <a-input v-model:value="formState.completionCycle" placeholder="请填写" />
           </a-form-item>
         </div>
         <div class="l-item clear">
@@ -140,9 +150,9 @@ const { resetFields, validate, validateInfos } = useForm(
         </div>
         <div class="l-item clear">
           <div class="t-title f-fl"><span class="t-red">*</span>需求描述：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.describe">
+          <a-form-item class="f-fl" v-bind="validateInfos.demandDesc">
             <a-textarea
-              v-model:value="value"
+              v-model:value="formState.demandDesc"
               placeholder="必填,请尽量填写仪器名称+检测项目+所用标准+报告用途(10-500个字)"
               :rows="4"
             />

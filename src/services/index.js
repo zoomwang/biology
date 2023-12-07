@@ -11,7 +11,8 @@ const api = axios.create({
 })
 // 请求拦截
 api.interceptors.request.use((config) => {
-    config.headers.Authorization = $localStorage.access_token;
+    config.headers.Authorization = $localStorage.getItem('access_token');
+    // debugger
     return config      
 }, error => {
     Promise.reject(error)
