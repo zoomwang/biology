@@ -8,16 +8,17 @@ const useForm = Form.useForm;
 const show = ref(true);
 const { isSendCode, changeSt } = useSendCode();
 const countDown = useCountDown(changeSt);
-const { getVerifiCode } = useGetVerifiCode(formState, () => {
-  changeSt(true);
-  countDown.countDown();
-});
 const formState = reactive({
   layout: "horizontal",
   code: "",
   mobile: "",
   oldPassword: "",
   newPassword: ""
+});
+
+const { getVerifiCode } = useGetVerifiCode(formState, () => {
+  changeSt(true);
+  countDown.countDown();
 });
 
 const onSubmit = () => {
@@ -40,7 +41,7 @@ const onSubmit = () => {
             description: "修改密码成功",
           });
           setTimeout(() => {
-            // router.push({name: "login"});
+            router.push({name: "login"});
           }, 400);
           
         }

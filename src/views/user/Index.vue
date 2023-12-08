@@ -1,6 +1,6 @@
 <script setup>
 import UserInfo from './Userinfo.vue';
-import { ref, computed, reactive, defineComponent } from "vue";
+import { reactive } from "vue";
 import { menus } from './config';
 const state = reactive({
   mode: "inline",

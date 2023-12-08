@@ -4,8 +4,6 @@ import { notification } from "ant-design-vue";
 import { resetPassword } from "../../services/user";
 
 const show = ref(true);
-// const { isSendCode, changeSt } = useSendCode();
-// const countDown = useCountDown(changeSt);
 
 const onSubmit = () => {
   if (formState.oldPassword != formState.newPassword) {

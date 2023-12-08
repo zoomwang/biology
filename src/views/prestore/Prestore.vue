@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, defineComponent, reactive } from "vue";
+import { ref, reactive } from "vue";
 import Payment from "../../assets/order/payment.png";
 import IconRecomends from "../../assets/order/i-ecommend.png";
 import checkIcon from "../../assets/prestore/bill67.png";

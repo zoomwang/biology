@@ -50,6 +50,7 @@ const checkLogin = async function (type) {
             notification.success({
               description: "登录成功",
             });
+            $localStorage.setItem("phone", formState.mobile);
             $localStorage.setItem("access_token", data?.data?.access_token);
             $localStorage.setItem("refresh_token", data?.data?.refresh_token);
             debugger

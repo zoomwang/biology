@@ -53,19 +53,22 @@ export const menus = [{
 
 export const identity = [{
   label: "学生",
-  value: "students",
+  value: 0,
 },{
   label: "教职工",
-  value: "teacher",
+  value: 1,
 },{
   label: "企业",
-  value: "company",
+  value: 2,
 },{
   label: "医院",
-  value: "hospitor",
+  value: 3,
 },{
   label: "个人",
-  value: "personer",
+  value: 4,
+},{
+  label: "其他",
+  value: 5,
 }]
 
 // export const getLabelFromVal = (value) => {
