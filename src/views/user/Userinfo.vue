@@ -57,12 +57,6 @@ const getUserInfo = async function () {
       res.data.mobile = res.data.username;
       res.data.university = res.data.university - 0;
       formState = Object.assign(formState, res.data);
-    } else {
-      notification.error({
-        message: "",
-        description: res.msg,
-      });
-      return;
     }
   } catch (err) {}
 };
@@ -139,10 +133,11 @@ onMounted(() => {
         <div class="t-label f-fl">地区：</div>
         <a-form-item class="f-fl">
           <a-cascader
+            allowClear
             :disabled="!canEdit"
             showSearch
             :options="areaData"
-            v-model="formState.address"
+            v-model:value="formState.address"
           />
         </a-form-item>
       </div>

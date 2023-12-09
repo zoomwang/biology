@@ -39,15 +39,15 @@ export const demandOptions = [
 
 export const menus = [{
   label: "个人资料",
-  value: "userData",
+  value: "1",
   type: "userMenu"
 },{
   label: "我的积分",
-  value: "userIntegral",
+  value: "2",
   type: "userMenu"
 },{
   label: "订单情况",
-  value: "order",
+  value: "10",
   type: "orderMenu"
 }];
 

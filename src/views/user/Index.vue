@@ -1,17 +1,24 @@
 <script setup>
+import { useRoute, useRouter } from "vue-router";
 import UserInfo from './Userinfo.vue';
+import Integral from './Integral.vue';
 import { reactive } from "vue";
 import { menus } from './config';
+import router from "../../router";
+
+const routers = useRouter();
+const route = useRoute();
 const state = reactive({
   mode: "inline",
   theme: "light",
-  selectedKeys: ["userData"],
-  openKeys: ["userData"],
+  selectedKeys: [route.query.selectedKeys || "1"],
+  openKeys: [route.query.selectedKeys || "1"],
 });
 const map = reactive({
   "userData": "userData",
   "userIntegral": "userIntegral"
 });
+
 </script>
 
 <template>
@@ -23,7 +30,7 @@ const map = reactive({
       :mode="state.mode"
       :theme="state.theme"
       @select="() => {
-        console.log(state.selectedKeys)
+        router.push({ path: '/user/userinfo', query: { selectedKeys: state.selectedKeys } })
       }"
     >
       <h2>账号管理</h2>
@@ -43,8 +50,9 @@ const map = reactive({
       
     </a-menu>
     <div class="content">
-      <a-card title="用户资料" :bordered="false">
-        <UserInfo v-if="state.selectedKeys.includes('userData')" />
+      <a-card :bordered="false">
+        <UserInfo v-if="state.selectedKeys.includes('1')" />
+        <Integral v-if="state.selectedKeys.includes('2')" />
       </a-card>
     </div>
   </main>

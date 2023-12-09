@@ -9,38 +9,43 @@ import $localStorage from "./hooks/localStorage";
 import router from './router';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import { blackList } from "@/utils/index.js";
+import { ref } from "vue";
 
 const routers = useRouter();
 const route = useRoute();
 console.log("当前路由：", route);
+const isNext = ref(false);
 
 const checkIslogged = async function() {
   try {
       const res = await isLogged();
     if (res?.code == 0) {
+      localStorage.setItem("access_token", res?.data?.access_token)
       $localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("isLogin", true);
+      isNext.value = true;
     } else {
+      isNext.value = true;
       if (blackList.includes(route?.fullPath)) {
-        router.push({name: "login"})
+        router.push({name: "login"});
       }
-      // router.push({name: "login"})
     }
-  } catch (err) {}
+  } catch (err) {
+    isNext.value = true;
+  }
 }
 
-onBeforeMount(async () => {
-  await checkIslogged();
-});
+onBeforeMount(async() => {
+  await checkIslogged()
+})
 
-// router.push({ path: "/home" });
 </script>
 
 <template :locale="zhCN">
   <a-config-provider :locale="zhCN">
     <Header></Header>
     <div class="wrap">
-      <RouterView class="wrap-l" />
+      <RouterView v-if="isNext" class="wrap-l" />
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
       <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
         <Wx />

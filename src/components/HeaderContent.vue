@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import router from '../router';
-
+import { onMounted } from "vue";
+import { getMainInfo } from "@/services/process";
 const dropdown = ref(null);
 defineProps({
   msg: {
@@ -9,45 +10,24 @@ defineProps({
     required: true,
   },
 });
+const getMenuInfo = async function () {
+  try {
+    const res = await getMainInfo();
+    if (res?.code == 0) {
+      nav.value = res?.data;
+    }
+  } catch (err) {}
+};
 const activeKey = ref("index");
-const nav = ref([{
-  key: "index",
-  title: "首页"
-},{
-  key: "high",
-  title: "高端测试"
-},{
-  key: "material",
-  title: "材料测试"
-},{
-  key: "biology",
-  title: "生物服务"
-},{
-  key: "env",
-  title: "环境监测"
-},{
-  key: "industry",
-  title: "行业服务"
-},{
-  key: "science",
-  title: "科研绘图"
-},{
-  key: "calculate",
-  title: "模拟计算"
-},{
-  key: "analysis",
-  title: "数据分析"
-},{
-  key: "service",
-  title: "论文服务"
-},{
-  key: "reagent",
-  title: "试剂耗材"
-}]);
+const nav = ref([]);
 const select = (nav) => {
   activeKey.value = nav;
   router.push({ path: `/process/${nav}` });
 };
+
+onMounted(() => {
+  getMenuInfo();
+});
 </script>
 
 <template>

@@ -28,7 +28,7 @@ const route = useRoute();
   </div>
   <div v-if="!route?.fullPath.includes('home')">
     <div class="bg" >
-    <HeaderContent />
+    <HeaderContent v-if="!route?.fullPath.includes('home')" />
   </div>
   
   </div>
