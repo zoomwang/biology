@@ -177,6 +177,7 @@ const onSubmit = () => {
     .then(async(res) => {
       try {
         formState.invoiceNum = formState.invoiceNum - 0;
+        formState.amount = formState.amount - 0;
         const newArr = formState.invoiceCostList.map((item) => {
           return item - 0
         });
@@ -587,6 +588,13 @@ onMounted(() => {
             <div class="t-title f-fl">
               <span class="t-red">*</span>发票抬头：
             </div>
+            <a-form-item class="f-fl" v-hide>
+              <a-input
+                v-model:value="modelRef.id"
+                :defaultValue="0"
+                hidden
+              />
+            </a-form-item>
             <a-form-item class="f-fl">
               <a-input
                 v-model:value="modelRef.title"
