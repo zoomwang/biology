@@ -1,8 +1,16 @@
 
 import api from './index'
-/** 账号登陆 */
-export const publish = (param) => {
+/** 预存接口 */
+export const addStore = (param) => {
   console.log("param==", param)
+  return api.post(`/sys/store/add`, param);
+}
+
+export const getStoreList = (param) => {
+  return api.get(`/sys/store/list`, param);
+}
+
+export const publish = (param) => {
   return api.post(`/sys/demand/publish`, param);
 }
 

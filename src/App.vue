@@ -5,7 +5,7 @@ import Header from "../src/components/Header.vue";
 import Footer from "../src/components/Footer.vue";
 import Wx from "../src/components/Wx.vue";
 import { isLogged } from "../src/services/user";
-import $localStorage from "./hooks/localStorage";
+import $localStorage from "@/hooks/localStorage";
 import router from './router';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import { blackList } from "@/utils/index.js";

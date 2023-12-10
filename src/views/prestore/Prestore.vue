@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import Payment from "../../assets/order/payment.png";
 import IconRecomends from "../../assets/order/i-ecommend.png";
 import checkIcon from "../../assets/prestore/bill67.png";
@@ -7,49 +7,54 @@ import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
 import { Form } from "ant-design-vue";
 import Pay from "./Pay.vue";
+import { addStore, getStoreList } from "@/services/prestore";
 
 const useForm = Form.useForm;
 const formState = reactive({
   // layout: "horizontal",
   payType: 0, //支付类型，0、1表示
   invoiceNum: 1, // 发票数量
+  invoiceNumType: 1,
   payAccount: 0,//预存账户，0、1表示
   welfare: 0, //福利
   invoiceType: 0, //发票类型
   amount: 0, //预存金额
   rebate: "", //预存返利
   remind: "", //预存备注
+  invoiceCostList: [], // 发票金额列表
   addition: ['电子合同', '电子版测试清单', '电子报告'], //附加文件
   canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
   demand: "", //需求方名称
   detection: "", //项目检测
   mailBox: "", //收件邮箱
-  invoiceTitle: [{
-    "invoiceid": 174304,
-    "title": "广东工业大学",
-    "registrationo": "12330000470003281H",
-    "depositbank": "招商银行",
-    "banksn": "",
-    "registaddress": "阿时间考虑的",
-    "registphone": "15086726356",
-    "isdefault": 1,
-    "checked": true,
-  },{
-    "invoiceid": 174304,
-    "title": "广东工业大学111",
-    "registrationo": "12330000470003281H",
-    "depositbank": "招商银行111",
-    "banksn": "",
-    "registaddress": "阿时间考虑的",
-    "registphone": "15086726356",
-    "isdefault": 1,
-    // "checked": true,
-  }],
+  // invoiceTitle: [{
+  //   "invoiceid": 174304,
+  //   "title": "广东工业大学",
+  //   "registrationo": "12330000470003281H",
+  //   "depositbank": "招商银行",
+  //   "banksn": "",
+  //   "registaddress": "阿时间考虑的",
+  //   "registphone": "15086726356",
+  //   "isdefault": 1,
+  //   "checked": true,
+  // },{
+  //   "invoiceid": 174304,
+  //   "title": "广东工业大学111",
+  //   "registrationo": "12330000470003281H",
+  //   "depositbank": "招商银行111",
+  //   "banksn": "",
+  //   "registaddress": "阿时间考虑的",
+  //   "registphone": "15086726356",
+  //   "isdefault": 1,
+  //   // "checked": true,
+  // }],
+  invoiceTitle: [],
 });
 const formOptions = reactive({
   plainOptions: ['电子合同', '电子版测试清单', '电子报告']
 });
 const defaultInvoice = {
+  "id": 0,
   "invoiceid": "",
   "title": "",
   "registrationo": "",
@@ -58,23 +63,63 @@ const defaultInvoice = {
   "registaddress": "",
   "registphone": "",
 };
+
+watch(formState, async (newdata, olddata) => {
+  invoiceCostList.value = new Array(newdata.invoiceNum - 0)
+})
+
+const getRebate = () => {
+  if (formState.amount > 5000 && formState.amount < 10000) {
+    return formState.amount * 0.03
+  }
+  if (formState.amount >= 10000 && formState.amount < 30000) {
+    return formState.amount * 0.04
+  }
+  if (formState.amount >= 30000 && formState.amount < 50000) {
+    return formState.amount * 0.06
+  }
+  if (formState.amount >= 50000 && formState.amount < 100000) {
+    return formState.amount * 0.08
+  }
+  if (formState.amount >= 100000) {
+    return formState.amount * 0.1
+  }
+  return 0;
+}
 let modelRef = reactive({
+    // "invoiceid": "",
+    // "title": "广东工业大学222",
+    // "registrationo": "12330000470003281H",
+    // "depositbank": "招商银行2",
+    // "banksn": "441782783288",
+    // "registaddress": "阿时间考虑的",
+    // "registphone": "15086726356",
+    // "isdefault": 1,
     "invoiceid": "",
-    "title": "广东工业大学222",
-    "registrationo": "12330000470003281H",
-    "depositbank": "招商银行2",
-    "banksn": "441782783288",
-    "registaddress": "阿时间考虑的",
-    "registphone": "15086726356",
+    "title": "",
+    "registrationo": "",
+    "depositbank": "",
+    "banksn": "",
+    "registaddress": "",
+    "registphone": "",
     "isdefault": 1,
   });
 let visible = ref(false);
-let payVisible = ref(true);
+let invoiceCostList = ref([]);
+let payVisible = ref(false);
 const checked = ref(false);
 const editInvoice = reactive({
   isEditInvoice: false,
   editIndex: 0,
 });
+const initStoreList = async function () {
+  try {
+    const res = await getStoreList();
+    if (res?.code == 0) {
+      nav.value = res?.data;
+    }
+  } catch (err) {}
+};
 const replaceChecked = (index) => {
   formState.invoiceTitle.forEach((item) => {
     item.isdefault = 0;
@@ -85,11 +130,11 @@ const replaceChecked = (index) => {
 }
 
 const showModal = () => {
-  visible = visible.value = true;
+  visible.value = true;
 };
 
 const hideModal = () => {
-  visible = visible.value = false;
+  visible.value = false;
 };
 
 const changeField = (type, value) => {
@@ -131,12 +176,18 @@ const onSubmit = () => {
   validate()
     .then(async(res) => {
       try {
-        const data = await regitry({
+        formState.invoiceNum = formState.invoiceNum - 0;
+        const newArr = formState.invoiceCostList.map((item) => {
+          return item - 0
+        });
+        debugger
+        formState.invoiceCostList = newArr;
+        const data = await addStore({
           ...formState
         });
         if (data?.code == 0) {
           notification.success({
-            description: "注册成功",
+            description: "预存成功",
           });
         }
       } catch(err) {
@@ -148,6 +199,10 @@ const onSubmit = () => {
     });
 };
 // 预存页面prestore
+
+onMounted(() => {
+  initStoreList();
+});
 </script>
 
 <template>
@@ -216,6 +271,7 @@ const onSubmit = () => {
               </div>
               <a-form-item class="f-fl" v-bind="validateInfos.amount">
                 <a-input
+                  type="number"
                   placeholder="请输入预存金额(开票金额)"
                   class="t-gaincode f-fl prestore-input"
                   style="width: 250px"
@@ -230,13 +286,14 @@ const onSubmit = () => {
                 <span>预计返利：</span>
               </div>
               <a-form-item class="f-fl">
-                <a-input
+                <!-- <a-input
                   placeholder="0"
                   disabled
                   class="t-gaincode f-fl prestore-input"
                   style="width: 250px"
                   v-model:value="formState.rebate"
-                />
+                /> -->
+                {{getRebate()}}
               </a-form-item>
               <span class="t-unil">元</span>
             </li>
@@ -336,13 +393,13 @@ const onSubmit = () => {
                 <div class="total-ticket ticket f-fl">
                   <a-radio-group
                     name="invoiceNum"
-                    v-model:value="formState.invoiceNum"
+                    v-model:value="formState.invoiceNumType"
                   >
-                    <a-radio :value=1>一张发票</a-radio>
-                    <a-radio :value=2>多张发票</a-radio>
+                    <a-radio :value="1">一张发票</a-radio>
+                    <a-radio :value="2">多张发票</a-radio>
                   </a-radio-group>
                 </div>
-                <a-form-item class="f-fl">
+                <a-form-item class="f-fl" v-if="formState.invoiceNumType == 2">
                   <a-input
                     placeholder="请输入数量"
                     class="prestore-input"
@@ -350,6 +407,22 @@ const onSubmit = () => {
                     v-model:value="formState.invoiceNum"
                   />
                 </a-form-item>
+              </div>
+              <div class="clear item-detection" v-if="formState.invoiceNumType == 2">
+                <div class="t-title f-fl" style="text-right: right!important;">发票金额：</div>
+                <div class="f-fl" style="width: 80%">
+                  <a-form-item>
+                    <a-input
+                      type="number"
+                      v-for="(item, index) in invoiceCostList"
+                      :key="item"
+                      placeholder="请输入这张发票金额"
+                      class="prestore-input"
+                      style="width: 200px; margin-right: 10px;margin-bottom: 10px"
+                      v-model:value="formState.invoiceCostList[index]"
+                    />
+                  </a-form-item>
+                </div>
               </div>
               <div class="clear item-detection">
                 <div class="t-title f-fl">项目检测：</div>
@@ -500,12 +573,11 @@ const onSubmit = () => {
       class="prestore-modal-wrap"
       v-model:visible="visible"
       :title="editInvoice.isEditInvoice? '编辑发票信息':'新增发票信息'"
-      cancelText="取消"
-      okText="确定"
       width="600px"
       @ok="handleOk"
       @cancel="() => {
         modelRef = defaultInvoice;
+        visible = false
       }"
     >
       <form>

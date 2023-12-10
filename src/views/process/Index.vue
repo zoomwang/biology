@@ -1,22 +1,25 @@
 <script setup>
-import { ref, computed, reactive, defineComponent } from "vue";
-// import { menus } from './config';
+import { ref, computed, reactive, defineComponent, watch } from "vue";
+import { useStorage } from "@/hooks/useStorage";
+import $localStorage from "@/hooks/localStorage";
+import Menu from "./components/menu.vue";
+const key = useStorage("menu");
 const state = reactive({
   mode: "inline",
   theme: "light",
   selectedKeys: ["userData"],
   openKeys: ["userData"],
 });
-const map = reactive({
-  "userData": "userData",
-  "userIntegral": "userIntegral"
-});
+const menuType = ref($localStorage.getItem("menu"));
+watch(key, async (newdata, olddata) => {
+  menuType.value = newdata
+})
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main class="d-flex home-wrap">
-    
+    <Menu :type="menuType" />
   </main>
 </template>
 <style lang="scss">

@@ -2,7 +2,9 @@
 import { ref } from "vue";
 import router from '../router';
 import { onMounted } from "vue";
-import { getMainInfo } from "@/services/process";
+import { getMainInfo, getSubMainInfo } from "@/services/process";
+import $localStorage from "@/hooks/localStorage";
+
 const dropdown = ref(null);
 defineProps({
   msg: {
@@ -10,19 +12,38 @@ defineProps({
     required: true,
   },
 });
+const activeKey = ref($localStorage.getItem('menu'));
+const nav = ref([]);
+const subNav = ref([]);
+const select = (nav) => {
+  activeKey.value = nav;
+  router.push({ path: `/process/${nav}` });
+  $localStorage.setItem("menu", nav);
+};
+const mouseOver = async(type) => {
+  getSubMenuInfo(type);
+};
 const getMenuInfo = async function () {
   try {
     const res = await getMainInfo();
     if (res?.code == 0) {
       nav.value = res?.data;
+      $localStorage.setItem("mainMenu", JSON.stringify(res?.data));
+    }else {
+      nav.value = JSON.parse($localStorage.getItem("mainMenu"));
     }
-  } catch (err) {}
+  } catch (err) {
+  }
 };
-const activeKey = ref("index");
-const nav = ref([]);
-const select = (nav) => {
-  activeKey.value = nav;
-  router.push({ path: `/process/${nav}` });
+const getSubMenuInfo = async function (id) {
+  try {
+    const res = await getSubMainInfo(id);
+    if (res?.code == 0) {
+      subNav.value = res?.data;
+    }else {
+    }
+  } catch (err) {
+  }
 };
 
 onMounted(() => {
@@ -33,14 +54,26 @@ onMounted(() => {
 <template>
   <div class="header d-flex">
     <a-dropdown ref="dropdown" v-for="item in nav"
-        :key="item.key">
+        :key="item.id" @visibleChange="mouseOver(item.id)">
       <a
-        
-        :class="activeKey == item.key ? 'active' : ''"
-        @click.prevent="select(item.key)"
+        :class="activeKey == item.id ? 'active' : ''"
+        @click.prevent="select(item.id)"
       >
         {{item.title}}
       </a>
+      <template #overlay>
+      <a-menu class="header-menu">
+        <a-menu-item v-for="item in subNav" :key="item">
+          <a style="color:#000!important;" :href="'/process/'+ item.type + '#' + item.id">{{item.itemName}}</a>
+        </a-menu-item>
+        <!-- <a-menu-item>
+          <a href="javascript:;">2nd menu item</a>
+        </a-menu-item>
+        <a-menu-item>
+          <a href="javascript:;">3rd menu item</a>
+        </a-menu-item> -->
+      </a-menu>
+    </template>
     </a-dropdown>
   </div>
 </template>

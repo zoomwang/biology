@@ -40,7 +40,7 @@ const onSubmit = () => {
 
 <template>
   <div class="pay-wrap d-flex" id="cmbPayDialog">
-    <div v-show="false">
+    <div v-show="show">
       <div class="unionPayMoney">
         应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
       </div>
@@ -80,15 +80,15 @@ const onSubmit = () => {
         </div>
       </div>
     </div>
-    <div>
+    <div v-show="!show">
       <a-result
         status="success"
         title="支付成功!"
         sub-title="请关注公众号."
       >
         <template #extra>
-          <a-button key="console" type="primary">确定</a-button>
-          <a-button key="buy">关闭</a-button>
+          <!-- <a-button key="console" type="primary">确定</a-button>
+          <a-button key="buy">关闭</a-button> -->
         </template>
       </a-result>
     </div>

@@ -1,11 +1,10 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive, defineComponent } from "vue";
+import { ref, computed, reactive, defineComponent, onMounted } from "vue";
 import { editUser, getUser, getSchool } from "../../services/user";
 import { identity } from "./config";
 import areaData from "../../public/area.js";
 import { notification, Form } from "ant-design-vue";
-import { onMounted } from "vue";
 import $localStorage from "@/hooks/localStorage";
 
 const useForm = Form.useForm;
