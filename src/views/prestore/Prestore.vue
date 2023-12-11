@@ -122,7 +122,8 @@ const initStoreList = async function () {
   try {
     const res = await getStoreList();
     if (res?.code == 0) {
-      nav.value = res?.data;
+      formState.value = res?.data;
+      // nav.value = res?.data;
     }
   } catch (err) {}
 };
