@@ -42,10 +42,10 @@ const onSubmit = async () => {
         description: "编辑成功",
       });
     } else {
-      notification.error({
-        message: "",
-        description: res.msg,
-      });
+      // notification.error({
+      //   message: "",
+      //   description: res.msg,
+      // });
     }
   } catch (err) {}
 };
@@ -55,6 +55,11 @@ const getUserInfo = async function () {
     if (res.code == 0) {
       res.data.mobile = res.data.username;
       res.data.university = res.data.university - 0;
+      res.data.address = res.data.address.map((item) => {
+        return `${item}`;
+      });
+      console.log(res.data.address)
+      debugger
       formState = Object.assign(formState, res.data);
     }
   } catch (err) {}

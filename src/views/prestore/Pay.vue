@@ -90,11 +90,13 @@ const onSubmit = () => {
       <a-result
         status="success"
         title="支付成功!"
-        sub-title="请关注公众号."
       >
         <template #extra>
-          <!-- <a-button key="console" type="primary">确定</a-button>
-          <a-button key="buy">关闭</a-button> -->
+          <p>订单号为：283912823288</p>
+          <p>充值金额：2000.00</p>
+          <p>申请时间：2023-12-11 10:13</p>
+          <p>发票抬头：广东工业大学</p>
+          <p>纳税人识别号：12330000470003281H</p>
         </template>
       </a-result>
     </div>
@@ -104,6 +106,10 @@ const onSubmit = () => {
 .pay-wrap {
   flex-direction: column;
   text-align: center;
+  p{
+    padding-left: 30px;
+    text-align: left;
+  }
 }
 #cmbPayDialog {
   height: 400px;

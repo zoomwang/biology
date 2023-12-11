@@ -15,6 +15,7 @@ defineProps({
 const activeKey = ref($localStorage.getItem('menu'));
 const nav = ref([]);
 const subNav = ref([]);
+const loading = ref(false);
 const select = (nav) => {
   activeKey.value = nav;
   router.push({ path: `/process/${nav}` });
@@ -46,6 +47,8 @@ const getSubMenuInfo = async function (id) {
   }
 };
 const redirct = function (type, id) {
+  activeKey.value = type;
+  $localStorage.setItem("menu", type);
   router.push({ path: `/process/${type}`, hash: `#${id}`});
 }
 

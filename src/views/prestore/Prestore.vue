@@ -6,6 +6,7 @@ import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
 import Pay from "./Pay.vue";
+import Apply from "./Apply.vue";
 import { addStore, getStoreList } from "@/services/prestore";
 import { notification, Form } from "ant-design-vue";
 
@@ -232,16 +233,16 @@ onMounted(() => {
               <a-button
                 type="primary"
                 class="b-base-button"
-                :class="{ 'b-base-button-active': !formState.payType }"
-                @click="changeField('payType', 0)"
+                :class="{ 'b-base-button-active': formState.payType }"
+                @click="changeField('payType', 1)"
               >
                 对公转账
               </a-button>
               <a-button
                 type="primary"
                 class="b-base-button"
-                :class="{ 'b-base-button-active': formState.payType }"
-                @click="changeField('payType', 1)"
+                :class="{ 'b-base-button-active': !formState.payType }"
+                @click="changeField('payType', 0)"
               >
                 扫码支付
               </a-button>
@@ -595,7 +596,7 @@ onMounted(() => {
             <div class="t-title f-fl">
               <span class="t-red">*</span>发票抬头：
             </div>
-            <a-form-item class="f-fl" v-hide>
+            <a-form-item class="f-fl" v-show="false">
               <a-input
                 v-model:value="modelRef.id"
                 :defaultValue="0"
@@ -674,11 +675,12 @@ onMounted(() => {
     <a-modal
       class="prestore-modal-wrap"
       v-model:visible="payVisible"
-      title="在线支付"
+      :title="formState.payType == 1 ? '在线支付': '申请提示'"
       width="400px"
       :footer="null"
     >
-      <Pay />
+      <Pay v-if="formState.payType == 0" />
+      <Apply :detail="formState" v-else />
     </a-modal>
     <TheWelcome />
   </main>
