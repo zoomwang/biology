@@ -5,9 +5,9 @@ import IconRecomends from "../../assets/order/i-ecommend.png";
 import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
-import { Form } from "ant-design-vue";
 import Pay from "./Pay.vue";
 import { addStore, getStoreList } from "@/services/prestore";
+import { notification, Form } from "ant-design-vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -19,7 +19,7 @@ const formState = reactive({
   welfare: 0, //福利
   invoiceType: 0, //发票类型
   amount: 0, //预存金额
-  rebate: "", //预存返利
+  rebate: 0, //预存返利
   remind: "", //预存备注
   invoiceCostList: [], // 发票金额列表
   addition: ['电子合同', '电子版测试清单', '电子报告'], //附加文件
@@ -55,7 +55,7 @@ const formOptions = reactive({
 });
 const defaultInvoice = {
   "id": 0,
-  "invoiceid": "",
+  "invoiceid": 0,
   "title": "",
   "registrationo": "",
   "depositbank": "",
@@ -70,18 +70,23 @@ watch(formState, async (newdata, olddata) => {
 
 const getRebate = () => {
   if (formState.amount > 5000 && formState.amount < 10000) {
+    formState.rebate = formState.amount * 0.03;
     return formState.amount * 0.03
   }
   if (formState.amount >= 10000 && formState.amount < 30000) {
+    formState.rebate = formState.amount * 0.04;
     return formState.amount * 0.04
   }
   if (formState.amount >= 30000 && formState.amount < 50000) {
+    formState.rebate = formState.amount * 0.06;
     return formState.amount * 0.06
   }
   if (formState.amount >= 50000 && formState.amount < 100000) {
+    formState.rebate = formState.amount * 0.08;
     return formState.amount * 0.08
   }
   if (formState.amount >= 100000) {
+    formState.rebate = formState.amount * 0.1;
     return formState.amount * 0.1
   }
   return 0;
@@ -95,7 +100,8 @@ let modelRef = reactive({
     // "registaddress": "阿时间考虑的",
     // "registphone": "15086726356",
     // "isdefault": 1,
-    "invoiceid": "",
+    "id": 0,
+    "invoiceid": 0,
     "title": "",
     "registrationo": "",
     "depositbank": "",
@@ -125,8 +131,8 @@ const replaceChecked = (index) => {
     item.isdefault = 0;
     item.checked = false;
   })
-  formState.invoiceTitle[index].isdefault = true; 
-  formState.invoiceTitle[index].checked = 1;  
+  formState.invoiceTitle[index].isdefault = 1; 
+  formState.invoiceTitle[index].checked = true;  
 }
 
 const showModal = () => {
@@ -158,7 +164,7 @@ const { resetFields, validate, validateInfos } = useForm(
         required: true,
         message: "预存金额不能少于1000",
         pattern: (num) => {
-          return num > 1000;
+          return num >= 1000;
         }
       },
     ],
@@ -181,15 +187,15 @@ const onSubmit = () => {
         const newArr = formState.invoiceCostList.map((item) => {
           return item - 0
         });
-        debugger
         formState.invoiceCostList = newArr;
         const data = await addStore({
           ...formState
         });
         if (data?.code == 0) {
-          notification.success({
-            description: "预存成功",
-          });
+          // notification.success({
+          //   description: "预存成功",
+          // });
+          payVisible.value = true;
         }
       } catch(err) {
         alert(err);
@@ -410,7 +416,7 @@ onMounted(() => {
                 </a-form-item>
               </div>
               <div class="clear item-detection" v-if="formState.invoiceNumType == 2">
-                <div class="t-title f-fl" style="text-right: right!important;">发票金额：</div>
+                <div class="t-title f-fl" style="text-align: right!important;padding-right: 30px;">发票金额：</div>
                 <div class="f-fl" style="width: 80%">
                   <a-form-item>
                     <a-input
@@ -426,7 +432,7 @@ onMounted(() => {
                 </div>
               </div>
               <div class="clear item-detection">
-                <div class="t-title f-fl">项目检测：</div>
+                <div class="t-title f-fl" style="text-align:right!important;padding-right: 30px;">项目检测：</div>
                 <div class="f-fl">
                   <a-form-item>
                     <a-input

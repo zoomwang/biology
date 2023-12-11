@@ -39,7 +39,7 @@ const getSubMenuInfo = async function (id) {
   try {
     const res = await getSubMainInfo(id);
     if (res?.code == 0) {
-      subNav.value = res?.data;
+      subNav.value = res?.data?.data;
     }else {
     }
   } catch (err) {
@@ -63,8 +63,8 @@ onMounted(() => {
       </a>
       <template #overlay>
       <a-menu class="header-menu">
-        <a-menu-item v-for="item in subNav" :key="item">
-          <a style="color:#000!important;" :href="'/process/'+ item.type + '#' + item.id">{{item.itemName}}</a>
+        <a-menu-item v-for="inneritem in subNav" :key="inneritem">
+          <a style="color:#000!important;" :href="'/process/'+ item.id + '#' + item.id">{{inneritem.catename}}</a>
         </a-menu-item>
         <!-- <a-menu-item>
           <a href="javascript:;">2nd menu item</a>

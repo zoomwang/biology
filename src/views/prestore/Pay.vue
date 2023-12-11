@@ -3,8 +3,13 @@ import { ref } from "vue";
 import { notification } from "ant-design-vue";
 import { resetPassword } from "../../services/user";
 
-const show = ref(true);
+const isPaySuccess = ref(true);
 
+const onRefrush = () => {
+  setTimeout(() => {
+    isPaySuccess.value = false;
+  },4000)
+}
 const onSubmit = () => {
   if (formState.oldPassword != formState.newPassword) {
     notification.error({
@@ -40,16 +45,17 @@ const onSubmit = () => {
 
 <template>
   <div class="pay-wrap d-flex" id="cmbPayDialog">
-    <div v-show="show">
+    <div v-show="isPaySuccess">
       <div class="unionPayMoney">
         应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
       </div>
       <img id="cmbPayDialog_img" alt="聚合二扫码支付" src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700" />
-      <div class="cmbPayDialog_img_smegma_refresh">
+      <div class="cmbPayDialog_img_smegma_refresh" @click="onRefrush()">
         <img
           class="cmbPayDialog_img_smegma_refresh_icon"
           src="../../assets/prestore/6.png"
           alt=""
+          
         />点击刷新二维码
       </div>
       <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
@@ -80,7 +86,7 @@ const onSubmit = () => {
         </div>
       </div>
     </div>
-    <div v-show="!show">
+    <div v-show="!isPaySuccess">
       <a-result
         status="success"
         title="支付成功!"
