@@ -45,6 +45,9 @@ const getSubMenuInfo = async function (id) {
   } catch (err) {
   }
 };
+const redirct = function (type, id) {
+  router.push({ path: `/process/${type}`, hash: `#${id}`});
+}
 
 onMounted(() => {
   getMenuInfo();
@@ -64,14 +67,8 @@ onMounted(() => {
       <template #overlay>
       <a-menu class="header-menu">
         <a-menu-item v-for="inneritem in subNav" :key="inneritem">
-          <a style="color:#000!important;" :href="'/process/'+ item.id + '#' + item.id">{{inneritem.catename}}</a>
+          <a style="color:#000!important;" @click.prevent="redirct(item.id, inneritem.categoryid)">{{inneritem.catename}}</a>
         </a-menu-item>
-        <!-- <a-menu-item>
-          <a href="javascript:;">2nd menu item</a>
-        </a-menu-item>
-        <a-menu-item>
-          <a href="javascript:;">3rd menu item</a>
-        </a-menu-item> -->
       </a-menu>
     </template>
     </a-dropdown>
