@@ -49,7 +49,8 @@ const getSubMenuInfo = async function (id) {
 const redirct = function (type, id) {
   activeKey.value = type;
   $localStorage.setItem("menu", type);
-  router.push({ path: `/process/${type}`, hash: `#${id}`});
+  router.push({ path: `/process/${type}`});
+  document.getElementById(id)?.scrollIntoView(true);
 }
 
 onMounted(() => {

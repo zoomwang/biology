@@ -9,12 +9,14 @@ import $localStorage from "@/hooks/localStorage";
 
 const useForm = Form.useForm;
 const formState = reactive({
+  id: "",
   address: "",
   mobile: "",
   userIdentity: "",
   university: "",
 });
 const schoolState = ref([]);
+const userId = ref('');
 const {
   resetFields: resetFieldsp,
   validate: validatep,
@@ -28,6 +30,11 @@ const {
         message: "请输入手机号",
         pattern: /^1[3456789]\d{9}$/,
       },
+    ],
+    address: [
+      {
+        required: true,
+      },
     ]
   })
 );
@@ -35,6 +42,7 @@ const visible = ref(false);
 const canEdit = ref(false);
 const onSubmit = async () => {
   try {
+    formState.id = userId.value || 2;
     const res = await editUser(formState);
     if (res.code == 0) {
       notification.success({
@@ -58,9 +66,8 @@ const getUserInfo = async function () {
       res.data.address = res.data.address.map((item) => {
         return `${item}`;
       });
-      console.log(res.data.address)
-      debugger
       formState = Object.assign(formState, res.data);
+      userId.value = res.data.id;
     }
   } catch (err) {}
 };
@@ -250,7 +257,7 @@ onMounted(() => {
     {{ formState.mobile }}
   </a-modal>
 </template>
-<style lang="scss">
+<style lang="scss" scope>
 .userinfo {
   .ant-form-item {
     .ant-select {

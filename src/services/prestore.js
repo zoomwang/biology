@@ -14,3 +14,7 @@ export const publish = (param) => {
   return api.post(`/sys/demand/publish`, param);
 }
 
+export const getInvoiceList = (param) => {
+  return api.get(`/sys/invoice/list`, param);
+}
+

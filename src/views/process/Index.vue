@@ -22,7 +22,7 @@ watch(key, async (newdata, olddata) => {
     <Menu :type="menuType" />
   </main>
 </template>
-<style lang="scss">
+<style lang="scss" >
 .user-wrap{
   margin-bottom: 0!important;
   .content{

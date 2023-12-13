@@ -7,7 +7,7 @@ import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
 import Pay from "./Pay.vue";
 import Apply from "./Apply.vue";
-import { addStore, getStoreList } from "@/services/prestore";
+import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
 import { notification, Form } from "ant-design-vue";
 
 const useForm = Form.useForm;
@@ -16,14 +16,14 @@ const formState = reactive({
   payType: 0, //支付类型，0、1表示
   invoiceNum: 1, // 发票数量
   invoiceNumType: 1,
-  payAccount: 0,//预存账户，0、1表示
+  payAccount: 0, //预存账户，0、1表示
   welfare: 0, //福利
   invoiceType: 0, //发票类型
   amount: 0, //预存金额
   rebate: 0, //预存返利
   remind: "", //预存备注
   invoiceCostList: [], // 发票金额列表
-  addition: ['电子合同', '电子版测试清单', '电子报告'], //附加文件
+  addition: ["电子合同", "电子版测试清单", "电子报告"], //附加文件
   canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
   demand: "", //需求方名称
   detection: "", //项目检测
@@ -52,65 +52,64 @@ const formState = reactive({
   invoiceTitle: [],
 });
 const formOptions = reactive({
-  plainOptions: ['电子合同', '电子版测试清单', '电子报告']
+  plainOptions: ["电子合同", "电子版测试清单", "电子报告"],
 });
 const defaultInvoice = {
-  "id": 0,
-  "invoiceid": 0,
-  "title": "",
-  "registrationo": "",
-  "depositbank": "",
-  "banksn": "",
-  "registaddress": "",
-  "registphone": "",
+  id: 0,
+  invoiceid: 0,
+  title: "",
+  registrationo: "",
+  depositbank: "",
+  banksn: "",
+  registaddress: "",
+  registphone: "",
 };
 
 watch(formState, async (newdata, olddata) => {
-  invoiceCostList.value = new Array(newdata.invoiceNum - 0)
-})
-
+  invoiceCostList.value = new Array(newdata.invoiceNum - 0);
+});
 const getRebate = () => {
   if (formState.amount > 5000 && formState.amount < 10000) {
     formState.rebate = formState.amount * 0.03;
-    return formState.amount * 0.03
+    return formState.amount * 0.03;
   }
   if (formState.amount >= 10000 && formState.amount < 30000) {
     formState.rebate = formState.amount * 0.04;
-    return formState.amount * 0.04
+    return formState.amount * 0.04;
   }
   if (formState.amount >= 30000 && formState.amount < 50000) {
     formState.rebate = formState.amount * 0.06;
-    return formState.amount * 0.06
+    return formState.amount * 0.06;
   }
   if (formState.amount >= 50000 && formState.amount < 100000) {
     formState.rebate = formState.amount * 0.08;
-    return formState.amount * 0.08
+    return formState.amount * 0.08;
   }
   if (formState.amount >= 100000) {
     formState.rebate = formState.amount * 0.1;
-    return formState.amount * 0.1
+    return formState.amount * 0.1;
   }
   return 0;
-}
+};
 let modelRef = reactive({
-    // "invoiceid": "",
-    // "title": "广东工业大学222",
-    // "registrationo": "12330000470003281H",
-    // "depositbank": "招商银行2",
-    // "banksn": "441782783288",
-    // "registaddress": "阿时间考虑的",
-    // "registphone": "15086726356",
-    // "isdefault": 1,
-    "id": 0,
-    "invoiceid": 0,
-    "title": "",
-    "registrationo": "",
-    "depositbank": "",
-    "banksn": "",
-    "registaddress": "",
-    "registphone": "",
-    "isdefault": 1,
-  });
+  // "invoiceid": "",
+  // "title": "广东工业大学222",
+  // "registrationo": "12330000470003281H",
+  // "depositbank": "招商银行2",
+  // "banksn": "441782783288",
+  // "registaddress": "阿时间考虑的",
+  // "registphone": "15086726356",
+  // "isdefault": 1,
+  id: 0,
+  invoiceid: 0,
+  title: "",
+  registrationo: "",
+  depositbank: "",
+  banksn: "",
+  registaddress: "",
+  registphone: "",
+  isdefault: 1,
+});
 let visible = ref(false);
 let invoiceCostList = ref([]);
 let payVisible = ref(false);
@@ -119,12 +118,11 @@ const editInvoice = reactive({
   isEditInvoice: false,
   editIndex: 0,
 });
-const initStoreList = async function () {
+const initInvoiceList = async function () {
   try {
-    const res = await getStoreList();
+    const res = await getInvoiceList();
     if (res?.code == 0) {
-      formState.value = res?.data;
-      // nav.value = res?.data;
+      formState.invoiceTitle = res?.data;
     }
   } catch (err) {}
 };
@@ -132,10 +130,10 @@ const replaceChecked = (index) => {
   formState.invoiceTitle.forEach((item) => {
     item.isdefault = 0;
     item.checked = false;
-  })
-  formState.invoiceTitle[index].isdefault = 1; 
-  formState.invoiceTitle[index].checked = true;  
-}
+  });
+  formState.invoiceTitle[index].isdefault = 1;
+  formState.invoiceTitle[index].checked = true;
+};
 
 const showModal = () => {
   visible.value = true;
@@ -150,13 +148,13 @@ const changeField = (type, value) => {
 };
 
 const handleOk = () => {
-  if(!editInvoice.isEditInvoice) {
+  if (!editInvoice.isEditInvoice) {
     formState.invoiceTitle.push(modelRef);
   } else {
     formState.invoiceTitle.splice(editInvoice.editIndex, 1, modelRef);
   }
-  hideModal()
-}
+  hideModal();
+};
 
 const { resetFields, validate, validateInfos } = useForm(
   formState,
@@ -167,14 +165,14 @@ const { resetFields, validate, validateInfos } = useForm(
         message: "预存金额不能少于1000",
         pattern: (num) => {
           return num >= 1000;
-        }
+        },
       },
     ],
     mailBo: [
       {
         required: true,
         message: "请输入正确格式邮箱",
-        pattern: /\w[-.\w]*\@[-a-z0-9]+(\.[-a-z0-9]+)*\.(com|cn|edu|uk)/ig
+        pattern: /\w[-.\w]*\@[-a-z0-9]+(\.[-a-z0-9]+)*\.(com|cn|edu|uk)/gi,
       },
     ],
   })
@@ -182,16 +180,16 @@ const { resetFields, validate, validateInfos } = useForm(
 
 const onSubmit = () => {
   validate()
-    .then(async(res) => {
+    .then(async (res) => {
       try {
         formState.invoiceNum = formState.invoiceNum - 0;
         formState.amount = formState.amount - 0;
         const newArr = formState.invoiceCostList.map((item) => {
-          return item - 0
+          return item - 0;
         });
         formState.invoiceCostList = newArr;
         const data = await addStore({
-          ...formState
+          ...formState,
         });
         if (data?.code == 0) {
           // notification.success({
@@ -199,7 +197,7 @@ const onSubmit = () => {
           // });
           payVisible.value = true;
         }
-      } catch(err) {
+      } catch (err) {
         alert(err);
       }
     })
@@ -210,7 +208,7 @@ const onSubmit = () => {
 // 预存页面prestore
 
 onMounted(() => {
-  initStoreList();
+  initInvoiceList();
 });
 </script>
 
@@ -267,11 +265,12 @@ onMounted(() => {
                 <span class="t-red"> *</span>
                 <span>预存福利：</span>
               </div>
-              <a-button 
-              type="primary" 
-              class="b-base-button"
-              :class="{ 'b-base-button-active': !formState.welfare }"
-              >测试费</a-button>
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': !formState.welfare }"
+                >测试费</a-button
+              >
             </li>
             <li class="clear l-payment">
               <div class="t-title f-fl">
@@ -302,7 +301,7 @@ onMounted(() => {
                   style="width: 250px"
                   v-model:value="formState.rebate"
                 /> -->
-                {{getRebate()}}
+                {{ getRebate() }}
               </a-form-item>
               <span class="t-unil">元</span>
             </li>
@@ -345,10 +344,10 @@ onMounted(() => {
                 <p>最快5分钟开具</p>
                 <img :src="IconRecomends" class="i-payment" />
               </div>
-              <div 
-              class="paper-invoices invoices-style-l"
-              :class="{ 'invoices-style-active': formState.invoiceType }"
-              @click="changeField('invoiceType', 1)"
+              <div
+                class="paper-invoices invoices-style-l"
+                :class="{ 'invoices-style-active': formState.invoiceType }"
+                @click="changeField('invoiceType', 1)"
               >
                 <p>纸质增值税专用发票</p>
                 <p>预计7天内送达</p>
@@ -360,14 +359,18 @@ onMounted(() => {
                 <span>开票总额：</span>
               </div>
               <div class="total-ticket f-fl">
-                <span class="">{{formState.amount}}</span>
+                <span class="">{{ formState.amount }}</span>
                 <span>元</span>
               </div>
             </div>
             <div class="clear attached-files-li">
               <div class="t-title f-fl">附加文件：</div>
               <div class="attached-files f-fl">
-                <a-checkbox-group name="addition" v-model:value="formState.addition" :options="formOptions.plainOptions" />
+                <a-checkbox-group
+                  name="addition"
+                  v-model:value="formState.addition"
+                  :options="formOptions.plainOptions"
+                />
               </div>
             </div>
             <div class="clear">
@@ -382,9 +385,14 @@ onMounted(() => {
                     v-model:value="formState.demand"
                   >
                     <template #suffix>
-                      <a @click="() => {
-                        formState.canEdit = !formState.canEdit;
-                      }">{{!formState.canEdit ? "修改" : "确定"}}</a>
+                      <a
+                        @click="
+                          () => {
+                            formState.canEdit = !formState.canEdit;
+                          }
+                        "
+                        >{{ !formState.canEdit ? "修改" : "确定" }}</a
+                      >
                     </template>
                   </a-input>
                 </a-form-item>
@@ -417,8 +425,16 @@ onMounted(() => {
                   />
                 </a-form-item>
               </div>
-              <div class="clear item-detection" v-if="formState.invoiceNumType == 2">
-                <div class="t-title f-fl" style="text-align: right!important;padding-right: 30px;">发票金额：</div>
+              <div
+                class="clear item-detection"
+                v-if="formState.invoiceNumType == 2"
+              >
+                <div
+                  class="t-title f-fl"
+                  style="text-align: right !important; padding-right: 30px"
+                >
+                  发票金额：
+                </div>
                 <div class="f-fl" style="width: 80%">
                   <a-form-item>
                     <a-input
@@ -427,14 +443,23 @@ onMounted(() => {
                       :key="item"
                       placeholder="请输入这张发票金额"
                       class="prestore-input"
-                      style="width: 200px; margin-right: 10px;margin-bottom: 10px"
+                      style="
+                        width: 200px;
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                      "
                       v-model:value="formState.invoiceCostList[index]"
                     />
                   </a-form-item>
                 </div>
               </div>
               <div class="clear item-detection">
-                <div class="t-title f-fl" style="text-align:right!important;padding-right: 30px;">项目检测：</div>
+                <div
+                  class="t-title f-fl"
+                  style="text-align: right !important; padding-right: 30px"
+                >
+                  项目检测：
+                </div>
                 <div class="f-fl">
                   <a-form-item>
                     <a-input
@@ -460,74 +485,139 @@ onMounted(() => {
         </div>
         <div class="content-invoice clear">
           <div class="h3">发票抬头</div>
-          <div class="card-wrap card-checked" v-for="(item, index) in formState.invoiceTitle" v-bind:key="item" v-show="item.checked" @click="() => {
-              replaceChecked(index)
-            }">
+          <div
+            class="card-wrap card-checked"
+            v-for="(item, index) in formState.invoiceTitle"
+            v-bind:key="item"
+            v-show="item.checked"
+            @click="
+              () => {
+                replaceChecked(index);
+              }
+            "
+          >
             <a-descriptions class="card-list card-list-active" :column="2">
-              <a-descriptions-item label="发票抬头"><span>{{item.title}}</span><img width="40" height="18" class="default-icon" style="" :src="defaultIcon" /></a-descriptions-item>
-              <a-descriptions-item label="企业税号">{{item.registrationo}}</a-descriptions-item>
-              <a-descriptions-item label="开户行名称">{{item.depositbank}}</a-descriptions-item>
-              <a-descriptions-item label="开户行帐号">{{item.banksn}}</a-descriptions-item>
+              <a-descriptions-item label="发票抬头"
+                ><span>{{ item.title }}</span
+                ><img
+                  width="40"
+                  height="18"
+                  class="default-icon"
+                  style=""
+                  :src="defaultIcon"
+              /></a-descriptions-item>
+              <a-descriptions-item label="企业税号">{{
+                item.registrationo
+              }}</a-descriptions-item>
+              <a-descriptions-item label="开户行名称">{{
+                item.depositbank
+              }}</a-descriptions-item>
+              <a-descriptions-item label="开户行帐号">{{
+                item.banksn
+              }}</a-descriptions-item>
               <a-descriptions-item label="注册地址">
-                {{item.registaddress}}
+                {{ item.registaddress }}
               </a-descriptions-item>
               <a-descriptions-item label="注册电话">
-                {{item.registphone}}
+                {{ item.registphone }}
               </a-descriptions-item>
             </a-descriptions>
             <div class="edit-btn-wrap">
-              <a class="b-edit" @click="() => {
-                editInvoice.isEditInvoice = true;
-                editInvoice.editIndex = index;
-                modelRef = formState.invoiceTitle[index];
-                showModal();
-              }">修改</a>
-              <a-popconfirm
-                title="你确定要删除吗？"
-                ok-text="确定"
-                cancel-text="取消"
-                @confirm="() => {
-                  formState.invoiceTitle.splice(index, 1);
-                }"
-              >
-                <a class="b-delete" @click="() => {
-                  formState.invoiceTitle.splice(index, 1);
-                }">删除</a>
-              </a-popconfirm>
-            </div>
-            <img :src="checkIcon" class="card-icon icon-check" />
-          </div>
-          <a-collapse v-model:activeKey="activeKey" accordion expandIconPosition="right" :bordered="false">
-            <a-collapse-panel key="1" header="使用其他抬头">
-              <div class="card-wrap card-uncheck" v-for="(item, index) in formState.invoiceTitle" v-bind:key="item" v-show="!item.checked" @click="() => {
-                replaceChecked(index)
-                }">
-                <a-descriptions class="card-list" :column="2">
-                  <a-descriptions-item label="发票抬头">{{item.title}}</a-descriptions-item>
-                  <a-descriptions-item label="企业税号">{{item.registrationo}}</a-descriptions-item>
-                  <a-descriptions-item label="开户行名称">{{item.depositbank}}</a-descriptions-item>
-                  <a-descriptions-item label="开户行帐号">{{item.banksn}}</a-descriptions-item>
-                  <a-descriptions-item label="注册地址">
-                    {{item.registaddress}}
-                  </a-descriptions-item>
-                  <a-descriptions-item label="注册电话">
-                    {{item.registphone}}
-                  </a-descriptions-item>
-                </a-descriptions>
-                <div class="edit-btn-wrap">
-                  <a class="b-edit" @click="() => {
+              <a
+                class="b-edit"
+                @click="
+                  () => {
                     editInvoice.isEditInvoice = true;
                     editInvoice.editIndex = index;
                     modelRef = formState.invoiceTitle[index];
                     showModal();
-                  }">修改</a>
+                  }
+                "
+                >修改</a
+              >
+              <a-popconfirm
+                title="你确定要删除吗？"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="
+                  () => {
+                    formState.invoiceTitle.splice(index, 1);
+                  }
+                "
+              >
+                <a
+                  class="b-delete"
+                  @click="
+                    () => {
+                      formState.invoiceTitle.splice(index, 1);
+                    }
+                  "
+                  >删除</a
+                >
+              </a-popconfirm>
+            </div>
+            <img :src="checkIcon" class="card-icon icon-check" />
+          </div>
+          <a-collapse
+            v-model:activeKey="activeKey"
+            accordion
+            expandIconPosition="right"
+            :bordered="false"
+          >
+            <a-collapse-panel key="1" header="使用其他抬头">
+              <div
+                class="card-wrap card-uncheck"
+                v-for="(item, index) in formState.invoiceTitle"
+                v-bind:key="item"
+                v-show="!item.checked"
+                @click="
+                  () => {
+                    replaceChecked(index);
+                  }
+                "
+              >
+                <a-descriptions class="card-list" :column="2">
+                  <a-descriptions-item label="发票抬头">{{
+                    item.title
+                  }}</a-descriptions-item>
+                  <a-descriptions-item label="企业税号">{{
+                    item.registrationo
+                  }}</a-descriptions-item>
+                  <a-descriptions-item label="开户行名称">{{
+                    item.depositbank
+                  }}</a-descriptions-item>
+                  <a-descriptions-item label="开户行帐号">{{
+                    item.banksn
+                  }}</a-descriptions-item>
+                  <a-descriptions-item label="注册地址">
+                    {{ item.registaddress }}
+                  </a-descriptions-item>
+                  <a-descriptions-item label="注册电话">
+                    {{ item.registphone }}
+                  </a-descriptions-item>
+                </a-descriptions>
+                <div class="edit-btn-wrap">
+                  <a
+                    class="b-edit"
+                    @click="
+                      () => {
+                        editInvoice.isEditInvoice = true;
+                        editInvoice.editIndex = index;
+                        modelRef = formState.invoiceTitle[index];
+                        showModal();
+                      }
+                    "
+                    >修改</a
+                  >
                   <a-popconfirm
                     title="你确定要删除吗？"
                     ok-text="确定"
                     cancel-text="取消"
-                    @confirm="() => {
-                      formState.invoiceTitle.splice(index, 1);
-                    }"
+                    @confirm="
+                      () => {
+                        formState.invoiceTitle.splice(index, 1);
+                      }
+                    "
                   >
                     <a class="b-delete">删除</a>
                   </a-popconfirm>
@@ -543,10 +633,12 @@ onMounted(() => {
             </div>
             <a-button
               type="primary"
-              @click="() => {
-                editInvoice.isEditInvoice = false;
-                showModal();
-              }"
+              @click="
+                () => {
+                  editInvoice.isEditInvoice = false;
+                  showModal();
+                }
+              "
               class="t-add"
             ></a-button>
           </div>
@@ -573,7 +665,12 @@ onMounted(() => {
       </div>
       <div class="m-button">
         <div class="m-submit">
-          <a-button type="primary" class="submit-button" @click.prevent="onSubmit">提交预存申请</a-button>
+          <a-button
+            type="primary"
+            class="submit-button"
+            @click.prevent="onSubmit"
+            >提交预存申请</a-button
+          >
         </div>
       </div>
     </form>
@@ -581,13 +678,15 @@ onMounted(() => {
     <a-modal
       class="prestore-modal-wrap"
       v-model:visible="visible"
-      :title="editInvoice.isEditInvoice? '编辑发票信息':'新增发票信息'"
+      :title="editInvoice.isEditInvoice ? '编辑发票信息' : '新增发票信息'"
       width="600px"
       @ok="handleOk"
-      @cancel="() => {
-        modelRef = defaultInvoice;
-        visible = false
-      }"
+      @cancel="
+        () => {
+          modelRef = defaultInvoice;
+          visible = false;
+        }
+      "
     >
       <form>
         <!-- <h3>新增发票信息</h3> -->
@@ -597,11 +696,7 @@ onMounted(() => {
               <span class="t-red">*</span>发票抬头：
             </div>
             <a-form-item class="f-fl" v-show="false">
-              <a-input
-                v-model:value="modelRef.id"
-                :defaultValue="0"
-                hidden
-              />
+              <a-input v-model:value="modelRef.id" :defaultValue="0" hidden />
             </a-form-item>
             <a-form-item class="f-fl">
               <a-input
@@ -675,7 +770,7 @@ onMounted(() => {
     <a-modal
       class="prestore-modal-wrap"
       v-model:visible="payVisible"
-      :title="formState.payType == 1 ? '在线支付': '申请提示'"
+      :title="formState.payType == 1 ? '在线支付' : '申请提示'"
       width="400px"
       :footer="null"
     >
@@ -686,60 +781,62 @@ onMounted(() => {
   </main>
 </template>
 <style lang="scss" scoped>
-.prestore-modal-wrap{
-  width: 600px!important;
+.prestore-modal-wrap {
+  width: 600px !important;
 }
-.card-list{
+.card-list {
   padding: 15px;
   // background: #FBFFFF;
-	border: 1px solid #EEEEEE;
+  border: 1px solid #eeeeee;
   cursor: pointer;
 }
-.card-list-active,.card-list:hover{
-  background:  #FBFFFF;
+.card-list-active,
+.card-list:hover {
+  background: #fbffff;
   border-color: #4096ff;
 }
-.card-wrap{
+.card-wrap {
   position: relative;
-  .card-icon{
+  .card-icon {
     position: absolute;
     right: 0;
     bottom: 0;
     width: 36px;
     height: 36px;
   }
-  .default-icon{
-position:relative;top:4px;margin-left: 3px;
+  .default-icon {
+    position: relative;
+    top: 4px;
+    margin-left: 3px;
   }
 }
-.card-wrap:hover{
-  .icon-uncheck{
+.card-wrap:hover {
+  .icon-uncheck {
     display: none;
   }
-  .edit-btn-wrap{
+  .edit-btn-wrap {
     display: block;
   }
 }
-.card-checked{
+.card-checked {
   padding: 16px;
   padding-bottom: 0;
-  .card-icon{
+  .card-icon {
     right: 16px;
     bottom: 0;
   }
 }
-.card-uncheck{
+.card-uncheck {
   margin-bottom: 10px;
 }
-.content-invoice{
-  .ant-descriptions-item-content{
-
+.content-invoice {
+  .ant-descriptions-item-content {
   }
 }
 .wrap-prestore {
   padding: 8px 30px 0;
   background: #fff;
-  .ant-collapse{
+  .ant-collapse {
     background: transparent;
   }
 }
@@ -915,14 +1012,14 @@ position:relative;top:4px;margin-left: 3px;
   padding: 20px 0 10px 44px;
   box-sizing: border-box;
 }
-.content-invoice{
+.content-invoice {
   position: relative;
-  .edit-btn-wrap{
+  .edit-btn-wrap {
     display: none;
     position: absolute;
     top: 30px;
     right: 30px;
-    .b-delete{
+    .b-delete {
       margin-left: 10px;
     }
   }
@@ -1005,10 +1102,10 @@ position:relative;top:4px;margin-left: 3px;
     width: 120px;
     color: #606266;
   }
-  .ant-form-item{
+  .ant-form-item {
     width: 430px;
   }
-  .prestore-input{
+  .prestore-input {
     width: 430px;
   }
 }
