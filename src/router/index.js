@@ -24,6 +24,11 @@ const router = createRouter({
       name: "index",
       component: import("../views/process/Index.vue"),
     },
+    {
+      path: "/process/order",
+      name: "order",
+      component: import("../views/process/Order.vue"),
+    },
     // {
     //   path: "/process/high",
     //   name: "high",

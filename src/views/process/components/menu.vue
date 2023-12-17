@@ -2,6 +2,7 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive, defineComponent, watch, onUpdated, onMounted } from "vue";
 import { getOrderMenu } from "@/services/process";
+import router from '@/router';
 const props = defineProps(['type'])
 const menuList = ref([]);
 
@@ -13,6 +14,12 @@ const getOrderMenuInfo = async function (type) {
     }
   } catch (err) {}
 };
+
+const order = (id) => {
+  router.push({ path: `/process/Order`, query: {
+    id,
+  }});
+}
 
 watch(props, async (newdata, olddata) => {
   getOrderMenuInfo(newdata.type);
@@ -31,7 +38,7 @@ onMounted(() => {
         <h2 class="bio-second-level" :id="item.categoryid">{{item.catename}}</h2>
         <ul class="bio-products">
           <li v-for="(innerItem, innerIndex) in item.list" :key="innerItem">
-            <a :data-id="innerItem.buffetid" href="">{{innerItem.itemname}}<img v-if="innerIndex < 1"
+            <a :data-id="innerItem.buffetid" @click="order(innerItem.buffetid)">{{innerItem.itemname}}<img v-if="innerIndex < 1"
                 style="height: 14px; margin-left: 4px; margin-top: -2px"
                 src="//cdn0.shiyanjia.com/c/2022/images/guide/sparkIcon.png"
                 alt=""

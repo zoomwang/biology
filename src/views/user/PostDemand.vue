@@ -14,7 +14,7 @@ const formState = reactive({
   email: "",
   samplesNumber: "",
   budgetRange: "",
-  completionCycle: "",
+  // completionCycle: "",
   fileUrl: "",
   demandDesc: ""
 });
@@ -50,7 +50,7 @@ const { resetFields, validate, validateInfos } = useForm(
     ],
     email: [
       {
-        required: true,
+        required: false,
         message: "请输入正确格式邮箱",
         pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/,
       },
@@ -126,12 +126,12 @@ const { resetFields, validate, validateInfos } = useForm(
             <a-input v-model:value="formState.budget" placeholder="请填写" />
           </a-form-item>
         </div>
-        <div class="l-item clear">
+        <!-- <div class="l-item clear">
           <div class="t-title f-fl">完成周期：</div>
           <a-form-item class="f-fl">
             <a-input v-model:value="formState.completionCycle" placeholder="请填写" />
           </a-form-item>
-        </div>
+        </div> -->
         <div class="l-item clear">
           <div class="t-title f-fl">添加附件：</div>
           <a-form-item class="f-fl">
