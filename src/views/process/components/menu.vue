@@ -16,7 +16,7 @@ const getOrderMenuInfo = async function (type) {
 };
 
 const order = (id) => {
-  router.push({ path: `/process/Order`, query: {
+  router.push({ path: `/process/order`, query: {
     id,
   }});
 }

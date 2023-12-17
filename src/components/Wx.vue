@@ -19,6 +19,7 @@ import wx from "../assets/wx.png";
 .sci-buffet-info-section {
   position: relative;
   top: 0px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.2)
 }
 /* å³ä¾§ä»ªå™¨ä¿¡æ¯ */
 .sci-buffet-right {

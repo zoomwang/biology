@@ -4,6 +4,7 @@ import { onMounted, onBeforeMount } from "vue";
 import Header from "../src/components/Header.vue";
 import Footer from "../src/components/Footer.vue";
 import Wx from "../src/components/Wx.vue";
+import Machine from "../src/components/Machine.vue";
 import { isLogged } from "../src/services/user";
 import $localStorage from "@/hooks/localStorage";
 import router from './router';
@@ -48,6 +49,7 @@ onBeforeMount(async() => {
       <RouterView v-if="isNext" class="wrap-l" />
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
       <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
+        <Machine v-if="route?.fullPath.includes('order')" />
         <Wx />
       </div>
     </div>
