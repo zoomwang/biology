@@ -1,7 +1,8 @@
 <script setup>
 import { ref, computed, reactive, defineComponent, watch } from "vue";
-import { CalendarTwoTone } from "@ant-design/icons-vue";
+import { CalendarTwoTone, DeleteTwoTone } from "@ant-design/icons-vue";
 // import { isLogged } from "../../services/user";
+
 const formState = reactive({
   layout: "horizontal",
   type: 0,
@@ -19,9 +20,11 @@ const formState = reactive({
       addition: [],
     }],
 });
+
 const headers = {
   authorization: "authorization-text",
 };
+const cost = ref(0);
 const handleChange = (info) => {
   if (info.file.status !== "uploading") {
     console.log(info.file, info.fileList);
@@ -32,6 +35,20 @@ const handleChange = (info) => {
     message.error(`${info.file.name} file upload failed.`);
   }
 };
+const addItem = () => {
+  formState.group.push({
+      sampleNum: 1,
+      sampleNo: [],
+      time: 1,
+      addition: [],
+    });
+}
+const deleteItem = (idx) => {
+  const group = formState.group;
+  if (group.length <= 1) return;
+  group.splice(idx, 1);
+  formState.group = group;
+}
 const labelCol = {
   span: 3,
 };
@@ -55,6 +72,7 @@ watch(formState, async (newdata, olddata) => {
   sampleNo.value = sample;
   // sampleNo.value = new Array(newdata.sampleNum - 0);
 });
+
 </script>
 
 <template>
@@ -93,6 +111,7 @@ watch(formState, async (newdata, olddata) => {
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel v-for="(item, index) in formState.group" :header="`第${index+1}组样品数据`" :key="index+3" :disabled="false">
+            <template #extra><DeleteTwoTone @click.prevent="deleteItem(index)" /></template>
             <a-form-item label="样品数量">
               <a-input
                 type="number"
@@ -139,18 +158,56 @@ watch(formState, async (newdata, olddata) => {
               </a-upload>
             </a-form-item>
           </a-collapse-panel>
-          <a-collapse-panel key="3" header="This is panel header 3" disabled>
+          <div style="padding: 20px">
+            <a-button type="primary" @click="addItem">增加一组样品</a-button>
+          </div>
+          <!-- <a-collapse-panel key="3" header="This is panel header 3" disabled>
             <p>{{ text }}</p>
-          </a-collapse-panel>
+          </a-collapse-panel> -->
         </a-collapse>
       </div>
     </a-form>
+    <div
+      class="steps-action d-flex"
+      ref="fixedName"
+    >
+    <!-- :class="[state.isFixed ? 'fixed_active' : '']" -->
+      <div class="cost">
+        合计费用：<a-button type="link">¥{{ cost }}</a-button>
+      </div>
+      <a-button @click="prev">保存草稿</a-button>
+      <a-button
+        style="margin-left: 8px; margin-right: 30px"
+        type="primary"
+        @click="$emit('next')"
+        >下一步</a-button
+      >
+      <!-- <a-button
+        v-if="current == 2"
+        type="primary"
+        style="margin-left: 8px; margin-right: 30px"
+        @click="$message.success('Processing complete!')"
+      >
+        提交
+      </a-button> -->
+    </div>
   </main>
 </template>
 <style lang="scss" scoped>
+.cost {
+  line-height: 32px;
+  flex: 1;
+  background: #fff;
+}
 .first-step {
   .ant-collapse-header-text {
     text-align: left !important;
   }
 }
+
+.steps-action {
+  padding-top: 24px;
+  background: #fff;
+}
+
 </style>
