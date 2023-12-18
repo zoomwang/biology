@@ -1,8 +1,25 @@
 <script setup>
-import { ref, computed, reactive, defineComponent, watch } from "vue";
-import { CalendarTwoTone, DeleteTwoTone } from "@ant-design/icons-vue";
+import {
+  ref,
+  computed,
+  reactive,
+  defineComponent,
+  watch,
+  defineEmits,
+} from "vue";
+import {
+  CalendarTwoTone,
+  DeleteTwoTone,
+  PlusSquareTwoTone,
+  QuestionCircleTwoTone,
+} from "@ant-design/icons-vue";
 // import { isLogged } from "../../services/user";
+import { Form } from "ant-design-vue";
+const emit = defineEmits(["submit", "next"]);
 
+const useForm = Form.useForm;
+const containerRef = ref();
+const bottom = ref(10);
 const formState = reactive({
   layout: "horizontal",
   type: 0,
@@ -18,7 +35,9 @@ const formState = reactive({
       sampleNo: [],
       time: 1,
       addition: [],
-    }],
+    },
+  ],
+  fee: 0,
 });
 
 const headers = {
@@ -37,24 +56,22 @@ const handleChange = (info) => {
 };
 const addItem = () => {
   formState.group.push({
-      sampleNum: 1,
-      sampleNo: [],
-      time: 1,
-      addition: [],
-    });
-}
+    sampleNum: 1,
+    sampleNo: [],
+    time: 1,
+    addition: [],
+  });
+};
 const deleteItem = (idx) => {
   const group = formState.group;
   if (group.length <= 1) return;
   group.splice(idx, 1);
   formState.group = group;
-}
+};
 const labelCol = {
   span: 3,
 };
-let sampleNo = ref([
-  [1]
-]);
+let sampleNo = ref([[1]]);
 
 const readme = ref([
   "啊看黄金时代卡是多久啊",
@@ -64,7 +81,7 @@ const readme = ref([
 ]);
 const activeKey = ref(["2", "3"]);
 watch(formState, async (newdata, olddata) => {
-  console.log('newdata==', newdata)
+  console.log("newdata==", newdata);
   const sample = [];
   newdata.group.forEach((item, index) => {
     sample[index] = new Array(item.sampleNum - 0);
@@ -73,11 +90,40 @@ watch(formState, async (newdata, olddata) => {
   // sampleNo.value = new Array(newdata.sampleNum - 0);
 });
 
+const canNext = () => {
+  validate()
+    .then(() => {
+      // debugger
+      emit("next");
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+};
+
+const { resetFields, validate, validateInfos } = useForm(
+  formState,
+  reactive({
+    type: [
+      {
+        required: true,
+        message: "请选择",
+      },
+    ],
+    magnetism: [
+      {
+        required: true,
+        message: "请输入",
+      },
+    ],
+    group: [],
+  })
+);
 </script>
 
 <template>
   <!-- 第一步 -->
-  <main>
+  <main id="components-affix-demo-target" ref="containerRef" class="scrollable-container">
     <a-form :model="formState">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
@@ -88,7 +134,7 @@ watch(formState, async (newdata, olddata) => {
             <template #extra><CalendarTwoTone /></template>
           </a-collapse-panel>
           <a-collapse-panel key="2" header="全局问题" :disabled="false">
-            <a-form-item label="拍摄方式">
+            <a-form-item label="拍摄方式" v-bind="validateInfos.type">
               <a-radio-group
                 v-model:value="formState.type"
                 button-style="solid"
@@ -100,6 +146,7 @@ watch(formState, async (newdata, olddata) => {
             <a-form-item
               ::label-col="labelCol"
               label="样品是否有磁性(即是否含有铁钴锰等磁性元素)"
+              v-bind="validateInfos.magnetism"
             >
               <a-radio-group
                 v-model:value="formState.type"
@@ -110,9 +157,26 @@ watch(formState, async (newdata, olddata) => {
               </a-radio-group>
             </a-form-item>
           </a-collapse-panel>
-          <a-collapse-panel v-for="(item, index) in formState.group" :header="`第${index+1}组样品数据`" :key="index+3" :disabled="false">
-            <template #extra><DeleteTwoTone @click.prevent="deleteItem(index)" /></template>
-            <a-form-item label="样品数量">
+          <a-collapse-panel
+            v-for="(item, index) in formState.group"
+            :header="`第${index + 1}组样品数据`"
+            :key="index + 3"
+            :disabled="false"
+          >
+            <template #extra
+              ><PlusSquareTwoTone
+                style="margin-right: 10px"
+                @click.stop="addItem" /><DeleteTwoTone
+                @click.stop="deleteItem(index)"
+            /></template>
+            <a-form-item
+              label="样品数量"
+              :rules="{
+                required: true,
+                message: '请输入',
+                trigger: 'change',
+              }"
+            >
               <a-input
                 type="number"
                 v-model:value="formState.group[index].sampleNum"
@@ -121,7 +185,14 @@ watch(formState, async (newdata, olddata) => {
                 style="width: 120px"
               />
             </a-form-item>
-            <a-form-item label="样品编号">
+            <a-form-item
+              label="样品编号"
+              :rules="{
+                required: true,
+                message: '请输入',
+                trigger: 'change',
+              }"
+            >
               <a-input
                 v-for="(item, idx) in sampleNo[index]"
                 :key="idx"
@@ -132,7 +203,14 @@ watch(formState, async (newdata, olddata) => {
                 <template #prefix> {{ idx + 1 }}- </template>
               </a-input>
             </a-form-item>
-            <a-form-item label="预约时长">
+            <a-form-item
+              label="预约时长"
+              :rules="{
+                required: true,
+                message: '请输入',
+                trigger: 'change',
+              }"
+            >
               <a-input
                 type="number"
                 v-model:value="formState.group[index].time"
@@ -142,7 +220,7 @@ watch(formState, async (newdata, olddata) => {
                 step="0.5"
               />
             </a-form-item>
-            <a-form-item label="预约时长">
+            <a-form-item label="上传文件">
               <a-upload
                 v-model:file-list="formState.group[index].addition"
                 name="file"
@@ -158,30 +236,56 @@ watch(formState, async (newdata, olddata) => {
               </a-upload>
             </a-form-item>
           </a-collapse-panel>
-          <div style="padding: 20px">
+          <a-collapse-panel
+            :key="formState.group.length + 2"
+            header="寄样地址"
+            :disabled="false"
+          >
+            <a-form-item label="运费" v-bind="validateInfos.fee">
+              <a-radio-group v-model:value="formState.fee" button-style="solid">
+                <a-radio-button :value="0">
+                  运费到付
+                  <a-popover placement="topLeft">
+                    <template #content>
+                      <p>选择运费到付，订单金额需加收12元快递费。</p>
+                    </template>
+                    <template #title>
+                      <span>提醒</span>
+                    </template>
+                    <QuestionCircleTwoTone />
+                  </a-popover>
+                </a-radio-button>
+                <a-radio-button :value="1">运费自付</a-radio-button>
+              </a-radio-group>
+            </a-form-item>
+            <a-form-item
+              ::label-col="labelCol"
+              label="寄样地址"
+              v-bind="validateInfos.magnetism"
+            >
+            </a-form-item>
+          </a-collapse-panel>
+          <!-- <div style="padding: 20px">
             <a-button type="primary" @click="addItem">增加一组样品</a-button>
-          </div>
-          <!-- <a-collapse-panel key="3" header="This is panel header 3" disabled>
-            <p>{{ text }}</p>
-          </a-collapse-panel> -->
+          </div> -->
         </a-collapse>
       </div>
     </a-form>
-    <div
-      class="steps-action d-flex"
-      ref="fixedName"
-    >
-    <!-- :class="[state.isFixed ? 'fixed_active' : '']" -->
-      <div class="cost">
-        合计费用：<a-button type="link">¥{{ cost }}</a-button>
-      </div>
-      <a-button @click="prev">保存草稿</a-button>
-      <a-button
-        style="margin-left: 8px; margin-right: 30px"
-        type="primary"
-        @click="$emit('next')"
-        >下一步</a-button
-      >
+      <a-affix :offset-bottom="bottom">
+        <div class="d-flex">
+        <div class="cost">
+          合计费用：<a-button type="link">¥{{ cost }}</a-button>
+        </div>
+        <a-button style="display:block" @click="prev">保存草稿</a-button>
+        <a-button
+          style="margin-left: 8px; margin-right: 30px;display:block"
+          type="primary"
+          @click="canNext"
+          >下一步</a-button
+        >
+        </div>
+      </a-affix>
+
       <!-- <a-button
         v-if="current == 2"
         type="primary"
@@ -190,7 +294,7 @@ watch(formState, async (newdata, olddata) => {
       >
         提交
       </a-button> -->
-    </div>
+    <!-- </div> -->
   </main>
 </template>
 <style lang="scss" scoped>
@@ -208,6 +312,12 @@ watch(formState, async (newdata, olddata) => {
 .steps-action {
   padding-top: 24px;
   background: #fff;
+}
+.d-flex{
+  margin-top: 10px;
+  padding: 15px 0 15px 10px;
+  background: #fff;
+  box-shadow: 3px 3px 4px 3px rgba(0, 0, 0, 0.1);
 }
 
 </style>
