@@ -12,6 +12,7 @@ import {
   DeleteTwoTone,
   PlusSquareTwoTone,
   QuestionCircleTwoTone,
+  EnvironmentOutlined
 } from "@ant-design/icons-vue";
 // import { isLogged } from "../../services/user";
 import { Form } from "ant-design-vue";
@@ -20,6 +21,19 @@ const emit = defineEmits(["submit", "next"]);
 const useForm = Form.useForm;
 const containerRef = ref();
 const bottom = ref(10);
+const addressList = [{
+  id: '1',
+  name: "广州办事处"
+},{
+  id: '2',
+  name: "深圳办事处"
+},{
+  id: '3',
+  name: "上海办事处"
+}]
+const selectAdd = (add) => {
+  console.log('add=', add);
+}
 const formState = reactive({
   layout: "horizontal",
   type: 0,
@@ -124,7 +138,7 @@ const { resetFields, validate, validateInfos } = useForm(
 <template>
   <!-- 第一步 -->
   <main id="components-affix-demo-target" ref="containerRef" class="scrollable-container">
-    <a-form :model="formState">
+    <a-form :model="formState" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
           <a-collapse-panel key="1" header="预约须知">
@@ -220,7 +234,7 @@ const { resetFields, validate, validateInfos } = useForm(
                 step="0.5"
               />
             </a-form-item>
-            <a-form-item label="上传文件">
+            <a-form-item label="上传文件" class="upload">
               <a-upload
                 v-model:file-list="formState.group[index].addition"
                 name="file"
@@ -263,6 +277,28 @@ const { resetFields, validate, validateInfos } = useForm(
               label="寄样地址"
               v-bind="validateInfos.magnetism"
             >
+            <div class="address-list f-fl addr_select_box">
+              <div v-for="item in addressList" class="li" :key="item.id" @click="selectAdd(item)">
+                {{item.name}}
+              </div>
+            </div>
+            <div class="fl addr post_addr_info">
+              <div class="addr_title">
+                  <h1 class="fl">曾老师</h1>
+              </div>
+              <div class="addr_body" style="position: relative">
+                  <p>15818130780</p>
+                  <div>
+                    <EnvironmentOutlined />
+                      <!-- <i class="iconfont com_icon_address"></i> -->
+                      <span>广东省广州市海珠区</span>&nbsp;
+                      <a>新港东路68号华域创意园D1-2（非工作时间拒收同城，请提前联系）</a>
+                  </div>
+                  <div class="sci-address-tips" style=" display: none ">
+                      请寄顺丰快递！！！
+                  </div>
+              </div>
+          </div>
             </a-form-item>
           </a-collapse-panel>
           <!-- <div style="padding: 20px">
@@ -319,5 +355,112 @@ const { resetFields, validate, validateInfos } = useForm(
   background: #fff;
   box-shadow: 3px 3px 4px 3px rgba(0, 0, 0, 0.1);
 }
-
+.ant-form-item-label{
+  &>label{
+    width: 81px!important;
+  }
+}
+.upload{
+  label{
+    width: 81px!important;
+  }
+}
+.addr_select_box{
+  width: 350px;
+    margin: 0 40px 0 0;
+    padding: 12px 7px;
+    background: rgba(22, 119, 225, 0.4);
+    border: 1px solid #5284c9;
+}
+.addr_select_box .li {
+  float: left;
+    min-width: 82px;
+    line-height: 28px;
+    margin-bottom: 5px;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #000;
+    text-align: center;
+      cursor: pointer;
+}
+.addr_select_box .li:hover {
+    background: #064cac;
+    color: #fff;
+}
+.addr_select_box div.default {
+    background: #064cac;
+    color: #fff;
+}
+.addr_select_box div.active {
+    line-height: 26px;
+    background: #064cac;
+    border: 1px solid #064cac;
+    color: #fff;
+}
+.addr {
+    width: 320px;
+    height: 174px;
+    float: left;
+    padding: 0 10px;
+      background: url('//statics.shiyanjia.com/c/yanlu/images/buffet/addr-bg.png') no-repeat;
+    /*border: 1px solid #E8E8E8;*/
+}
+.addr_title {
+    height: 53px;
+    line-height: 52px;
+    padding: 0 5px;
+    border-bottom: 1px solid #E8E8E8;
+}
+.addr_title h1 {
+    line-height: 52px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .65);
+    font-weight: 500;
+}
+.addr_title span {
+    font-size: 14px;
+    color: #1890FF;
+    font-weight: 500;
+      cursor: pointer;
+}
+.addr_body p {
+    margin: 17px 0 10px;
+    line-height: 20px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .65);
+}
+.addr_body div {
+    position: relative;
+    // padding-left: 32px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .65);
+    font-weight: 500;
+}
+.addr_body div i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 24px;
+}
+.addr_body div span {
+    color: rgba(0, 0, 0, .75);
+    font-weight: bold;
+}
+.addr_body div a {
+    color: rgba(0, 0, 0, .65)!important;
+}
+.com_icon_address:before {
+  content: "\e621";
+}
+.new_addr {
+    line-height: 24px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .65);
+    cursor: pointer;
+}
+.new_addr img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
 </style>
