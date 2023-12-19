@@ -33,13 +33,13 @@ const save = () => {
           <span>请注意预约须知</span>
         </template>
       </a-step>
-      <a-step title="第二步" sub-title="更多信息" description="寄样信息" />
-      <a-step title="第三步" description="支付信息" />
+      <a-step title="第二步" description="支付信息" />
+      <!-- <a-step title="第三步" description="支付信息" /> -->
     </a-steps>
     <div class="steps-content">
       <FirstStep v-if="current == 0" :id="id" @next="next" @save="save" />
-      <SecondStep v-if="current == 1" :id="id" @next="next" @save="save" />
-      <FinalStep v-if="current == 2" :id="id" @next="next" @save="save" />
+      <!-- <SecondStep v-if="current == 1" :id="id" @next="next" @save="save" /> -->
+      <FinalStep v-if="current == 1" :id="id" @next="next" @save="save" />
     </div>
     
   </main>

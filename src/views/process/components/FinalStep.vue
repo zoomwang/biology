@@ -1,185 +1,170 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive,defineComponent } from "vue";
+import { ref, computed, reactive, defineComponent } from "vue";
 // import { isLogged } from "../../services/user";
+import { DollarCircleTwoTone } from "@ant-design/icons-vue";
+import payment from "@/assets/order/payment.png";
 const formState = reactive({
   layout: "horizontal",
-  identity: "2",
-  no: "",
-  name: "",
+  prestore: 0,
 });
-
-// try {
-//   const data = isLogged();
-// } catch(err) {
-//   alert(err);
-// }
-
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <div class="container-userinfo">
-      <div class="h2">用户注册资料</div>
-      <div class="userinfo-item">
-        <div class="l-item clear">
-          <div class="t-title f-fl">登录账号：</div>
-          <a-form-item class="f-fl">
-            <a-input
-              v-model:value="formState.no"
-              style="width: 303px"
-              placeholder="请输入手机号"
-            />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl">姓名：</div>
-          <a-form-item class="f-fl">
-            <a-input
-              v-model:value="formState.name"
-              style="width: 203px"
-              placeholder="请姓名"
-            />
-          </a-form-item>
-        </div>
-        <div class="l-item clear l-identity" >
-          <div class="t-title f-fl">身份：</div>
-          <div class="">
-           <a-radio-group name="identity" v-model:value="formState.identity">
-            <a-radio value="1">A</a-radio>
-            <a-radio value="2">B</a-radio>
-            <a-radio value="3">C</a-radio>
-            <a-radio value="4">D</a-radio>
-          </a-radio-group>
+    <a-card title="待支付详情">
+      <div
+        class="card-wrap"
+        style="width: 300px; text-align: right; float: right"
+      >
+        <p>订单金额：</p>
+        <p>样品回收费：</p>
+        <p>安心测服务费：</p>
+        <p>运费：</p>
+        <p>优惠券：</p>
+        <a-divider />
+        <p>待支付： <span>￥200.00</span></p>
+      </div>
+    </a-card>
+    <a-card title="支付方式">
+      <p
+        style="
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.85);
+          margin-bottom: 16px;
+          font-weight: 500;
+        "
+      >
+        预存支付 <span>¥0.00</span>
+      </p>
+      <a-card title="">
+        <div class="payway_list">
+          <div class="payway_list_item payway_list_item_disabled">
+            <a-radio-group name="prestore" v-model:value="formState.prestore">
+              <a-radio value="1"
+                ><img
+                  src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
+                  title="不可选"
+                />
+                <span style="font-size: 20px">个人预存</span>
+                <span
+                  >您还没有预存，预存可以一次开票、多次使用，省去每次开票的麻烦，现在预存还有优惠哦。<a
+                    href="/user/prestore"
+                    style="color: #32d693"
+                    target="_blank"
+                    >我要预存</a
+                  ></span
+                ></a-radio
+              >
+              <br />
+            </a-radio-group>
           </div>
         </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">省份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
+      </a-card>
+      <p
+        style="
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.85);
+          margin-bottom: 16px;
+          margin-top: 16px;
+          font-weight: 500;
+        "
+      >
+        其他方式支付 <span>¥0.00</span>
+      </p>
+      <a-card title="">
+        <div class="payway_list">
+          <div class="payway_list_item payway_list_other">
+            <a-radio-group name="prestore" v-model:value="formState.prestore">
+              <a-radio value="2"
+                ><img
+                  src="//cdn0.shiyanjia.com/c/2023/images/payment/1.png"
+                  title="不可选" />
+                <span style="font-size: 20px">扫码支付</span>
+                <span>支持使用</span><img width="308px" height="76px" :src="payment" title="不可选"
+              /></a-radio>
+              <br />
+              <a-radio value="3"
+                ><img
+                  src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
+                  title="不可选" />
+                <span style="font-size: 20px">信用支付</span>
+                <span
+                  style="line-height: 48px; padding-left: 20px"
+                >
+                  先测试，后付费
+                  <img
+                    id="club_prize_icon"
+                    src="//cdn0.shiyanjia.com/c/2023/images/club/prizeIcon.png"
+                    alt=""
+                  /> </span
+              ></a-radio>
+            </a-radio-group>
+          </div>
         </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">城市：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">高校：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">院系：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">所处阶段：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">入学年份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-              <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">毕业年份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-              <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-      <div class="l-item clear">
-           <div class="t-title f-fl">请选择导师：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-      </div>
-    </div>
+      </a-card>
+    </a-card>
   </main>
 </template>
-<style lang="scss">
-.container-userinfo{
-  width: 980px;
-  margin: 30px auto;
-  background-color: #fff;
-  .h2{
-    padding-left: 50px;
-    height: 40px;
-    line-height: 40px;
-    text-align: left;
-    margin-bottom: 30px;
-    background-color: hsla(160, 100%, 37%, 0.2);
+<style lang="scss" scoped>
+.card-wrap {
+  p {
+    font-weight: bold;
+    span {
+      font-size: 24px;
+      color: #1890ff !important;
+    }
   }
-  .l-item {
-    width: 500px;
-  }
-  .t-title{
-    width: 150px;
-    text-align: right;
-  }
-  .l-identity{
-    margin-bottom: 20px;
-  }
+}
+
+.payway_list {
+  width: 100%;
+}
+.payway_list_item {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  line-height: 48px;
+  padding-left: 16px;
+  cursor: pointer;
+}
+.payway_list_item_active {
+  background-color: #eefcf6;
+  background-color: rgba(50, 214, 147, 0.08);
+  background-repeat: no-repeat;
+  background-position: 20px center;
+}
+.payway_list_item img {
+  float: left;
+  width: 28px;
+  height: 28px;
+  margin-top: 10px;
+}
+.payway_list_item p {
+  float: left;
+  line-height: 48px;
+  margin-left: 12px;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.65);
+}
+.payway_list_item span {
+  display: block;
+  height: 48px;
+  line-height: 54px;
+  float: left;
+  margin-left: 10px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}
+.coupon_box {
+  position: relative;
+  background: #fff;
+  margin-top: 20px;
+  padding: 30px 20px 0 0;
+  transition: all 0.3s linear;
+}
+.payway_list_other{
+  height: auto;
 }
 </style>

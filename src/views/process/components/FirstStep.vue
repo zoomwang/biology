@@ -15,7 +15,7 @@ import {
   EnvironmentOutlined
 } from "@ant-design/icons-vue";
 // import { isLogged } from "../../services/user";
-import { Form } from "ant-design-vue";
+import { Form, Modal } from "ant-design-vue";
 const emit = defineEmits(["submit", "next"]);
 
 const useForm = Form.useForm;
@@ -31,8 +31,16 @@ const addressList = [{
   id: '3',
   name: "上海办事处"
 }]
-const selectAdd = (add) => {
-  console.log('add=', add);
+const selectAdd = (item) => {
+  // console.log('add=', add);
+  Modal.confirm({
+    closable: true,
+    cancelText: "重新选择",
+    content: `是否和经理确认，样品邮寄到${item.name}？`,
+    onOk: () => {
+      formState.defaultAddress = item.id;
+    }
+  })
 }
 const formState = reactive({
   layout: "horizontal",
@@ -52,6 +60,7 @@ const formState = reactive({
     },
   ],
   fee: 0,
+  defaultAddress: "1",
 });
 
 const headers = {
@@ -114,6 +123,7 @@ const canNext = () => {
       console.log("error", error);
     });
 };
+
 
 const { resetFields, validate, validateInfos } = useForm(
   formState,
@@ -278,7 +288,7 @@ const { resetFields, validate, validateInfos } = useForm(
               v-bind="validateInfos.magnetism"
             >
             <div class="address-list f-fl addr_select_box">
-              <div v-for="item in addressList" class="li" :key="item.id" @click="selectAdd(item)">
+              <div v-for="item in addressList" :key="item.id" :class="{'default': item.id == formState.defaultAddress, 'li': true}" @click="selectAdd(item)">
                 {{item.name}}
               </div>
             </div>
