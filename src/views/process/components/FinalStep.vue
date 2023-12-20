@@ -4,10 +4,20 @@ import { ref, computed, reactive, defineComponent } from "vue";
 // import { isLogged } from "../../services/user";
 import { DollarCircleTwoTone } from "@ant-design/icons-vue";
 import payment from "@/assets/order/payment.png";
+import Pay from "@/components/Pay.vue";
 const formState = reactive({
   layout: "horizontal",
   prestore: 0,
+  payType: 0,
 });
+let payVisible = ref(false);
+const bottom = ref(10);
+
+const canNext = () => {
+  if (formState.payType == 1) {
+    payVisible.value = true;
+  }
+}
 </script>
 
 <template>
@@ -41,8 +51,8 @@ const formState = reactive({
       <a-card title="">
         <div class="payway_list">
           <div class="payway_list_item payway_list_item_disabled">
-            <a-radio-group name="prestore" v-model:value="formState.prestore">
-              <a-radio value="1"
+            <a-radio-group name="prestore" v-model:value="formState.payType">
+              <a-radio value="0"
                 ><img
                   src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
                   title="不可选"
@@ -76,16 +86,16 @@ const formState = reactive({
       <a-card title="">
         <div class="payway_list">
           <div class="payway_list_item payway_list_other">
-            <a-radio-group name="prestore" v-model:value="formState.prestore">
-              <a-radio value="2"
+            <a-radio-group name="prestore" v-model:value="formState.payType">
+              <a-radio value="1"
                 ><img
                   src="//cdn0.shiyanjia.com/c/2023/images/payment/1.png"
                   title="不可选" />
                 <span style="font-size: 20px">扫码支付</span>
-                <span>支持使用</span><img width="308px" height="76px" :src="payment" title="不可选"
+                <span>支持使用</span><img class="pay_type" width="308px" height="76px" :src="payment" title="不可选"
               /></a-radio>
               <br />
-              <a-radio value="3"
+              <a-radio value="2"
                 ><img
                   src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
                   title="不可选" />
@@ -95,6 +105,7 @@ const formState = reactive({
                 >
                   先测试，后付费
                   <img
+                    class="credit"
                     id="club_prize_icon"
                     src="//cdn0.shiyanjia.com/c/2023/images/club/prizeIcon.png"
                     alt=""
@@ -105,6 +116,26 @@ const formState = reactive({
         </div>
       </a-card>
     </a-card>
+    <a-affix :offset-bottom="bottom" style="padding-top: 10px;padding-bottom: 10px;">
+        <div class="d-flex">
+        <a-button
+          style="margin-left: 8px; margin-right: 30px;display:block"
+          type="primary"
+          @click="canNext"
+          >确认并支付</a-button
+        >
+        </div>
+      </a-affix>
+      <!-- 支付弹层 -->
+    <a-modal
+      class="prestore-modal-wrap"
+      v-model:visible="payVisible"
+      title="在线支付"
+      width="400px"
+      :footer="null"
+    >
+      <Pay v-if="formState.payType == 1" />
+    </a-modal>
   </main>
 </template>
 <style lang="scss" scoped>
@@ -140,6 +171,17 @@ const formState = reactive({
   width: 28px;
   height: 28px;
   margin-top: 10px;
+}
+.payway_list_item img.pay_type{
+  width: 120px;
+  height: 32px;
+}
+.payway_list_item img.credit{
+  position: absolute;
+  left: 110px;
+  top: -14px;
+  width: 148px;
+  height: 19px;
 }
 .payway_list_item p {
   float: left;

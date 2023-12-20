@@ -5,7 +5,7 @@ import IconRecomends from "../../assets/order/i-ecommend.png";
 import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
-import Pay from "./Pay.vue";
+import Pay from "@/components/Pay.vue";
 import Apply from "./Apply.vue";
 import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
 import { notification, Form } from "ant-design-vue";
