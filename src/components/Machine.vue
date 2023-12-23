@@ -9,7 +9,7 @@
       alt=""
     />
     <a href="/process/detail" target="_blank">
-      查看仪器详情 &gt;
+      查看项目详情 &gt;
     </a>
   </div>
 </template>
@@ -56,7 +56,7 @@
 }
 
 .sci-buffet-info-section a:hover {
-  background: #1677ff;
+  background: #1677ff!important;
   color: #FFF;
 }
 

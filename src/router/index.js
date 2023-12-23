@@ -29,6 +29,11 @@ const router = createRouter({
       name: "order",
       component: import("../views/process/Order.vue"),
     },
+    {
+      path: "/process/detail",
+      name: "detail",
+      component: import("../views/process/Detail.vue"),
+    },
     // {
     //   path: "/process/high",
     //   name: "high",

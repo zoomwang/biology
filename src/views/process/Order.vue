@@ -4,7 +4,7 @@ import { ref, computed, reactive, onMounted, onUnmounted } from "vue";
 // import $localStorage from "@/hooks/localStorage";
 import { useRoute, useRouter } from "vue-router";
 import FirstStep from "./components/FirstStep.vue";
-import SecondStep from "./components/SecondStep.vue";
+import OtherStep from "./components/OtherStep.vue";
 import FinalStep from "./components/FinalStep.vue";
 
 const current = ref(0);
@@ -37,8 +37,8 @@ const save = () => {
       <!-- <a-step title="第三步" description="支付信息" /> -->
     </a-steps>
     <div class="steps-content">
-      <FirstStep v-if="current == 0" :id="id" @next="next" @save="save" />
-      <!-- <SecondStep v-if="current == 1" :id="id" @next="next" @save="save" /> -->
+      <!-- <FirstStep v-if="current == 0" :id="id" @next="next" @save="save" /> -->
+      <OtherStep v-if="current == 0" :id="id" @next="next" @save="save" />
       <FinalStep v-if="current == 1" :id="id" @next="next" @save="save" />
     </div>
     

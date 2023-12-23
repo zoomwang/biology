@@ -8,7 +8,8 @@ import defaultIcon from "../../assets/prestore/bill73.png";
 import Pay from "@/components/Pay.vue";
 import Apply from "./Apply.vue";
 import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
-import { notification, Form } from "ant-design-vue";
+import { notification, Form, message } from "ant-design-vue";
+import {  } from 'ant-design-vue';
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -23,7 +24,7 @@ const formState = reactive({
   rebate: 0, //预存返利
   remind: "", //预存备注
   invoiceCostList: [], // 发票金额列表
-  addition: ["电子合同", "电子版测试清单", "电子报告"], //附加文件
+  addition: null, //附加文件
   canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
   demand: "", //需求方名称
   detection: "", //项目检测
@@ -105,14 +106,6 @@ const getRebate = () => {
   return 0;
 };
 let modelRef = reactive({
-  // "invoiceid": "",
-  // "title": "广东工业大学222",
-  // "registrationo": "12330000470003281H",
-  // "depositbank": "招商银行2",
-  // "banksn": "441782783288",
-  // "registaddress": "阿时间考虑的",
-  // "registphone": "15086726356",
-  // "isdefault": 1,
   id: 0,
   invoiceid: 0,
   title: "",
@@ -135,6 +128,15 @@ const initInvoiceList = async function () {
   try {
     const res = await getInvoiceList();
     if (res?.code == 0) {
+      res?.data.forEach((item) => {
+        item.checked = false;
+      })
+      for(let i = 0; i < res?.data.length; i++) {
+        if (res.data[i].isdefault) {
+          res.data[i].checked = true;
+          break;
+        }
+      }
       formState.invoiceTitle = res?.data;
     }
   } catch (err) {}
@@ -146,6 +148,7 @@ const replaceChecked = (index) => {
   });
   formState.invoiceTitle[index].isdefault = 1;
   formState.invoiceTitle[index].checked = true;
+  message.info('设置成功');
 };
 
 const showModal = () => {
@@ -551,7 +554,7 @@ onMounted(() => {
             <div class="edit-btn-wrap">
               <a
                 class="b-edit"
-                @click="
+                @click.stop="
                   () => {
                     editInvoice.isEditInvoice = true;
                     editInvoice.editIndex = index;
@@ -625,7 +628,7 @@ onMounted(() => {
                 <div class="edit-btn-wrap">
                   <a
                     class="b-edit"
-                    @click="
+                    @click.stop="
                       () => {
                         editInvoice.isEditInvoice = true;
                         editInvoice.editIndex = index;
