@@ -324,7 +324,7 @@ const { resetFields, validate, validateInfos } = useForm(
         </div>
         <a-button style="display:block" @click="prev">保存草稿</a-button>
         <a-button
-          style="margin-left: 8px; margin-right: 30px;display:block"
+          style="margin-left: 8px; margin-right: 15px;display:block"
           type="primary"
           @click="canNext"
           >下一步</a-button

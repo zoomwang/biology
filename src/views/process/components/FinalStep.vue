@@ -4,14 +4,14 @@ import { ref, computed, reactive, defineComponent } from "vue";
 // import { isLogged } from "../../services/user";
 import { DollarCircleTwoTone } from "@ant-design/icons-vue";
 import payment from "@/assets/order/payment.png";
-import Pay from "@/components/Pay.vue";
+import Pay from "../components/Pay.vue";
 const formState = reactive({
   layout: "horizontal",
   prestore: 0,
   payType: 0,
 });
 let payVisible = ref(false);
-const bottom = ref(10);
+const bottom = ref(-15);
 
 const canNext = () => {
   if (formState.payType == 1) {
@@ -117,15 +117,16 @@ const canNext = () => {
       </a-card>
     </a-card>
     <a-affix :offset-bottom="bottom" style="padding-top: 10px;padding-bottom: 10px;">
-        <div class="d-flex">
+      <div class="d-flex d-pay">
+        <div class="cost"></div>
         <a-button
-          style="margin-left: 8px; margin-right: 30px;display:block"
+          style="margin-left: 8px; margin-right: 15px;display:block"
           type="primary"
           @click="canNext"
           >确认并支付</a-button
         >
-        </div>
-      </a-affix>
+      </div>
+    </a-affix>
       <!-- 支付弹层 -->
     <a-modal
       class="prestore-modal-wrap"
@@ -139,6 +140,17 @@ const canNext = () => {
   </main>
 </template>
 <style lang="scss" scoped>
+.d-pay{
+  margin-top: 10px;
+  padding: 15px 0 15px 10px;
+  background: #fff;
+  box-shadow: 3px 3px 4px 3px rgba(0, 0, 0, 0.1);
+}
+.cost {
+  line-height: 32px;
+  flex: 1;
+  background: #fff;
+}
 .card-wrap {
   p {
     font-weight: bold;

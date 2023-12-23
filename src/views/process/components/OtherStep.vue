@@ -15,7 +15,7 @@ import {
   EnvironmentOutlined,
   UploadOutlined,
 } from "@ant-design/icons-vue";
-import { message } from 'ant-design-vue';
+import { message } from "ant-design-vue";
 // import { isLogged } from "../../services/user";
 import areaData from "../../../public/area.js";
 import { Form, Modal } from "ant-design-vue";
@@ -27,19 +27,19 @@ let visible = ref(false);
 const bottom = ref(10);
 let modelRef = reactive({
   id: 0,
-  receiver: '',
-  phone: '',
+  receiver: "",
+  phone: "",
   address: [],
-  detailAddress: '',
-  fullAddress: ''
+  detailAddress: "",
+  fullAddress: "",
 });
 const replaceChecked = (index) => {
   formState.recycleAddress.forEach((item) => {
     item.isdefault = 0;
-  })
+  });
   formState.recycleAddress[index].isdefault = 1;
   // formState.recycleAddress = formState.recycleAddress[index];
-  message.info('设置成功');
+  message.info("设置成功");
 };
 const addressList = [
   {
@@ -82,27 +82,27 @@ const formState = reactive({
     },
   ],
   recycleAddress: [
-  {
-    receiver: "zoom",
-    phone: "12738921382",
-    detailAddress: "北京啊就是劳动",
-    address: ["130000","130200","130203"],
-    fullAddress: "北京市建立的撒开的"
-  },
-  {
-    receiver: "sss",
-    phone: "12738921382",
-    address: ["130000","130200","130203"],
-    detailAddress: "北京啊就是劳动",
-    isdefault: 1,
-    fullAddress: "北京市建立的撒开的"
-  }
-],
+    {
+      receiver: "zoom",
+      phone: "12738921382",
+      detailAddress: "北京啊就是劳动",
+      address: ["130000", "130200", "130203"],
+      fullAddress: "北京市建立的撒开的",
+    },
+    {
+      receiver: "sss",
+      phone: "12738921382",
+      address: ["130000", "130200", "130203"],
+      detailAddress: "北京啊就是劳动",
+      isdefault: 1,
+      fullAddress: "北京市建立的撒开的",
+    },
+  ],
   fee: 0,
   recycle: 0,
   device: 0,
   deliveryAddress: "1",
-  message: ""
+  message: "",
 });
 
 const headers = {
@@ -138,11 +138,11 @@ const hideModal = () => {
 const handleOk = () => {
   if (!editAddress.isEditInvoice) {
     formState.recycleAddress.push({
-      ...modelRef
+      ...modelRef,
     });
   } else {
     formState.recycleAddress.splice(editAddress.editIndex, 1, {
-      ...modelRef
+      ...modelRef,
     });
   }
   hideModal();
@@ -154,12 +154,13 @@ const deleteItem = (idx) => {
   formState.group = group;
 };
 const initFullName = (e, option) => {
-  let fullName = '';
+  let fullName = "";
   option.forEach((item) => {
     fullName += item.label;
   });
-  modelRef.fullAddress = fullName + formState.recycleAddress[editAddress.editIndex].detailAddress;
-}
+  modelRef.fullAddress =
+    fullName + formState.recycleAddress[editAddress.editIndex].detailAddress;
+};
 const labelCol = {
   span: 3,
 };
@@ -172,7 +173,6 @@ const readme = ref([
   "啊看黄金时代卡是多久啊",
 ]);
 const activeKey = ref(["2", "3"]);
-
 
 const canNext = () => {
   validate()
@@ -222,7 +222,11 @@ const { resetFields, validate, validateInfos } = useForm(
             <template #extra><CalendarTwoTone /></template>
           </a-collapse-panel>
           <a-collapse-panel key="2" header="全局问题" :disabled="false">
-            <a-form-item label="送样单" v-bind="validateInfos.type">
+            <a-form-item
+              label="送样单"
+              v-bind="validateInfos.type"
+              class="no-margin"
+            >
               <a-upload
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 directory
@@ -286,6 +290,7 @@ const { resetFields, validate, validateInfos } = useForm(
                 message: '请输入',
                 trigger: 'change',
               }"
+              class="no-margin"
             >
               <a-input
                 v-model:value="formState.group[index].goal"
@@ -325,6 +330,7 @@ const { resetFields, validate, validateInfos } = useForm(
               ::label-col="labelCol"
               label="是否回收"
               v-bind="validateInfos.recycle"
+              class="no-margin"
             >
               <a-radio-group
                 v-model:value="formState.recycle"
@@ -354,47 +360,56 @@ const { resetFields, validate, validateInfos } = useForm(
               label="回收地址"
               v-bind="validateInfos.recycleAddress"
             >
-              <div class="recovery-address" v-for="(item, index) in formState.recycleAddress" :key="item" v-show="item.isdefault">
+              <div
+                class="recovery-address"
+                v-for="(item, index) in formState.recycleAddress"
+                :key="item"
+                v-show="item.isdefault"
+              >
                 <div class="default">
                   <div class="content">
                     <div>
-                      <span class="name">{{
-                        item.receiver
-                      }}</span>
-                      <span class="phone">{{
-                        item.phone
-                      }}</span>
+                      <span class="name">{{ item.receiver }}</span>
+                      <span class="phone">{{ item.phone }}</span>
                     </div>
                     <div>
                       <!---->
-                      <span class="address">{{
-                        item.fullAddress
-                      }}</span>
+                      <span class="address">{{ item.fullAddress }}</span>
                     </div>
                   </div>
-                  <div class="modify-button"><a
-                    class="b-edit"
-                    @click.stop="
-                      () => {
-                        editAddress.isEditInvoice = true;
-                        editAddress.editIndex = index;
-                        const { id, receiver, phone, address, detailAddress, fullAddress, isdefault} = formState.recycleAddress[index]; 
-                        modelRef.id = id
-                        modelRef.receiver = receiver
-                        modelRef.phone = phone
-                        modelRef.address = address
-                        modelRef.detailAddress = detailAddress
-                        modelRef.fullAddress = fullAddress
-                        modelRef.isdefault = isdefault
-                        showModal();
-                      }
-                    "
-                    >修改</a
-                  ></div>
+                  <div class="modify-button">
+                    <a
+                      class="b-edit"
+                      @click.stop="
+                        () => {
+                          editAddress.isEditInvoice = true;
+                          editAddress.editIndex = index;
+                          const {
+                            id,
+                            receiver,
+                            phone,
+                            address,
+                            detailAddress,
+                            fullAddress,
+                            isdefault,
+                          } = formState.recycleAddress[index];
+                          modelRef.id = id;
+                          modelRef.receiver = receiver;
+                          modelRef.phone = phone;
+                          modelRef.address = address;
+                          modelRef.detailAddress = detailAddress;
+                          modelRef.fullAddress = fullAddress;
+                          modelRef.isdefault = isdefault;
+                          showModal();
+                        }
+                      "
+                      >修改</a
+                    >
+                  </div>
                 </div>
               </div>
               <a-collapse
-                style="width:545px;margin-bottom: 15px"
+                style="width: 545px; margin-bottom: 15px"
                 v-model:activeKey="activeKey1"
                 accordion
                 expandIconPosition="right"
@@ -415,39 +430,43 @@ const { resetFields, validate, validateInfos } = useForm(
                       <div class="default">
                         <div class="content">
                           <div>
-                            <span class="name">{{
-                              item.receiver
-                            }}</span>
-                            <span class="phone">{{
-                              item.phone
-                            }}</span>
+                            <span class="name">{{ item.receiver }}</span>
+                            <span class="phone">{{ item.phone }}</span>
                           </div>
                           <div>
                             <!---->
-                            <span class="address">{{
-                              item.fullAddress
-                            }}</span>
+                            <span class="address">{{ item.fullAddress }}</span>
                           </div>
                         </div>
-                        <div class="modify-button"><a
-                          class="b-edit"
-                          @click.stop="
-                            () => {
-                              editAddress.isEditInvoice = true;
-                              editAddress.editIndex = index;
-                              const { id, receiver, phone, address, detailAddress, fullAddress, isdefault} = formState.recycleAddress[index]; 
-                              modelRef.id = id
-                              modelRef.receiver = receiver
-                              modelRef.phone = phone
-                              modelRef.address = address
-                              modelRef.detailAddress = detailAddress
-                              modelRef.fullAddress = fullAddress
-                              modelRef.isdefault = isdefault
-                              showModal();
-                            }
-                          "
-                          >修改</a
-                        ></div>
+                        <div class="modify-button">
+                          <a
+                            class="b-edit"
+                            @click.stop="
+                              () => {
+                                editAddress.isEditInvoice = true;
+                                editAddress.editIndex = index;
+                                const {
+                                  id,
+                                  receiver,
+                                  phone,
+                                  address,
+                                  detailAddress,
+                                  fullAddress,
+                                  isdefault,
+                                } = formState.recycleAddress[index];
+                                modelRef.id = id;
+                                modelRef.receiver = receiver;
+                                modelRef.phone = phone;
+                                modelRef.address = address;
+                                modelRef.detailAddress = detailAddress;
+                                modelRef.fullAddress = fullAddress;
+                                modelRef.isdefault = isdefault;
+                                showModal();
+                              }
+                            "
+                            >修改</a
+                          >
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -465,15 +484,16 @@ const { resetFields, validate, validateInfos } = useForm(
                   "
                   class="t-add"
                 >
-                <div class="t-new-add t-blue">
-                  <span class="text-add">+</span><span class="">新增地址</span>
-                </div>
+                  <div class="t-new-add t-blue">
+                    <span class="text-add">+</span
+                    ><span class="">新增地址</span>
+                  </div>
                 </a-button>
               </div>
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.group.length + 2"
+            :key="formState.group.length + 3"
             header="寄样地址"
             :disabled="false"
           >
@@ -533,11 +553,17 @@ const { resetFields, validate, validateInfos } = useForm(
               </div>
             </a-form-item>
           </a-collapse-panel>
+          <a-collapse-panel
+            :key="formState.group.length + 4"
+            header="留言"
+            :disabled="false"
+          >
+            <a-form-item label="实验留言" class="no-margin">
+              <a-textarea v-model:value="formState.message" />
+            </a-form-item>
+          </a-collapse-panel>
         </a-collapse>
       </div>
-      <a-form-item label="实验留言">
-        <a-textarea v-model:value="formState.message" />
-      </a-form-item>
     </a-form>
     <a-affix :offset-bottom="bottom">
       <div class="d-flex">
@@ -553,7 +579,7 @@ const { resetFields, validate, validateInfos } = useForm(
         >
       </div>
     </a-affix>
-     <!-- 弹层 -->
+    <!-- 弹层 -->
     <a-modal
       class="prestore-modal-wrap"
       v-model:visible="visible"
@@ -562,11 +588,11 @@ const { resetFields, validate, validateInfos } = useForm(
       @ok="handleOk"
       @cancel="
         () => {
-          modelRef.receiver = ''
-          modelRef.phone = ''
-          modelRef.address = ''
-          modelRef.detailAddress = ''
-          modelRef.fullAddress = ''
+          modelRef.receiver = '';
+          modelRef.phone = '';
+          modelRef.address = '';
+          modelRef.detailAddress = '';
+          modelRef.fullAddress = '';
           visible = false;
         }
       "
@@ -580,14 +606,8 @@ const { resetFields, validate, validateInfos } = useForm(
             trigger: 'change',
           }"
         >
-          <a-input
-            v-model:value="modelRef.receiver"
-            placeholder="请输入"
-          />
-          <a-input
-            v-model:value="modelRef.id"
-            hidden
-          />
+          <a-input v-model:value="modelRef.receiver" placeholder="请输入" />
+          <a-input v-model:value="modelRef.id" hidden />
         </a-form-item>
         <a-form-item
           label="联系电话"
@@ -597,10 +617,7 @@ const { resetFields, validate, validateInfos } = useForm(
             trigger: 'change',
           }"
         >
-          <a-input
-            v-model:value="modelRef.phone"
-            placeholder="请输入"
-          />
+          <a-input v-model:value="modelRef.phone" placeholder="请输入" />
         </a-form-item>
         <a-form-item
           label="选择地区"
@@ -610,7 +627,7 @@ const { resetFields, validate, validateInfos } = useForm(
             trigger: 'change',
           }"
         >
-        <a-cascader
+          <a-cascader
             allowClear
             showSearch
             @change="initFullName"
@@ -844,12 +861,15 @@ const { resetFields, validate, validateInfos } = useForm(
   font-size: 14px;
   color: rgba(0, 0, 0, 0.45);
 }
-.recovery-address-each .default{
+.recovery-address-each .default {
   cursor: pointer;
-  width: 520px!important;
+  width: 520px !important;
   border: 1px dashed #d9d9d9;
 }
-.recovery-address-each .default:hover{
+.recovery-address-each .default:hover {
   border: 1px solid #4096ff;
+}
+.no-margin {
+  margin-bottom: 0 !important;
 }
 </style>
