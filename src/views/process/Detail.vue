@@ -1,34 +1,47 @@
 <script setup>
-import { ref, computed, reactive, defineComponent, watch } from "vue";
-import { useStorage } from "@/hooks/useStorage";
-import $localStorage from "@/hooks/localStorage";
-import Menu from "./components/menu.vue";
-const key = useStorage("menu");
-const state = reactive({
-  mode: "inline",
-  theme: "light",
-  selectedKeys: ["userData"],
-  openKeys: ["userData"],
+import { ref, computed, reactive, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { getProjectInfo } from "@/services/process";
+
+const route = useRoute();
+const router = useRouter();
+const data = reactive({
+  value: []
 });
-const menuType = ref($localStorage.getItem("menu"));
-watch(key, async (newdata, olddata) => {
-  menuType.value = newdata
+
+const update = async() => {
+  const res = await getProjectInfo(route.query.id);
+  if (res?.code == 0) {
+    const arr = [];
+    for(var key in res?.data?.data) {
+      const obj = {
+        label: key,
+        value: res?.data?.data[key]
+      }
+      arr.push(obj);
+    }
+    data.value = arr
+    debugger
+  }
+}
+
+onMounted(() => {
+  update();
 })
 </script>
 
 <template>
 <div class="detail">
   <!-- 用户注册资料 -->
-  <a-card title="项目简介" style="width: 100%;">
-    <p>card content</p>
-    <p>card content</p>
-    <p>card content</p>
+  <a-card :title="item.label" style="width: 100%;margin-bottom: 10px" v-for="(item) in data.value" :key="item">
+    <p v-if="item.label != '项目图片'">{{item.value}}</p>
+    <img v-else :src="item.value" width="150" />
   </a-card>
-  <a-card title="结果展示" style="width: 100%;">
+  <!-- <a-card title="结果展示" style="width: 100%;">
     <p>card content</p>
     <p>card content</p>
     <p>card content</p>
-  </a-card>
+  </a-card> -->
   </div>
 </template>
 <style lang="scss" scoped>

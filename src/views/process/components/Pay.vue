@@ -1,24 +1,24 @@
 <script setup>
 import { ref } from "vue";
 import { notification } from "ant-design-vue";
-import {jstopdf} from "@/utils/index";
+import { jstopdf } from "@/utils/index";
 
 const isPaySuccess = ref(true);
 
 const download = () => {
   jstopdf({
-    title: '测试',
-    subject: 'sadsa',
-    id: 'download',
-    name: 'test'
-  })
-}
+    title: "测试",
+    subject: "sadsa",
+    id: "download",
+    name: "test",
+  });
+};
 
 const onRefrush = () => {
   setTimeout(() => {
     isPaySuccess.value = false;
-  },4000)
-}
+  }, 4000);
+};
 </script>
 
 <template>
@@ -27,31 +27,26 @@ const onRefrush = () => {
       <div class="unionPayMoney">
         应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
       </div>
-      <img id="cmbPayDialog_img" alt="聚合二扫码支付" src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700" />
+      <img
+        id="cmbPayDialog_img"
+        alt="聚合二扫码支付"
+        src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700"
+      />
       <div class="cmbPayDialog_img_smegma_refresh" @click="onRefrush()">
         <img
           class="cmbPayDialog_img_smegma_refresh_icon"
           src="../../../assets/prestore/6.png"
           alt=""
-          
         />点击刷新二维码
       </div>
       <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
       <div class="crmbpay_tips_img_box">
         <div>
-          <img
-            class="ali_icon"
-            src="../../../assets/prestore/3.png"
-            alt=""
-          />
+          <img class="ali_icon" src="../../../assets/prestore/3.png" alt="" />
           <div class="payment_text" style="margin-left: -8px">支付宝</div>
         </div>
         <div>
-          <img
-            class="wx_icon"
-            src="../../../assets/prestore/2.png"
-            alt=""
-          />
+          <img class="wx_icon" src="../../../assets/prestore/2.png" alt="" />
           <div class="payment_text" style="margin-left: 30px">微信</div>
         </div>
         <div>
@@ -64,28 +59,55 @@ const onRefrush = () => {
         </div>
       </div>
     </div>
-    <div v-show="isPaySuccess">
-      <a-result
-        status="success"
-        title="支付成功!"
-      >
+    <div v-show="!isPaySuccess">
+      <a-result status="success" title="支付成功!">
         <template #extra>
           <p>预约单号为：283912823288</p>
           <p>预约金额：2000.00</p>
           <p>预约时间：2023-12-11 10:13</p>
           <p>
-            <a-button
-            style="width:220px"
-              type="primary"
-              @click="download"
+            <a-button style="width: 220px" type="primary" @click="download"
               >下载预约单</a-button
             >
-            </p>
+          </p>
         </template>
       </a-result>
     </div>
     <div id="download" style="position: absolute; top: -99999px">
-      <a-descriptions title="User Info" bordered>
+      <table border="1px" width="100%">
+        <!--border是边框的意思-->
+
+        <tr>
+          <td>姓名</td>
+
+          <td>性别</td>
+
+          <td>年龄</td>
+
+          <td>地址</td>
+        </tr>
+
+        <tr>
+          <td>jack</td>
+
+          <td>boy</td>
+
+          <td>20</td>
+
+          <td>成都</td>
+        </tr>
+
+        <tr>
+          <td>rose</td>
+
+          <td>girl</td>
+
+          <td>18</td>
+
+          <td>绵阳</td>
+        </tr>
+      </table>
+      <!-- <a-descriptions title="User Info" bordered>
         <a-descriptions-item label="Product">Cloud Database</a-descriptions-item>
         <a-descriptions-item label="Billing Mode">Prepaid</a-descriptions-item>
         <a-descriptions-item label="Automatic Renewal">YES</a-descriptions-item>
@@ -111,7 +133,7 @@ const onRefrush = () => {
           Region: East China 1
           <br />
         </a-descriptions-item>
-      </a-descriptions>
+      </a-descriptions> -->
     </div>
   </div>
 </template>
@@ -119,7 +141,7 @@ const onRefrush = () => {
 .pay-wrap {
   flex-direction: column;
   text-align: center;
-  p{
+  p {
     padding-left: 30px;
     text-align: left;
   }
@@ -136,7 +158,7 @@ const onRefrush = () => {
   // top: 82px;
   text-align: center;
   width: 100%;
-  span{
+  span {
     color: red;
     font-size: 22px;
   }

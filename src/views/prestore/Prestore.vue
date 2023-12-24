@@ -34,16 +34,6 @@ const formState = reactive({
 const formOptions = reactive({
   plainOptions: ["电子合同", "电子版测试清单", "电子报告"],
 });
-// const defaultInvoice = {
-//   id: 0,
-//   invoiceid: 0,
-//   title: "",
-//   registrationo: "",
-//   depositbank: "",
-//   banksn: "",
-//   registaddress: "",
-//   registphone: "",
-// };
 const headers = {
   authorization: "authorization-text",
 };

@@ -48,8 +48,8 @@ export const getOrderList = (type) => {
 }
 
 /** 获取草稿信息 */
-export const getProjectInfo = (type) => {
-  return api.get(`/sys/order/project/info`);
+export const getProjectInfo = (id) => {
+  return api.get(`/sys/order/project/info?id=${id}`);
 }
 
 /** 获取订单详情 */

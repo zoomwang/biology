@@ -1,4 +1,12 @@
 <script setup>
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
+console.log("当前路由：", route);
+const toDetail = () => {
+router.push({name: "detail", query: { id: route.query.id } });
+}
 </script>
 
 <template>
@@ -8,7 +16,7 @@
       src="https://shiyanjia-files.oss-cn-hangzhou.aliyuncs.com/user/202011111737349422148002.jpg"
       alt=""
     />
-    <a href="/process/detail" target="_blank">
+    <a @click.stop="toDetail" target="_blank">
       查看项目详情 &gt;
     </a>
   </div>
