@@ -2,6 +2,7 @@ import { ref } from "vue";
 import config from "../utils/config";
 import { notification, Form } from "ant-design-vue";
 import { sendSysCode,  } from "../services/user";
+import { getOfficeInfo } from "@/services/process";
 
 export function useSendCode(boo) {
   const isSendCode = ref(false);
@@ -16,6 +17,15 @@ export function useSendCode(boo) {
   return {
     isSendCode,
     changeSt
+  };
+}
+
+export async function useOfficeInfos() {
+  const res = await getOfficeInfo();
+  return {
+    getValue: () => {
+      return res?.data;
+    }
   };
 }
 

@@ -6,6 +6,8 @@ import {
   defineComponent,
   watch,
   defineEmits,
+  onMounted,
+  defineProps,
 } from "vue";
 import {
   CalendarTwoTone,
@@ -16,14 +18,21 @@ import {
   UploadOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
-// import { isLogged } from "../../services/user";
 import areaData from "../../../public/area.js";
 import { Form, Modal } from "ant-design-vue";
 const emit = defineEmits(["submit", "next"]);
+import { useRoute, useRouter } from "vue-router";
+import { useOfficeInfos } from "../../../hooks/common";
+import { getOrderCostCalc, getOrderList } from "@/services/process";
 
 const useForm = Form.useForm;
+const props = defineProps(["id"]);
+const formRef = ref();
+const { id } = props;
 const containerRef = ref();
+const route = useRoute();
 let visible = ref(false);
+const type = route.query.type;
 const bottom = ref(10);
 let modelRef = reactive({
   id: 0,
@@ -33,54 +42,68 @@ let modelRef = reactive({
   detailAddress: "",
   fullAddress: "",
 });
+let orderOptions = ref([
+  {
+    value: 'jack',
+    label: 'Jack',
+  }
+]);
+const getOrderLists = async () => {
+  const res = await getOrderList(1);
+  if (res?.code == 0) {
+    res.data.forEach((item) => {
+      item.value = item.orderId;
+      item.label = item.remark;
+    })
+    orderOptions = res.data;
+  }
+}
 const replaceChecked = (index) => {
   formState.recycleAddress.forEach((item) => {
     item.isdefault = 0;
   });
   formState.recycleAddress[index].isdefault = 1;
-  // formState.recycleAddress = formState.recycleAddress[index];
   message.info("设置成功");
 };
-const addressList = [
-  {
-    id: "1",
-    name: "广州办事处",
+
+let addressList = reactive({
+  value: [],
+  detail: {
+    name:'',
+    phone: '',
+    detail_address: '',
+    user: ''
   },
-  {
-    id: "2",
-    name: "深圳办事处",
-  },
-  {
-    id: "3",
-    name: "上海办事处",
-  },
-];
+});
 const editAddress = reactive({
   isEditInvoice: false,
   editIndex: 0,
 });
-const selectAdd = (item) => {
+const selectAdd = (item, index) => {
   Modal.confirm({
     closable: true,
     cancelText: "重新选择",
     content: `是否和经理确认，样品邮寄到${item.name}？`,
     onOk: () => {
-      formState.deliveryAddress = item.id;
+      formState.officeId = item.id;
+      addressList.detail = addressList.value[index];
     },
   });
 };
 const formState = reactive({
   layout: "horizontal",
-  type: 0,
+  id: id - 0,
+  type,
+  officeId: 1,
   magnetism: 0,
-  group: [
+  sampleInfo: [
     {
-      sampleNum: 1,
-      sampleNo: [],
-      goal: 1,
-      addition: [],
+      count: 1,
+      numberList: [],
+      goal: ''
     },
   ],
+  sameDeviceRelateOrderId: '',
   recycleAddress: [
     {
       receiver: "zoom",
@@ -98,11 +121,17 @@ const formState = reactive({
       fullAddress: "北京市建立的撒开的",
     },
   ],
-  fee: 0,
-  recycle: 0,
-  device: 0,
+  needRecovery: 0,
+  needSameDevice: 0,
   deliveryAddress: "1",
+  freightMode: 0,
   message: "",
+});
+
+watch(formState, async (newdata, olddata) => {
+  const res = await getOrderCostCalc(newdata);
+  cost = res?.data || 0;
+  console.log('res==', res)
 });
 
 const headers = {
@@ -120,11 +149,10 @@ const handleChange = (info) => {
   }
 };
 const addItem = () => {
-  formState.group.push({
-    sampleNum: 1,
-    sampleNo: [],
-    time: 1,
-    addition: [],
+  formState.sampleInfo.push({
+    count: 1,
+    numberList: [],
+    goal: ''
   });
 };
 const showModal = () => {
@@ -148,10 +176,10 @@ const handleOk = () => {
   hideModal();
 };
 const deleteItem = (idx) => {
-  const group = formState.group;
+  const group = formState.sampleInfo;
   if (group.length <= 1) return;
   group.splice(idx, 1);
-  formState.group = group;
+  formState.sampleInfo = group;
 };
 const initFullName = (e, option) => {
   let fullName = "";
@@ -164,7 +192,7 @@ const initFullName = (e, option) => {
 const labelCol = {
   span: 3,
 };
-let sampleNo = ref([[1]]);
+let numberList = ref([[1]]);
 
 const readme = ref([
   "啊看黄金时代卡是多久啊",
@@ -179,6 +207,18 @@ const canNext = () => {
     .then(() => {
       // debugger
       emit("next");
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+};
+
+const saveData = () => {
+  console.log(formRef);
+  formRef.value
+    .validate()
+    .then(() => {
+      emit("save", formState);
     })
     .catch((error) => {
       console.log("error", error);
@@ -203,6 +243,16 @@ const { resetFields, validate, validateInfos } = useForm(
     group: [],
   })
 );
+
+onMounted(async () =>{
+  const getValue  = await useOfficeInfos();
+  addressList.value = await getValue.getValue();
+  const obj = (addressList.value.filter((item) => {
+    return item.id == formState.officeId;
+  }))[0];
+  addressList.detail = obj;
+  getOrderLists();
+})
 </script>
 
 <template>
@@ -212,7 +262,7 @@ const { resetFields, validate, validateInfos } = useForm(
     ref="containerRef"
     class="scrollable-container"
   >
-    <a-form :model="formState" labelAlign="right">
+    <a-form :model="formState" ref="formRef" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
           <a-collapse-panel key="1" header="预约须知">
@@ -239,7 +289,7 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            v-for="(item, index) in formState.group"
+            v-for="(item, index) in formState.sampleInfo"
             :header="`第${index + 1}组样品数据`"
             :key="index + 3"
             :disabled="false"
@@ -260,7 +310,7 @@ const { resetFields, validate, validateInfos } = useForm(
             >
               <a-input
                 type="number"
-                v-model:value="formState.group[index].sampleNum"
+                v-model:value="formState.sampleInfo[index].count"
                 placeholder="请输入样品数量"
                 :max-length="25"
                 style="width: 120px"
@@ -274,11 +324,11 @@ const { resetFields, validate, validateInfos } = useForm(
               }"
             >
               <a-input
-                v-for="(item, idx) in sampleNo[index]"
+                v-for="(item, idx) in numberList[index]"
                 :key="idx"
                 placeholder="请输入"
                 style="width: 120px; margin-right: 10px; margin-bottom: 10px"
-                v-model:value="formState.group[index].sampleNo[idx]"
+                v-model:value="formState.sampleInfo[index].numberList[idx]"
               >
                 <template #prefix> {{ idx + 1 }}- </template>
               </a-input>
@@ -292,21 +342,17 @@ const { resetFields, validate, validateInfos } = useForm(
               }"
               class="no-margin"
             >
-              <a-input
-                v-model:value="formState.group[index].goal"
-                placeholder="请输入"
-                style="width: 160px"
-              />
+            <a-textarea  style="width: 500px" v-model:value="formState.sampleInfo[index].goal" placeholder="请输入" :rows="4" />
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.group.length + 2"
+            :key="formState.sampleInfo.length + 2"
             header="样品寄送条件"
             :disabled="false"
           >
-            <a-form-item label="同台设备" v-bind="validateInfos.device">
+            <a-form-item label="同台设备" v-bind="validateInfos.needSameDevice">
               <a-radio-group
-                v-model:value="formState.device"
+                v-model:value="formState.needSameDevice"
                 button-style="solid"
               >
                 <a-radio-button :value="0">
@@ -327,13 +373,23 @@ const { resetFields, validate, validateInfos } = useForm(
               </a-radio-group>
             </a-form-item>
             <a-form-item
+              label="选择订单"
+              v-if="formState.needSameDevice"
+            >
+            <a-select
+              ref="select"
+              v-model:value="formState.sameDeviceRelateOrderId"
+              :options="orderOptions"
+            >
+            </a-select>
+            </a-form-item>
+            <a-form-item
               ::label-col="labelCol"
               label="是否回收"
-              v-bind="validateInfos.recycle"
-              class="no-margin"
+              v-bind="validateInfos.needRecovery"
             >
               <a-radio-group
-                v-model:value="formState.recycle"
+                v-model:value="formState.needRecovery"
                 button-style="solid"
               >
                 <a-radio-button :value="0">
@@ -355,7 +411,7 @@ const { resetFields, validate, validateInfos } = useForm(
               </a-radio-group>
             </a-form-item>
             <a-form-item
-              v-if="formState.recycle == 1"
+              v-if="formState.needRecovery == 1"
               ::label-col="labelCol"
               label="回收地址"
               v-bind="validateInfos.recycleAddress"
@@ -493,12 +549,12 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.group.length + 3"
+            :key="formState.sampleInfo.length + 3"
             header="寄样地址"
             :disabled="false"
           >
-            <a-form-item label="运费" v-bind="validateInfos.fee">
-              <a-radio-group v-model:value="formState.fee" button-style="solid">
+            <a-form-item label="运费" v-bind="validateInfos.freightMode">
+              <a-radio-group v-model:value="formState.freightMode" button-style="solid">
                 <a-radio-button :value="0">
                   运费到付
                   <a-popover placement="topLeft">
@@ -517,49 +573,39 @@ const { resetFields, validate, validateInfos } = useForm(
             <a-form-item
               ::label-col="labelCol"
               label="寄样地址"
-              v-bind="validateInfos.magnetism"
+              v-bind="validateInfos.officeId"
             >
-              <div class="address-list f-fl addr_select_box">
-                <div
-                  v-for="item in addressList"
-                  :key="item.id"
-                  :class="{
-                    default: item.id == formState.deliveryAddress,
-                    li: true,
-                  }"
-                  @click="selectAdd(item)"
-                >
-                  {{ item.name }}
-                </div>
+            <div class="address-list f-fl addr_select_box">
+              <div v-for="(item, index) in addressList.value" :key="item.id" :class="{'default': item.id == formState.officeId, 'li': true}" @click="selectAdd(item, index)">
+                {{item.name}}
               </div>
-              <div class="fl addr post_addr_info">
-                <div class="addr_title">
-                  <h1 class="fl">曾老师</h1>
-                </div>
-                <div class="addr_body" style="position: relative">
-                  <p>15818130780</p>
+            </div>
+            <div class="fl addr post_addr_info">
+              <div class="addr_title">
+                  <h1 class="fl">{{addressList.detail.name}}</h1>
+              </div>
+              <div class="addr_body" style="position: relative">
+                  <p>{{addressList.detail.phone}}</p>
                   <div>
                     <EnvironmentOutlined />
-                    <!-- <i class="iconfont com_icon_address"></i> -->
-                    <span>广东省广州市海珠区</span>&nbsp;
-                    <a
-                      >新港东路68号华域创意园D1-2（非工作时间拒收同城，请提前联系）</a
-                    >
+                      <!-- <i class="iconfont com_icon_address"></i> -->
+                      <!-- <span>广东省广州市海珠区</span>&nbsp; -->
+                      <a>{{addressList.detail.detail_address}}非工作时间拒收同城，请提前联系）</a>
                   </div>
-                  <div class="sci-address-tips" style="display: none">
-                    请寄顺丰快递！！！
+                  <div class="sci-address-tips" style=" display: none ">
+                      请寄顺丰快递！！！
                   </div>
-                </div>
               </div>
+          </div>
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.group.length + 4"
+            :key="formState.sampleInfo.length + 4"
             header="留言"
             :disabled="false"
           >
             <a-form-item label="实验留言" class="no-margin">
-              <a-textarea v-model:value="formState.message" />
+              <a-textarea v-model:value="formState.remark" />
             </a-form-item>
           </a-collapse-panel>
         </a-collapse>
@@ -570,7 +616,7 @@ const { resetFields, validate, validateInfos } = useForm(
         <div class="cost">
           合计费用：<a-button type="link">¥{{ cost }}</a-button>
         </div>
-        <a-button style="display: block" @click="prev">保存草稿</a-button>
+        <a-button style="display: block" @click="saveData">保存草稿</a-button>
         <a-button
           style="margin-left: 8px; margin-right: 30px; display: block"
           type="primary"
@@ -597,7 +643,7 @@ const { resetFields, validate, validateInfos } = useForm(
         }
       "
     >
-      <form>
+      <a-form>
         <a-form-item
           label="收件人"
           :rules="{
@@ -648,7 +694,7 @@ const { resetFields, validate, validateInfos } = useForm(
             placeholder="请输入"
           />
         </a-form-item>
-      </form>
+      </a-form>
     </a-modal>
   </main>
 </template>

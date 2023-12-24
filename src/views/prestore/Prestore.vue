@@ -29,42 +29,21 @@ const formState = reactive({
   demand: "", //需求方名称
   detection: "", //项目检测
   mailBox: "", //收件邮箱
-  // invoiceTitle: [{
-  //   "invoiceid": 174304,
-  //   "title": "广东工业大学",
-  //   "registrationo": "12330000470003281H",
-  //   "depositbank": "招商银行",
-  //   "banksn": "",
-  //   "registaddress": "阿时间考虑的",
-  //   "registphone": "15086726356",
-  //   "isdefault": 1,
-  //   "checked": true,
-  // },{
-  //   "invoiceid": 174304,
-  //   "title": "广东工业大学111",
-  //   "registrationo": "12330000470003281H",
-  //   "depositbank": "招商银行111",
-  //   "banksn": "",
-  //   "registaddress": "阿时间考虑的",
-  //   "registphone": "15086726356",
-  //   "isdefault": 1,
-  //   // "checked": true,
-  // }],
   invoiceTitle: [],
 });
 const formOptions = reactive({
   plainOptions: ["电子合同", "电子版测试清单", "电子报告"],
 });
-const defaultInvoice = {
-  id: 0,
-  invoiceid: 0,
-  title: "",
-  registrationo: "",
-  depositbank: "",
-  banksn: "",
-  registaddress: "",
-  registphone: "",
-};
+// const defaultInvoice = {
+//   id: 0,
+//   invoiceid: 0,
+//   title: "",
+//   registrationo: "",
+//   depositbank: "",
+//   banksn: "",
+//   registaddress: "",
+//   registphone: "",
+// };
 const headers = {
   authorization: "authorization-text",
 };
@@ -310,13 +289,6 @@ onMounted(() => {
                 <span>预计返利：</span>
               </div>
               <a-form-item class="f-fl">
-                <!-- <a-input
-                  placeholder="0"
-                  disabled
-                  class="t-gaincode f-fl prestore-input"
-                  style="width: 250px"
-                  v-model:value="formState.rebate"
-                /> -->
                 {{ getRebate() }}
               </a-form-item>
               <span class="t-unil">元</span>
@@ -395,11 +367,6 @@ onMounted(() => {
                     点击上传
                   </a-button>
                 </a-upload>
-                <!-- <a-checkbox-group
-                  name="addition"
-                  v-model:value="formState.addition"
-                  :options="formOptions.plainOptions"
-                /> -->
               </div>
             </div>
             <div class="clear">
@@ -558,8 +525,29 @@ onMounted(() => {
                   () => {
                     editInvoice.isEditInvoice = true;
                     editInvoice.editIndex = index;
-                    modelRef = formState.invoiceTitle[index];
-                    showModal();
+                    const {
+                            id,
+                            invoiceid,
+                            title,
+                            registrationo,
+                            depositbank,
+                            banksn,
+                            registaddress,
+                            registphone,
+                            checked
+                          } = formState.invoiceTitle[index];
+                          modelRef.id = id;
+                          modelRef.invoiceid = invoiceid;
+                          modelRef.title = title;
+                          modelRef.registrationo = registrationo;
+                          modelRef.detailAddress = detailAddress;
+                          modelRef.depositbank = depositbank;
+                          modelRef.banksn = banksn;
+                          modelRef.registaddress = registaddress;
+                          modelRef.registphone = registphone;
+                          modelRef.isdefault = isdefault;
+                          modelRef.checked = checked;
+                        showModal();
                   }
                 "
                 >修改</a
@@ -712,7 +700,14 @@ onMounted(() => {
       @ok="handleOk"
       @cancel="
         () => {
-          modelRef = defaultInvoice;
+          modelRef.id = 0;
+          modelRef.invoiceid = 0;
+          modelRef.title = '';
+          modelRef.registrationo = '';
+          modelRef.depositbank = '';
+          modelRef.banksn = '';
+          modelRef.registaddress = '';
+          modelRef.registphone = '';
           visible = false;
         }
       "

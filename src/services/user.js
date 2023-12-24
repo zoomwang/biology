@@ -50,3 +50,12 @@ api.get(`/sys/user/info`);
 /**  */
 export const getSchool = () =>
 api.get(`/sys/school/info`);
+
+/** 获取账户信用 */
+export const getCredit = () =>
+api.get(`/sys/user/credit`);
+
+
+/** 获取账户余额 */
+export const getAmount = () =>
+api.get(`/sys/user/amount`);

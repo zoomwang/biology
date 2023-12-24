@@ -1,23 +1,77 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive, defineComponent } from "vue";
+import { ref, computed, reactive, defineComponent, onUpdated, onMounted, defineProps } from "vue";
 // import { isLogged } from "../../services/user";
 import { DollarCircleTwoTone } from "@ant-design/icons-vue";
 import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
+import { getCredit, getAmount } from "@/services/user";
+import { getOrderInfo } from "@/services/process";
+import { notification } from "ant-design-vue";
+
 const formState = reactive({
   layout: "horizontal",
   prestore: 0,
   payType: 0,
 });
+const props = defineProps(["orderId"]);
 let payVisible = ref(false);
+const credit = ref(0);
+const amount = ref(0);
 const bottom = ref(-15);
+let orderInfo = ref({});
 
-const canNext = () => {
+const getOrderInfos = async() => {
+  try{
+    const res = await getOrderInfo(props?.orderId);
+    if (res.code == 0) {
+      orderInfo = res.data;
+    }
+  } catch(err) {}
+}
+const submit = () => {
+  if (formState.payType == 0) {
+    // payVisible.value = true;
+    if (orderInfo.fee > amount) {
+      notification.error({
+        message: "注意",
+        description: "预存金额不足，请前往预存",
+      });
+    }
+  }
   if (formState.payType == 1) {
     payVisible.value = true;
   }
+
+  if (formState.payType == 2) {
+    notification.success({
+      message: "",
+      description: "支付成功",
+    });
+  }
 }
+
+const getUserCredit = async () => {
+try {
+    const res = await getCredit();
+    if (res?.code == 0) {
+      credit = res?.credit
+    }
+  } catch (err) {}
+}
+const getUserAmount = async () => {
+  try {
+    const res = await getAmount();
+    if (res?.code == 0) {
+      amount = res?.credit;
+    }
+  } catch (err) {}
+}
+onMounted(() => {
+  getUserAmount();
+  // console.log('props==', props);
+  getOrderInfos();
+});
 </script>
 
 <template>
@@ -46,7 +100,7 @@ const canNext = () => {
           font-weight: 500;
         "
       >
-        预存支付 <span>¥0.00</span>
+        预存支付 <span>¥{{amount}}</span>
       </p>
       <a-card title="">
         <div class="payway_list">
@@ -59,6 +113,7 @@ const canNext = () => {
                 />
                 <span style="font-size: 20px">个人预存</span>
                 <span
+                  v-if="!amount"
                   >您还没有预存，预存可以一次开票、多次使用，省去每次开票的麻烦，现在预存还有优惠哦。<a
                     href="/user/prestore"
                     style="color: #32d693"
@@ -122,7 +177,7 @@ const canNext = () => {
         <a-button
           style="margin-left: 8px; margin-right: 15px;display:block"
           type="primary"
-          @click="canNext"
+          @click="submit"
           >确认并支付</a-button
         >
       </div>

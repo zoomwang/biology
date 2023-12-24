@@ -6,67 +6,95 @@ import {
   defineComponent,
   watch,
   defineEmits,
+  onMounted,
+  onUpdated,
+  defineProps,
 } from "vue";
 import {
   CalendarTwoTone,
   DeleteTwoTone,
   PlusSquareTwoTone,
   QuestionCircleTwoTone,
-  EnvironmentOutlined
+  EnvironmentOutlined,
 } from "@ant-design/icons-vue";
-// import { isLogged } from "../../services/user";
 import { Form, Modal } from "ant-design-vue";
-const emit = defineEmits(["submit", "next"]);
+import { useRoute, useRouter } from "vue-router";
+import { useOfficeInfos } from "../../../hooks/common";
+import { getOrderCostCalc, addOrder } from "@/services/process";
 
+const emit = defineEmits(["update", "save", "next"]);
+const orderId = ref("");
+const props = defineProps(["id"]);
+const { id } = props;
 const useForm = Form.useForm;
+const formRef = ref();
 const containerRef = ref();
 const bottom = ref(10);
-const addressList = [{
-  id: '1',
-  name: "广州办事处"
-},{
-  id: '2',
-  name: "深圳办事处"
-},{
-  id: '3',
-  name: "上海办事处"
-}]
-const selectAdd = (item) => {
-  // console.log('add=', add);
+const route = useRoute();
+const type = route.query.type;
+let addressList = reactive({
+  value: [],
+  detail: {
+    name: "",
+    phone: "",
+    detail_address: "",
+    user: "",
+  },
+});
+const selectAdd = (item, index) => {
   Modal.confirm({
     closable: true,
     cancelText: "重新选择",
     content: `是否和经理确认，样品邮寄到${item.name}？`,
     onOk: () => {
-      formState.defaultAddress = item.id;
-    }
-  })
-}
+      formState.officeId = item.id;
+      addressList.detail = addressList.value[index];
+    },
+  });
+};
 const formState = reactive({
   layout: "horizontal",
-  type: 0,
+  id: id - 0,
+  type,
+  officeId: 1,
   magnetism: 0,
-  // identity: "2",
-  // no: "",
-  // name: "",
-  group: [
+  globalProblem: {
+    shootingMethod: 0,
+    hasMagnetism: 1,
+  },
+  sampleInfo: [
     {
-      // num: 2,
-      // no: "122222",
-      sampleNum: 1,
-      sampleNo: [],
-      time: 1,
-      addition: [],
+      count: 1,
+      numberList: [],
+      hours: 1,
+      uploadFile: [],
     },
   ],
-  fee: 0,
-  defaultAddress: "1",
+  freightMode: 0,
+  // defaultAddress: "1",
 });
+let cost = ref(0);
 
+watch(formState, async (newdata, olddata) => {
+  const res = await getOrderCostCalc(newdata);
+  cost = res?.data || 0;
+  console.log('res==', res)
+});
 const headers = {
   authorization: "authorization-text",
 };
-const cost = ref(0);
+
+const saveData = () => {
+  console.log(formRef);
+  formRef.value
+    .validate()
+    .then(() => {
+      emit("save", formState);
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+};
 const handleChange = (info) => {
   if (info.file.status !== "uploading") {
     console.log(info.file, info.fileList);
@@ -78,23 +106,23 @@ const handleChange = (info) => {
   }
 };
 const addItem = () => {
-  formState.group.push({
-    sampleNum: 1,
-    sampleNo: [],
-    time: 1,
-    addition: [],
+  formState.sampleInfo.push({
+    count: 1,
+    numberList: [],
+    hours: 1,
+    uploadFile: [],
   });
 };
 const deleteItem = (idx) => {
-  const group = formState.group;
+  const group = formState.sampleInfo;
   if (group.length <= 1) return;
   group.splice(idx, 1);
-  formState.group = group;
+  formState.sampleInfo = group;
 };
 const labelCol = {
   span: 3,
 };
-let sampleNo = ref([[1]]);
+let numberList = ref([[1]]);
 
 const readme = ref([
   "啊看黄金时代卡是多久啊",
@@ -106,49 +134,69 @@ const activeKey = ref(["2", "3"]);
 watch(formState, async (newdata, olddata) => {
   console.log("newdata==", newdata);
   const sample = [];
-  newdata.group.forEach((item, index) => {
-    sample[index] = new Array(item.sampleNum - 0);
+  newdata.sampleInfo.forEach((item, index) => {
+    sample[index] = new Array(item.count - 0);
   });
-  sampleNo.value = sample;
-  // sampleNo.value = new Array(newdata.sampleNum - 0);
+  numberList.value = sample;
 });
 
 const canNext = () => {
-  validate()
+  formRef.value
+    .validate()
     .then(() => {
-      // debugger
-      emit("next");
+      try {
+        emit("update", formState);
+        emit("next");
+        // const res = await addOrder(formState);
+        // if (res?.code == 0) {
+        //   emit("next");
+        // }
+      } catch(err) {
+
+      }
     })
     .catch((error) => {
       console.log("error", error);
     });
 };
 
+// const { resetFields, validate, validateInfos } = useForm(
+//   formState,
+//   reactive({
+//     type: [
+//       {
+//         required: true,
+//         message: "请选择",
+//       },
+//     ],
+//     magnetism: [
+//       {
+//         required: true,
+//         message: "请输入",
+//       },
+//     ],
+//     group: [],
+//   })
+// );
 
-const { resetFields, validate, validateInfos } = useForm(
-  formState,
-  reactive({
-    type: [
-      {
-        required: true,
-        message: "请选择",
-      },
-    ],
-    magnetism: [
-      {
-        required: true,
-        message: "请输入",
-      },
-    ],
-    group: [],
-  })
-);
+onMounted(async () => {
+  const getValue = await useOfficeInfos();
+  addressList.value = await getValue.getValue();
+  const obj = addressList.value.filter((item) => {
+    return item.id == formState.officeId;
+  })[0];
+  addressList.detail = obj;
+});
 </script>
 
 <template>
   <!-- 第一步 -->
-  <main id="components-affix-demo-target" ref="containerRef" class="scrollable-container">
-    <a-form :model="formState" labelAlign="right">
+  <main
+    id="components-affix-demo-target"
+    ref="containerRef"
+    class="scrollable-container"
+  >
+    <a-form :model="formState" ref="formRef" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
           <a-collapse-panel key="1" header="预约须知">
@@ -158,9 +206,9 @@ const { resetFields, validate, validateInfos } = useForm(
             <template #extra><CalendarTwoTone /></template>
           </a-collapse-panel>
           <a-collapse-panel key="2" header="全局问题" :disabled="false">
-            <a-form-item label="拍摄方式" v-bind="validateInfos.type">
+            <a-form-item label="拍摄方式">
               <a-radio-group
-                v-model:value="formState.type"
+                v-model:value="formState.globalProblem.shootingMethod"
                 button-style="solid"
               >
                 <a-radio-button :value="0">云现场</a-radio-button>
@@ -170,10 +218,9 @@ const { resetFields, validate, validateInfos } = useForm(
             <a-form-item
               ::label-col="labelCol"
               label="样品是否有磁性(即是否含有铁钴锰等磁性元素)"
-              v-bind="validateInfos.magnetism"
             >
               <a-radio-group
-                v-model:value="formState.type"
+                v-model:value="formState.globalProblem.hasMagnetism"
                 button-style="solid"
               >
                 <a-radio-button :value="0">没有磁性</a-radio-button>
@@ -182,7 +229,7 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            v-for="(item, index) in formState.group"
+            v-for="(item, index) in formState.sampleInfo"
             :header="`第${index + 1}组样品数据`"
             :key="index + 3"
             :disabled="false"
@@ -203,7 +250,7 @@ const { resetFields, validate, validateInfos } = useForm(
             >
               <a-input
                 type="number"
-                v-model:value="formState.group[index].sampleNum"
+                v-model:value="formState.sampleInfo[index].count"
                 placeholder="请输入样品数量"
                 :max-length="25"
                 style="width: 120px"
@@ -218,11 +265,11 @@ const { resetFields, validate, validateInfos } = useForm(
               }"
             >
               <a-input
-                v-for="(item, idx) in sampleNo[index]"
+                v-for="(item, idx) in numberList[index]"
                 :key="idx"
                 placeholder="请输入"
                 style="width: 120px; margin-right: 10px; margin-bottom: 10px"
-                v-model:value="formState.group[index].sampleNo[idx]"
+                v-model:value="formState.sampleInfo[index].numberList[idx]"
               >
                 <template #prefix> {{ idx + 1 }}- </template>
               </a-input>
@@ -237,7 +284,7 @@ const { resetFields, validate, validateInfos } = useForm(
             >
               <a-input
                 type="number"
-                v-model:value="formState.group[index].time"
+                v-model:value="formState.sampleInfo[index].hours"
                 placeholder="请输入预约时长"
                 :max-length="25"
                 style="width: 120px"
@@ -246,7 +293,7 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-form-item>
             <a-form-item label="上传文件" class="upload">
               <a-upload
-                v-model:file-list="formState.group[index].addition"
+                v-model:file-list="formState.sampleInfo[index].uploadFile"
                 name="file"
                 :multiple="true"
                 action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -261,12 +308,15 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.group.length + 2"
+            :key="formState.sampleInfo.length + 2"
             header="寄样地址"
             :disabled="false"
           >
-            <a-form-item label="运费" v-bind="validateInfos.fee">
-              <a-radio-group v-model:value="formState.fee" button-style="solid">
+            <a-form-item label="运费">
+              <a-radio-group
+                v-model:value="formState.freightMode"
+                button-style="solid"
+              >
                 <a-radio-button :value="0">
                   运费到付
                   <a-popover placement="topLeft">
@@ -282,65 +332,57 @@ const { resetFields, validate, validateInfos } = useForm(
                 <a-radio-button :value="1">运费自付</a-radio-button>
               </a-radio-group>
             </a-form-item>
-            <a-form-item
-              ::label-col="labelCol"
-              label="寄样地址"
-              v-bind="validateInfos.magnetism"
-            >
-            <div class="address-list f-fl addr_select_box">
-              <div v-for="item in addressList" :key="item.id" :class="{'default': item.id == formState.defaultAddress, 'li': true}" @click="selectAdd(item)">
-                {{item.name}}
+            <a-form-item ::label-col="labelCol" label="寄样地址">
+              <div class="address-list f-fl addr_select_box">
+                <div
+                  v-for="(item, index) in addressList.value"
+                  :key="item.id"
+                  :class="{ default: item.id == formState.officeId, li: true }"
+                  @click="selectAdd(item, index)"
+                >
+                  {{ item.name }}
+                </div>
               </div>
-            </div>
-            <div class="fl addr post_addr_info">
-              <div class="addr_title">
-                  <h1 class="fl">曾老师</h1>
-              </div>
-              <div class="addr_body" style="position: relative">
-                  <p>15818130780</p>
+              <div class="fl addr post_addr_info">
+                <div class="addr_title">
+                  <h1 class="fl">{{ addressList.detail.name }}</h1>
+                </div>
+                <div class="addr_body" style="position: relative">
+                  <p>{{ addressList.detail.phone }}</p>
                   <div>
                     <EnvironmentOutlined />
-                      <!-- <i class="iconfont com_icon_address"></i> -->
-                      <span>广东省广州市海珠区</span>&nbsp;
-                      <a>新港东路68号华域创意园D1-2（非工作时间拒收同城，请提前联系）</a>
+                    <!-- <i class="iconfont com_icon_address"></i> -->
+                    <!-- <span>广东省广州市海珠区</span>&nbsp; -->
+                    <a
+                      >{{
+                        addressList.detail.detail_address
+                      }}非工作时间拒收同城，请提前联系）</a
+                    >
                   </div>
-                  <div class="sci-address-tips" style=" display: none ">
-                      请寄顺丰快递！！！
+                  <div class="sci-address-tips" style="display: none">
+                    请寄顺丰快递！！！
                   </div>
+                </div>
               </div>
-          </div>
             </a-form-item>
           </a-collapse-panel>
-          <!-- <div style="padding: 20px">
-            <a-button type="primary" @click="addItem">增加一组样品</a-button>
-          </div> -->
         </a-collapse>
       </div>
     </a-form>
-      <a-affix :offset-bottom="bottom">
-        <div class="d-flex">
+    <a-affix :offset-bottom="bottom">
+      <div class="d-flex">
         <div class="cost">
           合计费用：<a-button type="link">¥{{ cost }}</a-button>
         </div>
-        <a-button style="display:block" @click="prev">保存草稿</a-button>
+        <a-button style="display: block" @click="saveData">保存草稿</a-button>
         <a-button
-          style="margin-left: 8px; margin-right: 15px;display:block"
+          style="margin-left: 8px; margin-right: 15px; display: block"
           type="primary"
           @click="canNext"
           >下一步</a-button
         >
-        </div>
-      </a-affix>
-
-      <!-- <a-button
-        v-if="current == 2"
-        type="primary"
-        style="margin-left: 8px; margin-right: 30px"
-        @click="$message.success('Processing complete!')"
-      >
-        提交
-      </a-button> -->
-    <!-- </div> -->
+      </div>
+    </a-affix>
   </main>
 </template>
 <style lang="scss" scoped>
@@ -359,118 +401,119 @@ const { resetFields, validate, validateInfos } = useForm(
   padding-top: 24px;
   background: #fff;
 }
-.d-flex{
+.d-flex {
   margin-top: 10px;
   padding: 15px 0 15px 10px;
   background: #fff;
   box-shadow: 3px 3px 4px 3px rgba(0, 0, 0, 0.1);
 }
-.ant-form-item-label{
-  &>label{
-    width: 81px!important;
+.ant-form-item-label {
+  & > label {
+    width: 81px !important;
   }
 }
-.upload{
-  label{
-    width: 81px!important;
+.upload {
+  label {
+    width: 81px !important;
   }
 }
-.addr_select_box{
+.addr_select_box {
   width: 350px;
-    margin: 0 40px 0 0;
-    padding: 12px 7px;
-    background: rgba(22, 119, 225, 0.4);
-    border: 1px solid #5284c9;
+  margin: 0 40px 0 0;
+  padding: 12px 7px;
+  background: rgba(22, 119, 225, 0.4);
+  border: 1px solid #5284c9;
 }
 .addr_select_box .li {
   float: left;
-    min-width: 82px;
-    line-height: 28px;
-    margin-bottom: 5px;
-    padding: 0 5px;
-    font-size: 14px;
-    color: #000;
-    text-align: center;
-      cursor: pointer;
+  min-width: 82px;
+  line-height: 28px;
+  margin-bottom: 5px;
+  padding: 0 5px;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  cursor: pointer;
 }
 .addr_select_box .li:hover {
-    background: #064cac;
-    color: #fff;
+  background: #064cac;
+  color: #fff;
 }
 .addr_select_box div.default {
-    background: #064cac;
-    color: #fff;
+  background: #064cac;
+  color: #fff;
 }
 .addr_select_box div.active {
-    line-height: 26px;
-    background: #064cac;
-    border: 1px solid #064cac;
-    color: #fff;
+  line-height: 26px;
+  background: #064cac;
+  border: 1px solid #064cac;
+  color: #fff;
 }
 .addr {
-    width: 320px;
-    height: 174px;
-    float: left;
-    padding: 0 10px;
-      background: url('//statics.shiyanjia.com/c/yanlu/images/buffet/addr-bg.png') no-repeat;
-    /*border: 1px solid #E8E8E8;*/
+  width: 320px;
+  height: 174px;
+  float: left;
+  padding: 0 10px;
+  background: url("//statics.shiyanjia.com/c/yanlu/images/buffet/addr-bg.png")
+    no-repeat;
+  /*border: 1px solid #E8E8E8;*/
 }
 .addr_title {
-    height: 53px;
-    line-height: 52px;
-    padding: 0 5px;
-    border-bottom: 1px solid #E8E8E8;
+  height: 53px;
+  line-height: 52px;
+  padding: 0 5px;
+  border-bottom: 1px solid #e8e8e8;
 }
 .addr_title h1 {
-    line-height: 52px;
-    font-size: 14px;
-    color: rgba(0, 0, 0, .65);
-    font-weight: 500;
+  line-height: 52px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
 }
 .addr_title span {
-    font-size: 14px;
-    color: #1890FF;
-    font-weight: 500;
-      cursor: pointer;
+  font-size: 14px;
+  color: #1890ff;
+  font-weight: 500;
+  cursor: pointer;
 }
 .addr_body p {
-    margin: 17px 0 10px;
-    line-height: 20px;
-    font-size: 14px;
-    color: rgba(0, 0, 0, .65);
+  margin: 17px 0 10px;
+  line-height: 20px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
 }
 .addr_body div {
-    position: relative;
-    // padding-left: 32px;
-    font-size: 14px;
-    color: rgba(0, 0, 0, .65);
-    font-weight: 500;
+  position: relative;
+  // padding-left: 32px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
 }
 .addr_body div i {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 24px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 24px;
 }
 .addr_body div span {
-    color: rgba(0, 0, 0, .75);
-    font-weight: bold;
+  color: rgba(0, 0, 0, 0.75);
+  font-weight: bold;
 }
 .addr_body div a {
-    color: rgba(0, 0, 0, .65)!important;
+  color: rgba(0, 0, 0, 0.65) !important;
 }
 .com_icon_address:before {
   content: "\e621";
 }
 .new_addr {
-    line-height: 24px;
-    font-size: 14px;
-    color: rgba(0, 0, 0, .65);
-    cursor: pointer;
+  line-height: 24px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  cursor: pointer;
 }
 .new_addr img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
 }
 </style>
