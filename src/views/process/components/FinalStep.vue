@@ -5,6 +5,7 @@ import { ref, computed, reactive, defineComponent, onUpdated, onMounted, defineP
 import { DollarCircleTwoTone } from "@ant-design/icons-vue";
 import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
+import CreditPay from "../components/CreditPay.vue";
 import { getCredit, getAmount } from "@/services/user";
 import { getOrderInfo } from "@/services/process";
 import { notification } from "ant-design-vue";
@@ -14,7 +15,11 @@ const formState = reactive({
   prestore: 0,
   payType: 0,
 });
-const props = defineProps(["orderId"]);
+const props = defineProps(["orderId", "cost"]);
+const costDetail = reactive({
+  value: []
+});
+const total = props.cost['支付金额'];
 let payVisible = ref(false);
 const credit = ref(0);
 const amount = ref(0);
@@ -32,11 +37,12 @@ const getOrderInfos = async() => {
 const submit = () => {
   if (formState.payType == 0) {
     // payVisible.value = true;
-    if (orderInfo.fee > amount) {
+    if (total > amount.value) {
       notification.error({
         message: "注意",
         description: "预存金额不足，请前往预存",
       });
+      return;
     }
   }
   if (formState.payType == 1) {
@@ -44,10 +50,7 @@ const submit = () => {
   }
 
   if (formState.payType == 2) {
-    notification.success({
-      message: "",
-      description: "支付成功",
-    });
+    payVisible.value = true;
   }
 }
 
@@ -67,10 +70,22 @@ const getUserAmount = async () => {
     }
   } catch (err) {}
 }
+
+const initCost = () => {
+  const arr = [];
+  for(var key in props.cost) {
+    const obj = {
+      label: key,
+      value: props.cost[key]
+    }
+    arr.push(obj);
+  }
+  costDetail.value = arr;
+}
 onMounted(() => {
   getUserAmount();
-  // console.log('props==', props);
   getOrderInfos();
+  initCost();
 });
 </script>
 
@@ -82,13 +97,11 @@ onMounted(() => {
         class="card-wrap"
         style="width: 300px; text-align: right; float: right"
       >
-        <p>订单金额：</p>
-        <p>样品回收费：</p>
-        <p>安心测服务费：</p>
-        <p>运费：</p>
-        <p>优惠券：</p>
+        <template v-for="item in costDetail.value" :key="item">
+          <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
+        </template>
         <a-divider />
-        <p>待支付： <span>￥200.00</span></p>
+        <p class="wait_pay">待支付： <span>￥{{total}}</span></p>
       </div>
     </a-card>
     <a-card title="支付方式">
@@ -100,7 +113,7 @@ onMounted(() => {
           font-weight: 500;
         "
       >
-        预存支付 <span>¥{{amount}}</span>
+        预存支付 <span class="amount">¥{{amount}}</span>
       </p>
       <a-card title="">
         <div class="payway_list">
@@ -136,7 +149,7 @@ onMounted(() => {
           font-weight: 500;
         "
       >
-        其他方式支付 <span>¥0.00</span>
+        其他方式支付 <span class="amount">￥{{props.cost['支付金额']}}</span>
       </p>
       <a-card title="">
         <div class="payway_list">
@@ -191,6 +204,8 @@ onMounted(() => {
       :footer="null"
     >
       <Pay v-if="formState.payType == 1" />
+      <CreditPay v-if="formState.payType == 2" />
+      <!-- <Pay /> -->
     </a-modal>
   </main>
 </template>
@@ -210,9 +225,16 @@ onMounted(() => {
   p {
     font-weight: bold;
     span {
+      margin-top:14px;
       font-size: 24px;
       color: #1890ff !important;
+      vertical-align: bottom;
     }
+  }
+  .wait_pay{
+    overflow: hidden;
+    height: 37px;
+    line-height: 37px;;
   }
 }
 
@@ -275,5 +297,11 @@ onMounted(() => {
 }
 .payway_list_other{
   height: auto;
+}
+.amount{
+  color: #1890ff !important;
+  font-size: 16px;
+  vertical-align: middle;
+  font-weight: bold;
 }
 </style>

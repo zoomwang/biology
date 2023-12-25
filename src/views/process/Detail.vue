@@ -21,7 +21,6 @@ const update = async() => {
       arr.push(obj);
     }
     data.value = arr
-    debugger
   }
 }
 
@@ -37,11 +36,6 @@ onMounted(() => {
     <p v-if="item.label != '项目图片'">{{item.value}}</p>
     <img v-else :src="item.value" width="150" />
   </a-card>
-  <!-- <a-card title="结果展示" style="width: 100%;">
-    <p>card content</p>
-    <p>card content</p>
-    <p>card content</p>
-  </a-card> -->
   </div>
 </template>
 <style lang="scss" scoped>

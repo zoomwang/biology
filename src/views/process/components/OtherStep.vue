@@ -63,10 +63,10 @@ const getOrderDraftInfos = async () => {
   } catch(e) {}
 }
 const replaceChecked = (index) => {
-  formState.recycleAddress.forEach((item) => {
+  formState.recoveryAddress.forEach((item) => {
     item.isdefault = 0;
   });
-  formState.recycleAddress[index].isdefault = 1;
+  formState.recoveryAddress[index].isdefault = 1;
   message.info("设置成功");
 };
 
@@ -106,29 +106,22 @@ const formState = reactive({
     hasMagnetism: 1,
   },
   sampleInfo: [
-    // {
-    //   count: 1,
-    //   numberList: [],
-    //   goal: "",
-    //   hours: 1,
-    //   uploadFile: [],
-    // },
+    {
+      count: 1,
+      numberList: [],
+      goal: "",
+      hours: 1,
+      uploadFile: [],
+    },
   ],
   sameDeviceRelateOrderId: "",
-  recycleAddress: [
+  recoveryAddress: [
     {
+      id: 0,
       receiver: "zoom",
       phone: "12738921382",
       detailAddress: "北京啊就是劳动",
       address: ["130000", "130200", "130203"],
-      fullAddress: "北京市建立的撒开的",
-    },
-    {
-      receiver: "sss",
-      phone: "12738921382",
-      address: ["130000", "130200", "130203"],
-      detailAddress: "北京啊就是劳动",
-      isdefault: 1,
       fullAddress: "北京市建立的撒开的",
     },
   ],
@@ -193,11 +186,11 @@ const hideModal = () => {
 
 const handleOk = () => {
   if (!editAddress.isEditInvoice) {
-    formState.recycleAddress.push({
+    formState.recoveryAddress.push({
       ...modelRef,
     });
   } else {
-    formState.recycleAddress.splice(editAddress.editIndex, 1, {
+    formState.recoveryAddress.splice(editAddress.editIndex, 1, {
       ...modelRef,
     });
   }
@@ -215,7 +208,7 @@ const initFullName = (e, option) => {
     fullName += item.label;
   });
   modelRef.fullAddress =
-    fullName + formState.recycleAddress[editAddress.editIndex].detailAddress;
+    fullName + formState.recoveryAddress[editAddress.editIndex].detailAddress;
 };
 const labelCol = {
   span: 3,
@@ -242,7 +235,6 @@ const canNext = () => {
 };
 
 const saveData = () => {
-  console.log(formRef);
   formRef.value
     .validate()
     .then(() => {
@@ -273,11 +265,8 @@ const { resetFields, validate, validateInfos } = useForm(
 );
 
 const initFormState = () => {
+  formState.sampleInfo = [];
   if (type == '0') {
-    // formState.globalProblem = {
-    //   shootingMethod: 0,
-    //   hasMagnetism: 1,
-    // };
     formState.sampleInfo.push({
       count: 1,
       numberList: [],
@@ -512,7 +501,8 @@ onMounted(async () => {
                 />
               </a-form-item>
             </a-collapse-panel>
-            <a-collapse-panel
+          </template>
+          <a-collapse-panel
               :key="formState.sampleInfo.length + 3"
               header="样品寄送条件"
               :disabled="false"
@@ -581,11 +571,11 @@ onMounted(async () => {
                 v-if="formState.needRecovery == 1"
                 ::label-col="labelCol"
                 label="回收地址"
-                v-bind="validateInfos.recycleAddress"
+                v-bind="validateInfos.recoveryAddress"
               >
                 <div
                   class="recovery-address"
-                  v-for="(item, index) in formState.recycleAddress"
+                  v-for="(item, index) in formState.recoveryAddress"
                   :key="item"
                   v-show="item.isdefault"
                 >
@@ -615,7 +605,7 @@ onMounted(async () => {
                               detailAddress,
                               fullAddress,
                               isdefault,
-                            } = formState.recycleAddress[index];
+                            } = formState.recoveryAddress[index];
                             modelRef.id = id;
                             modelRef.receiver = receiver;
                             modelRef.phone = phone;
@@ -641,7 +631,7 @@ onMounted(async () => {
                   <a-collapse-panel key="1" header="其他地址">
                     <div
                       class="card-wrap card-uncheck"
-                      v-for="(item, index) in formState.recycleAddress"
+                      v-for="(item, index) in formState.recoveryAddress"
                       v-bind:key="item"
                       @click="
                         () => {
@@ -678,7 +668,7 @@ onMounted(async () => {
                                     detailAddress,
                                     fullAddress,
                                     isdefault,
-                                  } = formState.recycleAddress[index];
+                                  } = formState.recoveryAddress[index];
                                   modelRef.id = id;
                                   modelRef.receiver = receiver;
                                   modelRef.phone = phone;
@@ -735,8 +725,6 @@ onMounted(async () => {
                 <a-input style="width:500px" v-model:value="formState.contactsPhone" />
               </a-form-item>
             </a-collapse-panel>
-          </template>
-
           <a-collapse-panel
             :key="formState.sampleInfo.length + 5"
             header="寄样地址"

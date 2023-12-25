@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import FirstStep from "./components/FirstStep.vue";
 import OtherStep from "./components/OtherStep.vue";
 import FinalStep from "./components/FinalStep.vue";
-import { getOfficeInfo, draftSave, addOrder } from "@/services/process";
+import { getOrderCostCalc, getOfficeInfo, addOrder } from "@/services/process";
 import { notification } from "ant-design-vue";
 
 const current = ref(0);
@@ -15,24 +15,28 @@ console.log("route=", route);
 const order = reactive({
   id: '',
 });
+
+const cost = reactive({
+  value: '',
+});
+
+const getOrderCostCalcs = async(data) => {
+  try {
+    const res = await getOrderCostCalc(data);
+    cost.value = res?.data;
+  } catch(err) {}
+}
 const next = async(data) => {
   const res = await addOrder(data);
+  await getOrderCostCalcs(data);
   if (res?.code == 0) {
-    order.id = orderId;
+    order.id = res.data;
     current.value++;
   } else {
-    order.id = '1212';
+    // order.id = '1212';
   }
   
 };
-// const update = async(data) => {
-//   const res = await addOrder(data);
-//   if (res?.code == 0) {
-//     order.id = orderId;
-//   } else {
-//     order.id = '1212';
-//   }
-// }
 const save = async (data) => {
   try {
     const res = await draftSave(data);
@@ -62,7 +66,7 @@ const save = async (data) => {
     <div class="steps-content">
       <!-- <FirstStep v-if="current == 0 && type == 0" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" /> -->
       <OtherStep v-if="current == 0" :addressList="addressList" @update="update" @next="next" @save="save" />
-      <FinalStep v-if="current == 1 && order.id" :orderId="order.id" />
+      <FinalStep v-if="current == 1 && order.id" :cost="cost.value" :orderId="order.id" />
     </div>
     
   </main>
