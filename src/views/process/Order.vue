@@ -15,17 +15,24 @@ console.log("route=", route);
 const order = reactive({
   id: '',
 });
-const next = (data) => {
-  current.value++;
-};
-const update = async(data) => {
+const next = async(data) => {
   const res = await addOrder(data);
   if (res?.code == 0) {
     order.id = orderId;
+    current.value++;
   } else {
     order.id = '1212';
   }
-}
+  
+};
+// const update = async(data) => {
+//   const res = await addOrder(data);
+//   if (res?.code == 0) {
+//     order.id = orderId;
+//   } else {
+//     order.id = '1212';
+//   }
+// }
 const save = async (data) => {
   try {
     const res = await draftSave(data);
@@ -53,8 +60,8 @@ const save = async (data) => {
       <a-step title="第二步" description="支付信息" />
     </a-steps>
     <div class="steps-content">
-      <FirstStep v-if="current == 0 && type == 0" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" />
-      <OtherStep v-if="current == 0 && type == 1" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" />
+      <!-- <FirstStep v-if="current == 0 && type == 0" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" /> -->
+      <OtherStep v-if="current == 0" :addressList="addressList" @update="update" @next="next" @save="save" />
       <FinalStep v-if="current == 1 && order.id" :orderId="order.id" />
     </div>
     

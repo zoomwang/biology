@@ -23,15 +23,14 @@ import { Form, Modal } from "ant-design-vue";
 const emit = defineEmits(["submit", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
-import { getOrderCostCalc, getOrderList } from "@/services/process";
+import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
 
 const useForm = Form.useForm;
-const props = defineProps(["id"]);
 const formRef = ref();
-const { id } = props;
 const containerRef = ref();
 const route = useRoute();
 let visible = ref(false);
+const id = route.query.id;
 const type = route.query.type;
 const bottom = ref(10);
 let modelRef = reactive({
@@ -43,10 +42,6 @@ let modelRef = reactive({
   fullAddress: "",
 });
 let orderOptions = ref([
-  {
-    value: 'jack',
-    label: 'Jack',
-  }
 ]);
 const getOrderLists = async () => {
   const res = await getOrderList(1);
@@ -54,9 +49,18 @@ const getOrderLists = async () => {
     res.data.forEach((item) => {
       item.value = item.orderId;
       item.label = item.remark;
-    })
+    });
     orderOptions = res.data;
   }
+};
+
+const getOrderDraftInfos = async () => {
+  try{
+    const res = await getOrderDraftInfo(id);
+    if (res?.code == 0) {
+      formState = Object.assign(formState, res.data);
+    }
+  } catch(e) {}
 }
 const replaceChecked = (index) => {
   formState.recycleAddress.forEach((item) => {
@@ -69,10 +73,10 @@ const replaceChecked = (index) => {
 let addressList = reactive({
   value: [],
   detail: {
-    name:'',
-    phone: '',
-    detail_address: '',
-    user: ''
+    name: "",
+    phone: "",
+    detail_address: "",
+    user: "",
   },
 });
 const editAddress = reactive({
@@ -93,17 +97,24 @@ const selectAdd = (item, index) => {
 const formState = reactive({
   layout: "horizontal",
   id: id - 0,
+  itemname: id -0,
   type,
   officeId: 1,
   magnetism: 0,
+  globalProblem: {
+    shootingMethod: 0,
+    hasMagnetism: 1,
+  },
   sampleInfo: [
-    {
-      count: 1,
-      numberList: [],
-      goal: ''
-    },
+    // {
+    //   count: 1,
+    //   numberList: [],
+    //   goal: "",
+    //   hours: 1,
+    //   uploadFile: [],
+    // },
   ],
-  sameDeviceRelateOrderId: '',
+  sameDeviceRelateOrderId: "",
   recycleAddress: [
     {
       receiver: "zoom",
@@ -121,23 +132,31 @@ const formState = reactive({
       fullAddress: "北京市建立的撒开的",
     },
   ],
+  contactName: localStorage.userName,
+  contactsPhone: localStorage.phone,
   needRecovery: 0,
   needSameDevice: 0,
   deliveryAddress: "1",
   freightMode: 0,
   message: "",
 });
+let cost = reactive({
+  value: 0,
+});
+const getOrderCostCalcs = async(data) => {
+  try {
+    const res = await getOrderCostCalc(data);
+    cost.value = res?.data['支付金额'] || 0;
+  } catch(err) {}
+}
 
-watch(formState, async (newdata, olddata) => {
-  const res = await getOrderCostCalc(newdata);
-  cost = res?.data || 0;
-  console.log('res==', res)
+watch(formState, (newdata, olddata) => {
+  getOrderCostCalcs(newdata);
 });
 
 const headers = {
   authorization: "authorization-text",
 };
-const cost = ref(0);
 const handleChange = (info) => {
   if (info.file.status !== "uploading") {
     console.log(info.file, info.fileList);
@@ -149,11 +168,20 @@ const handleChange = (info) => {
   }
 };
 const addItem = () => {
-  formState.sampleInfo.push({
-    count: 1,
-    numberList: [],
-    goal: ''
-  });
+  if (type == '0') {
+    formState.sampleInfo.push({
+      count: 1,
+      numberList: [],
+      hours: 1,
+      uploadFile: [],
+    });
+  } else {
+    formState.sampleInfo.push({
+      count: 1,
+      numberList: [],
+      goal: "",
+    });
+  }
 };
 const showModal = () => {
   visible.value = true;
@@ -200,13 +228,13 @@ const readme = ref([
   "啊看黄金时代卡是多久啊",
   "啊看黄金时代卡是多久啊",
 ]);
-const activeKey = ref(["2", "3"]);
+const activeKey = ref(["2", "3", "4", "5", "6"]);
 
 const canNext = () => {
   validate()
     .then(() => {
       // debugger
-      emit("next");
+      emit("next", formState);
     })
     .catch((error) => {
       console.log("error", error);
@@ -244,15 +272,44 @@ const { resetFields, validate, validateInfos } = useForm(
   })
 );
 
-onMounted(async () =>{
-  const getValue  = await useOfficeInfos();
+const initFormState = () => {
+  if (type == '0') {
+    // formState.globalProblem = {
+    //   shootingMethod: 0,
+    //   hasMagnetism: 1,
+    // };
+    formState.sampleInfo.push({
+      count: 1,
+      numberList: [],
+      hours: 1,
+      uploadFile: [],
+    })
+  } else {
+    formState.sampleFormUrl = null;
+    delete formState.globalProblem;
+    formState.sampleInfo.push({
+      count: 1,
+      numberList: [],
+      goal: "",
+    })
+  }
+
+  getOrderCostCalcs(formState);
+}
+
+onMounted(async () => {
+  const getValue = await useOfficeInfos();
   addressList.value = await getValue.getValue();
-  const obj = (addressList.value.filter((item) => {
+  const obj = addressList.value.filter((item) => {
     return item.id == formState.officeId;
-  }))[0];
+  })[0];
   addressList.detail = obj;
+
+
   getOrderLists();
-})
+  getOrderDraftInfos();
+  initFormState();
+});
 </script>
 
 <template>
@@ -271,290 +328,425 @@ onMounted(async () =>{
             </p>
             <template #extra><CalendarTwoTone /></template>
           </a-collapse-panel>
-          <a-collapse-panel key="2" header="全局问题" :disabled="false">
-            <a-form-item
-              label="送样单"
-              v-bind="validateInfos.type"
-              class="no-margin"
-            >
-              <a-upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                directory
+          <template v-if="type == '0'">
+            <a-collapse-panel key="2" header="全局问题" :disabled="false">
+              <a-form-item label="拍摄方式">
+                <a-radio-group
+                  v-model:value="formState.globalProblem.shootingMethod"
+                  button-style="solid"
+                >
+                  <a-radio-button :value="0">云现场</a-radio-button>
+                  <a-radio-button :value="1">现场</a-radio-button>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item
+                ::label-col="labelCol"
+                label="样品是否有磁性(即是否含有铁钴锰等磁性元素)"
               >
-                <a-button>
-                  <UploadOutlined />
-                  点击上传送样单
-                </a-button>
-              </a-upload>
-            </a-form-item>
-          </a-collapse-panel>
-          <a-collapse-panel
-            v-for="(item, index) in formState.sampleInfo"
-            :header="`第${index + 1}组样品数据`"
-            :key="index + 3"
-            :disabled="false"
-          >
-            <template #extra
-              ><PlusSquareTwoTone
-                style="margin-right: 10px"
-                @click.stop="addItem" /><DeleteTwoTone
-                @click.stop="deleteItem(index)"
-            /></template>
-            <a-form-item
-              label="样品数量"
-              :rules="{
-                required: true,
-                message: '请输入',
-                trigger: 'change',
-              }"
+                <a-radio-group
+                  v-model:value="formState.globalProblem.hasMagnetism"
+                  button-style="solid"
+                >
+                  <a-radio-button :value="0">没有磁性</a-radio-button>
+                  <a-radio-button :value="1">有磁性</a-radio-button>
+                </a-radio-group>
+              </a-form-item>
+            </a-collapse-panel>
+            <a-collapse-panel
+              v-for="(item, index) in formState.sampleInfo"
+              :header="`第${index + 1}组样品数据`"
+              :key="index + 3"
+              :disabled="false"
             >
-              <a-input
-                type="number"
-                v-model:value="formState.sampleInfo[index].count"
-                placeholder="请输入样品数量"
-                :max-length="25"
-                style="width: 120px"
-              />
-            </a-form-item>
-            <a-form-item
-              label="样品编号"
-              :rules="{
-                message: '请输入',
-                trigger: 'change',
-              }"
-            >
-              <a-input
-                v-for="(item, idx) in numberList[index]"
-                :key="idx"
-                placeholder="请输入"
-                style="width: 120px; margin-right: 10px; margin-bottom: 10px"
-                v-model:value="formState.sampleInfo[index].numberList[idx]"
+              <template #extra
+                ><PlusSquareTwoTone
+                  style="margin-right: 10px"
+                  @click.stop="addItem" /><DeleteTwoTone
+                  @click.stop="deleteItem(index)"
+              /></template>
+              <a-form-item
+                label="样品数量"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
               >
-                <template #prefix> {{ idx + 1 }}- </template>
-              </a-input>
-            </a-form-item>
-            <a-form-item
-              label="实验目的"
-              :rules="{
-                required: true,
-                message: '请输入',
-                trigger: 'change',
-              }"
-              class="no-margin"
-            >
-            <a-textarea  style="width: 500px" v-model:value="formState.sampleInfo[index].goal" placeholder="请输入" :rows="4" />
-            </a-form-item>
-          </a-collapse-panel>
-          <a-collapse-panel
-            :key="formState.sampleInfo.length + 2"
-            header="样品寄送条件"
-            :disabled="false"
-          >
-            <a-form-item label="同台设备" v-bind="validateInfos.needSameDevice">
-              <a-radio-group
-                v-model:value="formState.needSameDevice"
-                button-style="solid"
+                <a-input
+                  type="number"
+                  v-model:value="formState.sampleInfo[index].count"
+                  placeholder="请输入样品数量"
+                  :max-length="25"
+                  style="width: 120px"
+                />
+              </a-form-item>
+              <a-form-item
+                label="样品编号"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
               >
-                <a-radio-button :value="0">
-                  不需要
-                  <a-popover placement="topLeft">
-                    <template #content>
-                      <p>
-                        如果您需要和历史订单使用相同的设备测试，请选择“需要”并指定之前的订单号。
-                      </p>
-                    </template>
-                    <template #title>
-                      <span>提醒</span>
-                    </template>
-                    <QuestionCircleTwoTone />
-                  </a-popover>
-                </a-radio-button>
-                <a-radio-button :value="1">需要</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item
-              label="选择订单"
-              v-if="formState.needSameDevice"
-            >
-            <a-select
-              ref="select"
-              v-model:value="formState.sameDeviceRelateOrderId"
-              :options="orderOptions"
-            >
-            </a-select>
-            </a-form-item>
-            <a-form-item
-              ::label-col="labelCol"
-              label="是否回收"
-              v-bind="validateInfos.needRecovery"
-            >
-              <a-radio-group
-                v-model:value="formState.needRecovery"
-                button-style="solid"
+                <a-input
+                  v-for="(item, idx) in numberList[index]"
+                  :key="idx"
+                  placeholder="请输入"
+                  style="width: 120px; margin-right: 10px; margin-bottom: 10px"
+                  v-model:value="formState.sampleInfo[index].numberList[idx]"
+                >
+                  <template #prefix> {{ idx + 1 }}- </template>
+                </a-input>
+              </a-form-item>
+              <a-form-item
+                label="预约时长"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
               >
-                <a-radio-button :value="0">
-                  不回收
-                  <a-popover placement="topLeft">
-                    <template #content>
-                      <p>
-                        回收时没法保证样品100%不被污染
-                        回收流程较繁琐，且部分测试对样品有破坏，如您的样品足够，建议不要选择回收
-                      </p>
-                    </template>
-                    <template #title>
-                      <span>提醒</span>
-                    </template>
-                    <QuestionCircleTwoTone />
-                  </a-popover>
-                </a-radio-button>
-                <a-radio-button :value="1">回收</a-radio-button>
-              </a-radio-group>
-            </a-form-item>
-            <a-form-item
-              v-if="formState.needRecovery == 1"
-              ::label-col="labelCol"
-              label="回收地址"
-              v-bind="validateInfos.recycleAddress"
-            >
-              <div
-                class="recovery-address"
-                v-for="(item, index) in formState.recycleAddress"
-                :key="item"
-                v-show="item.isdefault"
+                <a-input
+                  type="number"
+                  v-model:value="formState.sampleInfo[index].hours"
+                  placeholder="请输入预约时长"
+                  :max-length="25"
+                  style="width: 120px"
+                  step="0.5"
+                />
+              </a-form-item>
+              <a-form-item label="上传文件" class="upload">
+                <a-upload
+                  v-model:file-list="formState.sampleInfo[index].uploadFile"
+                  name="file"
+                  :multiple="true"
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  :headers="headers"
+                  @change="handleChange"
+                >
+                  <a-button>
+                    <upload-outlined></upload-outlined>
+                    点击上传
+                  </a-button>
+                </a-upload>
+              </a-form-item>
+            </a-collapse-panel>
+          </template>
+          <template v-else>
+            <a-collapse-panel key="2" header="全局问题" :disabled="false">
+              <a-form-item
+                label="送样单"
+                v-bind="validateInfos.sampleFormUrl"
+                class="no-margin"
               >
-                <div class="default">
-                  <div class="content">
-                    <div>
-                      <span class="name">{{ item.receiver }}</span>
-                      <span class="phone">{{ item.phone }}</span>
+                <a-upload
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  directory
+                >
+                  <a-button>
+                    <UploadOutlined />
+                    点击上传送样单
+                  </a-button>
+                </a-upload>
+              </a-form-item>
+            </a-collapse-panel>
+            <a-collapse-panel
+              v-for="(item, index) in formState.sampleInfo"
+              :header="`第${index + 1}组样品数据`"
+              :key="index + 3"
+              :disabled="false"
+            >
+              <template #extra
+                ><PlusSquareTwoTone
+                  style="margin-right: 10px"
+                  @click.stop="addItem" /><DeleteTwoTone
+                  @click.stop="deleteItem(index)"
+              /></template>
+              <a-form-item
+                label="样品数量"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
+              >
+                <a-input
+                  type="number"
+                  v-model:value="formState.sampleInfo[index].count"
+                  placeholder="请输入样品数量"
+                  :max-length="25"
+                  style="width: 120px"
+                />
+              </a-form-item>
+              <a-form-item
+                label="样品编号"
+                :rules="{
+                  message: '请输入',
+                  trigger: 'change',
+                }"
+              >
+                <a-input
+                  v-for="(item, idx) in numberList[index]"
+                  :key="idx"
+                  placeholder="请输入"
+                  style="width: 120px; margin-right: 10px; margin-bottom: 10px"
+                  v-model:value="formState.sampleInfo[index].numberList[idx]"
+                >
+                  <template #prefix> {{ idx + 1 }}- </template>
+                </a-input>
+              </a-form-item>
+              <a-form-item
+                label="实验目的"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
+                class="no-margin"
+              >
+                <a-textarea
+                  style="width: 500px"
+                  v-model:value="formState.sampleInfo[index].goal"
+                  placeholder="请输入"
+                  :rows="4"
+                />
+              </a-form-item>
+            </a-collapse-panel>
+            <a-collapse-panel
+              :key="formState.sampleInfo.length + 3"
+              header="样品寄送条件"
+              :disabled="false"
+            >
+              <a-form-item
+                label="同台设备"
+                v-bind="validateInfos.needSameDevice"
+              >
+                <a-radio-group
+                  v-model:value="formState.needSameDevice"
+                  button-style="solid"
+                >
+                  <a-radio-button :value="0">
+                    不需要
+                    <a-popover placement="topLeft">
+                      <template #content>
+                        <p>
+                          如果您需要和历史订单使用相同的设备测试，请选择“需要”并指定之前的订单号。
+                        </p>
+                      </template>
+                      <template #title>
+                        <span>提醒</span>
+                      </template>
+                      <QuestionCircleTwoTone />
+                    </a-popover>
+                  </a-radio-button>
+                  <a-radio-button :value="1">需要</a-radio-button>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item label="选择订单" v-if="formState.needSameDevice">
+                <a-select
+                  ref="select"
+                  v-model:value="formState.sameDeviceRelateOrderId"
+                  :options="orderOptions"
+                >
+                </a-select>
+              </a-form-item>
+              <a-form-item
+                ::label-col="labelCol"
+                label="是否回收"
+                v-bind="validateInfos.needRecovery"
+              >
+                <a-radio-group
+                  v-model:value="formState.needRecovery"
+                  button-style="solid"
+                >
+                  <a-radio-button :value="0">
+                    不回收
+                    <a-popover placement="topLeft">
+                      <template #content>
+                        <p>
+                          回收时没法保证样品100%不被污染
+                          回收流程较繁琐，且部分测试对样品有破坏，如您的样品足够，建议不要选择回收
+                        </p>
+                      </template>
+                      <template #title>
+                        <span>提醒</span>
+                      </template>
+                      <QuestionCircleTwoTone />
+                    </a-popover>
+                  </a-radio-button>
+                  <a-radio-button :value="1">回收</a-radio-button>
+                </a-radio-group>
+              </a-form-item>
+              <a-form-item
+                v-if="formState.needRecovery == 1"
+                ::label-col="labelCol"
+                label="回收地址"
+                v-bind="validateInfos.recycleAddress"
+              >
+                <div
+                  class="recovery-address"
+                  v-for="(item, index) in formState.recycleAddress"
+                  :key="item"
+                  v-show="item.isdefault"
+                >
+                  <div class="default">
+                    <div class="content">
+                      <div>
+                        <span class="name">{{ item.receiver }}</span>
+                        <span class="phone">{{ item.phone }}</span>
+                      </div>
+                      <div>
+                        <!---->
+                        <span class="address">{{ item.fullAddress }}</span>
+                      </div>
                     </div>
-                    <div>
-                      <!---->
-                      <span class="address">{{ item.fullAddress }}</span>
+                    <div class="modify-button">
+                      <a
+                        class="b-edit"
+                        @click.stop="
+                          () => {
+                            editAddress.isEditInvoice = true;
+                            editAddress.editIndex = index;
+                            const {
+                              id,
+                              receiver,
+                              phone,
+                              address,
+                              detailAddress,
+                              fullAddress,
+                              isdefault,
+                            } = formState.recycleAddress[index];
+                            modelRef.id = id;
+                            modelRef.receiver = receiver;
+                            modelRef.phone = phone;
+                            modelRef.address = address;
+                            modelRef.detailAddress = detailAddress;
+                            modelRef.fullAddress = fullAddress;
+                            modelRef.isdefault = isdefault;
+                            showModal();
+                          }
+                        "
+                        >修改</a
+                      >
                     </div>
-                  </div>
-                  <div class="modify-button">
-                    <a
-                      class="b-edit"
-                      @click.stop="
-                        () => {
-                          editAddress.isEditInvoice = true;
-                          editAddress.editIndex = index;
-                          const {
-                            id,
-                            receiver,
-                            phone,
-                            address,
-                            detailAddress,
-                            fullAddress,
-                            isdefault,
-                          } = formState.recycleAddress[index];
-                          modelRef.id = id;
-                          modelRef.receiver = receiver;
-                          modelRef.phone = phone;
-                          modelRef.address = address;
-                          modelRef.detailAddress = detailAddress;
-                          modelRef.fullAddress = fullAddress;
-                          modelRef.isdefault = isdefault;
-                          showModal();
-                        }
-                      "
-                      >修改</a
-                    >
                   </div>
                 </div>
-              </div>
-              <a-collapse
-                style="width: 545px; margin-bottom: 15px"
-                v-model:activeKey="activeKey1"
-                accordion
-                expandIconPosition="right"
-                :bordered="false"
-              >
-                <a-collapse-panel key="1" header="其他地址">
-                  <div
-                    class="card-wrap card-uncheck"
-                    v-for="(item, index) in formState.recycleAddress"
-                    v-bind:key="item"
-                    @click="
-                      () => {
-                        replaceChecked(index);
-                      }
-                    "
-                  >
-                    <div class="recovery-address recovery-address-each">
-                      <div class="default">
-                        <div class="content">
-                          <div>
-                            <span class="name">{{ item.receiver }}</span>
-                            <span class="phone">{{ item.phone }}</span>
+                <a-collapse
+                  style="width: 545px; margin-bottom: 15px"
+                  v-model:activeKey="activeKey1"
+                  accordion
+                  expandIconPosition="right"
+                  :bordered="false"
+                >
+                  <a-collapse-panel key="1" header="其他地址">
+                    <div
+                      class="card-wrap card-uncheck"
+                      v-for="(item, index) in formState.recycleAddress"
+                      v-bind:key="item"
+                      @click="
+                        () => {
+                          replaceChecked(index);
+                        }
+                      "
+                    >
+                      <div class="recovery-address recovery-address-each">
+                        <div class="default">
+                          <div class="content">
+                            <div>
+                              <span class="name">{{ item.receiver }}</span>
+                              <span class="phone">{{ item.phone }}</span>
+                            </div>
+                            <div>
+                              <!---->
+                              <span class="address">{{
+                                item.fullAddress
+                              }}</span>
+                            </div>
                           </div>
-                          <div>
-                            <!---->
-                            <span class="address">{{ item.fullAddress }}</span>
+                          <div class="modify-button">
+                            <a
+                              class="b-edit"
+                              @click.stop="
+                                () => {
+                                  editAddress.isEditInvoice = true;
+                                  editAddress.editIndex = index;
+                                  const {
+                                    id,
+                                    receiver,
+                                    phone,
+                                    address,
+                                    detailAddress,
+                                    fullAddress,
+                                    isdefault,
+                                  } = formState.recycleAddress[index];
+                                  modelRef.id = id;
+                                  modelRef.receiver = receiver;
+                                  modelRef.phone = phone;
+                                  modelRef.address = address;
+                                  modelRef.detailAddress = detailAddress;
+                                  modelRef.fullAddress = fullAddress;
+                                  modelRef.isdefault = isdefault;
+                                  showModal();
+                                }
+                              "
+                              >修改</a
+                            >
                           </div>
-                        </div>
-                        <div class="modify-button">
-                          <a
-                            class="b-edit"
-                            @click.stop="
-                              () => {
-                                editAddress.isEditInvoice = true;
-                                editAddress.editIndex = index;
-                                const {
-                                  id,
-                                  receiver,
-                                  phone,
-                                  address,
-                                  detailAddress,
-                                  fullAddress,
-                                  isdefault,
-                                } = formState.recycleAddress[index];
-                                modelRef.id = id;
-                                modelRef.receiver = receiver;
-                                modelRef.phone = phone;
-                                modelRef.address = address;
-                                modelRef.detailAddress = detailAddress;
-                                modelRef.fullAddress = fullAddress;
-                                modelRef.isdefault = isdefault;
-                                showModal();
-                              }
-                            "
-                            >修改</a
-                          >
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a-collapse-panel>
-              </a-collapse>
-              <div class="invoice-add">
-                <a-button
-                  type="dashed"
-                  style="width: 545px"
-                  @click="
-                    () => {
-                      editAddress.isEditInvoice = false;
-                      showModal();
-                    }
-                  "
-                  class="t-add"
-                >
-                  <div class="t-new-add t-blue">
-                    <span class="text-add">+</span
-                    ><span class="">新增地址</span>
-                  </div>
-                </a-button>
-              </div>
-            </a-form-item>
-          </a-collapse-panel>
+                  </a-collapse-panel>
+                </a-collapse>
+                <div class="invoice-add">
+                  <a-button
+                    type="dashed"
+                    style="width: 545px"
+                    @click="
+                      () => {
+                        editAddress.isEditInvoice = false;
+                        showModal();
+                      }
+                    "
+                    class="t-add"
+                  >
+                    <div class="t-new-add t-blue">
+                      <span class="text-add">+</span
+                      ><span class="">新增地址</span>
+                    </div>
+                  </a-button>
+                </div>
+              </a-form-item>
+            </a-collapse-panel>
+            <a-collapse-panel
+              :key="formState.sampleInfo.length + 4"
+              header="实验有问题联系谁"
+              :disabled="false"
+            >
+              <a-form-item
+                label="用户名"
+                :rules="[{ required: true, message: '请输入用户名!' }]"
+              >
+                <a-input style="width:500px" v-model:value="formState.contactName" />
+              </a-form-item>
+              <a-form-item
+                label="手机号"
+                :rules="[{ required: true, message: '请输入手机号!' }]"
+              >
+                <a-input style="width:500px" v-model:value="formState.contactsPhone" />
+              </a-form-item>
+            </a-collapse-panel>
+          </template>
+
           <a-collapse-panel
-            :key="formState.sampleInfo.length + 3"
+            :key="formState.sampleInfo.length + 5"
             header="寄样地址"
             :disabled="false"
           >
             <a-form-item label="运费" v-bind="validateInfos.freightMode">
-              <a-radio-group v-model:value="formState.freightMode" button-style="solid">
+              <a-radio-group
+                v-model:value="formState.freightMode"
+                button-style="solid"
+              >
                 <a-radio-button :value="0">
                   运费到付
                   <a-popover placement="topLeft">
@@ -575,32 +767,41 @@ onMounted(async () =>{
               label="寄样地址"
               v-bind="validateInfos.officeId"
             >
-            <div class="address-list f-fl addr_select_box">
-              <div v-for="(item, index) in addressList.value" :key="item.id" :class="{'default': item.id == formState.officeId, 'li': true}" @click="selectAdd(item, index)">
-                {{item.name}}
+              <div class="address-list f-fl addr_select_box">
+                <div
+                  v-for="(item, index) in addressList.value"
+                  :key="item.id"
+                  :class="{ default: item.id == formState.officeId, li: true }"
+                  @click="selectAdd(item, index)"
+                >
+                  {{ item.name }}
+                </div>
               </div>
-            </div>
-            <div class="fl addr post_addr_info">
-              <div class="addr_title">
-                  <h1 class="fl">{{addressList.detail.name}}</h1>
-              </div>
-              <div class="addr_body" style="position: relative">
-                  <p>{{addressList.detail.phone}}</p>
+              <div class="fl addr post_addr_info">
+                <div class="addr_title">
+                  <h1 class="fl">{{ addressList.detail.name }}</h1>
+                </div>
+                <div class="addr_body" style="position: relative">
+                  <p>{{ addressList.detail.phone }}</p>
                   <div>
                     <EnvironmentOutlined />
-                      <!-- <i class="iconfont com_icon_address"></i> -->
-                      <!-- <span>广东省广州市海珠区</span>&nbsp; -->
-                      <a>{{addressList.detail.detail_address}}非工作时间拒收同城，请提前联系）</a>
+                    <!-- <i class="iconfont com_icon_address"></i> -->
+                    <!-- <span>广东省广州市海珠区</span>&nbsp; -->
+                    <a
+                      >{{
+                        addressList.detail.detail_address
+                      }}非工作时间拒收同城，请提前联系）</a
+                    >
                   </div>
-                  <div class="sci-address-tips" style=" display: none ">
-                      请寄顺丰快递！！！
+                  <div class="sci-address-tips" style="display: none">
+                    请寄顺丰快递！！！
                   </div>
+                </div>
               </div>
-          </div>
             </a-form-item>
           </a-collapse-panel>
           <a-collapse-panel
-            :key="formState.sampleInfo.length + 4"
+            :key="formState.sampleInfo.length + 6"
             header="留言"
             :disabled="false"
           >
@@ -614,7 +815,7 @@ onMounted(async () =>{
     <a-affix :offset-bottom="bottom">
       <div class="d-flex">
         <div class="cost">
-          合计费用：<a-button type="link">¥{{ cost }}</a-button>
+          合计费用：<a-button type="link">¥{{ cost.value }}</a-button>
         </div>
         <a-button style="display: block" @click="saveData">保存草稿</a-button>
         <a-button

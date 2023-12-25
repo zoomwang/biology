@@ -68,6 +68,7 @@ const getUserInfo = async function () {
       });
       formState = Object.assign(formState, res.data);
       userId.value = res.data.id;
+      localStorage.setItem('userName', res.data.username);
     }
   } catch (err) {}
 };

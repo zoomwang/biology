@@ -22,8 +22,8 @@ export const getRecoveryList = (type) => {
 }
 
 /** 下订单 */
-export const addOrder = (type) => {
-  return api.get(`/sys/order/add`);
+export const addOrder = (params) => {
+  return api.post(`/sys/order/add`, params);
 }
 
 /** 预估金额 */
@@ -44,12 +44,17 @@ export const getOfficeInfo = (type) => {
 
 /** 获取办事处信息 */
 export const getOrderList = (type) => {
-  return api.get(`/sys/order/list?type=${type}`);
+  return api.get(`/sys/order/list?id=${type}`);
+}
+
+/** 获取项目详情信息 */
+export const getProjectInfo = (id) => {
+  return api.get(`/sys/order/project/info?id=${id}`);
 }
 
 /** 获取草稿信息 */
-export const getProjectInfo = (id) => {
-  return api.get(`/sys/order/project/info?id=${id}`);
+export const getOrderDraftInfo = (id) => {
+  return api.get(`/sys/order/draft/info?id=${id}`);
 }
 
 /** 获取订单详情 */
