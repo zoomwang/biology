@@ -4,8 +4,9 @@ export const blackList = [
   "/user/userinfo"
 ]
 
-import jsPDF from 'jspdf';
-import html2canvas from "html2canvas";
+// import jsPDF from 'jspdf';
+// import html2canvas from "html2canvas";
+import html2pdf from 'html2pdf.js';
 
 export const jstopdf = (data) => {
   // // 创建一个新的 jsPDF 实例
@@ -25,8 +26,18 @@ export const jstopdf = (data) => {
   //   // 下载 PDF 文件
   //   pdf.save(`${data?.name}.pdf`);
   // });
-  const doc = new jsPDF();
-  const formEl = document.getElementById('download');
-  debugger
-  doc.html(formEl).save('test.pdf');
+  var element = document.getElementById('download');;
+       var opt = {
+            margin: 12,
+            filename: `dowan.pdf`,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2, allowTaint: true },
+            pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },    // 智能分页，防止图片被截断
+            enableLinks: true  // 支持文本中放链接，可点击跳转
+        };
+        html2pdf(element, opt);
+  // const doc = new jsPDF();
+  // const formEl = document.getElementById('download');
+  // // debugger
+  // doc.html(formEl).save('test.pdf');
 }

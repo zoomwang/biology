@@ -4,6 +4,9 @@ import { notification } from "ant-design-vue";
 import { jstopdf } from "@/utils/index";
 
 const isPaySuccess = ref(true);
+const props = defineProps(["props"]);
+console.log('props==', props.props.cost['支付金额']);
+// debugger
 
 const download = () => {
   jstopdf({
@@ -25,7 +28,7 @@ const onRefrush = () => {
   <div class="pay-wrap d-flex" id="cmbPayDialog">
     <div v-show="isPaySuccess">
       <div class="unionPayMoney">
-        应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
+        应付金额<span>￥</span><span class="unionPayMoney_span">{{props.props.cost['支付金额'] || '1000'}}</span>
       </div>
       <img
         id="cmbPayDialog_img"

@@ -20,7 +20,7 @@ import {
 import { message } from "ant-design-vue";
 import areaData from "../../../public/area.js";
 import { Form, Modal } from "ant-design-vue";
-const emit = defineEmits(["submit", "next"]);
+const emit = defineEmits(["save", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
 import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
@@ -44,7 +44,7 @@ let modelRef = reactive({
 let orderOptions = ref([
 ]);
 const getOrderLists = async () => {
-  const res = await getOrderList(1);
+  const res = await getOrderList(type);
   if (res?.code == 0) {
     res.data.forEach((item) => {
       item.value = item.orderId;
@@ -145,6 +145,12 @@ const getOrderCostCalcs = async(data) => {
 
 watch(formState, (newdata, olddata) => {
   getOrderCostCalcs(newdata);
+  console.log("newdata==", newdata);
+  const sample = [];
+  newdata.sampleInfo.forEach((item, index) => {
+    sample[index] = new Array(item.count - 0);
+  });
+  numberList.value = sample;
 });
 
 const headers = {
@@ -248,21 +254,23 @@ const saveData = () => {
 const { resetFields, validate, validateInfos } = useForm(
   formState,
   reactive({
-    type: [
-      {
-        required: true,
-        message: "请选择",
-      },
-    ],
-    magnetism: [
+    contactName: [
       {
         required: true,
         message: "请输入",
       },
     ],
+    contactsPhone: [
+      {
+        required: true,
+        message: "请输入手机号",
+        pattern: /^1[3456789]\d{9}$/,
+      },
+    ],
     group: [],
   })
 );
+
 
 const initFormState = () => {
   formState.sampleInfo = [];
@@ -330,7 +338,7 @@ onMounted(async () => {
               </a-form-item>
               <a-form-item
                 ::label-col="labelCol"
-                label="样品是否有磁性(即是否含有铁钴锰等磁性元素)"
+                label="样品是否有磁性"
               >
                 <a-radio-group
                   v-model:value="formState.globalProblem.hasMagnetism"
@@ -349,10 +357,12 @@ onMounted(async () => {
             >
               <template #extra
                 ><PlusSquareTwoTone
-                  style="margin-right: 10px"
-                  @click.stop="addItem" /><DeleteTwoTone
+                  style="margin-right: 5px"
+                  @click.stop="addItem" /><span style="margin-right: 10px" @click.stop="addItem">新增</span>
+                  <DeleteTwoTone
+                  style="margin-right: 5px"
                   @click.stop="deleteItem(index)"
-              /></template>
+              /><span @click.stop="deleteItem(index)">删除</span></template>
               <a-form-item
                 label="样品数量"
                 :rules="{
@@ -535,6 +545,7 @@ onMounted(async () => {
               <a-form-item label="选择订单" v-if="formState.needSameDevice">
                 <a-select
                   ref="select"
+                  style="width: 300px"
                   v-model:value="formState.sameDeviceRelateOrderId"
                   :options="orderOptions"
                 >
@@ -713,16 +724,18 @@ onMounted(async () => {
               :disabled="false"
             >
               <a-form-item
+                v-bind="validateInfos.contactName"
                 label="用户名"
                 :rules="[{ required: true, message: '请输入用户名!' }]"
               >
-                <a-input style="width:500px" v-model:value="formState.contactName" />
+                <a-input style="width:300px" v-model:value="formState.contactName" />
               </a-form-item>
               <a-form-item
                 label="手机号"
+                v-bind="validateInfos.contactsPhone"
                 :rules="[{ required: true, message: '请输入手机号!' }]"
               >
-                <a-input style="width:500px" v-model:value="formState.contactsPhone" />
+                <a-input style="width:300px" v-model:value="formState.contactsPhone" />
               </a-form-item>
             </a-collapse-panel>
           <a-collapse-panel
@@ -1106,5 +1119,10 @@ onMounted(async () => {
 }
 .no-margin {
   margin-bottom: 0 !important;
+}
+.ant-collapse-content-box{
+  .ant-form-item:last-child{
+    margin-bottom: 0;
+  }
 }
 </style>

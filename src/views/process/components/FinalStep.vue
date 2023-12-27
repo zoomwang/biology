@@ -104,8 +104,8 @@ onMounted(() => {
         <p class="wait_pay">待支付： <span>￥{{total}}</span></p>
       </div>
     </a-card>
-    <a-card title="支付方式">
-      <p
+    <a-card title="支付" style="margin-top: 16px;">
+      <!-- <p
         style="
           font-size: 14px;
           color: rgba(0, 0, 0, 0.85);
@@ -114,8 +114,8 @@ onMounted(() => {
         "
       >
         预存支付 <span class="amount">¥{{amount}}</span>
-      </p>
-      <a-card title="">
+      </p> -->
+      <!-- <a-card title="">
         <div class="payway_list">
           <div class="payway_list_item payway_list_item_disabled">
             <a-radio-group name="prestore" v-model:value="formState.payType">
@@ -139,19 +139,18 @@ onMounted(() => {
             </a-radio-group>
           </div>
         </div>
-      </a-card>
+      </a-card> -->
       <p
         style="
           font-size: 14px;
           color: rgba(0, 0, 0, 0.85);
           margin-bottom: 16px;
-          margin-top: 16px;
           font-weight: 500;
         "
       >
-        其他方式支付 <span class="amount">￥{{props.cost['支付金额']}}</span>
+        支付金额 <span class="amount">￥{{props.cost['支付金额']}}</span>
       </p>
-      <a-card title="">
+      <a-card title="支付方式">
         <div class="payway_list">
           <div class="payway_list_item payway_list_other">
             <a-radio-group name="prestore" v-model:value="formState.payType">
@@ -162,6 +161,22 @@ onMounted(() => {
                 <span style="font-size: 20px">扫码支付</span>
                 <span>支持使用</span><img class="pay_type" width="308px" height="76px" :src="payment" title="不可选"
               /></a-radio>
+              <a-radio value="0"
+                ><img
+                  src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
+                  title="不可选"
+                />
+                <span style="font-size: 20px">个人预存</span>
+                <span
+                  v-if="!amount"
+                  >您还没有预存，预存可以一次开票、多次使用，省去每次开票的麻烦，现在预存还有优惠哦。<a
+                    href="/user/prestore"
+                    style="color: #32d693"
+                    target="_blank"
+                    >我要预存</a
+                  ></span
+                ></a-radio
+              >
               <br />
               <a-radio value="2"
                 ><img
@@ -203,7 +218,7 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType == 1" />
+      <Pay v-if="formState.payType == 1" :props="props" />
       <CreditPay v-if="formState.payType == 2" />
       <!-- <Pay /> -->
     </a-modal>
