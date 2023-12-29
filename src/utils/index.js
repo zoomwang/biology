@@ -4,40 +4,50 @@ export const blackList = [
   "/user/userinfo"
 ]
 
-// import jsPDF from 'jspdf';
-// import html2canvas from "html2canvas";
+import jsPDF from 'jspdf';
+import html2canvas from "html2canvas";
 import html2pdf from 'html2pdf.js';
 
-export const jstopdf = (data) => {
-  // // 创建一个新的 jsPDF 实例
-  // const pdf = new jsPDF();
-  // // 设置文档的页面大小为 A4 纸张
-  // pdf.setProperties({
-  //   title: data?.title,
-  //   subject: data?.subject,
-  //   author: data?.author,
-  // });
-  // // 使用 html2canvas 库将 HTML 页面转换为 canvas 元素
-  // html2canvas(document.querySelector(`#${data?.id}`)).then(canvas => {
-  //   // 将 canvas 元素转换为图像数据
-  //   const imgData = canvas.toDataURL('image/png');
-  //   // 将图像数据添加到 PDF 文档中
-  //   pdf.addImage(imgData, 'PNG', 0, 0);
-  //   // 下载 PDF 文件
-  //   pdf.save(`${data?.name}.pdf`);
-  // });
-  var element = document.getElementById('download');;
-       var opt = {
-            margin: 12,
-            filename: `dowan.pdf`,
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2, allowTaint: true },
-            pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },    // 智能分页，防止图片被截断
-            enableLinks: true  // 支持文本中放链接，可点击跳转
-        };
-        html2pdf(element, opt);
-  // const doc = new jsPDF();
-  // const formEl = document.getElementById('download');
-  // // debugger
-  // doc.html(formEl).save('test.pdf');
+// export const jstopdf = (data) => {
+//   // // 创建一个新的 jsPDF 实例
+//   var element = document.getElementById('download');;
+//        var opt = {
+//             margin: 12,
+//             filename: `dowan.pdf`,
+//             image: { type: 'jpeg', quality: 1 },
+//             html2canvas: { scale: 2, allowTaint: true },
+//             pagebreak: { mode: 'avoid-all', after: '.avoidThisRow' },    // 智能分页，防止图片被截断
+//             enableLinks: true  // 支持文本中放链接，可点击跳转
+//         };
+//         html2pdf(element, opt);
+  
+// }
+
+export const jstopdf = (elementName, htmlTitle, currentTime) => {
+  var element = document.getElementById(elementName)
+  html2canvas(element, {
+      logging: false
+  }).then(function(canvas) {
+      var pdf = new jsPDF("p", "mm", "a4") // A4纸，纵向
+      var ctx = canvas.getContext("2d")
+      var a4w = 190;
+      var a4h = 257 // A4大小，210mm x 297mm，四边各保留20mm的边距
+      var imgHeight = Math.floor(a4h * canvas.width / a4w) // 按A4显示比例换算一页图像的像素高度
+      var renderedHeight = 0
+
+      while (renderedHeight < canvas.height) {
+          var page = document.createElement("canvas")
+          page.width = canvas.width
+          page.height = Math.min(imgHeight, canvas.height - renderedHeight) // 可能内容不足一页
+
+          // 用getImageData剪裁指定区域，并画到前面创建的canvas对象中
+          page.getContext("2d").putImageData(ctx.getImageData(0, renderedHeight, canvas.width, Math.min(imgHeight, canvas.height - renderedHeight)), 0, 0)
+          pdf.addImage(page.toDataURL("image/jpeg", 1.0), "JPEG", 10, 10, a4w, Math.min(a4h, a4w * page.height / page.width)) // 添加图像到页面，保留10mm边距
+
+          renderedHeight += imgHeight
+          if (renderedHeight < canvas.height) { pdf.addPage() } // 如果后面还有内容，添加一个空页
+          // delete page;
+      }
+      pdf.save(htmlTitle + currentTime)
+  })
 }

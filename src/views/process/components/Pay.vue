@@ -9,12 +9,13 @@ console.log('props==', props.props.cost['支付金额']);
 // debugger
 
 const download = () => {
-  jstopdf({
-    title: "测试",
-    subject: "sadsa",
-    id: "download",
-    name: "test",
-  });
+  jstopdf("download", "对账单",timeFormat(new Date(), "YYYY-mm-dd"));
+  // jstopdf({
+  //   title: "测试",
+  //   subject: "sadsa",
+  //   id: "download",
+  //   name: "test",
+  // });
 };
 
 const onRefrush = () => {

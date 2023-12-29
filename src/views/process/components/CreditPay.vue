@@ -4,15 +4,19 @@ import { notification } from "ant-design-vue";
 import { jstopdf } from "@/utils/index";
 
 const isPaySuccess = ref(true);
-
+const props = defineProps(["orderInfo"]);
+const address = ref(null);
+console.log(props.orderInfo);
 const download = () => {
-  jstopdf({
-    title: "测试",
-    subject: "sadsa",
-    id: "download",
-    name: "test",
-  });
+  jstopdf("download", "对账单", new Date());
 };
+
+const initData = () => {
+  const defaultv = (props.orderInfo.recoveryAddress.filter((item) => {
+    return item.isdefault;
+  }))[0].fullAddress;
+  address = defaultv;
+}
 
 const onRefrush = () => {
   setTimeout(() => {
@@ -37,66 +41,37 @@ const onRefrush = () => {
         </template>
       </a-result>
     </div>
-    <div id="download" style="position: absolute; top: -99999px">
-      <table border="1px" width="100%">
-        <!--border是边框的意思-->
-        <tr>
-          <td>姓名</td>
-
-          <td>性别</td>
-
-          <td>年龄</td>
-
-          <td>地址</td>
-        </tr>
-
-        <tr>
-          <td>jack</td>
-
-          <td>boy</td>
-
-          <td>20</td>
-
-          <td>成都</td>
-        </tr>
-
-        <tr>
-          <td>rose</td>
-
-          <td>girl</td>
-
-          <td>18</td>
-
-          <td>绵阳</td>
-        </tr>
-      </table>
-      <!-- <a-descriptions title="User Info" bordered>
-        <a-descriptions-item label="Product">Cloud Database</a-descriptions-item>
-        <a-descriptions-item label="Billing Mode">Prepaid</a-descriptions-item>
-        <a-descriptions-item label="Automatic Renewal">YES</a-descriptions-item>
-        <a-descriptions-item label="Order time">2018-04-24 18:00:00</a-descriptions-item>
-        <a-descriptions-item label="Usage Time" :span="2">2019-04-24 18:00:00</a-descriptions-item>
-        <a-descriptions-item label="Status" :span="3">
-          <a-badge status="processing" text="Running" />
+    <div id="download" style="position: absolute; top: -9999px;width:700px">
+      <a-descriptions title="预约单" bordered :column="2">
+        <a-descriptions-item label="订单号">{{props?.orderInfo?.orderId}}</a-descriptions-item>
+        <a-descriptions-item label="运费支付方式">{{['到付', '自付'][props?.orderInfo?.freightMode]}}</a-descriptions-item>
+        <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
+        <a-descriptions-item label="项目名称">{{props?.orderInfo?.itemname}}</a-descriptions-item>
+        <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item>
+        <a-descriptions-item label="联系人">{{props?.orderInfo?.contactName}}</a-descriptions-item>
+        <a-descriptions-item label="联系号码">{{props?.orderInfo?.contactsPhone}}</a-descriptions-item>
+        <a-descriptions-item label="实验留言">{{props?.orderInfo?.remark}}</a-descriptions-item>
+        <a-descriptions-item label="总费用">
+          <p>总金额：{{props?.orderInfo?.costInfo['支付金额']}}</p>
+          <p>样品回收费：{{props?.orderInfo?.costInfo['样品回收费']}}</p>
+          <p>订单金额：{{props?.orderInfo?.costInfo['订单金额']}}</p>
+          <p>运费：{{props?.orderInfo?.costInfo['运费']}}</p>
         </a-descriptions-item>
-        <a-descriptions-item label="Negotiated Amount">$80.00</a-descriptions-item>
-        <a-descriptions-item label="Discount">$20.00</a-descriptions-item>
-        <a-descriptions-item label="Official Receipts">$60.00</a-descriptions-item>
-        <a-descriptions-item label="Config Info">
-          Data disk type: MongoDB
+        <a-descriptions-item label="全局问题" :span="2">
+          是否有磁性元素:{{props?.orderInfo?.globalProblem?.hasMagnetism ? '有':'没有'}}
           <br />
-          Database version: 3.4
-          <br />
-          Package: dds.mongo.mid
-          <br />
-          Storage space: 10 GB
-          <br />
-          Replication factor: 3
-          <br />
-          Region: East China 1
-          <br />
+          拍摄方式:{{props?.orderInfo?.globalProblem?.shootingMethod ? '现场':'云现场'}}
         </a-descriptions-item>
-      </a-descriptions> -->
+        <a-descriptions-item label="样品信息" v-for="item in props?.orderInfo?.sampleInfo" :key="item">
+          样品数量:{{item.count}}
+          <br />
+          样品编号:{{item.numberList.join(',')}}
+          <br />
+          目的:{{item.goal}}
+          <br />
+          预约市场:{{item.hours}}
+        </a-descriptions-item>
+      </a-descriptions>
     </div>
   </div>
 </template>

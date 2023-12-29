@@ -13,7 +13,7 @@ import { notification } from "ant-design-vue";
 const formState = reactive({
   layout: "horizontal",
   prestore: 0,
-  payType: 0,
+  payType: "1",
 });
 const props = defineProps(["orderId", "cost"]);
 const costDetail = reactive({
@@ -218,8 +218,8 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType == 1" :props="props" />
-      <CreditPay v-if="formState.payType == 2" />
+      <Pay v-if="formState.payType == 1" :props="props" :orderInfo="orderInfo" />
+      <CreditPay v-if="formState.payType == 2" :orderInfo="orderInfo" />
       <!-- <Pay /> -->
     </a-modal>
   </main>
