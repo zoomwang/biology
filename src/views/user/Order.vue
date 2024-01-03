@@ -2,161 +2,131 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive,defineComponent } from "vue";
 import { isLogged } from "../../services/user";
-const formState = reactive({
-  layout: "horizontal",
-  identity: "2",
-  no: "",
-  name: "",
-});
+import FinalStep from "../process/components/FinalStep.vue";
 
-// try {
-//   const data = isLogged();
-// } catch(err) {
-//   alert(err);
-// }
+const drawerVisible = ref(false);
+const showDrawer = () => {
+  drawerVisible.value = true;
+};
+const visible = ref(false);
+const showModal = () => {
+  visible.value = true;
+};
+const handleOk = e => {
+  console.log(e);
+  visible.value = false;
+};
+const columns = [
+  {
+    title: '项目名称',
+    dataIndex: 'name',
+  },
+  {
+    title: '下单时间',
+    className: 'column-money',
+    dataIndex: 'time',
+  },
+  {
+    title: '订单号',
+    dataIndex: 'orderId',
+  },
+  {
+    title: '实付款',
+    dataIndex: 'money',
+  },
+  {
+    title: '订单状态',
+    dataIndex: 'status',
+    slots: {
+      customRender: 'status',
+    },
+  },
+  {
+    title: '发票状态',
+    dataIndex: 'ticketStatus',
+    slots: {
+      customRender: 'ticketStatus',
+    },
+  },
+  {
+    title: '操作',
+    key: 'action',
+    slots: {
+      customRender: 'action',
+    },
+  },
+];
+const data = [
+  {
+    name: 'John Brown',
+    time: "2023-12-28",
+    orderId: '23231321',
+    money: 123,
+    status: 0,
+    ticketStatus: 0,
+  },
+  {
+    name: 'John Brown',
+    time: "2023-12-28",
+    orderId: '23231321',
+    money: 123,
+    status: 1,
+    ticketStatus: 1,
+  },
+]
 
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <div class="container-userinfo">
-      <div class="h2">用户注册资料</div>
-      <div class="userinfo-item">
-        <div class="l-item clear">
-          <div class="t-title f-fl">登录账号：</div>
-          <a-form-item class="f-fl">
-            <a-input
-              v-model:value="formState.no"
-              style="width: 303px"
-              placeholder="请输入手机号"
-            />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl">姓名：</div>
-          <a-form-item class="f-fl">
-            <a-input
-              v-model:value="formState.name"
-              style="width: 203px"
-              placeholder="请姓名"
-            />
-          </a-form-item>
-        </div>
-        <div class="l-item clear l-identity" >
-          <div class="t-title f-fl">身份：</div>
-          <div class="">
-           <a-radio-group name="identity" v-model:value="formState.identity">
-            <a-radio value="1">A</a-radio>
-            <a-radio value="2">B</a-radio>
-            <a-radio value="3">C</a-radio>
-            <a-radio value="4">D</a-radio>
-          </a-radio-group>
-          </div>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">省份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">城市：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">高校：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">院系：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">所处阶段：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">入学年份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-              <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-           <div class="t-title f-fl">毕业年份：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-              <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-      <div class="l-item clear">
-           <div class="t-title f-fl">请选择导师：</div>
-           <a-form-item class="f-fl">
-            <a-select
-                v-model:value="value2"
-                style="width: 120px; margin-right: 10px"
-              >
-                <a-select-option value="lucy">Lucy</a-select-option>
-              </a-select>
-          </a-form-item>
-        </div>
-      </div>
-    </div>
+    <a-tabs v-model:activeKey="activeKey">
+      <a-tab-pane key="1" tab="全部订单"></a-tab-pane>
+      <a-tab-pane key="2" tab="待支付" force-render></a-tab-pane>
+      <a-tab-pane key="3" tab="已完成"></a-tab-pane>
+    </a-tabs>
+    <a-table :columns="columns" :data-source="data" bordered>
+      <template #status="{ text }">
+        <span>
+          {{["待支付", "已取消"][text]}}
+        </span>
+      </template>
+      <template #ticketStatus="{ text }">
+        <span>
+          {{["无需开票", "无", "待申请"][text]}}
+        </span>
+      </template>
+      <template #action="{ record }">
+        <!-- <space> -->
+          <a-button style="margin-bottom: 5px" type="primary" @click="showDrawer">立即支付</a-button>
+          <br />
+          <a-button style="margin-bottom: 5px" type="text">取消订单</a-button>
+          <br />
+          <a-button type="text" @click="showModal">订单详情</a-button>
+        <!-- </space> -->
+      </template>
+    </a-table>
   </main>
+  <a-modal v-model:visible="visible" title="订单详情" @ok="handleOk">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+  </a-modal>
+  <a-drawer
+    title="订单详情"
+    placement="right"
+    :closable="false"
+    width="70%"
+    v-model:visible="drawerVisible"
+    :after-visible-change="afterVisibleChange"
+  >
+    <FinalStep :cost="{
+      '支付金额': 1111,
+      '订单金额': 360,
+      '样品回收费': 0,
+      '运费': 12
+    }" :orderId="1212121" />
+  </a-drawer>
 </template>
 <style lang="scss">
 

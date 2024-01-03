@@ -46,7 +46,7 @@ export const menus = [{
   value: "2",
   type: "userMenu"
 },{
-  label: "订单情况",
+  label: "我的订单",
   value: "10",
   type: "orderMenu"
 }];

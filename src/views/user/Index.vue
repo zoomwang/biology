@@ -2,6 +2,7 @@
 import { useRoute, useRouter } from "vue-router";
 import UserInfo from './Userinfo.vue';
 import Integral from './Integral.vue';
+import Order from './Order.vue';
 import { reactive } from "vue";
 import { menus } from './config';
 import router from "../../router";
@@ -53,6 +54,7 @@ const map = reactive({
       <a-card :bordered="false">
         <UserInfo v-if="state.selectedKeys.includes('1')" />
         <Integral v-if="state.selectedKeys.includes('2')" />
+        <Order v-if="state.selectedKeys.includes('10')" />
       </a-card>
     </div>
   </main>

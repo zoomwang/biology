@@ -34,36 +34,6 @@ const router = createRouter({
       name: "detail",
       component: import("../views/process/Detail.vue"),
     },
-    // {
-    //   path: "/process/high",
-    //   name: "high",
-    //   component: import("../views/process/High.vue"),
-    // },
-    // {
-    //   path: "/process/material",
-    //   name: "material",
-    //   component: import("../views/process/Material.vue"),
-    // },
-    // {
-    //   path: "/process/biology",
-    //   name: "biology",
-    //   component: import("../views/process/Biology.vue"),
-    // },
-    // {
-    //   path: "/process/Env",
-    //   name: "env",
-    //   component: import("../views/process/Env.vue"),
-    // },
-    // {
-    //   path: "/process/industry",
-    //   name: "industry",
-    //   component: import("../views/process/Industry.vue"),
-    // },
-    // {
-    //   path: "/process/high",
-    //   name: "high",
-    //   component: import("../views/process/High.vue"),
-    // },
     {
       path: "/home/login",
       name: "login",
