@@ -7,6 +7,8 @@ export const blackList = [
 import jsPDF from 'jspdf';
 import html2canvas from "html2canvas";
 import html2pdf from 'html2pdf.js';
+import { notification } from "ant-design-vue";
+
 
 // export const jstopdf = (data) => {
 //   // // 创建一个新的 jsPDF 实例
@@ -50,4 +52,17 @@ export const jstopdf = (elementName, htmlTitle, currentTime) => {
       }
       pdf.save(htmlTitle + currentTime)
   })
+}
+
+export function copy(text) {
+  const oinput = document.createElement('textarea');
+  oinput.value = text;
+  document.body.appendChild(oinput);
+  oinput.select(); // 选择对象
+  document.execCommand('Copy'); // 执行浏览器复制命令
+  document.body.removeChild(oinput);
+  notification.success({
+    description: "复制成功",
+  });
+  // alert(lang['复制完成'], 'info');
 }
