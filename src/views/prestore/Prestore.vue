@@ -9,7 +9,6 @@ import Pay from "@/components/Pay.vue";
 import Apply from "./Apply.vue";
 import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
 import { notification, Form, message } from "ant-design-vue";
-import {  } from 'ant-design-vue';
 
 const useForm = Form.useForm;
 const formState = reactive({

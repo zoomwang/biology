@@ -38,6 +38,10 @@ export const demandOptions = [
 ]
 
 export const menus = [{
+  label: "我的资产",
+  value: "0",
+  type: "userMenu"
+},{
   label: "个人资料",
   value: "1",
   type: "userMenu"
@@ -46,9 +50,21 @@ export const menus = [{
   value: "2",
   type: "userMenu"
 },{
+  label: "邀请好友",
+  value: "3",
+  type: "userMenu"
+},{
   label: "我的订单",
   value: "10",
   type: "orderMenu"
+},{
+  label: "优惠券",
+  value: "9",
+  type: "orderMenu"
+},{
+  label: "发票管理",
+  value: "8",
+  type: "invoiceMenu"
 }];
 
 export const identity = [{

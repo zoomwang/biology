@@ -2,6 +2,7 @@
 import { useRoute, useRouter } from "vue-router";
 import UserInfo from './Userinfo.vue';
 import Integral from './Integral.vue';
+import Invite from './Invite.vue';
 import Order from './Order.vue';
 import { reactive } from "vue";
 import { menus } from './config';
@@ -48,12 +49,19 @@ const map = reactive({
           {{ item.label }}
         </a-menu-item>
       </template>
-      
+      <h2>发票管理</h2>
+      <template v-for="item in menus" :key="item.value">
+        <a-menu-item  v-if="item.type == 'invoiceMenu'" :key="item.value">
+          <template #icon> </template>
+          {{ item.label }}
+        </a-menu-item>
+      </template>
     </a-menu>
     <div class="content">
       <a-card :bordered="false">
         <UserInfo v-if="state.selectedKeys.includes('1')" />
         <Integral v-if="state.selectedKeys.includes('2')" />
+        <Invite v-if="state.selectedKeys.includes('3')" />
         <Order v-if="state.selectedKeys.includes('10')" />
       </a-card>
     </div>
