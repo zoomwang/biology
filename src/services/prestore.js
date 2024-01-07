@@ -6,6 +6,18 @@ export const addStore = (param) => {
   return api.post(`/sys/store/add`, param);
 }
 
+export const editInvoices = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/invoice/modify`, param);
+}
+
+export const addInvoice = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/invoice/add`, param);
+}
+
+
+
 export const getStoreList = (param) => {
   return api.get(`/sys/store/list`, param);
 }

@@ -96,16 +96,16 @@ const initInvoiceList = async function () {
   try {
     const res = await getInvoiceList();
     if (res?.code == 0) {
-      res?.data.forEach((item) => {
+      res?.data?.list?.forEach((item) => {
         item.checked = false;
       })
-      for(let i = 0; i < res?.data.length; i++) {
-        if (res.data[i].isdefault) {
-          res.data[i].checked = true;
+      for(let i = 0; i < res?.data.list.length; i++) {
+        if (res.data.list[i].isdefault) {
+          res.data.list[i].checked = true;
           break;
         }
       }
-      formState.invoiceTitle = res?.data;
+      formState.invoiceTitle = res?.data.list;
     }
   } catch (err) {}
 };
@@ -117,6 +117,7 @@ const replaceChecked = (index) => {
   formState.invoiceTitle[index].isdefault = 1;
   formState.invoiceTitle[index].checked = true;
   message.info('设置成功');
+  debugger
 };
 
 const showModal = () => {
