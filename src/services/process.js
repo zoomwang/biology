@@ -62,5 +62,11 @@ export const getOrderInfo = (orderId) => {
   return api.get(`/sys/order/info?orderId=${orderId}`);
 }
 
+// 获取优惠券列表
+export const getCouponList = (param) => {
+  console.log("param==", param)
+  return api.get(`/sys/user/coupon/info`, param);
+}
+
 
 

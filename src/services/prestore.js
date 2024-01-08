@@ -16,7 +16,10 @@ export const addInvoice = (param) => {
   return api.post(`/sys/invoice/add`, param);
 }
 
-
+export const deleteInvoice = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/invoice/delete`, param);
+}
 
 export const getStoreList = (param) => {
   return api.get(`/sys/store/list`, param);

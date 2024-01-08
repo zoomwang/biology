@@ -2,13 +2,18 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive, defineComponent, onMounted } from "vue";
 import { isLogged } from "../../services/user";
-import { getInvoiceList, editInvoices, addInvoice } from "@/services/prestore";
+import {
+  getInvoiceList,
+  editInvoices,
+  addInvoice,
+  deleteInvoice,
+} from "@/services/prestore";
 import { Form } from "ant-design-vue";
 import { copy } from "@/utils";
 import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
-import { notification } from "ant-design-vue";
+import { notification, message } from "ant-design-vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -32,8 +37,28 @@ const initInvoiceList = async function () {
     }
   } catch (err) {}
 };
+
+const replaceChecked = (index) => {
+  formState.invoiceTitle.forEach((item) => {
+    item.isdefault = 0;
+    item.checked = false;
+  });
+  formState.invoiceTitle[index].isdefault = 1;
+  formState.invoiceTitle[index].checked = true;
+  message.info("设置默认成功");
+};
+
+const deleteItem = async (data) => {
+  const res = await deleteInvoice(data);
+  if (res?.code == 0) {
+    notification.success({
+      description: "删除成功",
+    });
+    initInvoiceList();
+  }
+};
 const originRef = reactive({
-  value: {}
+  value: {},
 });
 let modelRef = reactive({
   id: 0,
@@ -82,7 +107,7 @@ const { resetFields, validate, validateInfos } = useForm(
   })
 );
 
-const handleOk = async() => {
+const handleOk = async () => {
   let res;
   if (editInvoice.isEditInvoice) {
     res = await editInvoices(modelRef);
@@ -91,7 +116,7 @@ const handleOk = async() => {
   }
   if (res?.code == 0) {
     notification.success({
-      description: editInvoice.isEditInvoice ? '编辑成功' : "新增成功",
+      description: editInvoice.isEditInvoice ? "编辑成功" : "新增成功",
     });
     initInvoiceList();
   }
@@ -184,15 +209,15 @@ onMounted(() => {
               title="你确定要删除吗？"
               ok-text="确定"
               cancel-text="取消"
-              @confirm="
+              @confirm.stop="
                 () => {
-                  formState.invoiceTitle.splice(index, 1);
+                  deleteItem(formState.invoiceTitle[index]);
                 }
               "
             >
               <a
                 class="b-delete"
-                @click="
+                @click.stop="
                   () => {
                     formState.invoiceTitle.splice(index, 1);
                   }
@@ -204,66 +229,67 @@ onMounted(() => {
           <img :src="checkIcon" class="card-icon icon-check" />
         </div>
         <div
-                class="card-wrap card-uncheck"
-                v-for="(item, index) in formState.invoiceTitle"
-                v-bind:key="item"
-                v-show="!item.checked"
-                @click="
-                  () => {
-                    replaceChecked(index);
-                  }
-                "
-              >
-                <a-descriptions class="card-list" :column="2">
-                  <a-descriptions-item label="发票抬头">{{
-                    item.title
-                  }}</a-descriptions-item>
-                  <a-descriptions-item label="企业税号">{{
-                    item.registrationo
-                  }}</a-descriptions-item>
-                  <a-descriptions-item label="开户行名称">{{
-                    item.depositbank
-                  }}</a-descriptions-item>
-                  <a-descriptions-item label="开户行帐号">{{
-                    item.banksn
-                  }}</a-descriptions-item>
-                  <a-descriptions-item label="注册地址">
-                    {{ item.registaddress }}
-                  </a-descriptions-item>
-                  <a-descriptions-item label="注册电话">
-                    {{ item.registphone }}
-                  </a-descriptions-item>
-                </a-descriptions>
-                <div class="edit-btn-wrap">
-                  <a
-                    class="b-edit"
-                    @click.stop="
-                      () => {
-                        editInvoice.isEditInvoice = true;
-                        editInvoice.editIndex = index;
-                        modelRef = formState.invoiceTitle[index];
-                        originRef.value = JSON.parse(JSON.stringify(modelRef));
-                        showModal();
-                      }
-                    "
-                    >修改</a
-                  >
-                  <a-popconfirm
-                    title="你确定要删除吗？"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="
-                      () => {
-                        formState.invoiceTitle.splice(index, 1);
-                      }
-                    "
-                  >
-                    <a class="b-delete">删除</a>
-                  </a-popconfirm>
-                </div>
-                <img :src="checkIcon" class="card-icon icon-check" />
-                <img :src="uncheckIcon" class="card-icon icon-uncheck" />
-              </div>
+          class="card-wrap card-uncheck"
+          v-for="(item, index) in formState.invoiceTitle"
+          v-bind:key="item"
+          v-show="!item.checked"
+          @click.stop="
+            () => {
+              replaceChecked(index);
+            }
+          "
+        >
+          <a-descriptions class="card-list" :column="2">
+            <a-descriptions-item label="发票抬头">{{
+              item.title
+            }}</a-descriptions-item>
+            <a-descriptions-item label="企业税号">{{
+              item.registrationo
+            }}</a-descriptions-item>
+            <a-descriptions-item label="开户行名称">{{
+              item.depositbank
+            }}</a-descriptions-item>
+            <a-descriptions-item label="开户行帐号">{{
+              item.banksn
+            }}</a-descriptions-item>
+            <a-descriptions-item label="注册地址">
+              {{ item.registaddress }}
+            </a-descriptions-item>
+            <a-descriptions-item label="注册电话">
+              {{ item.registphone }}
+            </a-descriptions-item>
+          </a-descriptions>
+          <div class="edit-btn-wrap">
+            <a
+              class="b-edit"
+              @click.stop="
+                () => {
+                  editInvoice.isEditInvoice = true;
+                  editInvoice.editIndex = index;
+                  modelRef = formState.invoiceTitle[index];
+                  originRef.value = JSON.parse(JSON.stringify(modelRef));
+                  showModal();
+                }
+              "
+              >修改</a
+            >
+            <a-popconfirm
+              title="你确定要删除吗？"
+              ok-text="确定"
+              cancel-text="取消"
+              @confirm.stop="
+                () => {
+                  formState.invoiceTitle.splice(index, 1);
+                  deleteItem(formState.invoiceTitle[index]);
+                }
+              "
+            >
+              <a class="b-delete" @click.stop="">删除</a>
+            </a-popconfirm>
+          </div>
+          <img :src="checkIcon" class="card-icon icon-check" />
+          <img :src="uncheckIcon" class="card-icon icon-uncheck" />
+        </div>
         <div class="invoice-add">
           <div class="t-new-add t-blue">
             <span class="text-add">+</span><span class="">新增发票抬头</span>
@@ -283,7 +309,7 @@ onMounted(() => {
         <div></div>
       </div>
     </div>
-     <!-- 弹层 -->
+    <!-- 弹层 -->
     <a-modal
       class="prestore-modal-wrap"
       v-model:visible="visible"
@@ -422,7 +448,8 @@ onMounted(() => {
     bottom: 0;
   }
 }
-.card-uncheck, .card-checked {
+.card-uncheck,
+.card-checked {
   margin-bottom: 10px;
 }
 .content-invoice {
@@ -623,7 +650,7 @@ onMounted(() => {
 .invoice-add {
   position: relative;
   width: 835px;
-  margin-left: 15px;
+  // margin-left: 15px;
   height: 44px;
   background: #ffffff;
   border-radius: 2px;

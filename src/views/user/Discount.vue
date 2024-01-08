@@ -1,20 +1,57 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive,defineComponent } from "vue";
-import { isLogged } from "../../services/user";
+import { ref, computed, reactive, defineComponent, onMounted } from "vue";
+import { getCouponList } from "../../services/process";
 const data = [
     {
-      descript: '首单收样不超过200的，扣除首样 的价格，超过200的，扣除200',
+      status: 0,
       time: "7天",
-      sum: 200,
+      description: "ashdjsk",
+      money: 100,
+      name: "ask的",
+      endTime: "2023-1-23"
     },
     {
-      descript: '首单收样不超过200的，扣除首样 的价格，超过200的，扣除200',
-      time: "4天",
-      sum: 100,
+      status: 1,
+      time: "7天",
+      description: "ashdjsk",
+      money: 200,
+      name: "ask的",
+      endTime: "2023-1-23"
+    },
+    {
+      status: 2,
+      time: "7天",
+      description: "ashdjsk",
+      money: 300,
+      name: "ask的",
+      endTime: "2023-1-23"
     },
   ];
-const activeKey = ref('1');
+const activeKey = ref('0');
+const useType = ref(["", "全场通用券", "商品券", "品类券"]);
+const listData = reactive({
+  discount: [],
+});
+const getCouponLists = async function (activeKeys) {
+  try {
+    const key = activeKeys? activeKeys - 0 : activeKey.value - 0;
+    const res = await getCouponList();
+    if (res?.code == 0) {
+      // listData.discount = res?.data;
+      listData.discount = data.filter((item) => {
+        return item.status == key
+      });
+      console.log(data.filter((item) => {
+        return item.status == key
+      }))
+    }
+  } catch (err) {}
+};
+
+onMounted(() => {
+  getCouponLists();
+});
 
 </script>
 
@@ -22,29 +59,30 @@ const activeKey = ref('1');
   <!-- 优惠券 -->
   
   <main>
-    <a-tabs v-model:activeKey="activeKey">
-      <a-tab-pane key="1" tab="可使用"></a-tab-pane>
-      <a-tab-pane key="2" tab="已使用" force-render></a-tab-pane>
-      <a-tab-pane key="3" tab="已失效"></a-tab-pane>
+    <a-tabs v-model:activeKey="activeKey" @change="(tab)=> {
+        getCouponLists(tab);
+      }">
+      <a-tab-pane key="0" tab="可使用"></a-tab-pane>
+      <a-tab-pane key="1" tab="已使用" force-render></a-tab-pane>
+      <a-tab-pane key="2" tab="已失效"></a-tab-pane>
     </a-tabs>
-    <a-list  :data-source="data" :grid="{ gutter: 16, column: 2 }">
+    <a-list :data-source="listData.discount" :grid="{ gutter: 16, column: 2 }">
       <template #renderItem="{ item }">
         <a-list-item>
           <div class="volume-default">
             <div class="coupon-ul-info">
               <div class="coupon-money-height">
-                <div class="coupon-money">
+                <div class="coupon-money" :class="{ 'used': item.status == 1, 'disabled': item.status == 2 }">
                   <i>￥</i>
-                  <span>{{item.sum}}</span>
-                  <em>抵用券</em>
+                  <span>{{item.money}}</span>
+                  <em>{{useType[item.useType]}}</em>
                     </div>
               <div class="coupon-li-info">
                 <div class="coupon-info-left" style="margin-top: 10px">
-                  <div class="line">{{item.descript}}</div></div>
+                  <div class="line">{{item.description}}</div></div>
               </div>
-              
-              <div class="coupon-time">自领券当日起{{item.time}}有效</div>
-              <!-- <div class="coupon-time" title="领券满2件减3">使用描述：领券满2件减3</div> -->
+              <div class="coupon-time" v-if="item.status == 0">过期时间：{{item.endTime}}有效</div>
+              <div class="coupon-time" v-else>{{item.name}}</div>
               </div>
             </div>
           </div>
@@ -239,6 +277,10 @@ const activeKey = ref('1');
 
 .volume-default.volume-default .coupon-ul-info .coupon-money-height .coupon-money {
     color: #1890ff
+}
+
+.volume-default.volume-default .coupon-ul-info .coupon-money-height .coupon-money.disabled,.volume-default.volume-default .coupon-ul-info .coupon-money-height .coupon-money.used {
+    color: #999
 }
 
 .volume-default.volume-default .coupon-ul-info .line-icon {
