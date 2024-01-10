@@ -44,13 +44,15 @@ export const getOfficeInfo = (type) => {
 
 /** 获取办事处信息 */
 export const getOrderList = (type) => {
-  return api.get(`/sys/order/list?id=${type}`);
+  return api.post(`/sys/order/list`, {
+    id: type
+  });
 }
 
 /** 获取办事处信息 */
-export const getOrderLists = ({pageSize, curPage}) => {
+export const getOrderLists = (param) => {
   // debugger
-  return api.get(`/sys/order/list?id=1&pageSize=${pageSize}&curPage=${curPage}`);
+  return api.post(`/sys/order/list`,param || {});
 }
 
 /**取消订单 */
@@ -76,7 +78,7 @@ export const getOrderInfo = (orderId) => {
 // 获取优惠券列表
 export const getCouponList = (param) => {
   console.log("param==", param)
-  return api.get(`/sys/user/coupon/info`, param);
+  return api.post(`/sys/user/coupon/list`, param || {});
 }
 
 

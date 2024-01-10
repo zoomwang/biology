@@ -30,6 +30,6 @@ export const publish = (param) => {
 }
 
 export const getInvoiceList = (param) => {
-  return api.get(`/sys/invoice/list`, param);
+  return api.post(`/sys/invoice/list`, param || {});
 }
 

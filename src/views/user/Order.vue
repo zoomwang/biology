@@ -10,37 +10,40 @@ import {
 } from "vue";
 import { isLogged } from "../../services/user";
 import FinalStep from "../process/components/FinalStep.vue";
-import { getOrderLists, cancelOrder, getOrderInfo } from "../../services/process";
+import {
+  getOrderLists,
+  cancelOrder,
+  getOrderInfo,
+} from "../../services/process";
+import { notification } from "ant-design-vue";
 
 const drawerVisible = ref(false);
-const showDrawer = () => {
-  drawerVisible.value = true;
+const showDrawer = async (orderId) => {
+  await getOrderInfos(orderId);
 };
 const orderDetail = ref({});
 const visible = ref(false);
-const showModal = async(orderId) => {
-  await getOrderInfos(orderId);
-  debugger
-  visible.value = true;
+const showModal = async (orderId) => {
+  await getOrderInfos(orderId, "detail");
 };
 const handleOk = (e) => {
   console.log(e);
   visible.value = false;
 };
 const param = reactive({
-  pageSize: 10,
+  pageSize: 999,
   curPage: 1,
 });
 
 const columns = [
   {
     title: "项目名称",
-    dataIndex: "name",
+    dataIndex: "itemname",
   },
   {
     title: "下单时间",
     className: "column-money",
-    dataIndex: "time",
+    dataIndex: "createTime",
   },
   {
     title: "订单号",
@@ -48,7 +51,10 @@ const columns = [
   },
   {
     title: "实付款",
-    dataIndex: "money",
+    dataIndex: "costInfo",
+    slots: {
+      customRender: "costInfo",
+    },
   },
   {
     title: "订单状态",
@@ -57,13 +63,13 @@ const columns = [
       customRender: "status",
     },
   },
-  {
-    title: "发票状态",
-    dataIndex: "ticketStatus",
-    slots: {
-      customRender: "ticketStatus",
-    },
-  },
+  // {
+  //   title: "发票状态",
+  //   dataIndex: "ticketStatus",
+  //   slots: {
+  //     customRender: "ticketStatus",
+  //   },
+  // },
   {
     title: "操作",
     key: "action",
@@ -73,127 +79,58 @@ const columns = [
   },
 ];
 
-const dataSource = ref([
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 0,
-    ticketStatus: 0,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-  {
-    name: "John Brown",
-    time: "2023-12-28",
-    orderId: "23231321",
-    money: 123,
-    status: 1,
-    ticketStatus: 1,
-  },
-]);
+const dataSource = ref([]);
 
-const getOrderInfos = async (params) => {
-  try{
+const getOrderInfos = async (params, type) => {
+  try {
     const res = await getOrderInfo(params);
+    // debugger
     if (res?.code == 0) {
-      orderDetail = res?.data;
+      orderDetail.value = res?.data;
+      if (type == "detail") {
+        visible.value = true;
+      } else {
+        drawerVisible.value = true;
+      }
     }
-  } catch(err) {
-
-  }
-}
+  } catch (err) {}
+};
 
 const cancelOrders = async (orderId) => {
-  try{
+  try {
     const res = await cancelOrder({
-      orderId
+      orderId,
     });
     if (res?.code == 0) {
-      orderDetail = res?.data;
+      notification.success({
+        description: "取消订单成功",
+      });
     }
-  } catch(err) {
-
-  }
-}
+  } catch (err) {}
+};
 
 const getOrderList = async (params) => {
   try {
     const res = await getOrderLists(params);
-    // dataSource = res.data;
-    dataSource.value = [
-      {
-        name: "John Brown",
-        time: "2023-12-28",
-        orderId: "23231321",
-        money: 123,
-        status: 0,
-        ticketStatus: 0,
-      },
-      {
-        name: "John Brown",
-        time: "2023-12-28",
-        orderId: "23231321",
-        money: 123,
-        status: 1,
-        ticketStatus: 1,
-      },
-    ];
+    if (res?.code == 0) dataSource.value = res?.data?.list;
+    // dataSource.value = [
+    //   {
+    //     name: "John Brown",
+    //     time: "2023-12-28",
+    //     orderId: "23231321",
+    //     money: 123,
+    //     status: 0,
+    //     ticketStatus: 0,
+    //   },
+    //   {
+    //     name: "John Brown",
+    //     time: "2023-12-28",
+    //     orderId: "23231321",
+    //     money: 123,
+    //     status: 1,
+    //     ticketStatus: 1,
+    //   },
+    // ];
   } catch (err) {}
 };
 
@@ -218,7 +155,12 @@ onMounted(() => {
     >
       <template #status="{ text }">
         <span>
-          {{ ["待支付", "已取消"][text] }}
+          {{ ["待支付", "已支付", "已取消", "已完成"][text] }}
+        </span>
+      </template>
+      <template #costInfo="{ text }">
+        <span>
+          {{text['支付金额']}}
         </span>
       </template>
       <template #ticketStatus="{ text }">
@@ -228,39 +170,64 @@ onMounted(() => {
       </template>
       <template #action="{ record }">
         <!-- <space> -->
-        <a-button style="margin-bottom: 5px" type="primary" @click="showDrawer"
+        <a-button
+          style="margin-bottom: 5px"
+          type="primary"
+          @click="showDrawer(record.orderId)"
           >立即支付</a-button
         >
         <br />
-        <a-button style="margin-bottom: 5px" type="text">取消订单</a-button>
+        <a-popconfirm
+          title="你确认要取消订单吗?"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="cancelOrders(record.orderId)"
+          @cancel="cancel"
+        >
+          <a-button style="margin-bottom: 5px" type="text">取消订单</a-button>
+        </a-popconfirm>
         <br />
-        <a-button type="text" @click="showModal(record.orderId)">订单详情</a-button>
+        <a-button type="text" @click="showModal(record.orderId)"
+          >订单详情</a-button
+        >
         <!-- </space> -->
       </template>
     </a-table>
   </main>
-  <a-modal v-model:visible="visible" title="订单详情" @ok="handleOk">
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-  </a-modal>
   <a-drawer
     title="订单详情"
+    placement="right"
+    :closable="false"
+    width="75%"
+    v-model:visible="visible"
+  >
+    <a-descriptions title="联系方式" bordered :column="2">
+      <a-descriptions-item label="联系人">{{orderDetail.contactName}}</a-descriptions-item>
+      <a-descriptions-item label="联系号码">{{orderDetail.contactsPhone}}</a-descriptions-item>
+      <a-descriptions-item label="寄样地址">{{orderDetail.office}}</a-descriptions-item>
+      <a-descriptions-item label="运费支付方式">{{['到付', '自付'][orderDetail.freightMode]}}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions title="支付金额" bordered :column="2" style="margin-top: 10px">
+      <a-descriptions-item label="订单金额">¥{{orderDetail.costInfo['订单金额']}}</a-descriptions-item>
+      <a-descriptions-item label="优惠券抵扣">¥{{orderDetail.costInfo['优惠券']}}</a-descriptions-item>
+      <a-descriptions-item label="样品回收费">¥{{orderDetail.costInfo['样品回收费']}}</a-descriptions-item>
+      <a-descriptions-item label="运费">¥{{orderDetail.costInfo['运费']}}</a-descriptions-item>
+      <a-descriptions-item label="支付金额">¥{{orderDetail.costInfo['支付金额']}}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions title="订单要求" bordered :column="2" style="margin-top: 10px">
+      <a-descriptions-item label="样品是否要回收">¥{{['不需要', '需要'][orderDetail.needRecovery]}}</a-descriptions-item>
+      <a-descriptions-item label="实验留言">{{orderDetail.remark}}</a-descriptions-item>
+    </a-descriptions>
+  </a-drawer>
+  <a-drawer
+    title="订单支付"
     placement="right"
     :closable="false"
     width="70%"
     v-model:visible="drawerVisible"
     :after-visible-change="afterVisibleChange"
   >
-    <FinalStep
-      :cost="{
-        支付金额: 1111,
-        订单金额: 360,
-        样品回收费: 0,
-        运费: 12,
-      }"
-      :orderId="1212121"
-    />
+    <FinalStep :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" />
   </a-drawer>
 </template>
 <style lang="scss"></style>
