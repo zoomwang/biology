@@ -402,7 +402,7 @@ onMounted(() => {
     </a-modal>
   </main>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .prestore-modal-wrap {
   width: 600px !important;
 }

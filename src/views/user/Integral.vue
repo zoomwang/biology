@@ -1,12 +1,12 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive, defineComponent } from "vue";
-import { identity } from "./config";
-import areaData from "../../public/area.js";
-import { onMounted } from "vue";
-import $localStorage from "@/hooks/localStorage";
+import { ref, computed, reactive, defineComponent, onMounted  } from "vue";
+// import { identity } from "./config";
+// import areaData from "../../public/area.js";
+// import $localStorage from "@/hooks/localStorage";
 import { notification } from "ant-design-vue";
 import { addOrder, getOrderList, getOrderDetail } from "../../services/order";
+
 const visible = ref(false);
 const showModal = () => {
   visible.value = true;
@@ -15,6 +15,7 @@ const param = reactive({
   pageSize: 10,
   curPage: 1,
 })
+
 const orderSum = ref(0);
 const handleOk = e => {
   visible.value = false;
@@ -48,8 +49,18 @@ const getOrderDetails = async function () {
   } catch (err) {}
 }
 
+const getOrderLists = async function () {
+  try {
+    const res = await getOrderList();
+    if (res?.code == 0) {
+      data = res?.data?.list;
+    }
+  } catch (err) {}
+}
+
   onMounted(() => {
     getOrderDetails();
+    getOrderLists();
   })
 </script>
 
@@ -65,16 +76,6 @@ const getOrderDetails = async function () {
         </h1>
         <h2 style="white-space: nowrap; margin-top: 8px">我的积分</h2>
       </li>
-      <!-- <li class="exchange-navbar-item fl">
-        <h1>
-          <i id="TotalCanCush" money="0.00">0</i
-          ><i id="CanCushDecimal" money="0.00">.00</i
-          ><span class="addDan"> 分</span>
-        </h1>
-        <h2 style="white-space: nowrap; margin-top: 8px">
-          即将过期积分（2024.08.31过期）
-        </h2>
-      </li> -->
       <li class="point-tips fl" @click="showModal">
         查看积分规则
       </li>
@@ -85,7 +86,7 @@ const getOrderDetails = async function () {
         @confirm="addOrders"
       >
         <li class="point-tips fl">
-          兑换
+          <a-button type="primary">兑换</a-button>
         </li>
       </a-popconfirm>
       <li></li>
@@ -102,7 +103,7 @@ const getOrderDetails = async function () {
     </a-modal>
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .userinfo {
 }
 

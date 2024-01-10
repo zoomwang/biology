@@ -47,6 +47,17 @@ export const getOrderList = (type) => {
   return api.get(`/sys/order/list?id=${type}`);
 }
 
+/** 获取办事处信息 */
+export const getOrderLists = ({pageSize, curPage}) => {
+  // debugger
+  return api.get(`/sys/order/list?id=1&pageSize=${pageSize}&curPage=${curPage}`);
+}
+
+/**取消订单 */
+export const cancelOrder = (param) => {
+  return api.post(`/sys/order/cancel`, param);
+}
+
 /** 获取项目详情信息 */
 export const getProjectInfo = (id) => {
   return api.get(`/sys/order/project/info?id=${id}`);
