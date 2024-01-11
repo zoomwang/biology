@@ -76,19 +76,20 @@ const getOrderLists = async function () {
         </h1>
         <h2 style="white-space: nowrap; margin-top: 8px">我的积分</h2>
       </li>
-      <li class="point-tips fl" @click="showModal">
-        查看积分规则
+      <li class="fl" >
+        <a style="display:block;margin-top:30px" @click="showModal">查看积分规则</a>
+        <a-popconfirm
+          title="你确定要兑换吗?"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="addOrders"
+        >
+          <div style="margin-top:10px">
+            <a-button type="primary">兑换</a-button>
+          </div>
+        </a-popconfirm>
       </li>
-      <a-popconfirm
-        title="你确定要兑换吗?"
-        ok-text="确定"
-        cancel-text="取消"
-        @confirm="addOrders"
-      >
-        <li class="point-tips fl">
-          <a-button type="primary">兑换</a-button>
-        </li>
-      </a-popconfirm>
+      
       <li></li>
     </ul>
     <a-card title="积分兑换记录">
@@ -114,7 +115,7 @@ const getOrderLists = async function () {
 }
 
 .exchange-navbar-item {
-	width: 250px;
+	width: 150px;
 	height: 100%;
 	padding: 20px 30px;
 }
