@@ -50,6 +50,7 @@ const replaceChecked = (index) => {
 
 const deleteItem = async (data) => {
   const res = await deleteInvoice(data);
+  debugger
   if (res?.code == 0) {
     notification.success({
       description: "删除成功",
@@ -211,16 +212,14 @@ onMounted(() => {
               cancel-text="取消"
               @confirm.stop="
                 () => {
-                  deleteItem(formState.invoiceTitle[index]);
+                  formState.invoiceTitle.splice(index, 1);
+                  deleteItem(item);
                 }
               "
             >
               <a
                 class="b-delete"
                 @click.stop="
-                  () => {
-                    formState.invoiceTitle.splice(index, 1);
-                  }
                 "
                 >删除</a
               >
@@ -280,7 +279,7 @@ onMounted(() => {
               @confirm.stop="
                 () => {
                   formState.invoiceTitle.splice(index, 1);
-                  deleteItem(formState.invoiceTitle[index]);
+                  deleteItem(item);
                 }
               "
             >

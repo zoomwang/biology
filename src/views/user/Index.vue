@@ -5,6 +5,7 @@ import Integral from './Integral.vue';
 import Invite from './Invite.vue';
 import Order from './Order.vue';
 import Discount from './Discount.vue';
+import Assets from './Assets.vue';
 import Invoices from './Invoices.vue';
 import { reactive } from "vue";
 import { menus } from './config';
@@ -61,6 +62,7 @@ const map = reactive({
     </a-menu>
     <div class="content">
       <a-card :bordered="false">
+        <Assets v-if="state.selectedKeys.includes('0')" />
         <UserInfo v-if="state.selectedKeys.includes('1')" />
         <Integral v-if="state.selectedKeys.includes('2')" />
         <Invite v-if="state.selectedKeys.includes('3')" />

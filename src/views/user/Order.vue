@@ -35,6 +35,27 @@ const param = reactive({
   curPage: 1,
 });
 
+const orderColums = [
+  {
+    title: '样品数量',
+    dataIndex: 'count',
+    key: 'count',
+  },
+  {
+    title: '实验目的',
+    dataIndex: 'goal',
+    key: 'age',
+  },
+  {
+    title: '样品编号',
+    dataIndex: 'numberList',
+    key: 'address',
+    slots: {
+      customRender: "numberList",
+    },
+  },
+];
+
 const columns = [
   {
     title: "项目名称",
@@ -84,7 +105,6 @@ const dataSource = ref([]);
 const getOrderInfos = async (params, type) => {
   try {
     const res = await getOrderInfo(params);
-    // debugger
     if (res?.code == 0) {
       orderDetail.value = res?.data;
       if (type == "detail") {
@@ -113,24 +133,6 @@ const getOrderList = async (params) => {
   try {
     const res = await getOrderLists(params);
     if (res?.code == 0) dataSource.value = res?.data?.list;
-    // dataSource.value = [
-    //   {
-    //     name: "John Brown",
-    //     time: "2023-12-28",
-    //     orderId: "23231321",
-    //     money: 123,
-    //     status: 0,
-    //     ticketStatus: 0,
-    //   },
-    //   {
-    //     name: "John Brown",
-    //     time: "2023-12-28",
-    //     orderId: "23231321",
-    //     money: 123,
-    //     status: 1,
-    //     ticketStatus: 1,
-    //   },
-    // ];
   } catch (err) {}
 };
 
@@ -204,7 +206,7 @@ onMounted(() => {
     <a-descriptions title="联系方式" bordered :column="2">
       <a-descriptions-item label="联系人">{{orderDetail.contactName}}</a-descriptions-item>
       <a-descriptions-item label="联系号码">{{orderDetail.contactsPhone}}</a-descriptions-item>
-      <a-descriptions-item label="寄样地址">{{orderDetail.office}}</a-descriptions-item>
+      <a-descriptions-item label="寄样地址">{{orderDetail.officeDetailAddress}}</a-descriptions-item>
       <a-descriptions-item label="运费支付方式">{{['到付', '自付'][orderDetail.freightMode]}}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions title="支付金额" bordered :column="2" style="margin-top: 10px">
@@ -218,6 +220,16 @@ onMounted(() => {
       <a-descriptions-item label="样品是否要回收">¥{{['不需要', '需要'][orderDetail.needRecovery]}}</a-descriptions-item>
       <a-descriptions-item label="实验留言">{{orderDetail.remark}}</a-descriptions-item>
     </a-descriptions>
+    <h3 style="margin-top: 10px">订单信息</h3>
+    <a-card size="small" style="width: 100%">
+      <a-table :dataSource="orderDetail.sampleInfo || []" :columns="orderColums">
+        <template #costInfo="{ numberList }">
+          <span>
+            {{numberList.join(',')}}
+          </span>
+        </template>
+      </a-table>
+    </a-card>
   </a-drawer>
   <a-drawer
     title="订单支付"
