@@ -1,0 +1,50 @@
+<script setup>
+import { ref, defineProps } from "vue";
+import { notification } from "ant-design-vue";
+import $localStorage from "../hooks/localStorage";
+
+const props = defineProps(['onSuccess'])
+const header = {
+  Authorization: $localStorage.getItem('access_token')
+};
+const fileList = ref([]);
+const handleChange = (info) => {
+  let resFileList = [...info.fileList];
+
+  // 1. Limit the number of uploaded files
+  //    Only to show two recent uploaded files, and old ones will be replaced by the new
+  resFileList = resFileList.slice(-2);
+
+  // 2. read from response and show file link
+  resFileList = resFileList.map((file) => {
+    if (file.response) {
+      // Component will show file.url as link
+      file.url = file.response.url;
+    }
+    return file;
+  });
+  fileList.value = resFileList;
+  if(typeof props.onSuccess == 'function'){
+    props.onSuccess(fileList?.value[0]?.response?.data?.url); 
+  } 
+};
+</script>
+
+<template>
+  <!-- <a-form-item class="f-fl"> -->
+    <a-upload
+      action="/sys/file/upload"
+      :multiple="true"
+      :file-list="fileList"
+      @change="handleChange"
+      :headers="header"
+    >
+      <a-button>
+        <upload-outlined></upload-outlined>
+        上传文件
+      </a-button>
+    </a-upload>
+  <!-- </a-form-item> -->
+</template>
+<style lang="scss" scoped>
+</style>

@@ -6,7 +6,10 @@ import { identity } from "./config";
 import areaData from "../../public/area.js";
 import { notification, Form } from "ant-design-vue";
 import $localStorage from "@/hooks/localStorage";
+import UploadFile from "@/components/UploadFile.vue";
+import moment from 'moment';
 
+const dateFormat = 'YYYY-MM-DD';
 const useForm = Form.useForm;
 const formState = reactive({
   id: "",
@@ -14,6 +17,7 @@ const formState = reactive({
   mobile: "",
   userIdentity: "",
   university: "",
+  additionUrl: ""
 });
 const schoolState = ref([]);
 const userId = ref('');
@@ -61,11 +65,15 @@ const getUserInfo = async function () {
   try {
     const res = await getUser();
     if (res.code == 0) {
-      res.data.mobile = res.data.username;
-      res.data.university = res.data.university - 0;
-      res.data.address = res.data.address.map((item) => {
+      const { username, university, address } = res.data;
+      res.data.mobile = username;
+      res.data.university = university ? (university - 0) : '';
+      res.data.address = Array.isArray(address) && address.map((item) => {
         return `${item}`;
       });
+      res.data.studyStart = ref(moment(res?.data?.studyStart, dateFormat));
+      res.data.studyEnd = ref(moment(res?.data?.studyEnd, dateFormat));
+      // console.log(moment(res?.data?.studyStart).format())
       formState = Object.assign(formState, res.data);
       userId.value = res.data.id;
       localStorage.setItem('userName', res.data.username);
@@ -142,6 +150,14 @@ onMounted(() => {
         </a-form-item>
       </div>
       <div class="l-item clear">
+        <div class="t-label f-fl">附件上传：</div>
+        <a-form-item class="f-fl">
+           <UploadFile :onSuccess="(url) => {
+             formState.additionUrl = url;
+            }" />
+        </a-form-item>
+      </div>
+      <div class="l-item clear">
         <div class="t-label f-fl">地区：</div>
         <a-form-item class="f-fl">
           <a-cascader
@@ -178,7 +194,7 @@ onMounted(() => {
         <div class="t-label f-fl">所处阶段：</div>
         <a-form-item class="f-fl">
           <a-select v-model:value="formState.stage" :disabled="!canEdit">
-            <a-select-option value="lucy">Lucy</a-select-option>
+            <a-select-option value="0">阶段1</a-select-option>
           </a-select>
         </a-form-item>
       </div>
@@ -197,6 +213,7 @@ onMounted(() => {
         <a-form-item class="f-fl">
           <a-space direction="vertical">
             <a-month-picker
+              :defaultPickerValue="formState.studyStart"
               :disabled="!canEdit"
               style="width: 300px"
               v-model:value="formState.studyStart"

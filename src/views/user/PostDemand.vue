@@ -5,6 +5,7 @@ import { demandOptions } from "./config";
 import { UploadOutlined } from "@ant-design/icons-vue";
 import { publish } from "@/services/prestore";
 import { notification, Form } from "ant-design-vue";
+import UploadFile from "@/components/UploadFile.vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
@@ -16,26 +17,30 @@ const formState = reactive({
   budgetRange: "",
   // completionCycle: "",
   fileUrl: "",
-  demandDesc: ""
+  demandDesc: "",
 });
 
 const onSubmit = () => {
   validate()
-    .then(async(res) => {
+    .then(async (res) => {
       try {
-          const data = await publish(formState);
-          if (data?.code == 0) {
-            notification.success({
-              description: "需求发布成功",
-            });
-          }
-        } catch (err) {
-          alert(err);
+        const data = await publish(formState);
+        if (data?.code == 0) {
+          notification.success({
+            description: "需求发布成功",
+          });
         }
+      } catch (err) {
+        alert(err);
+      }
     })
     .catch((err) => {
       console.log("error", err);
     });
+};
+
+const onSuccess = (url) => {
+  formState.fileUrl = url;
 };
 
 const { resetFields, validate, validateInfos } = useForm(
@@ -87,55 +92,71 @@ const { resetFields, validate, validateInfos } = useForm(
       </div>
       <div class="postdemand-item">
         <a-form :model="formState">
-        <div class="l-item clear">
-          <div class="t-title f-fl"><span class="t-red">*</span>需求类别：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.type">
-            <a-radio-group
-              v-model:value="formState.type"
-              :options="demandOptions"
-            />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl"><span class="t-red">*</span>联系人：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.contacts">
-            <a-input v-model:value="formState.contacts" placeholder="请填写" />
-          </a-form-item>
-        </div>
-        <div class="l-item clear l-identity">
-          <div class="t-title f-fl"><span class="t-red">*</span>联系号码：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.phone">
-            <a-input v-model:value="formState.phone" placeholder="请填写" />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl"><span class="t-red">*</span>电子邮箱：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.email">
-            <a-input v-model:value="formState.email" placeholder="请填写" />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl">样品数量：</div>
-          <a-form-item class="f-fl">
-            <a-input v-model:value="formState.name" placeholder="请填写" />
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl">预算范围：</div>
-          <a-form-item class="f-fl">
-            <a-input v-model:value="formState.budget" placeholder="请填写" />
-          </a-form-item>
-        </div>
-        <!-- <div class="l-item clear">
+          <div class="l-item clear">
+            <div class="t-title f-fl">
+              <span class="t-red">*</span>需求类别：
+            </div>
+            <a-form-item class="f-fl" v-bind="validateInfos.type">
+              <a-radio-group
+                v-model:value="formState.type"
+                :options="demandOptions"
+              />
+            </a-form-item>
+          </div>
+          <div class="l-item clear">
+            <div class="t-title f-fl"><span class="t-red">*</span>联系人：</div>
+            <a-form-item class="f-fl" v-bind="validateInfos.contacts">
+              <a-input
+                v-model:value="formState.contacts"
+                placeholder="请填写"
+              />
+            </a-form-item>
+          </div>
+          <div class="l-item clear l-identity">
+            <div class="t-title f-fl">
+              <span class="t-red">*</span>联系号码：
+            </div>
+            <a-form-item class="f-fl" v-bind="validateInfos.phone">
+              <a-input v-model:value="formState.phone" placeholder="请填写" />
+            </a-form-item>
+          </div>
+          <div class="l-item clear">
+            <div class="t-title f-fl">
+              <span class="t-red">*</span>电子邮箱：
+            </div>
+            <a-form-item class="f-fl" v-bind="validateInfos.email">
+              <a-input v-model:value="formState.email" placeholder="请填写" />
+            </a-form-item>
+          </div>
+          <div class="l-item clear">
+            <div class="t-title f-fl">样品数量：</div>
+            <a-form-item class="f-fl">
+              <a-input v-model:value="formState.name" placeholder="请填写" />
+            </a-form-item>
+          </div>
+          <div class="l-item clear">
+            <div class="t-title f-fl">预算范围：</div>
+            <a-form-item class="f-fl">
+              <a-input v-model:value="formState.budget" placeholder="请填写" />
+            </a-form-item>
+          </div>
+          <!-- <div class="l-item clear">
           <div class="t-title f-fl">完成周期：</div>
           <a-form-item class="f-fl">
             <a-input v-model:value="formState.completionCycle" placeholder="请填写" />
           </a-form-item>
         </div> -->
-        <div class="l-item clear">
-          <div class="t-title f-fl">添加附件：</div>
-          <a-form-item class="f-fl">
-            <a-upload
+          <div class="l-item clear">
+            <div class="t-title f-fl">添加附件：</div>
+            <a-form-item class="f-fl">
+              <UploadFile
+                :onSuccess="
+                  (url) => {
+                    formState.fileUrl = url;
+                  }
+                "
+              />
+              <!-- <a-upload
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               :multiple="true"
               :file-list="fileList"
@@ -145,29 +166,36 @@ const { resetFields, validate, validateInfos } = useForm(
                 <upload-outlined></upload-outlined>
                 Upload
               </a-button>
-            </a-upload>
-          </a-form-item>
-        </div>
-        <div class="l-item clear">
-          <div class="t-title f-fl"><span class="t-red">*</span>需求描述：</div>
-          <a-form-item class="f-fl" v-bind="validateInfos.demandDesc">
-            <a-textarea
-              v-model:value="formState.demandDesc"
-              placeholder="必填,请尽量填写仪器名称+检测项目+所用标准+报告用途(10-500个字)"
-              :rows="4"
-            />
-            <span class="remind">需求尽量详细，以便更精确的匹配到合适的测试项目</span>
-          </a-form-item>
-        </div>
-        <a-button type="primary" class="b-submit-button f-fl" @click.prevent="onSubmit"
-          >提交需求</a-button
-        >
+            </a-upload> -->
+            </a-form-item>
+          </div>
+          <div class="l-item clear">
+            <div class="t-title f-fl">
+              <span class="t-red">*</span>需求描述：
+            </div>
+            <a-form-item class="f-fl" v-bind="validateInfos.demandDesc">
+              <a-textarea
+                v-model:value="formState.demandDesc"
+                placeholder="必填,请尽量填写仪器名称+检测项目+所用标准+报告用途(10-500个字)"
+                :rows="4"
+              />
+              <span class="remind"
+                >需求尽量详细，以便更精确的匹配到合适的测试项目</span
+              >
+            </a-form-item>
+          </div>
+          <a-button
+            type="primary"
+            class="b-submit-button f-fl"
+            @click.prevent="onSubmit"
+            >提交需求</a-button
+          >
         </a-form>
       </div>
     </div>
   </main>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 .container-postdemand {
   text-align: center;
   padding-top: 30px;
@@ -195,7 +223,7 @@ const { resetFields, validate, validateInfos } = useForm(
   .postdemand-item {
     width: 700px;
     margin: 0 auto;
-    .b-submit-button{
+    .b-submit-button {
       width: 100px;
       text-align: center;
       height: 40px;
@@ -204,28 +232,28 @@ const { resetFields, validate, validateInfos } = useForm(
     .t-title {
       width: 100px;
       height: 40px;
-      line-height: 40px ;
+      line-height: 40px;
       text-align: right;
     }
-    .ant-input{
+    .ant-input {
       height: 40px;
       line-height: 40px;
     }
-    textarea{
-      height: auto!important;
+    textarea {
+      height: auto !important;
     }
-    .ant-radio-wrapper{
+    .ant-radio-wrapper {
       margin-bottom: 10px;
     }
     .ant-form-item {
       width: 600px;
       text-align: left;
     }
-    .remind{
+    .remind {
       margin-top: 8px;
       line-height: 17px;
       font-size: 12px;
-      color: #FEA000;
+      color: #fea000;
     }
   }
 }

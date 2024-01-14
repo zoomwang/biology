@@ -33,23 +33,24 @@ const handleOk = (e) => {
 const param = reactive({
   pageSize: 999,
   curPage: 1,
+  status: "0",
 });
 
 const orderColums = [
   {
-    title: '样品数量',
-    dataIndex: 'count',
-    key: 'count',
+    title: "样品数量",
+    dataIndex: "count",
+    key: "count",
   },
   {
-    title: '实验目的',
-    dataIndex: 'goal',
-    key: 'age',
+    title: "实验目的",
+    dataIndex: "goal",
+    key: "age",
   },
   {
-    title: '样品编号',
-    dataIndex: 'numberList',
-    key: 'address',
+    title: "样品编号",
+    dataIndex: "numberList",
+    key: "address",
     slots: {
       customRender: "numberList",
     },
@@ -100,6 +101,19 @@ const columns = [
   },
 ];
 
+const labelCol = {
+  style: {
+    width: "150px",
+  },
+};
+const wrapperCol = {
+  span: 10,
+};
+const formState = reactive({
+  startTime: "",
+  endTime: "",
+});
+
 const dataSource = ref([]);
 
 const getOrderInfos = async (params, type) => {
@@ -129,26 +143,50 @@ const cancelOrders = async (orderId) => {
   } catch (err) {}
 };
 
-const getOrderList = async (params) => {
+const getOrderList = async () => {
   try {
-    const res = await getOrderLists(params);
+    const res = await getOrderLists(param);
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
 };
 
 onMounted(() => {
-  getOrderList(param);
+  getOrderList();
 });
+
+const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <a-tabs v-model:activeKey="activeKey">
-      <a-tab-pane key="1" tab="全部订单"></a-tab-pane>
-      <a-tab-pane key="2" tab="待支付" force-render></a-tab-pane>
-      <a-tab-pane key="3" tab="已完成"></a-tab-pane>
+    <a-tabs
+      v-model:activeKey="activeKey"
+      @change="
+        (tab) => {
+          param.status = tab;
+          getOrderList();
+        }
+      "
+    >
+      <a-tab-pane key="" tab="全部订单"></a-tab-pane>
+      <a-tab-pane
+        v-for="(item, index) in menus"
+        :key="++index"
+        :tab="item"
+        force-render
+      ></a-tab-pane>
     </a-tabs>
+    <a-form :model="formState" layout="horizontal" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-item label="订单创建时间" :wrapperCol="{
+        span: 10
+      }">
+        <a-input v-model:value="formState.startTime" />
+      </a-form-item>
+      <a-form-item label="订单结束时间">
+        <a-input v-model:value="formState.endTime" />
+      </a-form-item>
+    </a-form>
     <a-table
       :columns="columns"
       :data-source="dataSource"
@@ -157,12 +195,12 @@ onMounted(() => {
     >
       <template #status="{ text }">
         <span>
-          {{ ["待支付", "已支付", "已取消", "已完成"][text] }}
+          {{ menus[++text] }}
         </span>
       </template>
       <template #costInfo="{ text }">
         <span>
-          {{text['支付金额']}}
+          {{ text["支付金额"] }}
         </span>
       </template>
       <template #ticketStatus="{ text }">
@@ -204,28 +242,65 @@ onMounted(() => {
     v-model:visible="visible"
   >
     <a-descriptions title="联系方式" bordered :column="2">
-      <a-descriptions-item label="联系人">{{orderDetail.contactName}}</a-descriptions-item>
-      <a-descriptions-item label="联系号码">{{orderDetail.contactsPhone}}</a-descriptions-item>
-      <a-descriptions-item label="寄样地址">{{orderDetail.officeDetailAddress}}</a-descriptions-item>
-      <a-descriptions-item label="运费支付方式">{{['到付', '自付'][orderDetail.freightMode]}}</a-descriptions-item>
+      <a-descriptions-item label="联系人">{{
+        orderDetail.contactName
+      }}</a-descriptions-item>
+      <a-descriptions-item label="联系号码">{{
+        orderDetail.contactsPhone
+      }}</a-descriptions-item>
+      <a-descriptions-item label="寄样地址">{{
+        orderDetail.officeDetailAddress
+      }}</a-descriptions-item>
+      <a-descriptions-item label="运费支付方式">{{
+        ["到付", "自付"][orderDetail.freightMode]
+      }}</a-descriptions-item>
     </a-descriptions>
-    <a-descriptions title="支付金额" bordered :column="2" style="margin-top: 10px">
-      <a-descriptions-item label="订单金额">¥{{orderDetail.costInfo['订单金额']}}</a-descriptions-item>
-      <a-descriptions-item label="优惠券抵扣">¥{{orderDetail.costInfo['优惠券']}}</a-descriptions-item>
-      <a-descriptions-item label="样品回收费">¥{{orderDetail.costInfo['样品回收费']}}</a-descriptions-item>
-      <a-descriptions-item label="运费">¥{{orderDetail.costInfo['运费']}}</a-descriptions-item>
-      <a-descriptions-item label="支付金额">¥{{orderDetail.costInfo['支付金额']}}</a-descriptions-item>
+    <a-descriptions
+      title="支付金额"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="订单金额"
+        >¥{{ orderDetail.costInfo["订单金额"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="优惠券抵扣"
+        >¥{{ orderDetail.costInfo["优惠券"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="样品回收费"
+        >¥{{ orderDetail.costInfo["样品回收费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="运费"
+        >¥{{ orderDetail.costInfo["运费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="支付金额"
+        >¥{{ orderDetail.costInfo["支付金额"] }}</a-descriptions-item
+      >
     </a-descriptions>
-    <a-descriptions title="订单要求" bordered :column="2" style="margin-top: 10px">
-      <a-descriptions-item label="样品是否要回收">¥{{['不需要', '需要'][orderDetail.needRecovery]}}</a-descriptions-item>
-      <a-descriptions-item label="实验留言">{{orderDetail.remark}}</a-descriptions-item>
+    <a-descriptions
+      title="订单要求"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="样品是否要回收"
+        >¥{{
+          ["不需要", "需要"][orderDetail.needRecovery]
+        }}</a-descriptions-item
+      >
+      <a-descriptions-item label="实验留言">{{
+        orderDetail.remark
+      }}</a-descriptions-item>
     </a-descriptions>
     <h3 style="margin-top: 10px">订单信息</h3>
     <a-card size="small" style="width: 100%">
-      <a-table :dataSource="orderDetail.sampleInfo || []" :columns="orderColums">
+      <a-table
+        :dataSource="orderDetail.sampleInfo || []"
+        :columns="orderColums"
+      >
         <template #costInfo="{ numberList }">
           <span>
-            {{numberList.join(',')}}
+            {{ numberList.join(",") }}
           </span>
         </template>
       </a-table>

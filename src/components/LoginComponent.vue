@@ -70,16 +70,16 @@ const toDemand = () => {
               <a href="/user/userinfo">个人中心</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">我的发票</a>
+              <a href="/user/userinfo?selectedKeys=8">我的发票</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">我的积分</a>
+              <a href="/user/userinfo?selectedKeys=2">我的积分</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">邀请好友</a>
+              <a href="/user/userinfo?selectedKeys=3">邀请好友</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">优惠券管理</a>
+              <a href="/user/userinfo?selectedKeys=9">优惠券管理</a>
             </a-menu-item>
             <a-menu-item>
               <a href="javascript:;" @click="setLogout">退出</a>
