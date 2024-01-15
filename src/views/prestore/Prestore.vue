@@ -9,11 +9,13 @@ import Pay from "@/components/Pay.vue";
 import Apply from "./Apply.vue";
 import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
 import { notification, Form, message } from "ant-design-vue";
+import UploadFile from "@/components/UploadFile.vue";
 
 const useForm = Form.useForm;
 const formState = reactive({
   // layout: "horizontal",
   payType: 0, //支付类型，0、1表示
+  additionUrl: "",
   invoiceNum: 1, // 发票数量
   invoiceNumType: 1,
   payAccount: 0, //预存账户，0、1表示
@@ -344,19 +346,9 @@ onMounted(() => {
             <div class="clear attached-files-li">
               <div class="t-title f-fl">附加文件：</div>
               <div class="attached-files f-fl">
-                <a-upload
-                  v-model:file-list="formState.addition"
-                  name="file"
-                  :multiple="true"
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  :headers="headers"
-                  @change="handleChange"
-                >
-                  <a-button>
-                    <upload-outlined></upload-outlined>
-                    点击上传
-                  </a-button>
-                </a-upload>
+                <UploadFile :onSuccess="(url) => {
+                  formState.additionUrl = url;
+                  }" />
               </div>
             </div>
             <div class="clear">

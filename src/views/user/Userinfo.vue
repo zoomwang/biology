@@ -275,7 +275,7 @@ onMounted(() => {
     {{ formState.mobile }}
   </a-modal>
 </template>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .userinfo {
   .ant-form-item {
     .ant-select {

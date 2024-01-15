@@ -34,6 +34,8 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   status: "0",
+  startTime: "",
+  endTime: "",
 });
 
 const orderColums = [
@@ -103,7 +105,7 @@ const columns = [
 
 const labelCol = {
   style: {
-    width: "150px",
+    width: "120px",
   },
 };
 const wrapperCol = {
@@ -169,7 +171,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         }
       "
     >
-      <a-tab-pane key="" tab="全部订单"></a-tab-pane>
+      <a-tab-pane key="0" tab="全部订单"></a-tab-pane>
       <a-tab-pane
         v-for="(item, index) in menus"
         :key="++index"
@@ -177,14 +179,21 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         force-render
       ></a-tab-pane>
     </a-tabs>
-    <a-form :model="formState" layout="horizontal" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="订单创建时间" :wrapperCol="{
-        span: 10
+        span: 12
       }">
-        <a-input v-model:value="formState.startTime" />
+        <a-date-picker v-model:value="param.startTime" />
       </a-form-item>
-      <a-form-item label="订单结束时间">
-        <a-input v-model:value="formState.endTime" />
+      <a-form-item label="订单结束时间" :wrapperCol="{
+        span: 12
+      }">
+        <a-date-picker v-model:value="param.endTime" />
+      </a-form-item>
+      <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+        <a-button type="primary" @click="() => {
+          getOrderList();
+        }">搜索</a-button>
       </a-form-item>
     </a-form>
     <a-table
