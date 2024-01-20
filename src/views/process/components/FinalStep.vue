@@ -7,13 +7,14 @@ import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
 import CreditPay from "../components/CreditPay.vue";
 import { getCredit, getAmount } from "@/services/user";
-import { getOrderInfo } from "@/services/process";
+import { getOrderInfo, getCouponList } from "@/services/process";
 import { notification } from "ant-design-vue";
 
 const formState = reactive({
   layout: "horizontal",
   prestore: 0,
   payType: "1",
+  couponId: ""
 });
 const props = defineProps(["orderId", "cost"]);
 const costDetail = reactive({
@@ -25,12 +26,39 @@ const credit = ref(0);
 const amount = ref(0);
 const bottom = ref(-15);
 let orderInfo = ref({});
+const ticketsInfo = reactive({
+  value: []
+});
+const handleChange = (id) => {
+  formState.couponId = id;
+  const data = ticketsInfo.value.filter((item) => {
+    return item.id == id;
+  })
+  costDetail.value.forEach((innerItem) => {
+    if (innerItem.label == '优惠券') {
+      innerItem.value = -(data[0].money);
+    }
+  })
+  console.log(costDetail.value)
+  debugger
+}
 
 const getOrderInfos = async() => {
   try{
     const res = await getOrderInfo(props?.orderId);
     if (res.code == 0) {
       orderInfo = res.data;
+    }
+  } catch(err) {}
+}
+const getTicketLists = async() => {
+  try{
+    const res = await getCouponList({
+      pageSize: 9999,
+      curPage: 0,
+    });
+    if (res.code == 0) {
+      ticketsInfo.value = res?.data?.list;
     }
   } catch(err) {}
 }
@@ -85,6 +113,8 @@ const initCost = () => {
 onMounted(() => {
   getUserAmount();
   getOrderInfos();
+  getTicketLists();
+  getUserCredit();
   initCost();
 });
 </script>
@@ -99,6 +129,18 @@ onMounted(() => {
       >
         <template v-for="item in costDetail.value" :key="item">
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
+          <p v-if="item.label == '优惠券'">
+            <a-select
+              ref="select"
+              v-model:value="formState.couponId"
+              style="width: 120px"
+              placeholder="优惠券选择"
+              @change="handleChange"
+            >
+              <a-select-option v-for="item in ticketsInfo.value" :value="item.id">{{ item.name }}</a-select-option>
+            </a-select>
+            {{item.label}}: {{item.value}}
+          </p>
         </template>
         <a-divider />
         <p class="wait_pay">待支付： <span>￥{{total}}</span></p>
