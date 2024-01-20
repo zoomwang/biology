@@ -16,6 +16,8 @@ import {
   getOrderInfo,
 } from "../../services/process";
 import { notification } from "ant-design-vue";
+// import moment from 'moment';
+import {formatTime} from "@/utils/index";
 
 const drawerVisible = ref(false);
 const showDrawer = async (orderId) => {
@@ -109,7 +111,7 @@ const labelCol = {
   },
 };
 const wrapperCol = {
-  span: 10,
+  span: 24,
 };
 const formState = reactive({
   startTime: "",
@@ -148,6 +150,11 @@ const cancelOrders = async (orderId) => {
 const getOrderList = async () => {
   try {
     const res = await getOrderLists(param);
+    res?.data?.list.forEach((item) => {
+      
+      item.createTime = formatTime(item.createTime);
+    })
+    // console.log(res?.data?.list)
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
 };
@@ -162,7 +169,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <a-tabs
+    <!-- <a-tabs
       v-model:activeKey="activeKey"
       @change="
         (tab) => {
@@ -178,19 +185,27 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         :tab="item"
         force-render
       ></a-tab-pane>
-    </a-tabs>
+    </a-tabs> -->
     <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="订单创建时间" :wrapperCol="{
-        span: 12
+        span: 7
       }">
-        <a-date-picker v-model:value="param.startTime" />
+        <a-date-picker v-model:value="param.startTime" style="width:140px" />
       </a-form-item>
       <a-form-item label="订单结束时间" :wrapperCol="{
-        span: 12
+        span: 5
       }">
-        <a-date-picker v-model:value="param.endTime" />
+        <a-date-picker v-model:value="param.endTime" style="width:120px" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+      <a-form-item label="订单状态" :wrapperCol="{
+        span: 7
+      }">
+        <a-select v-model:value="param.status" style="width: 100px">
+          <a-select-option value="0">全部订单</a-select-option>
+          <a-select-option v-for="(item, index) in menus" :key="item" :value="++index">{{ item }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
         <a-button type="primary" @click="() => {
           getOrderList();
         }">搜索</a-button>
