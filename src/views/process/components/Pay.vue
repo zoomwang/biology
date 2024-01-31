@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { notification } from "ant-design-vue";
 import { jstopdf } from "@/utils/index";
+import { payQrcodeOrder, payQrcodeStore } from "@/services/order";
+import QRCode from 'qrcode';
 
 const isPaySuccess = ref(true);
+let imrUrl = ref(0);
 const props = defineProps(["props"]);
 console.log('props==', props.props.cost['支付金额']);
 // debugger
@@ -23,6 +26,29 @@ const onRefrush = () => {
     isPaySuccess.value = false;
   }, 4000);
 };
+
+const getQrCode = async() => {
+  console.log(props);
+  // debugger
+  const res = await payQrcodeOrder({
+    orderId: props.props.orderId
+  });
+  if (res?.code == 0) {
+    QRCode.toDataURL(res.data)
+    .then(url => {
+      console.log(url)
+      imrUrl = url;
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  } 
+  
+}
+
+onMounted(() => {
+  getQrCode();
+})
 </script>
 
 <template>
@@ -34,7 +60,7 @@ const onRefrush = () => {
       <img
         id="cmbPayDialog_img"
         alt="聚合二扫码支付"
-        src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700"
+        :src="imrUrl"
       />
       <div class="cmbPayDialog_img_smegma_refresh" @click="onRefrush()">
         <img

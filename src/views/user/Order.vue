@@ -237,6 +237,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         <a-button
           style="margin-bottom: 5px"
           type="primary"
+          v-if="record.status <= 1"
           @click="showDrawer(record.orderId)"
           >立即支付</a-button
         >

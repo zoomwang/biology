@@ -94,7 +94,7 @@ const selectAdd = (item, index) => {
     },
   });
 };
-const formState = reactive({
+let formState = reactive({
   layout: "horizontal",
   id: id - 0,
   itemname: id -0,

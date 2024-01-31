@@ -5,7 +5,7 @@ import { jstopdf } from "@/utils/index";
 
 const isPaySuccess = ref(true);
 const props = defineProps(["orderInfo"]);
-const address = ref(null);
+let address = ref(null);
 console.log(props.orderInfo);
 const download = () => {
   jstopdf("download", "对账单", new Date());

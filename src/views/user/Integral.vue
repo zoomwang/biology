@@ -16,11 +16,11 @@ const param = reactive({
   curPage: 1,
 })
 
-const orderSum = ref(0);
+let orderSum = ref(0);
 const handleOk = e => {
   visible.value = false;
 };
-const data = ref([]);
+let data = ref([]);
 const columns = [
   {
     title: '消耗积分',

@@ -7,6 +7,7 @@ import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
 import CreditPay from "../components/CreditPay.vue";
 import { getCredit, getAmount } from "@/services/user";
+import { payAmount, payCredit } from "@/services/order";
 import { getOrderInfo, getCouponList } from "@/services/process";
 import { notification } from "ant-design-vue";
 
@@ -22,8 +23,8 @@ const costDetail = reactive({
 });
 const total = props.cost['支付金额'];
 let payVisible = ref(false);
-const credit = ref(0);
-const amount = ref(0);
+let credit = ref(0);
+let amount = ref(0);
 const bottom = ref(-15);
 let orderInfo = ref({});
 const ticketsInfo = reactive({
@@ -62,7 +63,7 @@ const getTicketLists = async() => {
     }
   } catch(err) {}
 }
-const submit = () => {
+const submit = async () => {
   if (formState.payType == 0) {
     // payVisible.value = true;
     if (total > amount.value) {
@@ -71,14 +72,28 @@ const submit = () => {
         description: "预存金额不足，请前往预存",
       });
       return;
+    } else {
+      const res = await payAmount({
+        orderId: props.orderId
+      });
+      if (res?.code == 0) {
+        payVisible.value = true;
+      }
     }
   }
   if (formState.payType == 1) {
+    
     payVisible.value = true;
   }
 
   if (formState.payType == 2) {
-    payVisible.value = true;
+    // payVisible.value = true;
+    const res = await payCredit({
+      orderId: props.orderId
+    });
+    if (res?.code == 0) {
+      payVisible.value = true;
+    }
   }
 }
 

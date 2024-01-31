@@ -17,6 +17,7 @@
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "node-sass": "^9.0.0",
+    "qrcode": "^1.5.3",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "scss": "^0.2.4",

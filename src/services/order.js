@@ -18,5 +18,31 @@ export const getOrderDetail = (param) => {
   return api.get(`/sys/user/points/info`, param);
 }
 
+//余额支付
+export const payAmount = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/order/pay/amount`, param);
+}
+
+//信用支付
+export const payCredit = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/order/pay/credit`, param);
+}
+
+// 获取二维码
+export const payQrcodeOrder = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/order/pay/qrcode`, param);
+}
+
+// 获取二维码
+export const payQrcodeStore = (param) => {
+  console.log("param==", param)
+  return api.post(`/sys/store/pay/qrcode`, param);
+}
+
+
+
 
 
