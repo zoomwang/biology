@@ -81,12 +81,11 @@ const submit = async () => {
       }
     }
   }
-  if (formState.payType == 1) {
-    
+  if (formState.payType >= 1 && formState.payType <= 3) {
     payVisible.value = true;
   }
 
-  if (formState.payType == 2) {
+  if (formState.payType == 4) {
     // payVisible.value = true;
     const res = await payCredit({
       orderId: props.orderId
@@ -211,13 +210,36 @@ onMounted(() => {
         <div class="payway_list">
           <div class="payway_list_item payway_list_other">
             <a-radio-group name="prestore" v-model:value="formState.payType">
-              <a-radio value="1"
+              <!-- <a-radio value="1"
                 ><img
                   src="//cdn0.shiyanjia.com/c/2023/images/payment/1.png"
                   title="不可选" />
                 <span style="font-size: 20px">扫码支付</span>
                 <span>支持使用</span><img class="pay_type" width="308px" height="76px" :src="payment" title="不可选"
-              /></a-radio>
+              /></a-radio> -->
+              <a-radio value="1"
+                ><img
+                style="margin-top: 13px"
+                  src="@/assets/order/zhifubao.jpg"
+                  title="不可选" />
+                <span style="font-size: 20px">支付宝支付</span>
+              </a-radio>
+              <br />
+              <a-radio value="2"
+                ><img
+                style="margin-top: 13px"
+                  src="@/assets/order/wechat.jpg"
+                  title="不可选" />
+                <span style="font-size: 20px">微信支付</span>
+              </a-radio>
+              <br />
+              <a-radio value="3"
+                ><img
+                style="margin-top: 13px"
+                  src="@/assets/order/wechat.jpg"
+                  title="不可选" />
+                <span style="font-size: 20px">银联支付</span>
+              </a-radio>
               <a-radio value="0"
                 ><img
                   src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
@@ -235,9 +257,9 @@ onMounted(() => {
                 ></a-radio
               >
               <br />
-              <a-radio value="2"
+              <a-radio value="4"
                 ><img
-                  src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
+                  src="@/assets/order/payment-credit.png"
                   title="不可选" />
                 <span style="font-size: 20px">信用支付</span>
                 <span
@@ -275,8 +297,8 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType == 1" :props="props" :orderInfo="orderInfo" />
-      <CreditPay v-if="formState.payType == 2" :orderInfo="orderInfo" />
+      <Pay v-if="formState.payType >= 1 && formState.payType <= 3" :props="props" :payType="formState.payType" :orderInfo="orderInfo" />
+      <CreditPay v-if="formState.payType == 4" :orderInfo="orderInfo" />
       <!-- <Pay /> -->
     </a-modal>
   </main>

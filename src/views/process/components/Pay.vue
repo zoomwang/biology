@@ -1,13 +1,21 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, reactive, onMounted, onUpdated } from "vue";
 import { notification } from "ant-design-vue";
 import { jstopdf } from "@/utils/index";
 import { payQrcodeOrder, payQrcodeStore } from "@/services/order";
 import QRCode from 'qrcode';
 
 const isPaySuccess = ref(true);
-let imrUrl = ref(0);
-const props = defineProps(["props"]);
+let imrUrl = reactive({
+  value: ''
+});
+
+const props = defineProps(["props", 'payType']);
+watch(props, async (newdata, olddata) => {
+  // console.log(newdata)
+  // debugger
+  getQrCode();
+})
 console.log('props==', props.props.cost['支付金额']);
 // debugger
 
@@ -28,24 +36,29 @@ const onRefrush = () => {
 };
 
 const getQrCode = async() => {
-  console.log(props);
-  // debugger
   const res = await payQrcodeOrder({
-    orderId: props.props.orderId
+    orderId: props.props.orderId,
+    payPlatform: props.payType
   });
   if (res?.code == 0) {
     QRCode.toDataURL(res.data)
     .then(url => {
+      imrUrl.value = url;
       console.log(url)
-      imrUrl = url;
     })
     .catch(err => {
+      debugger
       console.error(err)
     })
   } 
   
 }
 
+// onUpdated((old, n) => {
+//   console.log(props);
+//   debugger
+//   // getQrCode();
+// })
 onMounted(() => {
   getQrCode();
 })
@@ -60,7 +73,7 @@ onMounted(() => {
       <img
         id="cmbPayDialog_img"
         alt="聚合二扫码支付"
-        :src="imrUrl"
+        :src="imrUrl.value"
       />
       <div class="cmbPayDialog_img_smegma_refresh" @click="onRefrush()">
         <img
@@ -71,21 +84,21 @@ onMounted(() => {
       </div>
       <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
       <div class="crmbpay_tips_img_box">
-        <div>
+        <div v-if="props.payType == 1">
           <img class="ali_icon" src="../../../assets/prestore/3.png" alt="" />
-          <div class="payment_text" style="margin-left: -8px">支付宝</div>
+          <div class="payment_text" style="margin-left: 54px">支付宝</div>
         </div>
-        <div>
+        <div v-if="props.payType == 2">
           <img class="wx_icon" src="../../../assets/prestore/2.png" alt="" />
-          <div class="payment_text" style="margin-left: 30px">微信</div>
+          <div class="payment_text" style="margin-left: 54px">微信</div>
         </div>
-        <div>
+        <div v-if="props.payType == 3">
           <img
             class="unionpay_icon"
             src="../../../assets/prestore/9.png"
             alt=""
           />
-          <div class="payment_text" style="margin-left: 30px">银联</div>
+          <div class="payment_text" style="margin-left: 54px">银联</div>
         </div>
       </div>
     </div>
@@ -241,20 +254,21 @@ onMounted(() => {
 #cmbPayDialog .ali_icon {
   width: 24px;
   height: 24px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 
 #cmbPayDialog .wx_icon {
   width: 27px;
   height: 24px;
-  margin-left: 28px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 
 #cmbPayDialog .unionpay_icon {
   width: 36px;
   height: 24px;
-  margin-left: 28px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 
