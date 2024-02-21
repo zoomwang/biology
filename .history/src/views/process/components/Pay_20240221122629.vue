@@ -146,7 +146,8 @@ onUnmounted(() => {
       </a-result>
     </div>
     <div id="download" style="position: absolute; top: -99999px">
-      <!-- <table border="1px" width="100%">
+      <table border="1px" width="100%">
+        <!--border是边框的意思-->
 
         <tr>
           <td>姓名</td>
@@ -177,8 +178,8 @@ onUnmounted(() => {
 
           <td>绵阳</td>
         </tr>
-      </table> -->
-      <a-descriptions title="User Info" bordered>
+      </table>
+      <!-- <a-descriptions title="User Info" bordered>
         <a-descriptions-item label="Product">Cloud Database</a-descriptions-item>
         <a-descriptions-item label="Billing Mode">Prepaid</a-descriptions-item>
         <a-descriptions-item label="Automatic Renewal">YES</a-descriptions-item>
@@ -204,7 +205,7 @@ onUnmounted(() => {
           Region: East China 1
           <br />
         </a-descriptions-item>
-      </a-descriptions>
+      </a-descriptions> -->
     </div>
   </div>
 </template>

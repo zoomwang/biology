@@ -147,6 +147,7 @@ onUnmounted(() => {
     </div>
     <div id="download" style="position: absolute; top: -99999px">
       <!-- <table border="1px" width="100%">
+        <!--border是边框的意思-->
 
         <tr>
           <td>姓名</td>
