@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, reactive, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import FirstStep from "./components/FirstStep.vue";
+// import FirstStep from "./components/FirstStep.vue";
 import OtherStep from "./components/OtherStep.vue";
 import FinalStep from "./components/FinalStep.vue";
 import { getOrderCostCalc, getOfficeInfo, addOrder, draftSave } from "@/services/process";
@@ -20,6 +20,8 @@ const cost = reactive({
   value: '',
 });
 
+let orderData = reactive({});
+
 const getOrderCostCalcs = async(data) => {
   try {
     const res = await getOrderCostCalc(data);
@@ -27,6 +29,7 @@ const getOrderCostCalcs = async(data) => {
   } catch(err) {}
 }
 const next = async(data) => {
+  orderData = data;
   const res = await addOrder(data);
   await getOrderCostCalcs(data);
   if (res?.code == 0) {
@@ -66,7 +69,7 @@ const save = async (data) => {
     <div class="steps-content">
       <!-- <FirstStep v-if="current == 0 && type == 0" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" /> -->
       <OtherStep v-if="current == 0" :addressList="addressList" @update="update" @next="next" @save="save" />
-      <FinalStep v-if="current == 1 && order.id" :cost="cost.value" :orderId="order.id" />
+      <FinalStep v-if="current == 1 && order.id" :cost="cost.value" :orderId="order.id" :orderData="orderData" />
     </div>
     
   </main>

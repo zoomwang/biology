@@ -13,12 +13,8 @@ let imrUrl = reactive({
 
 const props = defineProps(["props", 'payType']);
 watch(props, async (newdata, olddata) => {
-  // console.log(newdata)
-  // debugger
   getQrCode();
 })
-console.log('props==', props.props.cost['支付金额']);
-// debugger
 
 const download = () => {
   // jstopdf("download", "对账单",timeFormat(new Date(), "YYYY-mm-dd"));
