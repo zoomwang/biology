@@ -16,7 +16,9 @@ const param = reactive({
   curPage: 1,
 })
 
-let orderSum = ref(0);
+let orderSum = reactive({
+  value: 0,
+});
 const handleOk = e => {
   visible.value = false;
 };
@@ -28,6 +30,16 @@ const columns = [
     key: 'points',
   },
 ];
+
+const jingdonPay = () => {
+  if (orderSum.value - 0 < 3000) {
+    notification.error({
+      description: "积分不足"
+    })
+  } else {
+    
+  }
+}
 
 const addOrders = async function () {
   try {
@@ -44,7 +56,7 @@ const getOrderDetails = async function () {
   try {
     const res = await getOrderDetail();
     if (res?.code == 0) {
-      orderSum = res?.data?.points;
+      orderSum.value = res?.data?.points;
     }
   } catch (err) {}
 }
@@ -70,9 +82,9 @@ const getOrderLists = async function () {
     <ul class="exchange-navbar clearfloat">
       <li class="exchange-navbar-item fl">
         <h1>
-          <i id="TotalCoupon" money="0.00">{{orderSum}}</i
+          <i id="TotalCoupon" money="0.00">{{orderSum.value}}</i
           ><i id="CouponDecimal" money="0.00">.00</i
-          ><span class="addDan"> 分</span>
+          ><span class="addDan">分</span>
         </h1>
         <h2 style="white-space: nowrap; margin-top: 8px">我的积分</h2>
       </li>
@@ -82,10 +94,20 @@ const getOrderLists = async function () {
           title="你确定要兑换吗?"
           ok-text="确定"
           cancel-text="取消"
+          @confirm="jingdonPay"
+        >
+          <div style="display: inline-block;margin-top:10px">
+            <a-button type="primary" style="margin-right: 10px">兑换京东卡</a-button>
+          </div>
+        </a-popconfirm>
+        <a-popconfirm
+          title="你确定要兑换吗?"
+          ok-text="确定"
+          cancel-text="取消"
           @confirm="addOrders"
         >
-          <div style="margin-top:10px">
-            <a-button type="primary">兑换</a-button>
+          <div style="display: inline-block;margin-top:10px">
+            <a-button type="primary">兑换测试费</a-button>
           </div>
         </a-popconfirm>
       </li>
@@ -115,7 +137,7 @@ const getOrderLists = async function () {
 }
 
 .exchange-navbar-item {
-	width: 150px;
+	width: 200px;
 	height: 100%;
 	padding: 20px 30px;
 }

@@ -32,6 +32,12 @@ export default defineConfig({
         changeOrigin: true,
         // rewrite: path => path.replace(/^\/api/, ''),
       },
+      '/notify': {
+        target: 'http://47.113.192.227:8080',
+        //target: 'http://test3.javablade.com',
+        changeOrigin: true,
+        // rewrite: path => path.replace(/^\/api/, ''),
+      },
     },
   },
 })

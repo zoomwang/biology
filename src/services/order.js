@@ -42,7 +42,23 @@ export const payQrcodeStore = (param) => {
   return api.post(`/sys/store/pay/qrcode`, param);
 }
 
+// 获取支付回掉
+export const aliPayNotify = (param) => {
+  console.log("param==", param)
+  return api.post(`/aliPay/notify`, param);
+}
 
+// 获取支付回掉
+export const wxPayNotify = (param) => {
+  console.log("param==", param)
+  return api.post(`/wxPay/notify`, param);
+}
+
+// 获取支付回掉
+export const unionPayNotify = (param) => {
+  console.log("param==", param)
+  return api.post(`/unionPay/notify`, param);
+}
 
 
 

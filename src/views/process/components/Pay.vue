@@ -1,11 +1,12 @@
 <script setup>
-import { ref, watch, reactive, onMounted, onUpdated } from "vue";
+import { ref, watch, reactive, onMounted, onUpdated, onUnmounted} from "vue";
 import { notification } from "ant-design-vue";
 import { jstopdf } from "@/utils/index";
-import { payQrcodeOrder, payQrcodeStore } from "@/services/order";
+import { payQrcodeOrder, payQrcodeStore, aliPayNotify, wxPayNotify, unionPayNotify } from "@/services/order";
 import QRCode from 'qrcode';
 
-const isPaySuccess = ref(true);
+const isPaySuccess = ref(false);
+const interval = ref(null);
 let imrUrl = reactive({
   value: ''
 });
@@ -20,7 +21,8 @@ console.log('props==', props.props.cost['支付金额']);
 // debugger
 
 const download = () => {
-  jstopdf("download", "对账单",timeFormat(new Date(), "YYYY-mm-dd"));
+  // jstopdf("download", "对账单",timeFormat(new Date(), "YYYY-mm-dd"));
+  jstopdf("download", "对账单");
   // jstopdf({
   //   title: "测试",
   //   subject: "sadsa",
@@ -31,7 +33,8 @@ const download = () => {
 
 const onRefrush = () => {
   setTimeout(() => {
-    isPaySuccess.value = false;
+    isPaySuccess.value = true;
+    clearInterval(interval.value);
   }, 4000);
 };
 
@@ -54,19 +57,45 @@ const getQrCode = async() => {
   
 }
 
+const roll = () => {
+  let res;
+  interval.value = setInterval(async () => {
+    if (props.payType == "1") {
+      res = await aliPayNotify();
+    }
+    if (props.payType == "2") {
+      res = await wxPayNotify();
+    }
+    if (props.payType == "3") {
+      res = await unionPayNotify();
+    } 
+    if (res?.code == 0) {
+      isPaySuccess.value = true;
+      clearInterval(interval.value);
+    }
+  }, 2000);
+}
+
 // onUpdated((old, n) => {
 //   console.log(props);
 //   debugger
 //   // getQrCode();
 // })
+
 onMounted(() => {
   getQrCode();
+  roll();
+  onRefrush();
 })
+
+onUnmounted(() => {
+  clearInterval(interval.value);
+});
 </script>
 
 <template>
   <div class="pay-wrap d-flex" id="cmbPayDialog">
-    <div v-show="isPaySuccess">
+    <div v-show="!isPaySuccess">
       <div class="unionPayMoney">
         应付金额<span>￥</span><span class="unionPayMoney_span">{{props.props.cost['支付金额'] || '1000'}}</span>
       </div>
@@ -102,7 +131,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div v-show="!isPaySuccess">
+    <div v-show="isPaySuccess">
       <a-result status="success" title="支付成功!">
         <template #extra>
           <p>预约单号为：283912823288</p>
