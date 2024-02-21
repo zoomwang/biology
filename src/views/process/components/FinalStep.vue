@@ -100,7 +100,7 @@ const getUserCredit = async () => {
 try {
     const res = await getCredit();
     if (res?.code == 0) {
-      credit = res?.credit
+      credit = res?.data
     }
   } catch (err) {}
 }
@@ -108,7 +108,7 @@ const getUserAmount = async () => {
   try {
     const res = await getAmount();
     if (res?.code == 0) {
-      amount = res?.credit;
+      amount = res?.data;
     }
   } catch (err) {}
 }
