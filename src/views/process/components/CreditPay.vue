@@ -1,28 +1,16 @@
 <script setup>
 import { ref } from "vue";
 import { notification } from "ant-design-vue";
-import { jstopdf } from "@/utils/index";
+import { jstopdf, formatTime } from "@/utils/index";
 
 const isPaySuccess = ref(true);
-const props = defineProps(["orderInfo"]);
+const props = defineProps(["props", 'payType', 'orderId', 'orderInfo']);
 let address = ref(null);
-console.log(props.orderInfo);
+console.log(props);
 const download = () => {
-  jstopdf("download", "对账单", new Date());
+  jstopdf("download", "对账单");
 };
 
-const initData = () => {
-  const defaultv = (props.orderInfo.recoveryAddress.filter((item) => {
-    return item.isdefault;
-  }))[0].fullAddress;
-  address = defaultv;
-}
-
-const onRefrush = () => {
-  setTimeout(() => {
-    isPaySuccess.value = false;
-  }, 4000);
-};
 </script>
 
 <template>
@@ -30,9 +18,9 @@ const onRefrush = () => {
     <div v-show="isPaySuccess">
       <a-result status="success" title="支付成功!">
         <template #extra>
-          <p>预约单号为：283912823288</p>
-          <p>预约金额：2000.00</p>
-          <p>预约时间：2023-12-11 10:13</p>
+          <p>预约单号为：{{ props.orderId }}</p>
+          <p>预约金额：{{ props.props.cost['支付金额'] }}</p>
+          <p>预约时间：{{ formatTime(Date.now()) }}</p>
           <p>
             <a-button style="width: 220px" type="primary" @click="download"
               >下载预约单</a-button

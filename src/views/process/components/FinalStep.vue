@@ -2,13 +2,13 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive, defineComponent, watch, onUpdated, onMounted, defineProps } from "vue";
 // import { isLogged } from "../../services/user";
-import { DollarCircleTwoTone } from "@ant-design/icons-vue";
-import payment from "@/assets/order/payment.png";
+// import { DollarCircleTwoTone } from "@ant-design/icons-vue";
+// import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
 import CreditPay from "../components/CreditPay.vue";
 import { getCredit, getAmount } from "@/services/user";
 import { payAmount, payCredit } from "@/services/order";
-import { getOrderInfo, getCouponList, getOrderCostCalc } from "@/services/process";
+import { getOrderInfo, addOrder, getCouponList, getOrderCostCalc } from "@/services/process";
 import { notification } from "ant-design-vue";
 
 const formState = reactive({
@@ -33,6 +33,7 @@ let amount = ref(0);
 const bottom = ref(-15);
 let orderInfo = ref({});
 let isUpdata = ref(false);
+let orderId = ref('');
 const ticketsInfo = reactive({
   value: []
 });
@@ -49,6 +50,10 @@ const handleChange = async(id) => {
   formState.couponId = id;
   const data = Object.assign(formState, props.orderData);
   await getOrderCostCalcs(data);
+  const res = await addOrder(data);
+  if (res?.code == 0) {
+    orderId.value = res.data;
+  }
   initCost('update');
   isUpdata.value = true;
 }
@@ -81,6 +86,7 @@ const submit = async () => {
     //   });
     //   return;
     // } else {
+      payVisible.value = true;
       const res = await payAmount({
         orderId: props.orderId
       });
@@ -94,6 +100,7 @@ const submit = async () => {
   }
 
   if (formState.payType == 4) {
+    payVisible.value = true;
     const res = await payCredit({
       orderId: props.orderId
     });
@@ -270,9 +277,8 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType >= 1 && formState.payType <= 3" :props="props" :payType="formState.payType" :orderInfo="orderInfo" />
-      <CreditPay v-if="formState.payType == 4" :orderInfo="orderInfo" />
-      <!-- <Pay /> -->
+      <Pay v-if="formState.payType >= 1 && formState.payType <= 3" :props="isUpdata ? prop : props" :orderId="isUpdata ? orderId : props.orderId" :payType="formState.payType" :orderInfo="orderInfo" />
+      <CreditPay v-if="formState.payType == 4 || formState.payType == 0" :props="isUpdata ? prop : props" :orderId="isUpdata ? orderId : props.orderId" :payType="formState.payType" :orderInfo="orderInfo" />
     </a-modal>
   </main>
 </template>
