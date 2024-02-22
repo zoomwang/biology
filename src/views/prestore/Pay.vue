@@ -14,7 +14,7 @@ const props = defineProps(["props", 'payType', 'orderId']);
 // watch(props, async (newdata, olddata) => {
 //   getQrCode();
 // })
-const { amount } = props.props;
+const { amount, type, rebate, remind, demand, mailBox } = props.props;
 
 const download = () => {
   jstopdf("download", "对账单");
@@ -49,15 +49,6 @@ const getQrCode = async() => {
 const roll = () => {
   let res;
   interval.value = setInterval(async () => {
-    // if (props.payType == "1") {
-    //   res = await aliPayNotify();
-    // }
-    // if (props.payType == "2") {
-    //   res = await wxPayNotify();
-    // }
-    // if (props.payType == "3") {
-    //   res = await unionPayNotify();
-    // } 
     res = await getStoreStatus(props.orderId);
     if (res?.code == 0 && res?.data == 0) {
       isPaySuccess.value = true;
@@ -132,14 +123,12 @@ onUnmounted(() => {
     <div id="download" style="position: absolute; top: -9999px;width:700px">
       <a-descriptions title="预存单" bordered :column="2">
         <a-descriptions-item label="预存单号">{{props?.orderId}}</a-descriptions-item>
-        <a-descriptions-item label="运费支付方式">{{['到付', '自付'][props?.orderInfo?.freightMode]}}</a-descriptions-item>
-        <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
-        <a-descriptions-item label="项目名称">{{props?.orderInfo?.itemname}}</a-descriptions-item>
-        <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item>
-        <a-descriptions-item label="联系人">{{props?.orderInfo?.contactName}}</a-descriptions-item>
-        <a-descriptions-item label="联系号码">{{props?.orderInfo?.contactsPhone}}</a-descriptions-item>
-        <a-descriptions-item label="实验留言">{{props?.orderInfo?.remark}}</a-descriptions-item>
-        <a-descriptions-item label="总费用">
+        <a-descriptions-item label="支付方式">{{['', '支付宝', '微信', '银联'][type]}}</a-descriptions-item>
+        <a-descriptions-item label="预存返利">{{rebate}}</a-descriptions-item>
+        <a-descriptions-item label="预存备注">{{remind}}</a-descriptions-item>
+        <a-descriptions-item label="需求方名称">{{demand}}</a-descriptions-item>
+        <a-descriptions-item label="联系邮箱">{{mailBox}}</a-descriptions-item>
+        <!-- <a-descriptions-item label="总费用">
           <p>总金额：{{props?.orderInfo?.costInfo['支付金额']}}</p>
           <p>样品回收费：{{props?.orderInfo?.costInfo['样品回收费']}}</p>
           <p>订单金额：{{props?.orderInfo?.costInfo['订单金额']}}</p>
@@ -158,7 +147,7 @@ onUnmounted(() => {
           目的:{{item.goal}}
           <br />
           预约市场:{{item.hours}}
-        </a-descriptions-item>
+        </a-descriptions-item> -->
       </a-descriptions>
     </div>
   </div>
