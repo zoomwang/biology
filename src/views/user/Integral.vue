@@ -100,16 +100,16 @@ const getOrderLists = async function () {
             <a-button type="primary" style="margin-right: 10px">兑换京东卡</a-button>
           </div>
         </a-popconfirm>
-        <a-popconfirm
+        <!-- <a-popconfirm
           title="你确定要兑换吗?"
           ok-text="确定"
           cancel-text="取消"
           @confirm="addOrders"
-        >
-          <div style="display: inline-block;margin-top:10px">
-            <a-button type="primary">兑换测试费</a-button>
-          </div>
-        </a-popconfirm>
+        > -->
+          <!-- <div style="display: inline-block;margin-top:10px"> -->
+            <a-button type="primary" @click="">兑换测试费</a-button>
+          <!-- </div> -->
+        <!-- </a-popconfirm> -->
       </li>
       
       <li></li>
@@ -123,6 +123,8 @@ const getOrderLists = async function () {
     </a-card>
     <a-modal v-model:visible="visible" title="积分规则" @ok="handleOk">
       <p>将于2022年8月31日23:59:59，清理2021年8月31日（包含8月31日）及之前所有获得并未使用的积分。至此之后，将于每年8月31日23:59:59清除前一年8月31日（包含8月31日）及之前获得并未使用的积分。</p>
+    </a-modal>
+    <a-modal v-model:visible="visible" title="积分规则" @ok="handleOk">
     </a-modal>
   </div>
 </template>

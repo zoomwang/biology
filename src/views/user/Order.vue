@@ -155,7 +155,6 @@ const getOrderList = async () => {
   try {
     const res = await getOrderLists(param);
     res?.data?.list.forEach((item) => {
-      
       item.createTime = formatTime(item.createTime);
     })
     // console.log(res?.data?.list)
@@ -167,7 +166,7 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["","待支付", "待实验", "实验中", "已完成", "已取消"];
+const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
 </script>
 
 <template>
@@ -223,7 +222,7 @@ const menus = ["","待支付", "待实验", "实验中", "已完成", "已取消
     >
       <template #status="{ text }">
         <span>
-          {{ menus[text] }}
+          {{ menus[--text] }}
         </span>
       </template>
       <template #costInfo="{ text }">

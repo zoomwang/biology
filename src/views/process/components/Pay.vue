@@ -6,7 +6,7 @@ import { payQrcodeOrder, payQrcodeStore, aliPayNotify, wxPayNotify, unionPayNoti
 import QRCode from 'qrcode';
 
 const isPaySuccess = ref(false);
-const interval = ref(null);
+let interval = ref(null);
 let imrUrl = reactive({
   value: ''
 });
