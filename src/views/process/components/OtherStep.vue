@@ -46,7 +46,7 @@ let orderOptions = ref([
 const getOrderLists = async () => {
   const res = await getOrderList(type);
   if (res?.code == 0) {
-    res.data.forEach((item) => {
+    res?.data?.list?.forEach((item) => {
       item.value = item.orderId;
       item.label = item.remark;
     });

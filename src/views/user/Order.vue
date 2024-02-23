@@ -19,9 +19,13 @@ import { notification } from "ant-design-vue";
 // import moment from 'moment';
 import {formatTime} from "@/utils/index";
 
+let orderData = reactive({
+});
 const drawerVisible = ref(false);
-const showDrawer = async (orderId) => {
-  await getOrderInfos(orderId);
+const showDrawer = async (record) => {
+  orderData = record;
+  debugger
+  await getOrderInfos(record.orderId);
 };
 const orderDetail = ref({});
 const visible = ref(false);
@@ -151,7 +155,6 @@ const getOrderList = async () => {
   try {
     const res = await getOrderLists(param);
     res?.data?.list.forEach((item) => {
-      
       item.createTime = formatTime(item.createTime);
     })
     // console.log(res?.data?.list)
@@ -219,7 +222,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
     >
       <template #status="{ text }">
         <span>
-          {{ menus[++text] }}
+          {{ menus[--text] }}
         </span>
       </template>
       <template #costInfo="{ text }">
@@ -238,20 +241,21 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
           style="margin-bottom: 5px"
           type="primary"
           v-if="record.status <= 1"
-          @click="showDrawer(record.orderId)"
+          @click="showDrawer(record)"
           >立即支付</a-button
         >
-        <br />
+        <br v-if="record.status <= 1" />
         <a-popconfirm
           title="你确认要取消订单吗?"
           ok-text="确定"
+          v-if="record.status <= 1"
           cancel-text="取消"
           @confirm="cancelOrders(record.orderId)"
           @cancel="cancel"
         >
           <a-button style="margin-bottom: 5px" type="text">取消订单</a-button>
         </a-popconfirm>
-        <br />
+        <br v-if="record.status <= 1" />
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
@@ -339,7 +343,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
     v-model:visible="drawerVisible"
     :after-visible-change="afterVisibleChange"
   >
-    <FinalStep :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" />
+    <FinalStep :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
   </a-drawer>
 </template>
 <style lang="scss"></style>

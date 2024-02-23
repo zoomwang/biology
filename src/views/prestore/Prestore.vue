@@ -5,7 +5,7 @@ import IconRecomends from "../../assets/order/i-ecommend.png";
 import checkIcon from "../../assets/prestore/bill67.png";
 import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
-import Pay from "@/components/Pay.vue";
+import Pay from "./Pay.vue";
 import Apply from "./Apply.vue";
 import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
 import { notification, Form, message } from "ant-design-vue";
@@ -15,6 +15,7 @@ const useForm = Form.useForm;
 const formState = reactive({
   // layout: "horizontal",
   payType: 0, //支付类型，0、1表示
+  type: 1, //支付类型，0、1表示
   additionUrl: "",
   invoiceNum: 1, // 发票数量
   invoiceNumType: 1,
@@ -32,6 +33,7 @@ const formState = reactive({
   mailBox: "", //收件邮箱
   invoiceTitle: [],
 });
+const orderId = ref('');
 const formOptions = reactive({
   plainOptions: ["电子合同", "电子版测试清单", "电子报告"],
 });
@@ -182,6 +184,7 @@ const onSubmit = () => {
           // notification.success({
           //   description: "预存成功",
           // });
+          orderId.value = data.data;
           payVisible.value = true;
         }
       } catch (err) {
@@ -215,21 +218,45 @@ onMounted(() => {
                 <span class="t-red"> *</span>
                 <span>支付方式：</span>
               </div>
-              <a-button
+              <!-- <a-button
                 type="primary"
                 class="b-base-button"
                 :class="{ 'b-base-button-active': formState.payType }"
                 @click="changeField('payType', 1)"
               >
                 对公转账
-              </a-button>
-              <a-button
+              </a-button> -->
+              <!-- <a-button
                 type="primary"
                 class="b-base-button"
                 :class="{ 'b-base-button-active': !formState.payType }"
                 @click="changeField('payType', 0)"
               >
                 扫码支付
+              </a-button> -->
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': formState.type == 1 }"
+                @click="changeField('type', 1)"
+              >
+                支付宝支付
+              </a-button>
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': formState.type == 2 }"
+                @click="changeField('type', 2)"
+              >
+                微信支付
+              </a-button>
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': formState.type == 3 }"
+                @click="changeField('type', 3)"
+              >
+                银联支付
               </a-button>
               <div class="i-img">
                 <img :src="Payment" class="i-payment" />
@@ -780,8 +807,8 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType == 0" />
-      <Apply :detail="formState" v-else />
+      <Pay :props="formState" :orderId="orderId" :payType="formState.type" />
+      <!-- <Apply :detail="formState" v-else /> -->
     </a-modal>
     <TheWelcome />
   </main>

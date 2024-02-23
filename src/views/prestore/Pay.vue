@@ -1,104 +1,154 @@
 <script setup>
-import { ref } from "vue";
-import { notification } from "ant-design-vue";
-import { resetPassword } from "../../services/user";
+import { ref, watch, reactive, onMounted, onUpdated, onUnmounted} from "vue";
+import { jstopdf, formatTime } from "@/utils/index";
+import { payQrcodeStore, aliPayNotify, wxPayNotify, unionPayNotify, getStoreStatus } from "@/services/order";
+import QRCode from 'qrcode';
 
-const isPaySuccess = ref(true);
+const isPaySuccess = ref(false);
+const interval = ref(null);
+let imrUrl = reactive({
+  value: ''
+});
+
+const props = defineProps(["props", 'payType', 'orderId']);
+// watch(props, async (newdata, olddata) => {
+//   getQrCode();
+// })
+const { amount, type, rebate, remind, demand, mailBox } = props.props;
+
+const download = () => {
+  jstopdf("download", "对账单");
+};
 
 const onRefrush = () => {
   setTimeout(() => {
-    isPaySuccess.value = false;
-  },4000)
-}
-const onSubmit = () => {
-  if (formState.oldPassword != formState.newPassword) {
-    notification.error({
-      description: "密码不一致，请确认",
-    });
-    return;
-  }
-  validate()
-    .then(async (res) => {
-      try {
-        const data = await resetPassword({
-          mobile: formState.mobile,
-          newPassword: formState.newPassword,
-          code: formState.code,
-        });
-        if (data?.code == 0) {
-          notification.success({
-            description: "修改密码成功",
-          });
-          setTimeout(() => {
-            // router.push({name: "login"});
-          }, 400);
-        }
-      } catch (err) {
-        alert(err);
-      }
-    })
-    .catch((err) => {
-      console.log("error", err);
-    });
+    isPaySuccess.value = true;
+    clearInterval(interval.value);
+  }, 4000);
 };
+
+const getQrCode = async() => {
+  const res = await payQrcodeStore({
+    storeId: props.orderId,
+    payPlatform: props.payType
+  });
+  if (res?.code == 0) {
+    QRCode.toDataURL(res.data)
+    .then(url => {
+      imrUrl.value = url;
+      console.log(url)
+    })
+    .catch(err => {
+      debugger
+      console.error(err)
+    })
+  } 
+  
+}
+
+const roll = () => {
+  let res;
+  interval.value = setInterval(async () => {
+    res = await getStoreStatus(props.orderId);
+    if (res?.code == 0 && res?.data == 0) {
+      isPaySuccess.value = true;
+      clearInterval(interval.value);
+    }
+  }, 2000);
+}
+
+onMounted(() => {
+  getQrCode();
+  roll();
+  // onRefrush();
+})
+
+onUnmounted(() => {
+  clearInterval(interval.value);
+});
 </script>
 
 <template>
   <div class="pay-wrap d-flex" id="cmbPayDialog">
-    <div v-show="isPaySuccess">
+    <div v-show="!isPaySuccess">
       <div class="unionPayMoney">
-        应付金额<span>￥</span><span class="unionPayMoney_span">1000</span>
+        应付金额<span>￥</span><span class="unionPayMoney_span">{{amount}}</span>
       </div>
-      <img id="cmbPayDialog_img" alt="聚合二扫码支付" src="https://pay.shiyanjia.com/qrcode.html?data=https%3A%2F%2Fqr.95516.com%2F03080000%2F1004%2F100423120519562994667700" />
-      <div class="cmbPayDialog_img_smegma_refresh" @click="onRefrush()">
+      <img
+        id="cmbPayDialog_img"
+        alt="聚合二扫码支付"
+        :src="imrUrl.value"
+      />
+      <div class="cmbPayDialog_img_smegma_refresh" @click="getQrCode()">
         <img
           class="cmbPayDialog_img_smegma_refresh_icon"
           src="../../assets/prestore/6.png"
           alt=""
-          
         />点击刷新二维码
       </div>
       <div class="crmbpay_tips">您可以使用以下软件扫描上方二维码付款</div>
       <div class="crmbpay_tips_img_box">
-        <div>
-          <img
-            class="ali_icon"
-            src="../../assets/prestore/3.png"
-            alt=""
-          />
-          <div class="payment_text" style="margin-left: -8px">支付宝</div>
+        <div v-if="props.payType == 1">
+          <img class="ali_icon" src="../../assets/prestore/3.png" alt="" />
+          <div class="payment_text" style="margin-left: 54px">支付宝</div>
         </div>
-        <div>
-          <img
-            class="wx_icon"
-            src="../../assets/prestore/2.png"
-            alt=""
-          />
-          <div class="payment_text" style="margin-left: 30px">微信</div>
+        <div v-if="props.payType == 2">
+          <img class="wx_icon" src="../../assets/prestore/2.png" alt="" />
+          <div class="payment_text" style="margin-left: 54px">微信</div>
         </div>
-        <div>
+        <div v-if="props.payType == 3">
           <img
             class="unionpay_icon"
             src="../../assets/prestore/9.png"
             alt=""
           />
-          <div class="payment_text" style="margin-left: 30px">银联</div>
+          <div class="payment_text" style="margin-left: 54px">银联</div>
         </div>
       </div>
     </div>
-    <div v-show="!isPaySuccess">
-      <a-result
-        status="success"
-        title="支付成功!"
-      >
+    <div v-show="isPaySuccess">
+      <a-result status="success" title="支付成功!">
         <template #extra>
-          <p>订单号为：283912823288</p>
-          <p>充值金额：2000.00</p>
-          <p>申请时间：2023-12-11 10:13</p>
-          <p>发票抬头：广东工业大学</p>
-          <p>纳税人识别号：12330000470003281H</p>
+          <p>预存单号为：{{ props.orderId }}</p>
+          <p>预存金额：{{  amount }}</p>
+          <p>预约时间：{{ formatTime(Date.now()) }}</p>
+          <p>
+            <a-button style="width: 220px" type="primary" @click="download"
+              >下载预存单</a-button
+            >
+          </p>
         </template>
       </a-result>
+    </div>
+    <div id="download" style="position: absolute; top: -9999px;width:700px">
+      <a-descriptions title="预存单" bordered :column="2">
+        <a-descriptions-item label="预存单号">{{props?.orderId}}</a-descriptions-item>
+        <a-descriptions-item label="支付方式">{{['', '支付宝', '微信', '银联'][type]}}</a-descriptions-item>
+        <a-descriptions-item label="预存返利">{{rebate}}</a-descriptions-item>
+        <a-descriptions-item label="预存备注">{{remind}}</a-descriptions-item>
+        <a-descriptions-item label="需求方名称">{{demand}}</a-descriptions-item>
+        <a-descriptions-item label="联系邮箱">{{mailBox}}</a-descriptions-item>
+        <!-- <a-descriptions-item label="总费用">
+          <p>总金额：{{props?.orderInfo?.costInfo['支付金额']}}</p>
+          <p>样品回收费：{{props?.orderInfo?.costInfo['样品回收费']}}</p>
+          <p>订单金额：{{props?.orderInfo?.costInfo['订单金额']}}</p>
+          <p>运费：{{props?.orderInfo?.costInfo['运费']}}</p>
+        </a-descriptions-item>
+        <a-descriptions-item label="全局问题" :span="2">
+          是否有磁性元素:{{props?.orderInfo?.globalProblem?.hasMagnetism ? '有':'没有'}}
+          <br />
+          拍摄方式:{{props?.orderInfo?.globalProblem?.shootingMethod ? '现场':'云现场'}}
+        </a-descriptions-item>
+        <a-descriptions-item label="样品信息" v-for="item in props?.orderInfo?.sampleInfo" :key="item">
+          样品数量:{{item.count}}
+          <br />
+          样品编号:{{item.numberList.join(',')}}
+          <br />
+          目的:{{item.goal}}
+          <br />
+          预约市场:{{item.hours}}
+        </a-descriptions-item> -->
+      </a-descriptions>
     </div>
   </div>
 </template>
@@ -106,7 +156,7 @@ const onSubmit = () => {
 .pay-wrap {
   flex-direction: column;
   text-align: center;
-  p{
+  p {
     padding-left: 30px;
     text-align: left;
   }
@@ -123,7 +173,7 @@ const onSubmit = () => {
   // top: 82px;
   text-align: center;
   width: 100%;
-  span{
+  span {
     color: red;
     font-size: 22px;
   }
@@ -176,20 +226,21 @@ const onSubmit = () => {
 #cmbPayDialog .ali_icon {
   width: 24px;
   height: 24px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 
 #cmbPayDialog .wx_icon {
   width: 27px;
   height: 24px;
-  margin-left: 28px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 
 #cmbPayDialog .unionpay_icon {
   width: 36px;
   height: 24px;
-  margin-left: 28px;
+  margin-left: 58px;
   margin-bottom: 4px;
 }
 

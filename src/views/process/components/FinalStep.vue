@@ -1,14 +1,14 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
-import { ref, computed, reactive, defineComponent, onUpdated, onMounted, defineProps } from "vue";
+import { ref, computed, reactive, defineComponent, watch, onUpdated, onMounted, defineProps } from "vue";
 // import { isLogged } from "../../services/user";
-import { DollarCircleTwoTone } from "@ant-design/icons-vue";
-import payment from "@/assets/order/payment.png";
+// import { DollarCircleTwoTone } from "@ant-design/icons-vue";
+// import payment from "@/assets/order/payment.png";
 import Pay from "../components/Pay.vue";
 import CreditPay from "../components/CreditPay.vue";
 import { getCredit, getAmount } from "@/services/user";
 import { payAmount, payCredit } from "@/services/order";
-import { getOrderInfo, getCouponList } from "@/services/process";
+import { getOrderInfo, addOrder, getCouponList, getOrderCostCalc } from "@/services/process";
 import { notification } from "ant-design-vue";
 
 const formState = reactive({
@@ -17,31 +17,45 @@ const formState = reactive({
   payType: "1",
   couponId: ""
 });
-const props = defineProps(["orderId", "cost"]);
+// let cost = ref(0);
+let props = defineProps(["orderId", "cost", "orderData"]);
+const prop = reactive({
+  cost: {},
+});
+
 const costDetail = reactive({
   value: []
 });
 const total = props.cost['支付金额'];
 let payVisible = ref(false);
-let credit = ref(0);
+// let credit = ref(0);
 let amount = ref(0);
 const bottom = ref(-15);
 let orderInfo = ref({});
+let isUpdata = ref(false);
+let orderId = ref('');
 const ticketsInfo = reactive({
   value: []
 });
-const handleChange = (id) => {
+
+
+const getOrderCostCalcs = async(data) => {
+  try {
+    const res = await getOrderCostCalc(data);
+    prop.cost = res?.data;
+  } catch(err) {};
+}
+
+const handleChange = async(id) => {
   formState.couponId = id;
-  const data = ticketsInfo.value.filter((item) => {
-    return item.id == id;
-  })
-  costDetail.value.forEach((innerItem) => {
-    if (innerItem.label == '优惠券') {
-      innerItem.value = -(data[0].money);
-    }
-  })
-  console.log(costDetail.value)
-  debugger
+  const data = Object.assign(formState, props.orderData);
+  await getOrderCostCalcs(data);
+  const res = await addOrder(data);
+  if (res?.code == 0) {
+    orderId.value = res.data;
+  }
+  initCost('update');
+  isUpdata.value = true;
 }
 
 const getOrderInfos = async() => {
@@ -65,28 +79,28 @@ const getTicketLists = async() => {
 }
 const submit = async () => {
   if (formState.payType == 0) {
-    // payVisible.value = true;
-    if (total > amount) {
-      notification.error({
-        message: "注意",
-        description: "预存金额不足，请前往预存",
-      });
-      return;
-    } else {
+    // if (total > amount.value) {
+    //   notification.error({
+    //     message: "注意",
+    //     description: "预存金额不足，请前往预存",
+    //   });
+    //   return;
+    // } else {
+      payVisible.value = true;
       const res = await payAmount({
         orderId: props.orderId
       });
       if (res?.code == 0) {
         payVisible.value = true;
       }
-    }
+    // }
   }
   if (formState.payType >= 1 && formState.payType <= 3) {
     payVisible.value = true;
   }
 
   if (formState.payType == 4) {
-    // payVisible.value = true;
+    payVisible.value = true;
     const res = await payCredit({
       orderId: props.orderId
     });
@@ -113,12 +127,12 @@ const getUserAmount = async () => {
   } catch (err) {}
 }
 
-const initCost = () => {
+const initCost = (type) => {
   const arr = [];
-  for(var key in props.cost) {
+  for(var key in (!type ? props.cost : prop.cost)) {
     const obj = {
       label: key,
-      value: props.cost[key]
+      value: !type ? props.cost[key] : prop.cost[key]
     }
     arr.push(obj);
   }
@@ -141,20 +155,22 @@ onMounted(() => {
         class="card-wrap"
         style="width: 300px; text-align: right; float: right"
       >
+        <p>
+          优惠券选择:
+          <a-select
+            ref="select"
+            allowClear
+            v-model:value="formState.couponId"
+            style="width: 120px"
+            placeholder="优惠券选择"
+            @change="handleChange"
+          >
+            <a-select-option v-for="item in ticketsInfo.value" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
+          </a-select>
+        </p>
         <template v-for="item in costDetail.value" :key="item">
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
-          <!-- <p>
-            <a-select
-              ref="select"
-              v-model:value="formState.couponId"
-              style="width: 120px"
-              placeholder="优惠券选择"
-              @change="handleChange"
-            >
-              <a-select-option v-for="item in ticketsInfo.value" :value="item.id">{{ item.name }}</a-select-option>
-            </a-select>
-            {{item.label}}: {{item.value}}
-          </p> -->
+          <p class="wait_pay" v-if="item.label == '支付金额'">待支付： <span>￥{{item.value}}</span></p>
         </template>
         <p>
           优惠券选择：
@@ -165,49 +181,13 @@ onMounted(() => {
               placeholder="优惠券选择"
               @change="handleChange"
             >
-              <a-select-option v-for="item in ticketsInfo.value" :value="item.id">{{ item.name }}</a-select-option>
+              <a-select-option v-for="item in ticketsInfo.value" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
             </a-select>
           </p>
         <a-divider />
-        <p class="wait_pay">待支付： <span>￥{{total}}</span></p>
       </div>
     </a-card>
     <a-card title="支付" style="margin-top: 16px;">
-      <!-- <p
-        style="
-          font-size: 14px;
-          color: rgba(0, 0, 0, 0.85);
-          margin-bottom: 16px;
-          font-weight: 500;
-        "
-      >
-        预存支付 <span class="amount">¥{{amount}}</span>
-      </p> -->
-      <!-- <a-card title="">
-        <div class="payway_list">
-          <div class="payway_list_item payway_list_item_disabled">
-            <a-radio-group name="prestore" v-model:value="formState.payType">
-              <a-radio value="0"
-                ><img
-                  src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
-                  title="不可选"
-                />
-                <span style="font-size: 20px">个人预存</span>
-                <span
-                  v-if="!amount"
-                  >您还没有预存，预存可以一次开票、多次使用，省去每次开票的麻烦，现在预存还有优惠哦。<a
-                    href="/user/prestore"
-                    style="color: #32d693"
-                    target="_blank"
-                    >我要预存</a
-                  ></span
-                ></a-radio
-              >
-              <br />
-            </a-radio-group>
-          </div>
-        </div>
-      </a-card> -->
       <p
         style="
           font-size: 14px;
@@ -216,7 +196,7 @@ onMounted(() => {
           font-weight: 500;
         "
       >
-        支付金额 <span class="amount">￥{{props.cost['支付金额']}}</span>
+        支付金额 <span class="amount">￥{{!isUpdata ? props.cost['支付金额'] : prop.cost['支付金额']}}</span>
       </p>
       <a-card title="支付方式">
         <div class="payway_list">
@@ -309,9 +289,8 @@ onMounted(() => {
       width="400px"
       :footer="null"
     >
-      <Pay v-if="formState.payType >= 1 && formState.payType <= 3" :props="props" :payType="formState.payType" :orderInfo="orderInfo" />
-      <CreditPay v-if="formState.payType == 4" :orderInfo="orderInfo" />
-      <!-- <Pay /> -->
+      <Pay v-if="formState.payType >= 1 && formState.payType <= 3" :props="isUpdata ? prop : props" :orderId="isUpdata ? orderId : props.orderId" :payType="formState.payType" :orderInfo="orderInfo" />
+      <CreditPay v-if="formState.payType == 4 || formState.payType == 0" :props="isUpdata ? prop : props" :orderId="isUpdata ? orderId : props.orderId" :payType="formState.payType" :orderInfo="orderInfo" />
     </a-modal>
   </main>
 </template>

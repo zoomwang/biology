@@ -1,6 +1,6 @@
 <script setup>
 import HeaderContent from "./HeaderContent.vue";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/home_logo.jpg";
 import { useRoute } from "vue-router";
 // import SecondLogo from "../assets/secondLogo.jpg";
 import SecondLogo from "../assets/secondLogo.jpg";
@@ -21,7 +21,7 @@ const route = useRoute();
   <div class="header-wrap">
     <div class="header d-flex">
       <div class="logo">
-        <img :src="Logo" style="width: 258px; height: auto" />
+        <img :src="Logo" style="width: auto; height: 80px" />
       </div>
       <LoginComponent class="f-fr" style="flex: 1" />
     </div>

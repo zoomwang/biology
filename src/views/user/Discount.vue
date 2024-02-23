@@ -1,32 +1,9 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, computed, reactive, defineComponent, onMounted } from "vue";
+import {formatTime} from "@/utils/index";
 import { getCouponList } from "../../services/process";
 const data = [
-    {
-      status: 0,
-      time: "7天",
-      description: "ashdjsk",
-      money: 100,
-      name: "ask的",
-      endTime: "2023-1-23"
-    },
-    {
-      status: 1,
-      time: "7天",
-      description: "ashdjsk",
-      money: 200,
-      name: "ask的",
-      endTime: "2023-1-23"
-    },
-    {
-      status: 2,
-      time: "7天",
-      description: "ashdjsk",
-      money: 300,
-      name: "ask的",
-      endTime: "2023-1-23"
-    },
   ];
 const activeKey = ref('0');
 const useType = ref(["", "全场通用券", "商品券", "品类券"]);
@@ -39,7 +16,7 @@ const getCouponLists = async function (activeKeys) {
     const res = await getCouponList();
     if (res?.code == 0) {
       // listData.discount = res?.data;
-      listData.discount = data.filter((item) => {
+      listData.discount = res?.data?.list?.filter((item) => {
         return item.status == key
       });
       console.log(data.filter((item) => {
@@ -81,7 +58,7 @@ onMounted(() => {
                 <div class="coupon-info-left" style="margin-top: 10px">
                   <div class="line">{{item.description}}</div></div>
               </div>
-              <div class="coupon-time" v-if="item.status == 0">过期时间：{{item.endTime}}有效</div>
+              <div class="coupon-time" v-if="item.status == 0">过期时间：{{formatTime(item.endTime)}}有效</div>
               <div class="coupon-time" v-else>{{item.name}}</div>
               </div>
             </div>
@@ -312,7 +289,7 @@ onMounted(() => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 210px
+    width: 250px
 }
 
 .volume-default.on {
