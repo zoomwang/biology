@@ -5,7 +5,7 @@ import { ref, computed, reactive, defineComponent, onMounted  } from "vue";
 // import areaData from "../../public/area.js";
 // import $localStorage from "@/hooks/localStorage";
 import { notification } from "ant-design-vue";
-import { addOrder, getOrderList, getOrderDetail } from "../../services/order";
+import { addOrder, getOrderList, getOrderDetail, orderByJd, orderByFee } from "../../services/order";
 
 const visible = ref(false);
 const showModal = () => {
@@ -31,13 +31,39 @@ const columns = [
   },
 ];
 
-const jingdonPay = () => {
+const jingdonPay = async() => {
   if (orderSum.value - 0 < 3000) {
     notification.error({
       description: "积分不足"
     })
   } else {
-    
+    try {
+    const res = await orderByJd();
+    if (res?.code == 0) {
+      notification.success({
+        description: "申请成功，请耐心等待工作人员联系",
+      });
+    }
+  } catch (err) {}
+  }
+}
+
+const feePay = async(type) => {
+  if (orderSum.value - 0 < 3000) {
+    notification.error({
+      description: "积分不足"
+    })
+  } else {
+    try {
+      const res = await orderByFee({
+        type
+      });
+      if (res?.code == 0) {
+        notification.success({
+          description: "申请成功，请耐心等待工作人员联系",
+        });
+      }
+    } catch (err) {}
   }
 }
 
@@ -100,19 +126,48 @@ const getOrderLists = async function () {
             <a-button type="primary" style="margin-right: 10px">兑换京东卡</a-button>
           </div>
         </a-popconfirm>
-        <!-- <a-popconfirm
-          title="你确定要兑换吗?"
-          ok-text="确定"
-          cancel-text="取消"
-          @confirm="addOrders"
-        > -->
-          <!-- <div style="display: inline-block;margin-top:10px"> -->
-            <a-button type="primary" @click="">兑换测试费</a-button>
-          <!-- </div> -->
-        <!-- </a-popconfirm> -->
+            
       </li>
       
-      <li></li>
+      <li class="fl" style="margin-left: 20px">
+        <span style="display:block;margin-top:30px">兑换测试费</span>
+        <div style="display: inline-block">
+          <a-popconfirm
+            title="你确定要兑换吗?"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="feePay(1)"
+          >
+            <div style="display: inline-block;margin-top:10px">
+              <a-button type="primary" style="margin-right: 10px">兑换1000积分</a-button>
+            </div>
+          </a-popconfirm>
+        </div>
+        <div style="display: inline-block">
+          <a-popconfirm
+            title="你确定要兑换吗?"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="feePay(2)"
+          >
+            <div style="display: inline-block;margin-top:10px">
+              <a-button type="primary" style="margin-right: 10px">兑换2000积分</a-button>
+            </div>
+          </a-popconfirm>
+        </div>
+        <div style="display: inline-block">
+          <a-popconfirm
+            title="你确定要兑换吗?"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="feePay(3)"
+          >
+            <div style="display: inline-block;margin-top:10px">
+              <a-button type="primary" style="margin-right: 10px">兑换3000积分</a-button>
+            </div>
+          </a-popconfirm>
+        </div>
+      </li>
     </ul>
     <a-card title="积分兑换记录">
       <a-table :columns="columns" :data-source="data">

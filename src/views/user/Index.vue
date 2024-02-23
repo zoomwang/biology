@@ -99,7 +99,8 @@ const map = reactive({
   h2{
     height: 40px;
     line-height: 40px;
-    text-align: center;
+    text-align: left;
+    padding-left: 20px;
     font-size: 16px;
     margin-bottom: 0;
   }

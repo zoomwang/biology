@@ -6,6 +6,16 @@ export const addOrder = (params) => {
   return api.post(`/sys/user/points/order/pay`, params);
 }
 
+/** 下积分兑换京东券 */
+export const orderByJd = (params) => {
+  return api.post(`/sys/user/points/order/buy_jd_card`, params);
+}
+
+/** 下积分兑换京东券 */
+export const orderByFee = (params) => {
+  return api.post(`/sys/user/points/order/buy_test_fee`, params);
+}
+
 // 获取优惠券列表
 export const getOrderList = (param) => {
   console.log("param==", param)
