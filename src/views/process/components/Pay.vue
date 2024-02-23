@@ -2,7 +2,7 @@
 import { ref, watch, reactive, onMounted, onUpdated, onUnmounted} from "vue";
 // import { notification } from "ant-design-vue";
 import { jstopdf, formatTime } from "@/utils/index";
-import { payQrcodeOrder, payQrcodeStore, aliPayNotify, wxPayNotify, unionPayNotify } from "@/services/order";
+import { payQrcodeOrder, getOrderStatus } from "@/services/order";
 import QRCode from 'qrcode';
 
 const isPaySuccess = ref(false);
@@ -40,7 +40,6 @@ const getQrCode = async() => {
       console.log(url)
     })
     .catch(err => {
-      debugger
       console.error(err)
     })
   } 
@@ -48,17 +47,8 @@ const getQrCode = async() => {
 }
 
 const roll = () => {
-  let res;
   interval.value = setInterval(async () => {
-    if (props.payType == "1") {
-      res = await aliPayNotify();
-    }
-    if (props.payType == "2") {
-      res = await wxPayNotify();
-    }
-    if (props.payType == "3") {
-      res = await unionPayNotify();
-    } 
+    const res = await getOrderStatus(props.orderId);
     if (res?.code == 0) {
       isPaySuccess.value = true;
       clearInterval(interval.value);
@@ -69,7 +59,7 @@ const roll = () => {
 onMounted(() => {
   getQrCode();
   roll();
-  onRefrush();
+  // onRefrush();
 })
 
 onUnmounted(() => {
