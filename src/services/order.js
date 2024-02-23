@@ -42,22 +42,26 @@ export const payQrcodeStore = (param) => {
   return api.post(`/sys/store/pay/qrcode`, param);
 }
 
-// 获取渔村支付回掉
+// 获取订单状态
+export const getOrderStatus = (orderId) => {
+  return api.get(`/sys/order/status?orderId=${orderId}`);
+}
+// 获取预存状态
 export const getStoreStatus = (storeId) => {
   return api.get(`/sys/store/status?storeId=${storeId}`);
 }
 
-// 获取支付回掉
-export const aliPayNotify = (param) => {
-  console.log("param==", param)
-  return api.post(`/aliPay/notify`, param);
-}
+// // 获取支付回掉
+// export const aliPayNotify = (param) => {
+//   console.log("param==", param)
+//   return api.post(`/aliPay/notify`, param);
+// }
 
-// 获取支付回掉
-export const wxPayNotify = (param) => {
-  console.log("param==", param)
-  return api.post(`/wxPay/notify`, param);
-}
+// // 获取支付回掉
+// export const wxPayNotify = (param) => {
+//   console.log("param==", param)
+//   return api.post(`/wxPay/notify`, param);
+// }
 
 // 获取支付回掉
 export const unionPayNotify = (param) => {
