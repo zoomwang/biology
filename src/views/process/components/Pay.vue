@@ -49,7 +49,7 @@ const getQrCode = async() => {
 const roll = () => {
   interval.value = setInterval(async () => {
     const res = await getOrderStatus(props.orderId);
-    if (res?.code == 0) {
+    if (res?.code == 0 && res?.data > 1) {
       isPaySuccess.value = true;
       clearInterval(interval.value);
     }
