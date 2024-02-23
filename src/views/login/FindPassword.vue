@@ -97,7 +97,7 @@ const { resetFields, validate, validateInfos } = useForm(
         <a-input v-model:value="formState.mobile" placeholder="请输入您注册时的手机号码" />
       </a-form-item>
       <a-form-item label="验证码" v-bind="validateInfos.code">
-        <a-input class="f-fl" style="width: 282px" v-model:value="formState.code" placeholder="请输入验证码" />
+        <a-input class="f-fl" style="width: 270px" v-model:value="formState.code" placeholder="请输入验证码" />
         <a-button style="width:130px" class="f-fr" @click="getVerifiCode" :disabled="isSendCode">
           <span class="s-gauncode" v-if="!isSendCode"
             >获取验证码</span

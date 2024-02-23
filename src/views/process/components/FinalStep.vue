@@ -66,7 +66,7 @@ const getTicketLists = async() => {
 const submit = async () => {
   if (formState.payType == 0) {
     // payVisible.value = true;
-    if (total > amount.value) {
+    if (total > amount) {
       notification.error({
         message: "注意",
         description: "预存金额不足，请前往预存",
@@ -100,7 +100,7 @@ const getUserCredit = async () => {
 try {
     const res = await getCredit();
     if (res?.code == 0) {
-      credit = res?.credit
+      credit = res?.data
     }
   } catch (err) {}
 }
@@ -108,7 +108,7 @@ const getUserAmount = async () => {
   try {
     const res = await getAmount();
     if (res?.code == 0) {
-      amount = res?.credit;
+      amount = res?.data;
     }
   } catch (err) {}
 }
@@ -143,7 +143,7 @@ onMounted(() => {
       >
         <template v-for="item in costDetail.value" :key="item">
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
-          <p v-if="item.label == '优惠券'">
+          <!-- <p>
             <a-select
               ref="select"
               v-model:value="formState.couponId"
@@ -154,8 +154,20 @@ onMounted(() => {
               <a-select-option v-for="item in ticketsInfo.value" :value="item.id">{{ item.name }}</a-select-option>
             </a-select>
             {{item.label}}: {{item.value}}
-          </p>
+          </p> -->
         </template>
+        <p>
+          优惠券选择：
+            <a-select
+              ref="select"
+              v-model:value="formState.couponId"
+              style="width: 120px"
+              placeholder="优惠券选择"
+              @change="handleChange"
+            >
+              <a-select-option v-for="item in ticketsInfo.value" :value="item.id">{{ item.name }}</a-select-option>
+            </a-select>
+          </p>
         <a-divider />
         <p class="wait_pay">待支付： <span>￥{{total}}</span></p>
       </div>

@@ -18,26 +18,26 @@ const router = createRouter({
       path: "/",
       // redirect: { name: 'login' }
     },
-    { path: "/process/:id", component: import("../views/process/Index.vue") },
+    { path: "/process/:id", component: () => import("../views/process/Index.vue") },
     {
       path: "/process/index",
       name: "index",
-      component: import("../views/process/Index.vue"),
+      component: () => import("../views/process/Index.vue"),
     },
     {
       path: "/process/order",
       name: "order",
-      component: import("../views/process/Order.vue"),
+      component: () => import("../views/process/Order.vue"),
     },
     {
       path: "/process/detail",
       name: "detail",
-      component: import("../views/process/Detail.vue"),
+      component: () => import("../views/process/Detail.vue"),
     },
     {
       path: "/home/login",
       name: "login",
-      component: import("../views/login/Login.vue"),
+      component: () => import("../views/login/Login.vue"),
     },
     {
       path: "/home/register",
