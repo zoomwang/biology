@@ -16,7 +16,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      // redirect: { name: 'login' }
+      redirect: { name: 'userinfo' }
     },
     { path: "/process/:id", component: () => import("../views/process/Index.vue") },
     {
