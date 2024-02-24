@@ -119,9 +119,9 @@ const { resetFields, validate, validateInfos } = useForm(
               />
             </a-form-item>
           </div>
-          <div class="l-item">
+          <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span> 验证码：</div>
-            <a-form-item style="height: 40px">
+            <a-form-item style="height: 40px;" class="f-fl">
               <div class="code-content clear" style="overflow: hidden; height: 60px">
                 <a-form-item v-bind="validateInfos.code" class="f-fl">
                     <a-input
@@ -137,7 +137,7 @@ const { resetFields, validate, validateInfos } = useForm(
                   ghost
                   :disabled="isSendCode"
                   class="b-base b-gaincode f-fl"
-                  style="width: 120px; text-align: center; padding: 0"
+                  style="width: 120px; margin-left: 10px;text-align: center; padding: 0"
                 >
                   <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
                   <span class="t-countdown" v-else
