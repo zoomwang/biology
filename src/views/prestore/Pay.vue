@@ -50,7 +50,7 @@ const roll = () => {
   let res;
   interval.value = setInterval(async () => {
     res = await getStoreStatus(props.orderId);
-    if (res?.code == 0 && res?.data > 1) {
+    if (res?.code == 0 && res?.data == 1) {
       isPaySuccess.value = true;
       clearInterval(interval.value);
     }
