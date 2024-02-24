@@ -9,14 +9,6 @@ import {
   onMounted,
   defineProps,
 } from "vue";
-import {
-  CalendarTwoTone,
-  DeleteTwoTone,
-  PlusSquareTwoTone,
-  QuestionCircleTwoTone,
-  EnvironmentOutlined,
-  UploadOutlined,
-} from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import areaData from "../../../public/area.js";
 import { Form, Modal } from "ant-design-vue";
@@ -50,7 +42,7 @@ const getOrderLists = async () => {
       item.value = item.orderId;
       item.label = item.remark;
     });
-    orderOptions = res.data;
+    orderOptions = res.data.list;
   }
 };
 
