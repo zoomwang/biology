@@ -144,6 +144,7 @@ const cancelOrders = async (orderId) => {
       orderId,
     });
     if (res?.code == 0) {
+      getOrderList();
       notification.success({
         description: "取消订单成功",
       });

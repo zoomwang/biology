@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, reactive, onMounted, onUpdated, onUnmounted} from "vue";
 import { jstopdf, formatTime } from "@/utils/index";
-import { payQrcodeStore, aliPayNotify, wxPayNotify, unionPayNotify, getStoreStatus } from "@/services/order";
+import { payQrcodeStore, getStoreStatus } from "@/services/order";
 import QRCode from 'qrcode';
 
 const isPaySuccess = ref(false);

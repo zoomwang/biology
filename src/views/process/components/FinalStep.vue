@@ -172,7 +172,7 @@ onMounted(() => {
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
           <p class="wait_pay" v-if="item.label == '支付金额'">待支付： <span>￥{{item.value}}</span></p>
         </template>
-        <p>
+        <!-- <p>
           优惠券选择：
             <a-select
               ref="select"
@@ -183,7 +183,7 @@ onMounted(() => {
             >
               <a-select-option v-for="item in ticketsInfo.value" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
             </a-select>
-          </p>
+          </p> -->
         <a-divider />
       </div>
     </a-card>

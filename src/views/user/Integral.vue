@@ -179,8 +179,6 @@ const getOrderLists = async function () {
     <a-modal v-model:visible="visible" title="积分规则" @ok="handleOk">
       <p>将于2022年8月31日23:59:59，清理2021年8月31日（包含8月31日）及之前所有获得并未使用的积分。至此之后，将于每年8月31日23:59:59清除前一年8月31日（包含8月31日）及之前获得并未使用的积分。</p>
     </a-modal>
-    <a-modal v-model:visible="visible" title="积分规则" @ok="handleOk">
-    </a-modal>
   </div>
 </template>
 <style lang="scss" scoped>
