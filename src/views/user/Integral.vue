@@ -176,8 +176,11 @@ const getOrderLists = async function () {
         </template>
       </a-table>
     </a-card>
-    <a-modal v-model:visible="visible" title="积分规则" @ok="handleOk">
-      <p>将于2022年8月31日23:59:59，清理2021年8月31日（包含8月31日）及之前所有获得并未使用的积分。至此之后，将于每年8月31日23:59:59清除前一年8月31日（包含8月31日）及之前获得并未使用的积分。</p>
+    <a-modal v-model:visible="visible" title="【易研易测积分活动宣传单】" @ok="handleOk">
+      <p></p>
+      <p>🚀 **积分奖励计划** 🚀</p>
+      <p>- **一元一积分，福利随意选：** 每当您委托我们完成一项测试订单，便能根据消费金额获赋相应积分。每消费1元，即可获得1积分的奖励。</p>
+      <p>- **积分用途丰富：** 积分可以用于抵扣后续检测费用、兑换京东礼品卡，以及各种精美礼物，更多精彩用途，待您探索。</p>
     </a-modal>
   </div>
 </template>
