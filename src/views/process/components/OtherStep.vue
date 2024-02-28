@@ -91,6 +91,7 @@ let formState = reactive({
   id: id - 0,
   itemname: id -0,
   type,
+  remark: "",
   officeId: 1,
   magnetism: 0,
   globalProblem: {
@@ -224,7 +225,7 @@ const activeKey = ref(["2", "3", "4", "5", "6"]);
 const canNext = () => {
   validate()
     .then(() => {
-      // debugger
+      console.log(formState)
       emit("next", formState);
     })
     .catch((error) => {
@@ -798,8 +799,8 @@ onMounted(async () => {
             header="留言"
             :disabled="false"
           >
-            <a-form-item label="实验留言" class="no-margin">
-              <a-textarea v-model:value="formState.remark" />
+            <a-form-item label="实验留言" class="no-margin" v-bind="validateInfos.remark" >
+              <a-textarea v-model:value="formState.remark"  />
             </a-form-item>
           </a-collapse-panel>
         </a-collapse>

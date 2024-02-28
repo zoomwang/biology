@@ -39,7 +39,6 @@ const getQrCode = async() => {
       console.log(url)
     })
     .catch(err => {
-      debugger
       console.error(err)
     })
   } 

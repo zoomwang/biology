@@ -35,7 +35,7 @@ const download = () => {
         <a-descriptions-item label="运费支付方式">{{['到付', '自付'][props?.orderInfo?.freightMode]}}</a-descriptions-item>
         <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
         <a-descriptions-item label="项目名称">{{props?.orderInfo?.itemname}}</a-descriptions-item>
-        <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item>
+        <!-- <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item> -->
         <a-descriptions-item label="联系人">{{props?.orderInfo?.contactName}}</a-descriptions-item>
         <a-descriptions-item label="联系号码">{{props?.orderInfo?.contactsPhone}}</a-descriptions-item>
         <a-descriptions-item label="实验留言">{{props?.orderInfo?.remark}}</a-descriptions-item>

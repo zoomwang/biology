@@ -11,9 +11,9 @@ let imrUrl = reactive({
   value: ''
 });
 
-const props = defineProps(["props", 'payType', 'orderId']);
+const props = defineProps(["props", 'payType', 'orderId', 'orderInfo']);
 watch(props, async (newdata, olddata) => {
-  getQrCode();
+  getQrCode()
 })
 
 const download = () => {
@@ -121,11 +121,11 @@ onUnmounted(() => {
     </div>
     <div id="download" style="position: absolute; top: -9999px;width:700px">
       <a-descriptions title="预约单" bordered :column="2">
-        <a-descriptions-item label="订单号">{{props?.orderInfo?.orderId}}</a-descriptions-item>
+        <a-descriptions-item label="订单号">{{props?.orderId}}</a-descriptions-item>
         <a-descriptions-item label="运费支付方式">{{['到付', '自付'][props?.orderInfo?.freightMode]}}</a-descriptions-item>
         <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
         <a-descriptions-item label="项目名称">{{props?.orderInfo?.itemname}}</a-descriptions-item>
-        <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item>
+        <!-- <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item> -->
         <a-descriptions-item label="联系人">{{props?.orderInfo?.contactName}}</a-descriptions-item>
         <a-descriptions-item label="联系号码">{{props?.orderInfo?.contactsPhone}}</a-descriptions-item>
         <a-descriptions-item label="实验留言">{{props?.orderInfo?.remark}}</a-descriptions-item>
