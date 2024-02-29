@@ -18,12 +18,12 @@ defineProps({
         color: rgba(0, 0, 0, 0.65);
       "
     >
-      —— 科学指南针·中国大型科研服务机构 ——
+      —— 易研易测 ——
     </p>
     <p
       style="text-align: center; color: rgba(0, 0, 0, 0.45); line-height: 20px"
     >
-      Copyright 杭州研趣信息技术有限公司 All Rights Reserved
+      Copyright  All Rights Reserved
       <span style="margin-left: 8px">服务热线：400-831-0631</span>
     </p>
   </div>
