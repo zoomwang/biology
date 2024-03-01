@@ -69,12 +69,12 @@ export function copy(text) {
 
 export function formatTime(time) {
   const date = new Date(time); // 获取当前时间
-  const year = date.getFullYear(); // 获取年份
-  const month = date.getMonth() + 1; // 获取月份（注意月份是从0开始的）
-  const day = date.getDate(); // 获取日期
-  const hours = date.getHours(); // 获取小时
-  const minutes = date.getMinutes(); // 获取分钟
-  const seconds = date.getSeconds(); // 获取秒数
+  const year = date.getUTCFullYear(); // 获取年份
+  const month = date.getUTCMonth() + 1; // 获取月份（注意月份是从0开始的）
+  const day = date.getUTCDate(); // 获取日期
+  const hours = date.getUTCHours(); // 获取小时
+  const minutes = date.getUTCMinutes(); // 获取分钟
+  const seconds = date.getUTCSeconds(); // 获取秒数
   const formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
   return formattedDate;
 }
