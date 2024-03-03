@@ -38,6 +38,7 @@ const handleChange = (info) => {
       :file-list="fileList"
       @change="handleChange"
       :headers="header"
+      accept=".doc,.docx,.xml,.pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     >
       <a-button>
         <upload-outlined></upload-outlined>

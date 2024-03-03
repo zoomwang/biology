@@ -16,6 +16,7 @@ const emit = defineEmits(["save", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
 import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
+import UploadFile from "@/components/UploadFile.vue";
 
 const useForm = Form.useForm;
 const formRef = ref();
@@ -215,10 +216,7 @@ const labelCol = {
 let numberList = ref([[1]]);
 
 const readme = ref([
-  "啊看黄金时代卡是多久啊",
-  "啊看黄金时代卡是多久啊",
-  "啊看黄金时代卡是多久啊",
-  "啊看黄金时代卡是多久啊",
+  "暂无",
 ]);
 const activeKey = ref(["2", "3", "4", "5", "6"]);
 
@@ -408,7 +406,7 @@ onMounted(async () => {
                 />
               </a-form-item>
               <a-form-item label="上传文件" class="upload">
-                <a-upload
+                <!-- <a-upload
                   v-model:file-list="formState.sampleInfo[index].uploadFile"
                   name="file"
                   :multiple="true"
@@ -420,7 +418,14 @@ onMounted(async () => {
                     <upload-outlined></upload-outlined>
                     点击上传
                   </a-button>
-                </a-upload>
+                </a-upload> -->
+                <UploadFile
+                :onSuccess="
+                  (url) => {
+                    formState.sampleInfo[index].uploadFile = url;
+                  }
+                "
+              />
               </a-form-item>
             </a-collapse-panel>
           </template>
@@ -431,7 +436,14 @@ onMounted(async () => {
                 v-bind="validateInfos.sampleFormUrl"
                 class="no-margin"
               >
-                <a-upload
+                <UploadFile
+                  :onSuccess="
+                    (url) => {
+                      validateInfos.sampleFormUrl = url
+                    }
+                  "
+                />
+                <!-- <a-upload
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   directory
                 >
@@ -439,7 +451,7 @@ onMounted(async () => {
                     <UploadOutlined />
                     点击上传送样单
                   </a-button>
-                </a-upload>
+                </a-upload> -->
               </a-form-item>
             </a-collapse-panel>
             <a-collapse-panel
