@@ -87,6 +87,15 @@ onMounted(() => {
               >
                 申请预存
               </a-button>
+              <!-- <a-button
+                type="primary"
+                style="margin-left:55px"
+                @click="() => {
+                  router.push({ path: `/user/userinfo`, query: { selectedKeys: 10 }});
+                }"
+              >
+                预存记录
+              </a-button> -->
             </li>
             <li>
               <p class="salary-title">我的积分</p>
