@@ -685,8 +685,8 @@ onMounted(() => {
               >
               </a-input>
             </a-form-item>
+            <div class="t-red mail-tips" style="margin-left: 10px;">请输入邮箱</div>
           </div>
-          <div class="t-red mail-tips">请输入邮箱</div>
         </div>
       </div>
       <div class="m-button">
@@ -696,6 +696,12 @@ onMounted(() => {
             class="submit-button"
             @click.prevent="onSubmit"
             >提交预存申请</a-button
+          >
+          <a-button
+            type="primary"
+            class="submit-button"
+            @click.prevent="onSubmit"
+            >立即支付</a-button
           >
         </div>
       </div>

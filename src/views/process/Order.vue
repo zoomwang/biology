@@ -1,11 +1,11 @@
 <script setup>
 import { ref, computed, reactive, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-// import FirstStep from "./components/FirstStep.vue";
 import OtherStep from "./components/OtherStep.vue";
 import FinalStep from "./components/FinalStep.vue";
 import { getOrderCostCalc, getOfficeInfo, addOrder, draftSave } from "@/services/process";
 import { notification } from "ant-design-vue";
+import router from '../../router';
 
 const current = ref(0);
 const route = useRoute();
@@ -34,7 +34,8 @@ const next = async(data) => {
   await getOrderCostCalcs(data);
   if (res?.code == 0) {
     order.id = res.data;
-    current.value++;
+    router.push({ path: `/user/userinfo`, query: { selectedKeys: 10 }});
+    // current.value++;
   } else {
     // order.id = '1212';
   }
@@ -67,7 +68,6 @@ const save = async (data) => {
       <a-step title="第二步" description="支付信息" />
     </a-steps>
     <div class="steps-content">
-      <!-- <FirstStep v-if="current == 0 && type == 0" :id="id" :addressList="addressList" @update="update" @next="next" @save="save" /> -->
       <OtherStep v-if="current == 0" :addressList="addressList" @update="update" @next="next" @save="save" />
       <FinalStep v-if="current == 1 && order.id" :cost="cost.value" :orderId="order.id" :orderData="orderData" />
     </div>
