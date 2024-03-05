@@ -121,11 +121,25 @@ onUnmounted(() => {
     </div>
     <div id="download" style="position: absolute; top: -9999px;width:700px">
       <a-descriptions title="预约单" bordered :column="2">
+        <a-descriptions-item label="项目名称">{{props?.itemname}}</a-descriptions-item>
+        <a-descriptions-item label="订单号">{{props?.orderId}}</a-descriptions-item>
+        <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
+        <a-descriptions-item label="备注">{{props?.orderInfo?.remark}}</a-descriptions-item>
+        <a-descriptions-item label="样品信息" v-for="item in props?.orderInfo?.sampleInfo" :key="item">
+          样品编号:{{item.numberList.join(',')}}
+          <br />
+          样品数量:{{item.count}}
+          <br />
+          {{item.uploadFile ? '对接单:' + item.uploadFile : ''}}
+        </a-descriptions-item>
+      </a-descriptions>
+    </div>
+    <!-- <div id="download" style="position: absolute; top: -9999px;width:700px">
+      <a-descriptions title="预约单" bordered :column="2">
         <a-descriptions-item label="订单号">{{props?.orderId}}</a-descriptions-item>
         <a-descriptions-item label="运费支付方式">{{['到付', '自付'][props?.orderInfo?.freightMode]}}</a-descriptions-item>
         <a-descriptions-item label="是否需要回收">{{props?.orderInfo?.needRecovery ? '需要': '不需要'}}</a-descriptions-item>
         <a-descriptions-item label="项目名称">{{props?.orderInfo?.itemname}}</a-descriptions-item>
-        <!-- <a-descriptions-item label="回收地址">{{address}}</a-descriptions-item> -->
         <a-descriptions-item label="联系人">{{props?.orderInfo?.contactName}}</a-descriptions-item>
         <a-descriptions-item label="联系号码">{{props?.orderInfo?.contactsPhone}}</a-descriptions-item>
         <a-descriptions-item label="实验留言">{{props?.orderInfo?.remark}}</a-descriptions-item>
@@ -150,7 +164,7 @@ onUnmounted(() => {
           预约市场:{{item.hours}}
         </a-descriptions-item>
       </a-descriptions>
-    </div>
+    </div> -->
   </div>
 </template>
 <style lang="scss" scoped>

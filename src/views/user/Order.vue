@@ -245,11 +245,11 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
           @click="showDrawer(record)"
           >立即支付</a-button
         >
-        <br v-if="record.status <= 1" />
+        <br v-if="record.status <=2" />
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
-        <br v-if="record.status <= 1" />
+        <br />
         <a-popconfirm
           title="你确认要取消订单吗?"
           ok-text="确定"

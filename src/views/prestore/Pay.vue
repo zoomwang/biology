@@ -17,7 +17,7 @@ const props = defineProps(["props", 'payType', 'orderId']);
 const { amount, type, rebate, remind, demand, mailBox } = props.props;
 
 const download = () => {
-  jstopdf("download", "对账单");
+  jstopdf("download", "预存单");
 };
 
 const onRefrush = () => {
@@ -111,11 +111,11 @@ onUnmounted(() => {
           <p>预存单号为：{{ props.orderId }}</p>
           <p>预存金额：{{  amount }}</p>
           <p>预约时间：{{ formatTime(Date.now()) }}</p>
-          <p>
+          <!-- <p>
             <a-button style="width: 220px" type="primary" @click="download"
               >下载预存单</a-button
             >
-          </p>
+          </p> -->
         </template>
       </a-result>
     </div>

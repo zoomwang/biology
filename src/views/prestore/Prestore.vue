@@ -711,13 +711,13 @@ onMounted(() => {
           <a-button
             type="primary"
             class="submit-button"
-            @click.prevent="onSubmit"
+            @click.prevent="onSubmit(true)"
             >提交预存申请</a-button
           >
           <a-button
             type="primary"
             class="submit-button"
-            @click.prevent="onSubmit"
+            @click.prevent="onSubmit(false)"
             >立即支付</a-button
           >
         </div>

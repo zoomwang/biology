@@ -10,11 +10,6 @@ import {
 } from "vue";
 import { isLogged } from "../../services/user";
 import FinalStep from "../process/components/FinalStep.vue";
-import {
-  getOrderLists,
-  cancelOrder,
-  getOrderInfo,
-} from "../../services/process";
 import { getStoreList, cancelStoreRefund } from "@/services/prestore";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -24,7 +19,6 @@ let orderData = reactive({
 const drawerVisible = ref(false);
 const showDrawer = async (record) => {
   orderData = record;
-  await getOrderInfos(record.orderId);
 };
 const orderDetail = ref({});
 const visible = ref(false);
@@ -144,11 +138,9 @@ const getOrderInfos = async (params, type) => {
   } catch (err) {}
 };
 
-const cancelOrders = async (orderId) => {
+const cancelOrders = async (record) => {
   try {
-    const res = await getStoreRefund({
-      storeId: orderId,
-    });
+    const res = await cancelStoreRefund(record);
     if (res?.code == 0) {
       getOrderList();
       notification.success({
@@ -237,16 +229,16 @@ const invoiceTypes = ["普票", "专票"];
           >立即支付</a-button
         > -->
         <br v-if="record.status <= 1" />
-        <a-button type="text" @click="showModal(record)"
+        <a-button type="link" @click="showModal(record)"
           >订单详情</a-button
         >
          <br v-if="record.status <= 1" />
         <a-popconfirm
           title="你确认要取消订单吗?"
           ok-text="确定"
-          v-if="record.status >= 1"
+          v-if="record.status == 1"
           cancel-text="取消"
-          @confirm="cancelOrders(record.storeId)"
+          @confirm="cancelOrders(record)"
           @cancel="cancel"
         >
           <a-button danger style="margin-bottom: 5px" type="text">取消订单</a-button>

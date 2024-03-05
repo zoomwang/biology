@@ -86,7 +86,7 @@ const submit = async () => {
     //   });
     //   return;
     // } else {
-      payVisible.value = true;
+      // payVisible.value = true;
       const res = await payAmount({
         orderId: props.orderId
       });
@@ -100,7 +100,7 @@ const submit = async () => {
   }
 
   if (formState.payType == 4) {
-    payVisible.value = true;
+    // payVisible.value = true;
     const res = await payCredit({
       orderId: props.orderId
     });
@@ -232,6 +232,7 @@ onMounted(() => {
                   title="不可选" />
                 <span style="font-size: 20px">银联支付</span>
               </a-radio>
+              <br />
               <a-radio value="0"
                 ><img
                   src="//cdn0.shiyanjia.com/c/images/payment-coupon.png"
@@ -254,17 +255,12 @@ onMounted(() => {
                   src="@/assets/order/payment-credit.png"
                   title="不可选" />
                 <span style="font-size: 20px">信用支付</span>
-                <span
+                <!-- <span
                   style="line-height: 48px; padding-left: 20px"
                 >
                   先测试，后付费
-                  <img
-                    class="credit"
-                    id="club_prize_icon"
-                    src="//cdn0.shiyanjia.com/c/2023/images/club/prizeIcon.png"
-                    alt=""
-                  /> </span
-              ></a-radio>
+                </span> -->
+              </a-radio>
             </a-radio-group>
           </div>
         </div>
