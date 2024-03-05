@@ -186,6 +186,9 @@ const onSubmit = () => {
           // });
           orderId.value = data.data;
           payVisible.value = true;
+          // notification.success({
+          //   description: "提交预存申请成功",
+          // });
         }
       } catch (err) {
         alert(err);
@@ -284,6 +287,12 @@ onMounted(() => {
                 class="b-base-button"
                 :class="{ 'b-base-button-active': !formState.welfare }"
                 >测试费</a-button
+              >
+              <a-button
+                type="primary"
+                class="b-base-button"
+                :class="{ 'b-base-button-active': !formState.welfare }"
+                >京东卡</a-button
               >
             </li>
             <li class="clear l-payment">

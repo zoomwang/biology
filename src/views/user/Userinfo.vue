@@ -8,11 +8,11 @@ import { notification, Form } from "ant-design-vue";
 import $localStorage from "@/hooks/localStorage";
 import UploadFile from "@/components/UploadFile.vue";
 import moment from 'moment';
-import { formatTime } from "../../utils/index";
+import { formatLocalTime } from "../../utils/index";
+import dayjs from 'dayjs';
 
 const dateFormat = 'YYYY-MM-DD';
 const monthFormat = 'YYYY/MM';
-const end = ref(moment('2015/01', monthFormat))
 const useForm = Form.useForm;
 let formState = reactive({
   id: "",
@@ -21,7 +21,6 @@ let formState = reactive({
   userIdentity: "",
   university: "",
   additionUrl: "",
-  end: ref(moment('2015/01', monthFormat))
 });
 const schoolState = ref([]);
 const userId = ref('');
@@ -82,8 +81,8 @@ const getUserInfo = async function () {
       res.data.address = Array.isArray(address) && address.map((item) => {
         return `${item}`;
       });
-      res.data.studyStart = ref(moment(formatTime(res?.data?.studyStart, true), monthFormat));
-      res.data.studyEnd = ref(moment(formatTime(res?.data?.studyEnd, true), monthFormat));
+      res.data.studyStart = ref(dayjs(formatLocalTime(res?.data?.studyStart, true), monthFormat));
+      res.data.studyEnd = ref(dayjs(formatLocalTime(res?.data?.studyEnd, true), monthFormat));
       formState = Object.assign(formState, res.data);
       userId.value = res.data.id;
       localStorage.setItem('userName', res.data.username);
@@ -235,7 +234,6 @@ onMounted(() => {
         <a-form-item class="f-fl">
           <a-space direction="vertical">
             <a-month-picker
-              :defaultPickerValue="formState.studyStart"
               :disabled="!canEdit"
               style="width: 300px"
               :format="monthFormat"
@@ -253,7 +251,7 @@ onMounted(() => {
               :disabled="!canEdit"
               style="width: 300px"
               :format="monthFormat"
-              v-model:value="formState.end"
+              v-model:value="formState.studyEnd"
               placeholder="请选择毕业年份"
             />
           </a-space>

@@ -76,7 +76,20 @@ export function formatTime(time, isGetMonth) {
   const minutes = date.getUTCMinutes(); // 获取分钟
   const seconds = date.getUTCSeconds(); // 获取秒数
   const formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
-  const formatMonth = year + '/' + month;
+  const formatMonth = year + '/' + (month >= 10 ? month : `0${month}`);
+  return !isGetMonth ? formattedDate : formatMonth;
+}
+
+export function formatLocalTime(time, isGetMonth) {
+  const date = new Date(time); // 获取当前时间
+  const year = date.getFullYear(); // 获取年份
+  const month = date.getMonth() + 1; // 获取月份（注意月份是从0开始的）
+  const day = date.getDate(); // 获取日期
+  const hours = date.getHours(); // 获取小时
+  const minutes = date.getMinutes(); // 获取分钟
+  const seconds = date.getSeconds(); // 获取秒数
+  const formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+  const formatMonth = year + '/' + (month >= 10 ? month : `0${month}`);
   return !isGetMonth ? formattedDate : formatMonth;
 }
 

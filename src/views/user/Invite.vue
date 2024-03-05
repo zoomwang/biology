@@ -12,6 +12,7 @@ const data = reactive({
   // withdraw: 20,
   // withdrawn: 20,
 });
+const origin = location.origin;
 const isShow = ref(true);
 
 const getAmounts = async function () {
@@ -76,7 +77,7 @@ onMounted(() => {
       </a-card>
       <a-card title="邀请返利" style="width: 100%">
         <p>
-          当好友注册后下单，您可获得8%奖励，好友可得：<span style="color: red">200元新人券</span>
+          3个月内完成金额<span style="color: red">8%</span>（需还款）
         </p>
         <div class="other-way-item" style="margin-bottom: 32px">
           <p>邀请方式：将您的专属邀请链接发送给您的好友；</p>
@@ -85,7 +86,7 @@ onMounted(() => {
             class="btn invite-link"
             style="margin: 14px 0px 0px 0px"
           >
-            {{`https://www.test.com/home/login?invitecode=${$localStorage.getItem("phone")}`}}
+            {{`${origin}/home/login?invitecode=${$localStorage.getItem("phone")}`}}
           </a>
           <a
             id="copyInviteLink"
@@ -93,7 +94,7 @@ onMounted(() => {
             class="btn hover"
             style="margin: 14px 0px 0px 40px"
             @click="() => {
-              copy(`https://www.test.com/home/login?invitecode=${$localStorage.getItem('phone')}`)
+              copy(`${origin}/home/login?invitecode=${$localStorage.getItem('phone')}`)
             }"
             >复制链接</a
           >
@@ -101,9 +102,9 @@ onMounted(() => {
       </a-card>
       <a-card title="活动规则" style="width: 100%">
       <div class="invite-cont invite-rules" ><p>1.
-						自2020年12月01日邀请好友活动规则升级改版，原被邀请好友前2个月内完成订单金额的8%作为返利，由推荐人和被邀请好友平分，各享4%返利；升级后调整为：被邀好友前3个月内下单订单金额的8%作为返利，推荐人可享8%返利。
-					</p> <p>2. 通过分享专属链接、专属邀请二维码、专属邀请码（手机号）邀请好友注册，即成为你的推荐用户。</p> <p>3.
-						邀请好友下单后，将按好友订单金额的8%作为返利，推荐人获得8%返利，以现金方式返利到推荐人的零钱包中并（订单完成15天后）可提现。用户可在，“个人中心&gt;邀请好友”里查看。
+						被邀好友前3个月内下单订单金额的8%作为返利，推荐人可享8%返利。
+					</p> <p>2. 通过分享专属链接、专属邀请码（手机号）邀请好友注册，即成为你的推荐用户。</p> <p>3.
+						邀请好友下单后，将按好友订单金额的8%作为返利，推荐人获得8%返利，以现金方式返利到推荐人的零钱包中并（订单还款后）可提现。用户可在，“个人中心&gt;邀请好友”里查看。
 					</p> <p>4. 推荐的好友越多，好友前三个月下单金额越多，获得的返利就越多。</p></div>
     </a-card>
     </div>
