@@ -500,9 +500,8 @@ onMounted(async () => {
                 </a-input>
               </a-form-item>
               <a-form-item
-                label="实验目的"
+                label="特殊备注"
                 :rules="{
-                  required: true,
                   message: '请输入',
                   trigger: 'change',
                 }"

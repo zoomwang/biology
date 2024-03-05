@@ -3,6 +3,7 @@ import { ref, computed, reactive, defineComponent, watch } from "vue";
 import { useStorage } from "@/hooks/useStorage";
 import $localStorage from "@/hooks/localStorage";
 import Menu from "./components/menu.vue";
+import { useRoute, useRouter } from "vue-router";
 import banner from "../../assets/home_benner.png";
 const key = useStorage("menu");
 const state = reactive({
@@ -11,6 +12,7 @@ const state = reactive({
   selectedKeys: ["userData"],
   openKeys: ["userData"],
 });
+const route = useRoute();
 const menuType = ref($localStorage.getItem("menu"));
 watch(key, async (newdata, olddata) => {
   menuType.value = newdata;
@@ -20,7 +22,7 @@ watch(key, async (newdata, olddata) => {
 <template>
   <!-- 用户注册资料 -->
   <main class="d-flex home-wrap" style="position: relative">
-    <div style="position: relative; width: 1280px; left: -40px">
+    <div v-if="route.path.includes('/process/1') || route.path.includes('/process/index')" style="position: relative; width: 1280px; left: -40px">
       <img :src="banner" width="1280" height="250" />
       <div data-v-5c81cf27="" class="bannerBottom">
         <div data-v-5c81cf27="" class="bannerBottomWrap">
@@ -558,7 +560,7 @@ watch(key, async (newdata, olddata) => {
         </div>
       </div>
     </div>
-    <Menu :type="menuType" />
+    <Menu v-else :type="menuType" />
   </main>
 </template>
 <style lang="scss">

@@ -9,6 +9,7 @@ const header = {
 };
 const fileList = ref([]);
 const handleChange = (info) => {
+  const fileMaxSize = 1024*1024*100
   let resFileList = [...info.fileList];
 
   // 1. Limit the number of uploaded files
@@ -20,6 +21,12 @@ const handleChange = (info) => {
     if (file.response) {
       // Component will show file.url as link
       file.url = file.response.url;
+    }
+    if (file.size > fileMaxSize) {
+      notification.error({
+        description: "上传文件大小超出100M限制",
+      });
+      return;
     }
     return file;
   });
