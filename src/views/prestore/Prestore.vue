@@ -286,12 +286,14 @@ onMounted(() => {
                 type="primary"
                 class="b-base-button"
                 :class="{ 'b-base-button-active': !formState.welfare }"
+                @click="changeField('welfare', 0)"
                 >测试费</a-button
               >
               <a-button
                 type="primary"
                 class="b-base-button"
-                :class="{ 'b-base-button-active': !formState.welfare }"
+                :class="{ 'b-base-button-active': formState.welfare == 1 }"
+                @click="changeField('welfare', 1)"
                 >京东卡</a-button
               >
             </li>

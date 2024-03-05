@@ -15,8 +15,8 @@ import {
   cancelOrder,
   getOrderInfo,
 } from "../../services/process";
+import { getStoreList, getStoreRefund } from "@/services/prestore";
 import { notification } from "ant-design-vue";
-// import moment from 'moment';
 import {formatTime} from "@/utils/index";
 
 let orderData = reactive({
@@ -24,7 +24,6 @@ let orderData = reactive({
 const drawerVisible = ref(false);
 const showDrawer = async (record) => {
   orderData = record;
-  debugger
   await getOrderInfos(record.orderId);
 };
 const orderDetail = ref({});
@@ -67,23 +66,26 @@ const orderColums = [
 
 const columns = [
   {
-    title: "项目名称",
-    dataIndex: "itemname",
-  },
-  {
-    title: "下单时间",
-    className: "column-money",
-    dataIndex: "createTime",
-  },
-  {
     title: "订单号",
-    dataIndex: "orderId",
+    dataIndex: "storeId",
   },
   {
-    title: "实付款",
-    dataIndex: "costInfo",
+    title: "预存福利",
+    dataIndex: "welfare",
     slots: {
-      customRender: "costInfo",
+      customRender: "welfare",
+    },
+  },
+  {
+    title: "预存金额",
+    className: "amount",
+    dataIndex: "amount",
+  },
+  {
+    title: "发票类型",
+    dataIndex: "invoiceType",
+    slots: {
+      customRender: "invoiceType",
     },
   },
   {
@@ -93,20 +95,23 @@ const columns = [
       customRender: "status",
     },
   },
+  {
+    title: "附件地址",
+    dataIndex: "additionUrl",
+    
+  },
+  {
+    title: "邮箱",
+    dataIndex: "mailBox",
+    
+  },
   // {
-  //   title: "发票状态",
-  //   dataIndex: "ticketStatus",
+  //   title: "操作",
+  //   key: "action",
   //   slots: {
-  //     customRender: "ticketStatus",
+  //     customRender: "action",
   //   },
   // },
-  {
-    title: "操作",
-    key: "action",
-    slots: {
-      customRender: "action",
-    },
-  },
 ];
 
 const labelCol = {
@@ -154,7 +159,7 @@ const cancelOrders = async (orderId) => {
 
 const getOrderList = async () => {
   try {
-    const res = await getOrderLists(param);
+    const res = await getStoreList(param);
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
     })
@@ -167,29 +172,14 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
+const menus = ["待支付", "已支付", "已退款"];
+const welfares = ["测试费", "京东卡"];
+const invoiceTypes = ["普票", "专票"];
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <!-- <a-tabs
-      v-model:activeKey="activeKey"
-      @change="
-        (tab) => {
-          param.status = tab;
-          getOrderList();
-        }
-      "
-    >
-      <a-tab-pane key="0" tab="全部订单"></a-tab-pane>
-      <a-tab-pane
-        v-for="(item, index) in menus"
-        :key="++index"
-        :tab="item"
-        force-render
-      ></a-tab-pane>
-    </a-tabs> -->
     <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="订单创建时间" :wrapperCol="{
         span: 7
@@ -201,14 +191,14 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
       }">
         <a-date-picker v-model:value="param.endTime" style="width:120px" />
       </a-form-item>
-      <a-form-item label="订单状态" :wrapperCol="{
+      <!-- <a-form-item label="订单状态" :wrapperCol="{
         span: 7
       }">
         <a-select v-model:value="param.status" style="width: 100px">
           <a-select-option value="0">全部订单</a-select-option>
           <a-select-option v-for="(item, index) in menus" :key="item" :value="++index">{{ item }}</a-select-option>
         </a-select>
-      </a-form-item>
+      </a-form-item> -->
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
         <a-button type="primary" @click="() => {
           getOrderList();
@@ -223,17 +213,17 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
     >
       <template #status="{ text }">
         <span>
-          {{ menus[--text] }}
+          {{ menus[text] }}
         </span>
       </template>
-      <template #costInfo="{ text }">
+      <template #welfare="{ text }">
         <span>
-          {{ text["支付金额"] }}
+          {{ welfares[text] }}
         </span>
       </template>
-      <template #ticketStatus="{ text }">
+      <template #invoiceType="{ text }">
         <span>
-          {{ ["无需开票", "无", "待申请"][text] }}
+          {{ invoiceTypes[text] }}
         </span>
       </template>
       <template #action="{ record }">
@@ -246,9 +236,9 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
           >立即支付</a-button
         > -->
         <!-- <br v-if="record.status <= 1" /> -->
-        <a-button type="text" @click="showModal(record.orderId)"
+        <!-- <a-button type="text" @click="showModal(record.storeId)"
           >订单详情</a-button
-        >
+        > -->
         <!-- <br v-if="record.status <= 1" />
         <a-popconfirm
           title="你确认要取消订单吗?"

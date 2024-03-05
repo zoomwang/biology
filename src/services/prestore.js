@@ -22,7 +22,11 @@ export const deleteInvoice = (param) => {
 }
 
 export const getStoreList = (param) => {
-  return api.get(`/sys/store/list`, param);
+  return api.post(`/sys/store/list`, param);
+}
+
+export const getStoreRefund = (param) => {
+  return api.get(`/sys/store/refund`, param);
 }
 
 export const publish = (param) => {
