@@ -310,12 +310,12 @@ onMounted(async () => {
     <a-form :model="formState" ref="formRef" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
-          <a-collapse-panel key="1" header="预约须知">
+          <!-- <a-collapse-panel key="1" header="预约须知">
             <p v-for="(item, index) in readme" :key="index">
               {{ ++index }}.{{ item }}
             </p>
             <template #extra><CalendarTwoTone /></template>
-          </a-collapse-panel>
+          </a-collapse-panel> -->
           <template v-if="type == '0'">
             <a-collapse-panel key="2" header="全局问题" :disabled="false">
               <a-form-item label="拍摄方式">

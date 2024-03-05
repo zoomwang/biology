@@ -8,8 +8,11 @@ import { notification, Form } from "ant-design-vue";
 import $localStorage from "@/hooks/localStorage";
 import UploadFile from "@/components/UploadFile.vue";
 import moment from 'moment';
+import { formatTime } from "../../utils/index";
 
 const dateFormat = 'YYYY-MM-DD';
+const monthFormat = 'YYYY/MM';
+const end = ref(moment('2015/01', monthFormat))
 const useForm = Form.useForm;
 let formState = reactive({
   id: "",
@@ -17,7 +20,8 @@ let formState = reactive({
   mobile: "",
   userIdentity: "",
   university: "",
-  additionUrl: ""
+  additionUrl: "",
+  end: ref(moment('2015/01', monthFormat))
 });
 const schoolState = ref([]);
 const userId = ref('');
@@ -47,6 +51,13 @@ const canEdit = ref(false);
 const onSubmit = async () => {
   try {
     formState.id = userId.value || 2;
+    if (formState.mobile == formState.inviterMobile) {
+      notification.error({
+        message: "",
+        description: "邀请人和当前账号重复，请重新输入",
+      });
+      return;
+    }
     const res = await editUser(formState);
     if (res.code == 0) {
       notification.success({
@@ -71,9 +82,8 @@ const getUserInfo = async function () {
       res.data.address = Array.isArray(address) && address.map((item) => {
         return `${item}`;
       });
-      res.data.studyStart = ref(moment(res?.data?.studyStart, dateFormat));
-      res.data.studyEnd = ref(moment(res?.data?.studyEnd, dateFormat));
-      // console.log(moment(res?.data?.studyStart).format())
+      res.data.studyStart = ref(moment(formatTime(res?.data?.studyStart, true), monthFormat));
+      res.data.studyEnd = ref(moment(formatTime(res?.data?.studyEnd, true), monthFormat));
       formState = Object.assign(formState, res.data);
       userId.value = res.data.id;
       localStorage.setItem('userName', res.data.username);
@@ -84,7 +94,15 @@ const getSchoolInfoInfo = async function () {
   try {
     const res = await getSchool();
     if (res?.code == 0) {
-      schoolState.value = res.data;
+      // schoolState.value = res.data;
+      const data1 = [];
+      res.data.forEach((item) => {
+        data1.push({
+          label: item.name,
+          value: item.id
+        })
+      })
+      schoolState.value = data1;
     }
   } catch (err) {}
 };
@@ -172,8 +190,12 @@ onMounted(() => {
       <div class="l-item clear">
         <div class="t-label f-fl">高校：</div>
         <a-form-item class="f-fl">
-          <a-select v-model:value="formState.university" :disabled="!canEdit">
-            <a-select-option v-for="item in schoolState" :value="item.id">{{ item.name }}</a-select-option>
+          <a-select showSearch optionFilterProp="label" :options="schoolState" :filterOption="(value,option) => {
+            if(option?.label?.includes(value)) {
+              return true;
+            }
+          }" v-model:value="formState.university" :disabled="!canEdit">
+            <!-- <a-select-option v-for="item in schoolState" :value="item.id">{{ item.name }}</a-select-option> -->
           </a-select>
         </a-form-item>
       </div>
@@ -216,6 +238,7 @@ onMounted(() => {
               :defaultPickerValue="formState.studyStart"
               :disabled="!canEdit"
               style="width: 300px"
+              :format="monthFormat"
               v-model:value="formState.studyStart"
               placeholder="请选择入学年份"
             />
@@ -229,7 +252,8 @@ onMounted(() => {
             <a-month-picker
               :disabled="!canEdit"
               style="width: 300px"
-              v-model:value="formState.studyEnd"
+              :format="monthFormat"
+              v-model:value="formState.end"
               placeholder="请选择毕业年份"
             />
           </a-space>

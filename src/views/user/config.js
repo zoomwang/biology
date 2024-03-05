@@ -65,6 +65,10 @@ export const menus = [{
   label: "发票管理",
   value: "8",
   type: "invoiceMenu"
+},{
+  label: "预存管理",
+  value: "11",
+  type: "storeMenu"
 }];
 
 export const identity = [{
