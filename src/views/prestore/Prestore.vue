@@ -167,7 +167,7 @@ const { resetFields, validate, validateInfos } = useForm(
   })
 );
 
-const onSubmit = () => {
+const onSubmit = (isApply) => {
   validate()
     .then(async (res) => {
       try {
@@ -181,10 +181,16 @@ const onSubmit = () => {
           ...formState,
         });
         if (data?.code == 0) {
-          // notification.success({
-          //   description: "预存成功",
-          // });
           orderId.value = data.data;
+          if (isApply) {
+            notification.success({
+              description: "提交预存申请成功",
+            });
+            setTimeout(() => {
+              router.push({ path: '/user/userinfo', query: { selectedKeys: 11 } })
+            }, 500)
+            return;
+          }
           payVisible.value = true;
           // notification.success({
           //   description: "提交预存申请成功",
