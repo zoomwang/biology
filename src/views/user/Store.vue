@@ -15,7 +15,7 @@ import {
   cancelOrder,
   getOrderInfo,
 } from "../../services/process";
-import { getStoreList, getStoreRefund } from "@/services/prestore";
+import { getStoreList, cancelStoreRefund } from "@/services/prestore";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 
@@ -28,8 +28,9 @@ const showDrawer = async (record) => {
 };
 const orderDetail = ref({});
 const visible = ref(false);
-const showModal = async (orderId) => {
-  await getOrderInfos(orderId, "detail");
+const showModal = async (record) => {
+  orderDetail.value =  record;
+  visible.value = true;
 };
 const handleOk = (e) => {
   console.log(e);
@@ -105,13 +106,13 @@ const columns = [
     dataIndex: "mailBox",
     
   },
-  // {
-  //   title: "操作",
-  //   key: "action",
-  //   slots: {
-  //     customRender: "action",
-  //   },
-  // },
+  {
+    title: "操作",
+    key: "action",
+    slots: {
+      customRender: "action",
+    },
+  },
 ];
 
 const labelCol = {
@@ -145,8 +146,8 @@ const getOrderInfos = async (params, type) => {
 
 const cancelOrders = async (orderId) => {
   try {
-    const res = await cancelOrder({
-      orderId,
+    const res = await getStoreRefund({
+      storeId: orderId,
     });
     if (res?.code == 0) {
       getOrderList();
@@ -235,21 +236,21 @@ const invoiceTypes = ["普票", "专票"];
           @click="showDrawer(record)"
           >立即支付</a-button
         > -->
-        <!-- <br v-if="record.status <= 1" /> -->
-        <!-- <a-button type="text" @click="showModal(record.storeId)"
+        <br v-if="record.status <= 1" />
+        <a-button type="text" @click="showModal(record)"
           >订单详情</a-button
-        > -->
-        <!-- <br v-if="record.status <= 1" />
+        >
+         <br v-if="record.status <= 1" />
         <a-popconfirm
           title="你确认要取消订单吗?"
           ok-text="确定"
-          v-if="record.status <= 2"
+          v-if="record.status >= 1"
           cancel-text="取消"
-          @confirm="cancelOrders(record.orderId)"
+          @confirm="cancelOrders(record.storeId)"
           @cancel="cancel"
         >
           <a-button danger style="margin-bottom: 5px" type="text">取消订单</a-button>
-        </a-popconfirm> -->
+        </a-popconfirm>
       </template>
     </a-table>
   </main>
@@ -260,58 +261,62 @@ const invoiceTypes = ["普票", "专票"];
     width="75%"
     v-model:visible="visible"
   >
-    <a-descriptions title="联系方式" bordered :column="2">
-      <a-descriptions-item label="联系人">{{
-        orderDetail.contactName
+    <a-descriptions title="订单基础信息" bordered :column="2">
+      <a-descriptions-item label="订单号">{{
+        orderDetail.storeId
       }}</a-descriptions-item>
-      <a-descriptions-item label="联系号码">{{
-        orderDetail.contactsPhone
+      <a-descriptions-item label="预存福利">{{
+        welfares[orderDetail.welfare]
       }}</a-descriptions-item>
-      <a-descriptions-item label="寄样地址">{{
-        orderDetail.officeDetailAddress
+      <a-descriptions-item label="预存金额">{{
+        orderDetail.amount
       }}</a-descriptions-item>
-      <a-descriptions-item label="运费支付方式">{{
-        ["到付", "自付"][orderDetail.freightMode]
+      <a-descriptions-item label="发票类型">{{
+        invoiceTypes[orderDetail.invoiceType]
       }}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions
-      title="支付金额"
+      title="更多信息"
       bordered
       :column="2"
       style="margin-top: 10px"
     >
-      <a-descriptions-item label="订单金额"
-        >¥{{ orderDetail.costInfo["订单金额"] }}</a-descriptions-item
+      <a-descriptions-item label="附件地址"
+        >{{ orderDetail.additionUrl }}</a-descriptions-item
       >
-      <a-descriptions-item label="优惠券抵扣"
-        >¥{{ orderDetail.costInfo["优惠券"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="样品回收费"
-        >¥{{ orderDetail.costInfo["样品回收费"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="运费"
-        >¥{{ orderDetail.costInfo["运费"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="支付金额"
-        >¥{{ orderDetail.costInfo["支付金额"] }}</a-descriptions-item
+      <a-descriptions-item label="备注"
+        >{{ orderDetail.remind }}</a-descriptions-item
       >
     </a-descriptions>
     <a-descriptions
-      title="订单要求"
+      title="发票信息"
       bordered
       :column="2"
       style="margin-top: 10px"
+      v-for="item in orderDetail.invoiceTitle"
     >
-      <a-descriptions-item label="样品是否要回收"
-        >¥{{
-          ["不需要", "需要"][orderDetail.needRecovery]
+      <a-descriptions-item  label="开户行帐号"
+        >{{
+          item.banksn
         }}</a-descriptions-item
       >
-      <a-descriptions-item label="实验留言">{{
-        orderDetail.remark
-      }}</a-descriptions-item>
+      <a-descriptions-item  label="发票抬头"
+        >{{
+          item.title
+        }}</a-descriptions-item
+      >
+      <a-descriptions-item  label="企业税号"
+        >{{
+          item.registrationo
+        }}</a-descriptions-item
+      >
+      <a-descriptions-item  label="开户行名称"
+        >{{
+          item.depositbank
+        }}</a-descriptions-item
+      >
     </a-descriptions>
-    <h3 style="margin-top: 10px">订单信息</h3>
+    <!-- <h3 style="margin-top: 10px">订单信息</h3>
     <a-card size="small" style="width: 100%">
       <a-table
         :dataSource="orderDetail.sampleInfo || []"
@@ -323,7 +328,7 @@ const invoiceTypes = ["普票", "专票"];
           </span>
         </template>
       </a-table>
-    </a-card>
+    </a-card> -->
   </a-drawer>
   <a-drawer
     title="订单支付"
