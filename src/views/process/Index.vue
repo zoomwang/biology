@@ -22,7 +22,13 @@ watch(key, async (newdata, olddata) => {
 <template>
   <!-- 用户注册资料 -->
   <main class="d-flex home-wrap" style="position: relative">
-    <div v-if="route.path.includes('/process/1') || route.path.includes('/process/index')" style="position: relative; width: 1280px; left: -40px">
+    <div
+      v-if="
+        route.path.includes('/process/1') ||
+        route.path.includes('/process/index')
+      "
+      style="position: relative; width: 1280px; left: -40px"
+    >
       <img :src="banner" width="1280" height="250" />
       <div data-v-5c81cf27="" class="bannerBottom">
         <div data-v-5c81cf27="" class="bannerBottomWrap">
@@ -559,6 +565,732 @@ watch(key, async (newdata, olddata) => {
           </div>
         </div>
       </div>
+
+      <div data-v-5c81cf27="" class="HaveConfidenceIn-out">
+        <div data-v-5c81cf27="" class="HaveConfidenceIn">
+          <div data-v-5c81cf27="" class="HaveConfidenceInTitle">客户信任</div>
+          <div data-v-5c81cf27="" class="HaveConfidenceInContext">
+            六年磨一剑 只为更专业
+          </div>
+          <div data-v-5c81cf27="" class="HaveConfidenceInCenter">
+            <div data-v-5c81cf27="" class="HaveConfidenceInCenterOnce fl">
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterTitle">
+                30W+
+              </div>
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterContext">
+                服务客户数
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="HaveConfidenceInCenterOnce fl">
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterTitle">
+                100W+
+              </div>
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterContext">
+                收到样品数
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="HaveConfidenceInCenterOnce fl">
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterTitle">
+                3.5天
+              </div>
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterContext">
+                平均周期数
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="HaveConfidenceInCenterOnce fl">
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterTitle">
+                1500+
+              </div>
+              <div data-v-5c81cf27="" class="HaveConfidenceInCenterContext">
+                合作单位数
+              </div>
+            </div>
+          </div>
+          <div data-v-5c81cf27="" class="HaveConfidenceInBottom">
+            <ul data-v-5c81cf27="">
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6-627d9660.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%A4%8D%E6%97%A6%E5%A4%A7%E5%AD%A6%20logo-fa028793.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E6%B1%9F%E8%8B%8F%E5%A4%A7%E5%AD%A6-597fdb23.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%8E%E4%B8%9C%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6-43a2f87f.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%8E%E4%B8%BA%20logo-6b9d51f2.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%20logo-21d79dd9.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%20logo-a676987d.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8E%A6%E9%97%A8%E5%A4%A7%E5%AD%A6%20logo-f77c5bde.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%8A%E6%B5%B7%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-e73f05a9.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%9B%9B%E5%B7%9D%E5%A4%A7%E5%AD%A6logo-41aaba8e.png"
+                  alt=""
+                />
+              </li>
+            </ul>
+            <ul data-v-5c81cf27="" class="scrollTwo">
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E9%95%BF%E5%9F%8E%E6%B1%BD%E8%BD%A6-d115b3d4.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E9%99%A2%20logo-41685bb1.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E8%A5%BF%E5%AE%89%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-81f7fe08.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E6%B2%B3%E6%B5%B7%E5%A4%A7%E5%AD%A6-1c29b883.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8E%A6%E9%97%A8%E5%A4%A7%E5%AD%A6%20logo-f77c5bde.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E6%AF%94%E4%BA%9A%E8%BF%AA%20logo-c574a367.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%8A%E6%B5%B7%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-e73f05a9.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6-4156297c.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%20logo-21d79dd9.png"
+                  alt=""
+                />
+              </li>
+            </ul>
+            <ul data-v-5c81cf27="">
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%A4%A7%E5%AD%A6%20logo-21d79dd9.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%9B%9B%E5%B7%9D%E5%A4%A7%E5%AD%A6logo-41aaba8e.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%8A%E6%B5%B7%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-e73f05a9.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%20logo-a676987d.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E9%99%A2%20logo-41685bb1.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E8%A5%BF%E5%8D%97%E5%A4%A7%E5%AD%A6-0f11ff27.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%8E%E4%B8%9C%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6-43a2f87f.png"
+                  alt=""
+                />
+              </li>
+              <li data-v-5c81cf27="" class="fl HaveConfidenceInLi">
+                <img
+                  data-v-5c81cf27=""
+                  src="https://www.ceshihui.cn/assets/%E5%8D%97%E4%BA%AC%E5%B7%A5%E4%B8%9A%E5%A4%A7%E5%AD%A6%20logo-a676987d.png"
+                  alt=""
+                />
+              </li>
+            </ul>
+            <div data-v-5c81cf27="" class="HaveConfidenceInBottomLeft"></div>
+            <div
+              data-v-5c81cf27=""
+              class="HaveConfidenceInBottomRight"
+              style="left: 1140px"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div data-v-5c81cf27="" class="GoodReputation-out">
+        <div data-v-5c81cf27="" class="GoodReputation">
+          <div data-v-5c81cf27="" class="GoodReputationTitle">客户好评</div>
+          <div data-v-5c81cf27="" class="GoodReputationBody">
+            <div data-v-5c81cf27="" class="v-s-s">
+              <div
+                style="
+                  width: 2191px;
+                  transform: translate(-192.6px, 0px);
+                  transition: all 0ms ease-in 0s;
+                  overflow: hidden;
+                  display: block;
+                "
+              >
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul data-v-5c81cf27="" class="roll_img_div">
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >张*涛</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，易研易测就是会测试</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >王*</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >我对测试结果很满意，主要是测试速度快，结果描述清晰</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >吴*凡</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >看到推广去尝试了下，觉得挺好，会推荐个给朋友</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >胡*纯</span
+                      ><span data-v-5c81cf27="" class="GoodReputationBodyReview"
+                        >感谢有你，废话不多说，去下单了</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >曹*明</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >已经帮大家做了小白鼠，结果超出预期，值得一试</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul data-v-5c81cf27="" class="roll_img_div">
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >张*涛</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，易研易测就是会测试</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >王*</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >我对测试结果很满意，主要是测试速度快，结果描述清晰</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >吴*凡</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >看到推广去尝试了下，觉得挺好，会推荐个给朋友</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >胡*纯</span
+                      ><span data-v-5c81cf27="" class="GoodReputationBodyReview"
+                        >感谢有你，废话不多说，去下单了</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >曹*明</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >已经帮大家做了小白鼠，结果超出预期，值得一试</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="v-s-s">
+              <div
+                style="
+                  width: 2191px;
+                  transform: translate(-192.6px, 0px);
+                  transition: all 0ms ease-in 0s;
+                  overflow: hidden;
+                  display: block;
+                "
+              >
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul
+                    data-v-5c81cf27=""
+                    class="roll_img_div"
+                    style="position: relative; left: 80px"
+                  >
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >李*林</span
+                      ><span data-v-5c81cf27="" class="GoodReputationBodyReview"
+                        >不说了，后面就用你了，谢谢</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >刘*峰</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >运气好找到这个平台了，解决了我燃眉之急！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >张*华</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >这个平台比学校的好用，及便捷有快速，我的好助手！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >王*军</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >XPS比学校还便宜，服务态度一级棒，强力安利一波</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul
+                    data-v-5c81cf27=""
+                    class="roll_img_div"
+                    style="position: relative; left: 80px"
+                  >
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >李*林</span
+                      ><span data-v-5c81cf27="" class="GoodReputationBodyReview"
+                        >不说了，后面就用你了，谢谢</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >刘*峰</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >运气好找到这个平台了，解决了我燃眉之急！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >张*华</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >这个平台比学校的好用，及便捷有快速，我的好助手！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >王*军</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >XPS比学校还便宜，服务态度一级棒，强力安利一波</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="v-s-s">
+              <div
+                style="
+                  width: 2191px;
+                  transform: translate(-192.6px, 0px);
+                  transition: all 0ms ease-in 0s;
+                  overflow: hidden;
+                  display: block;
+                "
+              >
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul data-v-5c81cf27="" class="roll_img_div">
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >杨*澎</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >上门取样人员态度还好，因为我自己的原因导致取样人员等待了2个多小时，测试结果也非常满意。值得信赖</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >彭*</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >第一次用这个平台，结果超出预期，好用实惠，以后就是你了，</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >杨*健</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >感谢易研易测平台，论文给我很大帮助，漂亮！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >胡*铭</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >学长推荐，测试速度快，质量也好。妥妥的科研帮手。</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >车*刚</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >学校排队太长，选了这个测试，结果很满意！</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  style="
+                    float: left;
+                    overflow: hidden;
+                    display: block;
+                    flex-shrink: 1;
+                  "
+                >
+                  <ul data-v-5c81cf27="" class="roll_img_div">
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >杨*澎</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >上门取样人员态度还好，因为我自己的原因导致取样人员等待了2个多小时，测试结果也非常满意。值得信赖</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >彭*</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >第一次用这个平台，结果超出预期，好用实惠，以后就是你了，</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >杨*健</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >感谢易研易测平台，论文给我很大帮助，漂亮！</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >胡*铭</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >学长推荐，测试速度快，质量也好。妥妥的科研帮手。</span
+                      >
+                    </li>
+                    <li data-v-5c81cf27="" class="GoodReputationLI fl">
+                      <img
+                        data-v-5c81cf27=""
+                        src="https://ceshihui-dev.oss-cn-shanghai.aliyuncs.com/boy.png"
+                        alt=""
+                      /><span data-v-5c81cf27="" class="GoodReputationBodyName"
+                        >车*刚</span
+                      ><span
+                        data-v-5c81cf27=""
+                        class="GoodReputationBodyReview_long"
+                        >学校排队太长，选了这个测试，结果很满意！</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div data-v-5c81cf27="" class="HaveConfidenceInBottomLeft"></div>
+            <div
+              data-v-5c81cf27=""
+              class="HaveConfidenceInBottomRight"
+              style="left: 1130px"
+            ></div>
+          </div>
+        </div>
+      </div>
     </div>
     <Menu v-else :type="menuType" />
   </main>
@@ -594,7 +1326,7 @@ watch(key, async (newdata, olddata) => {
     margin-bottom: 0;
   }
 }
-bannerBottom[data-v-5c81cf27] {
+.bannerBottom[data-v-5c81cf27] {
   width: 1280px;
   height: 102px;
   background: #ffffff;
@@ -693,372 +1425,412 @@ bannerBottom[data-v-5c81cf27] {
   color: #8f959e;
 }
 .advantage-out[data-v-5c81cf27] {
-    width: 100%;
-    background: #F4F9FF;
-    background-image: url(https://ceshihui-prod.oss-cn-shanghai.aliyuncs.com/system_img/first_page_test_route.png);
-    margin: 0;
-    padding-top: 40px;
-    padding-bottom: 40px
+  width: 100%;
+  background: #f4f9ff;
+  background-image: url(https://ceshihui-prod.oss-cn-shanghai.aliyuncs.com/system_img/first_page_test_route.png);
+  margin: 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .HaveConfidenceIn-out[data-v-5c81cf27] {
-    width: 100%;
-    margin: 0;
-    padding-top: 40px;
-    padding-bottom: 40px
+  width: 100%;
+  margin: 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .advantage[data-v-5c81cf27] {
-    width: 1280px;
-    border-radius: 8px;
-    margin: 0 auto;
-    margin-top: 50px;
+  width: 1280px;
+  border-radius: 8px;
+  margin: 0 auto;
+  margin-top: 50px;
 }
 
 .advantageWrap[data-v-5c81cf27] {
-    width: 1280px;
-    height: 100%;
-    margin: 0 auto;
-    text-align: center;
-    overflow: hidden
+  width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  text-align: center;
+  overflow: hidden;
 }
 
 .advantageCenter[data-v-5c81cf27] {
-    width: 1280px;
-    margin-top: 48px;
-    height: 350px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around
+  width: 1280px;
+  margin-top: 48px;
+  height: 350px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .advantageCenterOnce[data-v-5c81cf27] {
-    width: 392px;
-    height: 163px;
-    background: linear-gradient(270deg,#E3EFFC 0%,#FFFFFF 100%);
-    border-radius: 2px;
-    padding-top: 28px;
-    padding-left: 25px;
-    text-align: left
+  width: 392px;
+  height: 163px;
+  background: linear-gradient(270deg, #e3effc 0%, #ffffff 100%);
+  border-radius: 2px;
+  padding-top: 28px;
+  padding-left: 25px;
+  text-align: left;
 }
 
 .advantageCenterOnce:hover .advantageCenterOnceIMG[data-v-5c81cf27] {
-    scale: 1.15
+  scale: 1.15;
 }
 
 .advantageCenterOnceIMG[data-v-5c81cf27] {
-    animation: moveUpDown-5c81cf27 3s infinite
+  animation: moveUpDown-5c81cf27 3s infinite;
 }
 
 @keyframes moveUpDown-5c81cf27 {
-    0% {
-        transform: translateY(0)
-    }
+  0% {
+    transform: translateY(0);
+  }
 
-    50% {
-        transform: translateY(-15px)
-    }
+  50% {
+    transform: translateY(-15px);
+  }
 
-    to {
-        transform: translateY(0)
-    }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .advantageCenterOnceTitle[data-v-5c81cf27] {
-    font-size: 22px;
-    font-weight: 600;
-    color: #000
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
 }
 
 .advantageCenterOnceText[data-v-5c81cf27] {
-    font-size: 14px;
-    font-weight: 500;
-    color: #8f959e;
-    width: 226px;
-    height: 40px;
-    margin-top: 16px
+  font-size: 14px;
+  font-weight: 500;
+  color: #8f959e;
+  width: 226px;
+  height: 40px;
+  margin-top: 16px;
 }
 
 .HaveConfidenceIn[data-v-5c81cf27] {
-    width: 100%;
-    text-align: center
+  width: 100%;
+  text-align: center;
 }
 
 .HaveConfidenceInTitle[data-v-5c81cf27] {
-    font-size: 30px;
-    font-weight: 600;
-    color: #000
+  font-size: 30px;
+  font-weight: 600;
+  color: #000;
 }
 
 .HaveConfidenceInContext[data-v-5c81cf27] {
-    font-size: 14px;
-    font-weight: 400;
-    color: #666666a6;
-    margin-top: 20px
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666a6;
+  margin-top: 20px;
 }
 
 .HaveConfidenceInCenter[data-v-5c81cf27] {
-    width: 1280px;
-    height: 82px;
-    margin: 41px auto 0;
-    display: flex;
-    justify-content: space-around
+  width: 1200px;
+  height: 82px;
+  margin: 41px auto 0;
+  display: flex;
+  justify-content: space-around;
 }
 
 .HaveConfidenceInCenterTitle[data-v-5c81cf27] {
-    width: 160px;
-    font-size: 36px;
-    font-weight: 700;
-    color: #0a1a2cb3;
-    line-height: 54px;
-    animation: numAnimation-5c81cf27 2s ease-out
+  width: 160px;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0a1a2cb3;
+  line-height: 54px;
+  animation: numAnimation-5c81cf27 2s ease-out;
 }
 
+
 .HaveConfidenceInCenterContext[data-v-5c81cf27] {
-    font-size: 18px;
-    font-weight: 500;
-    color: #0a1a2cb3;
-    margin-top: 5px
+  font-size: 18px;
+  font-weight: 500;
+  color: #0a1a2cb3;
+  margin-top: 5px;
 }
 
 .HaveConfidenceInBottom[data-v-5c81cf27] {
-    width: 1280px;
-    margin: 35px auto 0;
-    position: relative;
-    overflow: hidden
+  width: 1200px;
+  margin: 35px auto 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .HaveConfidenceInLi[data-v-5c81cf27] {
-    width: 144px;
-    height: 80px;
-    display: block
+  width: 144px;
+  height: 80px;
+  display: block;
 }
 
 .HaveConfidenceInLi img[data-v-5c81cf27] {
-    width: 100%;
-    height: 100%
+  width: 100%;
+  height: 100%;
 }
 
-.HaveConfidenceInBottom ul[data-v-5c81cf27]:nth-child(1),.HaveConfidenceInBottom ul[data-v-5c81cf27]:nth-child(3) {
-    width: 100%;
-    display: flex;
-    justify-content: space-around
+.HaveConfidenceInBottom ul[data-v-5c81cf27]:nth-child(1),
+.HaveConfidenceInBottom ul[data-v-5c81cf27]:nth-child(3) {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 
-.HaveConfidenceInBottom ul:nth-child(1) li[data-v-5c81cf27]:nth-child(9),.HaveConfidenceInBottom ul:nth-child(4) li[data-v-5c81cf27]:nth-child(9) {
-    position: absolute;
-    left: 1190px
+.HaveConfidenceInBottom ul:nth-child(1) li[data-v-5c81cf27]:nth-child(9),
+.HaveConfidenceInBottom ul:nth-child(4) li[data-v-5c81cf27]:nth-child(9) {
+  position: absolute;
+  left: 1190px;
 }
 
-.HaveConfidenceInBottom ul:nth-child(1) li[data-v-5c81cf27]:nth-child(10),.HaveConfidenceInBottom ul:nth-child(4) li[data-v-5c81cf27]:nth-child(10) {
-    position: absolute;
-    left: 1320px
+.HaveConfidenceInBottom ul:nth-child(1) li[data-v-5c81cf27]:nth-child(10),
+.HaveConfidenceInBottom ul:nth-child(4) li[data-v-5c81cf27]:nth-child(10) {
+  position: absolute;
+  left: 1320px;
 }
 
 .HaveConfidenceInBottom ul[data-v-5c81cf27]:nth-child(2) {
-    transform: translate(-50px);
-    position: relative
+  transform: translate(-50px);
+  position: relative;
 }
 
 .HaveConfidenceInBottom ul:nth-child(2) li[data-v-5c81cf27]:nth-child(9) {
-    position: absolute;
-    left: 1140px
+  position: absolute;
+  left: 1140px;
 }
 
 .HaveConfidenceInBottom ul:nth-child(2) li[data-v-5c81cf27]:nth-child(10) {
-    position: absolute;
-    left: 1320px
+  position: absolute;
+  left: 1320px;
 }
 
 .HaveConfidenceInBottom ul:nth-child(2) li[data-v-5c81cf27]:nth-child(11) {
-    position: absolute;
-    left: 1450px
+  position: absolute;
+  left: 1450px;
 }
 
 .HaveConfidenceInBottom ul:nth-child(2) li[data-v-5c81cf27]:nth-child(11) {
-    position: absolute;
-    left: 1580px
+  position: absolute;
+  left: 1580px;
 }
 
-.HaveConfidenceInBottomLeft[data-v-5c81cf27],.HaveConfidenceInBottomRight[data-v-5c81cf27] {
-    position: absolute;
-    width: 70px;
-    height: 100%;
-    background-color: #fff;
-    opacity: .8;
-    top: 0
+.HaveConfidenceInBottomLeft[data-v-5c81cf27],
+.HaveConfidenceInBottomRight[data-v-5c81cf27] {
+  position: absolute;
+  width: 70px;
+  height: 100%;
+  background-color: #fff;
+  opacity: 0.8;
+  top: 0;
 }
 
 .HaveConfidenceInBottomRight[data-v-5c81cf27] {
-    left: 1060px
+  left: 1060px;
 }
 
 .GoodReputation[data-v-5c81cf27] {
-    width: 1280px;
-    text-align: center;
-    margin: 0 auto;
-    height: 100%;
-    overflow: hidden
+  width: 1280px;
+  text-align: center;
+  margin: 0 auto;
+  height: 100%;
+  overflow: hidden;
 }
 
 .GoodReputationTitle[data-v-5c81cf27] {
-    font-size: 30px;
-    font-weight: 600;
-    color: #000
+  font-size: 30px;
+  font-weight: 600;
+  color: #000;
 }
 
 .GoodReputationLI[data-v-5c81cf27] {
-    text-align: left;
-    width: 341px;
-    height: 106px;
-    box-shadow: 0 0 10px 10px #ececec33;
-    border-radius: 2px;
-    margin-left: 24px;
-    padding: 16px 14px 17px
+  text-align: left;
+  width: 341px;
+  height: 106px;
+  box-shadow: 0 0 10px 10px #ececec33;
+  border-radius: 2px;
+  margin-left: 24px;
+  padding: 16px 14px 17px;
 }
 
 .GoodReputationLI img[data-v-5c81cf27] {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    vertical-align: text-top
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  vertical-align: text-top;
 }
 
 .GoodReputationBodyName[data-v-5c81cf27] {
-    display: inline-block;
-    margin-left: 16px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #18191b
+  display: inline-block;
+  margin-left: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #18191b;
 }
 
 .GoodReputationBodyReview[data-v-5c81cf27] {
-    display: block;
-    margin-left: 52px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #18191b;
-    width: 270px;
-    height: 40px;
-    line-height: 25px;
-    padding: 8px;
-    background-color: #eeececa9;
-    border-radius: 6px;
-    position: absolute;
-    top: 40px
+  display: block;
+  margin-left: 52px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #18191b;
+  width: 270px;
+  height: 40px;
+  line-height: 25px;
+  padding: 8px;
+  background-color: #eeececa9;
+  border-radius: 6px;
+  position: absolute;
+  top: 40px;
 }
 
 .GoodReputationBodyReview_long[data-v-5c81cf27] {
-    display: block;
-    margin-left: 52px;
-    font-size: 14px;
-    font-weight: 400;
-    color: #18191b;
-    border-radius: 4px;
-    width: 270px;
-    height: 60px;
-    line-height: 24px;
-    padding: 8px;
-    background-color: #dddddd4b;
-    position: absolute;
-    top: 40px;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden
+  display: block;
+  margin-left: 52px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #18191b;
+  border-radius: 4px;
+  width: 270px;
+  height: 60px;
+  line-height: 24px;
+  padding: 8px;
+  background-color: #dddddd4b;
+  position: absolute;
+  top: 40px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .GoodReputationBody[data-v-5c81cf27] {
-    position: relative
+  position: relative;
 }
 
 .GoodReputationBody ul[data-v-5c81cf27] {
-    height: 106px;
-    margin-top: 24px
+  height: 106px;
+  margin-top: 24px;
 }
 
-.GoodReputationBody ul[data-v-5c81cf27]:nth-child(1),.GoodReputationBody ul[data-v-5c81cf27]:nth-child(3) {
-    transform: translate(-80px)
+.GoodReputationBody ul[data-v-5c81cf27]:nth-child(1),
+.GoodReputationBody ul[data-v-5c81cf27]:nth-child(3) {
+  transform: translate(-80px);
 }
 
 .GoodReputationBody ul[data-v-5c81cf27]:nth-child(2) {
-    transform: translate(-150px)
+  transform: translate(-150px);
 }
 
-.GoodReputationBody ul:nth-child(1) li[data-v-5c81cf27]:nth-child(4),.GoodReputationBody ul:nth-child(3) li[data-v-5c81cf27]:nth-child(4) {
-    position: absolute;
-    top: 0;
-    left: 1090px
+.GoodReputationBody ul:nth-child(1) li[data-v-5c81cf27]:nth-child(4),
+.GoodReputationBody ul:nth-child(3) li[data-v-5c81cf27]:nth-child(4) {
+  position: absolute;
+  top: 0;
+  left: 1090px;
 }
 
 .GoodReputationBody ul:nth-child(2) li[data-v-5c81cf27]:nth-child(4) {
-    position: absolute;
-    top: 0;
-    left: 1090px
+  position: absolute;
+  top: 0;
+  left: 1090px;
 }
 
 .WrapBottom[data-v-5c81cf27] {
-    width: 100%;
-    height: 262px;
-    background-image: url(https://ceshihui-prod.oss-cn-shanghai.aliyuncs.com/system_img/first_page_buttom_banner.png);
-    margin: 0 auto;
-    text-align: center;
-    overflow: hidden
+  width: 100%;
+  height: 262px;
+  background-image: url(https://ceshihui-prod.oss-cn-shanghai.aliyuncs.com/system_img/first_page_buttom_banner.png);
+  margin: 0 auto;
+  text-align: center;
+  overflow: hidden;
 }
 
 .WrapBottomTitle[data-v-5c81cf27] {
-    font-size: 28px;
-    font-weight: 600;
-    color: #18191b;
-    margin-top: 75px
+  font-size: 28px;
+  font-weight: 600;
+  color: #18191b;
+  margin-top: 75px;
 }
 
 .WrapBottomContent[data-v-5c81cf27] {
-    width: 876px;
-    height: 50px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 8px;
-    margin: 36px auto 0
+  width: 876px;
+  height: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 8px;
+  margin: 36px auto 0;
 }
 
-.GoodReputationBody ul[data-v-5c81cf27]:nth-child(1),.GoodReputationBody ul[data-v-5c81cf27]:nth-child(2),.GoodReputationBody ul[data-v-5c81cf27]:nth-child(3) {
-    position: relative
+.GoodReputationBody ul[data-v-5c81cf27]:nth-child(1),
+.GoodReputationBody ul[data-v-5c81cf27]:nth-child(2),
+.GoodReputationBody ul[data-v-5c81cf27]:nth-child(3) {
+  position: relative;
 }
 
-.GoodReputationBody ul:nth-child(1) .GoodReputationLI[data-v-5c81cf27]:nth-child(5),.GoodReputationBody ul:nth-child(3) .GoodReputationLI[data-v-5c81cf27]:nth-child(5) {
-    position: absolute;
-    left: 1500px
+.GoodReputationBody
+  ul:nth-child(1)
+  .GoodReputationLI[data-v-5c81cf27]:nth-child(5),
+.GoodReputationBody
+  ul:nth-child(3)
+  .GoodReputationLI[data-v-5c81cf27]:nth-child(5) {
+  position: absolute;
+  left: 1500px;
 }
 
-.GoodReputationBody ul:nth-child(2) .GoodReputationLI[data-v-5c81cf27]:nth-child(5) {
-    position: absolute;
-    left: 1500px
+.GoodReputationBody
+  ul:nth-child(2)
+  .GoodReputationLI[data-v-5c81cf27]:nth-child(5) {
+  position: absolute;
+  left: 1500px;
+}
+
+
+@keyframes slidein {
+  0% {
+    transform: translate(-192.6px, 0px);
+  }
+
+  80% {
+    transform: translate(-1024.6px, 0px);
+  }
+
+  100% {
+    transform: translate(-192.6px, 0px);
+  }
 }
 
 @keyframes numAnimation-5c81cf27 {
-    0% {
-        opacity: 0
-    }
+  0% {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1
-    }
+  to {
+    opacity: 1;
+  }
 }
 
 .animationDemo[data-v-5c81cf27] {
-    animation: numAnimation2-5c81cf27 2.5s ease-out
+  animation: numAnimation2-5c81cf27 2.5s ease-out;
 }
 
 @keyframes numAnimation2-5c81cf27 {
-    0% {
-        opacity: 0
-    }
+  0% {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 1
-    }
+  to {
+    opacity: 1;
+  }
+}
+.fl {
+  float: left;
+}
+
+.v-s-s{
+  &>div{
+    animation: slidein 50s ease-out;
+  }
 }
 </style>
