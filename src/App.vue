@@ -50,7 +50,7 @@ onBeforeMount(async() => {
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
       <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
         <Machine v-if="route?.fullPath.includes('order')" />
-        <Wx />
+        <Wx v-if="!route.path.includes('/process/1') && !route.path.includes('/process/index')" />
       </div>
     </div>
     <Footer></Footer>
