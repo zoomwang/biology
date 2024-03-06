@@ -49,7 +49,7 @@ const jingdonPay = async() => {
 }
 
 const feePay = async(type) => {
-  if (orderSum.value - 0 < 3000) {
+  if (orderSum.value - 0 < (1000 * type)) {
     notification.error({
       description: "积分不足"
     })
