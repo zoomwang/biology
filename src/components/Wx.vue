@@ -1,5 +1,5 @@
 <script setup>
-import wx from "../assets/wx.png";
+import wx from "../assets/wx.jpg";
 </script>
 
 <template>

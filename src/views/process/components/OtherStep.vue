@@ -17,6 +17,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
 import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
 import UploadFile from "@/components/UploadFile.vue";
+// import $localStorage from "@/hooks/localStorage";
 
 const useForm = Form.useForm;
 const formRef = ref();
@@ -437,6 +438,7 @@ onMounted(async () => {
                 class="no-margin"
               >
                 <UploadFile
+                style="display: inline-block;"
                   :onSuccess="
                     (url) => {
                       validateInfos.sampleFormUrl = url
@@ -452,6 +454,9 @@ onMounted(async () => {
                     点击上传送样单
                   </a-button>
                 </a-upload> -->
+                <a-button type="link" style="display: inline-block; margin-left: 10px;">
+                    下载模板
+                  </a-button>
               </a-form-item>
             </a-collapse-panel>
             <a-collapse-panel

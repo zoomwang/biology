@@ -167,7 +167,7 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
+const menus = ["不可支付", "可支付", "待实验", "实验中", "已完成", "已取消"];
 </script>
 
 <template>
@@ -241,7 +241,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         <a-button
           style="margin-bottom: 5px"
           type="primary"
-          v-if="record.status <= 1"
+          v-if="record.status == 2"
           @click="showDrawer(record)"
           >立即支付</a-button
         >
@@ -253,7 +253,7 @@ const menus = ["待支付", "待实验", "实验中", "已完成", "已取消"];
         <a-popconfirm
           title="你确认要取消订单吗?"
           ok-text="确定"
-          v-if="record.status <= 2"
+          v-if="record.status <= 3"
           cancel-text="取消"
           @confirm="cancelOrders(record.orderId)"
           @cancel="cancel"
