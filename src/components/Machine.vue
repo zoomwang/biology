@@ -1,19 +1,39 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-
+import { getOrderDetail } from "@/services/process";
+import {
+  onMounted,
+  reactive
+} from "vue";
 const route = useRoute();
 const router = useRouter();
 console.log("当前路由：", route);
+let orderDetails = reactive({
+  value: {
+    pictureUrl: "https://shiyanjia-files.oss-cn-hangzhou.aliyuncs.com/user/2022051118373179932994811.jpg"
+  }
+});
+
+// const id = route.query.id;
 const toDetail = () => {
-router.push({name: "detail", query: { id: route.query.id } });
+  router.push({name: "detail", query: { id: route.query.id } });
 }
+const getOrderDetails = async (id) => {
+  const res = await getOrderDetail(id);
+  if (res?.code == 0) {
+    orderDetails.value = res.data;
+  }
+}
+onMounted(async () => {
+  getOrderDetails(id);
+})
 </script>
 
 <template>
   <div class="sci-buffet-info-section">
     <h3>仪器图片</h3>
     <img
-      src="https://shiyanjia-files.oss-cn-hangzhou.aliyuncs.com/user/202011111737349422148002.jpg"
+      :src="orderDetails?.value?.pictureUrl"
       alt=""
     />
     <a @click.stop="toDetail" target="_blank">

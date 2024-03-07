@@ -1,9 +1,13 @@
 <script setup>
 import HeaderContent from "./HeaderContent.vue";
 import Logo from "../assets/home_logo.jpg";
+import Zheng from "../assets/zhengicon.jpg";
+import Zheng1 from "../assets/zhengicon1.jpg";
+import Zhengshu from "../assets/zhengshu.jpg";
+import Zhengshu1 from "../assets/zhengshu1.jpg";
 import { useRoute } from "vue-router";
 // import SecondLogo from "../assets/secondLogo.jpg";
-import SecondLogo from "../assets/secondLogo.jpg";
+// import SecondLogo from "../assets/secondLogo.jpg";
 import LoginComponent from "../components/LoginComponent.vue";
 
 defineProps({
@@ -20,9 +24,27 @@ const route = useRoute();
   </div> -->
   <div class="header-wrap">
     <div class="header d-flex">
-      <div class="logo">
-        <img :src="Logo" style="width: auto; height: 80px" />
+      <div class="logo" style="display: inline-block;">
+        <img :src="Logo" style="width: auto; height: 80px;" />
       </div>
+      <a-popover placement="bottom" style="display: inline-block">
+          <template #content>
+            <img :src="Zhengshu" style="width: auto; height: 700px" />
+          </template>
+          <template #title>
+            <span></span>
+          </template>
+          <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
+        </a-popover>
+        <a-popover placement="bottom" style="display: inline-block">
+          <template #content>
+            <img :src="Zhengshu1" style="width: auto; height: 700px" />
+          </template>
+          <template #title>
+            <span></span>
+          </template>
+          <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" />
+        </a-popover>
       <LoginComponent class="f-fr" style="flex: 1" />
     </div>
   </div>
@@ -76,7 +98,7 @@ const route = useRoute();
   // overflow: hidden;
   .logo {
     // float: left;
-    width: 258px;
+    width: 130px;
     height: auto;
     margin: 0 24px 0 0;
     img {
@@ -102,7 +124,7 @@ const route = useRoute();
 
 .header .logo {
   img {
-    display: block;
+    display: inline-block;
     width: 100%;
     height: 100%;
   }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, defineComponent, reactive } from "vue";
-import wx from "../assets/wx.png";
+import wx from "../assets/wx.jpg";
 
 const expired = ref(false);
 const wxUrl = ref("");

@@ -17,6 +17,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
 import { getOrderCostCalc, getOrderList, getOrderDraftInfo, getOrderDetail } from "@/services/process";
 import UploadFile from "@/components/UploadFile.vue";
+import { trimLeft } from "@/utils/index";
+// import $localStorage from "@/hooks/localStorage";
 
 const useForm = Form.useForm;
 const formRef = ref();
@@ -323,9 +325,11 @@ onMounted(async () => {
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
           <a-collapse-panel key="1" header="预约须知">
-            <p>
-             {{orderDetails.value.notice}}
-            </p>
+            <!-- <div style="width:100%;word-wrap: break-word;white-space:pre-wrap"> -->
+              <pre width="100" style="white-space:pre-wrap;text-indent: -16ch;">
+                {{trimLeft(orderDetails.value.notice)}}
+              </pre>
+            <!-- </div> -->
             <template #extra><CalendarTwoTone /></template>
           </a-collapse-panel>
           <template v-if="type == '0'">
@@ -449,6 +453,7 @@ onMounted(async () => {
                 class="no-margin"
               >
                 <UploadFile
+                style="display: inline-block;"
                   :onSuccess="
                     (url) => {
                       validateInfos.sampleFormUrl = url
@@ -464,6 +469,10 @@ onMounted(async () => {
                     点击上传送样单
                   </a-button>
                 </a-upload> -->
+                <a style="vertical-align: top;position:relative;top:5px;margin-left:5px" :href="orderDetails?.value?.globalProblem?.sampleFormTemplateUrl" download="w3logo.docx">下载模板</a>
+                <!-- <a-button type="link" style="display: inline-block; margin-left: 10px;">
+                    下载模板
+                  </a-button> -->
               </a-form-item>
             </a-collapse-panel>
             <a-collapse-panel
