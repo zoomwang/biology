@@ -15,7 +15,7 @@ import { Form, Modal } from "ant-design-vue";
 const emit = defineEmits(["save", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
-import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
+import { getOrderCostCalc, getOrderList, getOrderDraftInfo, getOrderDetail } from "@/services/process";
 import UploadFile from "@/components/UploadFile.vue";
 
 const useForm = Form.useForm;
@@ -36,6 +36,16 @@ let modelRef = reactive({
 });
 let orderOptions = ref([
 ]);
+let orderDetails = reactive({
+  value: {}
+});
+
+const getOrderDetails = async (id) => {
+  const res = await getOrderDetail(id);
+  if (res?.code == 0) {
+    orderDetails.value = res.data;
+  }
+}
 const getOrderLists = async () => {
   const res = await getOrderList(type);
   if (res?.code == 0) {
@@ -297,6 +307,7 @@ onMounted(async () => {
   getOrderLists();
   getOrderDraftInfos();
   initFormState();
+  getOrderDetails(id);
 });
 </script>
 
@@ -307,15 +318,16 @@ onMounted(async () => {
     ref="containerRef"
     class="scrollable-container"
   >
+    <a-divider orientation="left">{{orderDetails.value.itemname}}</a-divider>
     <a-form :model="formState" ref="formRef" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
-          <!-- <a-collapse-panel key="1" header="预约须知">
-            <p v-for="(item, index) in readme" :key="index">
-              {{ ++index }}.{{ item }}
+          <a-collapse-panel key="1" header="预约须知">
+            <p>
+             {{orderDetails.value.notice}}
             </p>
             <template #extra><CalendarTwoTone /></template>
-          </a-collapse-panel> -->
+          </a-collapse-panel>
           <template v-if="type == '0'">
             <a-collapse-panel key="2" header="全局问题" :disabled="false">
               <a-form-item label="拍摄方式">
@@ -905,6 +917,9 @@ onMounted(async () => {
   </main>
 </template>
 <style lang="scss" scoped>
+.scrollable-container{
+  background: #fff;
+}
 .cost {
   line-height: 32px;
   flex: 1;

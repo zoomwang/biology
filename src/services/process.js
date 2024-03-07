@@ -26,6 +26,11 @@ export const addOrder = (params) => {
   return api.post(`/sys/order/add`, params);
 }
 
+/** 获取项目详情 */
+export const getOrderDetail = (id) => {
+  return api.get(`/sys/order/template?id=${id}`);
+}
+
 /** 预估金额 */
 export const getOrderCostCalc = (params) => {
   return api.post(`/sys/order/cost/calc`, params);
