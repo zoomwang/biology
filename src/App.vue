@@ -27,7 +27,7 @@ const checkIslogged = async function() {
       isNext.value = true;
     } else {
       isNext.value = true;
-      if (blackList.includes(route?.fullPath)) {
+      if (!blackList.includes(route?.fullPath)) {
         router.push({name: "login"});
       }
     }

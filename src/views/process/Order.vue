@@ -34,7 +34,13 @@ const next = async(data) => {
   await getOrderCostCalcs(data);
   if (res?.code == 0) {
     order.id = res.data;
-    router.push({ path: `/user/userinfo`, query: { selectedKeys: 10 }});
+    debugger
+    notification.success({
+      description: "提交订单成功",
+    });
+    setTimeout(() => {
+      router.push({ path: `/user/userinfo`, query: { selectedKeys: 10 }});
+    }, 400);
     // current.value++;
   } else {
     // order.id = '1212';

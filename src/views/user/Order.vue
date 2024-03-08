@@ -167,7 +167,7 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["不可支付", "可支付", "待实验", "实验中", "已完成", "已取消"];
+const menus = ["已创建(待确认价格)", "可支付", "待实验", "实验中", "已完成", "已取消"];
 </script>
 
 <template>

@@ -285,8 +285,9 @@ const initFormState = () => {
       uploadFile: [],
     })
   } else {
-    formState.sampleFormUrl = null;
-    delete formState.globalProblem;
+    // formState.sampleFormUrl = null;
+    delete formState.globalProblem.shootingMethod;
+    delete formState.globalProblem.hasMagnetism;
     formState.sampleInfo.push({
       count: 1,
       numberList: [],
@@ -422,19 +423,6 @@ onMounted(async () => {
                 />
               </a-form-item>
               <a-form-item label="上传文件" class="upload">
-                <!-- <a-upload
-                  v-model:file-list="formState.sampleInfo[index].uploadFile"
-                  name="file"
-                  :multiple="true"
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  :headers="headers"
-                  @change="handleChange"
-                >
-                  <a-button>
-                    <upload-outlined></upload-outlined>
-                    点击上传
-                  </a-button>
-                </a-upload> -->
                 <UploadFile
                 :onSuccess="
                   (url) => {
@@ -456,7 +444,8 @@ onMounted(async () => {
                 style="display: inline-block;"
                   :onSuccess="
                     (url) => {
-                      validateInfos.sampleFormUrl = url
+                      console.log('url===', url);
+                      formState.globalProblem.sampleFormUrl = url;
                     }
                   "
                 />

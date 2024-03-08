@@ -1,7 +1,7 @@
 export const blackList = [
-  "/user/prestore",
-  "/user/publish-demand",
-  "/user/userinfo"
+  // "/user/prestore",
+  // "/user/publish-demand",
+  // "/user/userinfo"
 ]
 
 import jsPDF from 'jspdf';

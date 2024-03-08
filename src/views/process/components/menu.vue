@@ -38,7 +38,7 @@ onMounted(() => {
       <div class="bio-list" style="padding: 26px 0px 9px" v-for="item in menuList" :key="item">
         <h2 class="bio-second-level" :id="item.categoryid">{{item.catename}}</h2>
         <ul class="bio-products">
-          <li v-for="(innerItem, innerIndex) in item.list" :key="innerItem">
+          <li v-for="(innerItem, innerIndex) in item.list" v-show="!innerItem.isHidden" :key="innerItem">
             <a :data-id="innerItem.buffetid" @click="order(innerItem.buffetid, innerItem.type)">{{innerItem.itemname}}<img v-if="innerIndex < 1"
                 style="height: 14px; margin-left: 4px; margin-top: -2px"
                 src="//cdn0.shiyanjia.com/c/2022/images/guide/sparkIcon.png"
