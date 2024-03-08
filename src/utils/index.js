@@ -12,8 +12,8 @@ import { notification } from "ant-design-vue";
 
 // export const jstopdf = (data) => {
 //   // // 创建一个新的 jsPDF 实例
-//   var element = document.getElementById('download');;
-//        var opt = {
+//   let element = document.getElementById('download');;
+//        let opt = {
 //             margin: 12,
 //             filename: `dowan.pdf`,
 //             image: { type: 'jpeg', quality: 1 },
@@ -26,19 +26,19 @@ import { notification } from "ant-design-vue";
 // }
 
 export const jstopdf = (elementName, htmlTitle, currentTime) => {
-  var element = document.getElementById(elementName)
+  let element = document.getElementById(elementName)
   html2canvas(element, {
       logging: false
   }).then(function(canvas) {
-      var pdf = new jsPDF("p", "mm", "a4") // A4纸，纵向
-      var ctx = canvas.getContext("2d")
-      var a4w = 190;
-      var a4h = 257 // A4大小，210mm x 297mm，四边各保留20mm的边距
-      var imgHeight = Math.floor(a4h * canvas.width / a4w) // 按A4显示比例换算一页图像的像素高度
-      var renderedHeight = 0
+      let pdf = new jsPDF("p", "mm", "a4") // A4纸，纵向
+      let ctx = canvas.getContext("2d")
+      let a4w = 190;
+      let a4h = 257 // A4大小，210mm x 297mm，四边各保留20mm的边距
+      let imgHeight = Math.floor(a4h * canvas.width / a4w) // 按A4显示比例换算一页图像的像素高度
+      let renderedHeight = 0
 
       while (renderedHeight < canvas.height) {
-          var page = document.createElement("canvas")
+          let page = document.createElement("canvas")
           page.width = canvas.width
           page.height = Math.min(imgHeight, canvas.height - renderedHeight) // 可能内容不足一页
 
@@ -92,4 +92,20 @@ export function formatLocalTime(time, isGetMonth) {
   const formatMonth = year + '/' + (month >= 10 ? month : `0${month}`);
   return !isGetMonth ? formattedDate : formatMonth;
 }
+
+export function trimLeft(s){ 
+  if(s == null) { 
+  return ""; 
+  } 
+  let whitespace = new String(" \t\n\r"); 
+  let str = new String(s); 
+  if (whitespace.indexOf(str.charAt(0)) != -1) { 
+  let j=0, i = str.length; 
+  while (j < i && whitespace.indexOf(str.charAt(j)) != -1){ 
+  j++; 
+  } 
+  str = str.substring(j, i); 
+  } 
+  return str; 
+  } 
 

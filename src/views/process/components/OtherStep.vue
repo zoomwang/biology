@@ -15,8 +15,9 @@ import { Form, Modal } from "ant-design-vue";
 const emit = defineEmits(["save", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
-import { getOrderCostCalc, getOrderList, getOrderDraftInfo } from "@/services/process";
+import { getOrderCostCalc, getOrderList, getOrderDraftInfo, getOrderDetail } from "@/services/process";
 import UploadFile from "@/components/UploadFile.vue";
+import { trimLeft } from "@/utils/index";
 // import $localStorage from "@/hooks/localStorage";
 
 const useForm = Form.useForm;
@@ -37,6 +38,16 @@ let modelRef = reactive({
 });
 let orderOptions = ref([
 ]);
+let orderDetails = reactive({
+  value: {}
+});
+
+const getOrderDetails = async (id) => {
+  const res = await getOrderDetail(id);
+  if (res?.code == 0) {
+    orderDetails.value = res.data;
+  }
+}
 const getOrderLists = async () => {
   const res = await getOrderList(type);
   if (res?.code == 0) {
@@ -298,6 +309,7 @@ onMounted(async () => {
   getOrderLists();
   getOrderDraftInfos();
   initFormState();
+  getOrderDetails(id);
 });
 </script>
 
@@ -308,15 +320,18 @@ onMounted(async () => {
     ref="containerRef"
     class="scrollable-container"
   >
+    <a-divider orientation="left">{{orderDetails.value.itemname}}</a-divider>
     <a-form :model="formState" ref="formRef" labelAlign="right">
       <div class="first-step">
         <a-collapse v-model:activeKey="activeKey" expand-icon-position="left">
-          <!-- <a-collapse-panel key="1" header="预约须知">
-            <p v-for="(item, index) in readme" :key="index">
-              {{ ++index }}.{{ item }}
-            </p>
+          <a-collapse-panel key="1" header="预约须知">
+            <!-- <div style="width:100%;word-wrap: break-word;white-space:pre-wrap"> -->
+              <pre width="100" style="white-space:pre-wrap;text-indent: -16ch;">
+                {{trimLeft(orderDetails.value.notice)}}
+              </pre>
+            <!-- </div> -->
             <template #extra><CalendarTwoTone /></template>
-          </a-collapse-panel> -->
+          </a-collapse-panel>
           <template v-if="type == '0'">
             <a-collapse-panel key="2" header="全局问题" :disabled="false">
               <a-form-item label="拍摄方式">
@@ -454,9 +469,10 @@ onMounted(async () => {
                     点击上传送样单
                   </a-button>
                 </a-upload> -->
-                <a-button type="link" style="display: inline-block; margin-left: 10px;">
+                <a style="vertical-align: top;position:relative;top:5px;margin-left:5px" :href="orderDetails?.value?.globalProblem?.sampleFormTemplateUrl" download="w3logo.docx">下载模板</a>
+                <!-- <a-button type="link" style="display: inline-block; margin-left: 10px;">
                     下载模板
-                  </a-button>
+                  </a-button> -->
               </a-form-item>
             </a-collapse-panel>
             <a-collapse-panel
@@ -910,6 +926,9 @@ onMounted(async () => {
   </main>
 </template>
 <style lang="scss" scoped>
+.scrollable-container{
+  background: #fff;
+}
 .cost {
   line-height: 32px;
   flex: 1;

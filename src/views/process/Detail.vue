@@ -33,7 +33,11 @@ onMounted(() => {
 <div class="detail">
   <!-- 用户注册资料 -->
   <a-card :title="item.label" style="width: 100%;margin-bottom: 10px" v-for="(item) in data.value" :key="item">
-    <p v-if="item.label != '项目图片'">{{item.value}}</p>
+    <p v-if="item.label != '项目图片'">
+      <pre width="100" style="white-space:pre-wrap;text-indent: -7ch;">
+        {{item.value}}
+      </pre>
+    </p>
     <img v-else :src="item.value" width="150" />
   </a-card>
   </div>
