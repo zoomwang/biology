@@ -80,7 +80,7 @@ onMounted(() => {
               <p class="salary-value">{{ isShow ? data.amount: "*****" }}</p>
               <a-button
                 type="primary"
-                style="margin-left:55px"
+                style="margin-left:55px; margin-top: 10px"
                 @click="() => {
                   router.push({ path: `/user/prestore`});
                 }"

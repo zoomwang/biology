@@ -37,3 +37,7 @@ export const getInvoiceList = (param) => {
   return api.post(`/sys/invoice/list`, param || {});
 }
 
+export const getStoreRebate = (amount, type) => {
+  return api.get(`/sys/store/rebate?amount=${amount}&type=${type}`);
+}
+

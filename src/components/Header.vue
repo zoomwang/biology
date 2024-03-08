@@ -98,7 +98,7 @@ const route = useRoute();
   // overflow: hidden;
   .logo {
     // float: left;
-    width: 130px;
+    width: 230px;
     height: auto;
     margin: 0 24px 0 0;
     img {

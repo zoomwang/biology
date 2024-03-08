@@ -146,7 +146,7 @@ const { resetFields, validate, validateInfos } = useForm(
             <a-input v-model:value="formState.completionCycle" placeholder="请填写" />
           </a-form-item>
         </div> -->
-          <div class="l-item clear">
+          <div class="l-item clear" :style="{ 'height': formState.fileUrl ? '70px' : '50px' }">
             <div class="t-title f-fl">添加附件：</div>
             <a-form-item class="f-fl">
               <UploadFile

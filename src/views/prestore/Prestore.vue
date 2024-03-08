@@ -7,7 +7,7 @@ import uncheckIcon from "../../assets/prestore/bill66.png";
 import defaultIcon from "../../assets/prestore/bill73.png";
 import Pay from "./Pay.vue";
 import Apply from "./Apply.vue";
-import { addStore, getStoreList, getInvoiceList } from "@/services/prestore";
+import { addStore, getStoreList, getInvoiceList, getStoreRebate } from "@/services/prestore";
 import { notification, Form, message } from "ant-design-vue";
 import UploadFile from "@/components/UploadFile.vue";
 
@@ -54,28 +54,9 @@ const handleChange = (info) => {
 watch(formState, async (newdata, olddata) => {
   invoiceCostList.value = new Array(newdata.invoiceNum - 0);
 });
-const getRebate = () => {
-  if (formState.amount > 5000 && formState.amount < 10000) {
-    formState.rebate = formState.amount * 0.03;
-    return formState.amount * 0.03;
-  }
-  if (formState.amount >= 10000 && formState.amount < 30000) {
-    formState.rebate = formState.amount * 0.04;
-    return formState.amount * 0.04;
-  }
-  if (formState.amount >= 30000 && formState.amount < 50000) {
-    formState.rebate = formState.amount * 0.06;
-    return formState.amount * 0.06;
-  }
-  if (formState.amount >= 50000 && formState.amount < 100000) {
-    formState.rebate = formState.amount * 0.08;
-    return formState.amount * 0.08;
-  }
-  if (formState.amount >= 100000) {
-    formState.rebate = formState.amount * 0.1;
-    return formState.amount * 0.1;
-  }
-  return 0;
+const getRebate = async () => {
+  const res = await getStoreRebate(formState.amount, formState.welfare);
+  formState.rebate = res.data;
 };
 let modelRef = reactive({
   id: 0,
@@ -121,7 +102,6 @@ const replaceChecked = (index) => {
   formState.invoiceTitle[index].isdefault = 1;
   formState.invoiceTitle[index].checked = true;
   message.info('设置成功');
-  debugger
 };
 
 const showModal = () => {
@@ -133,7 +113,10 @@ const hideModal = () => {
 };
 
 const changeField = (type, value) => {
-  formState[type] = value || !formState[type];
+  formState[type] = value;
+  if (type == 'welfare') {
+getRebate();
+  }
 };
 
 const handleOk = () => {
@@ -314,6 +297,9 @@ onMounted(() => {
                   placeholder="请输入预存金额(开票金额)"
                   class="t-gaincode f-fl prestore-input"
                   style="width: 250px"
+                  @change="(val) => {
+                    getRebate()
+                  }"
                   v-model:value="formState.amount"
                 />
               </a-form-item>
@@ -325,7 +311,7 @@ onMounted(() => {
                 <span>预计返利：</span>
               </div>
               <a-form-item class="f-fl">
-                {{ getRebate() }}
+                {{ formState.rebate }}
               </a-form-item>
               <span class="t-unil">元</span>
             </li>
@@ -387,7 +373,7 @@ onMounted(() => {
                 <span>元</span>
               </div>
             </div>
-            <div class="clear attached-files-li">
+            <div class="clear attached-files-li" :style="{ 'height': formState.additionUrl ? '100px' : '50px' }">
               <div class="t-title f-fl">附加文件：</div>
               <div class="attached-files f-fl">
                 <UploadFile :onSuccess="(url) => {
@@ -1017,7 +1003,7 @@ onMounted(() => {
   margin-top: 6px;
 }
 .attached-files-li {
-  height: 50px;
+  height: 80px;
   line-height: 50px;
   .t-title {
     line-height: 30px;
