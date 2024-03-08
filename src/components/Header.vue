@@ -29,7 +29,7 @@ const route = useRoute();
       </div>
       <a-popover placement="bottom" style="display: inline-block">
           <template #content>
-            <img :src="Zhengshu" style="width: auto; height: 700px" />
+            <img :src="Zhengshu1" style="width: auto; height: 500px" />
           </template>
           <template #title>
             <span></span>
@@ -38,7 +38,7 @@ const route = useRoute();
         </a-popover>
         <a-popover placement="bottom" style="display: inline-block">
           <template #content>
-            <img :src="Zhengshu1" style="width: auto; height: 700px" />
+            <img :src="Zhengshu" style="width: auto; height: 500px" />
           </template>
           <template #title>
             <span></span>

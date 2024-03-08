@@ -35,7 +35,7 @@ export function useCountDown(callback) {
     let se = setInterval(() => {
       if (count.value <= 1) {
         clearInterval(se);
-        count.value = 6;
+        count.value = config.timeCount;
         typeof callback == 'function' && callback();
         console.log(count)
       }
