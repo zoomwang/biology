@@ -51,6 +51,7 @@ const jingdonPay = async() => {
       notification.success({
         description: "申请成功，请耐心等待工作人员联系",
       });
+      getOrderLists()
     }
   } catch (err) {}
   }
@@ -70,6 +71,7 @@ const feePay = async(type) => {
         notification.success({
           description: "申请成功，请耐心等待工作人员联系",
         });
+        getOrderLists();
       }
     } catch (err) {}
   }
@@ -99,7 +101,6 @@ const getOrderLists = async function () {
   try {
     const res = await getOrderList();
     if (res?.code == 0) {
-      // debugger
       data.value = res?.data?.list;
     }
   } catch (err) {}
@@ -179,7 +180,7 @@ const getOrderLists = async function () {
       </li>
     </ul>
     <a-card title="积分兑换记录">
-      <a-table :columns="columns" :data-source="data">
+      <a-table :columns="columns" :data-source="data" bordered>
         <template #name="{ points }">
           <a>{{ points }}</a>
         </template>
@@ -209,7 +210,7 @@ const getOrderLists = async function () {
 }
 
 .exchange-navbar-item {
-	width: 200px;
+	width: 240px;
 	height: 100%;
 	padding: 20px 30px;
 }

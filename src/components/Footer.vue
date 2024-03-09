@@ -24,7 +24,7 @@ defineProps({
       style="text-align: center; color: rgba(0, 0, 0, 0.45); line-height: 20px"
     >
       Copyright  All Rights Reserved
-      <span style="margin-left: 8px">服务热线：400-831-0631</span>
+      <span style="margin-left: 8px">服务热线：400-9969-327</span>
     </p>
   </div>
 </template>
