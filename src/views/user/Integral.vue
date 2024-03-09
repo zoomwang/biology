@@ -29,6 +29,14 @@ const columns = [
     dataIndex: 'points',
     key: 'points',
   },
+  {
+    title: '兑换类型',
+    dataIndex: 'type',
+    key: 'type',
+    slots: {
+      customRender: "type",
+    },
+  },
 ];
 
 const jingdonPay = async() => {
@@ -91,7 +99,8 @@ const getOrderLists = async function () {
   try {
     const res = await getOrderList();
     if (res?.code == 0) {
-      data = res?.data?.list;
+      // debugger
+      data.value = res?.data?.list;
     }
   } catch (err) {}
 }
@@ -174,6 +183,11 @@ const getOrderLists = async function () {
         <template #name="{ points }">
           <a>{{ points }}</a>
         </template>
+        <template #type="{ text }">
+        <span>
+          {{ ["京东卡", "测试费"][text] }}
+        </span>
+      </template>
       </a-table>
     </a-card>
     <a-modal v-model:visible="visible" title="【易研易测积分活动宣传单】" @ok="handleOk">
