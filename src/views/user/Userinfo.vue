@@ -14,6 +14,36 @@ import dayjs from 'dayjs';
 const dateFormat = 'YYYY-MM-DD';
 const monthFormat = 'YYYY/MM';
 const useForm = Form.useForm;
+const stageMenu = [
+  {
+    label: '本科',
+    value: 0
+  },
+  {
+    label: '硕士',
+    value: 1
+  },
+  {
+    label: '博士',
+    value: 2
+  },
+  {
+    label: '博士后',
+    value: 3
+  },
+  {
+    label: '讲师',
+    value: 4
+  },
+  {
+    label: '副教授/副研究员',
+    value: 5
+  },
+  {
+    label: '教授/研究员',
+    value: 6
+  }
+]
 let formState = reactive({
   id: "",
   address: "",
@@ -160,7 +190,7 @@ onMounted(() => {
         <div class="t-label f-fl">邀请人手机号：</div>
         <a-form-item class="f-fl" v-bind="validateInfosp.inviterMobile">
           <a-input
-            :disabled="!canEdit"
+            disabled
             v-model:value="formState.inviterMobile"
             placeholder="请输入手机号"
           />
@@ -173,6 +203,7 @@ onMounted(() => {
              formState.additionUrl = url;
             }" />
         </a-form-item>
+        <span>上传工作证或学生证等真实信息</span>
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl">地区：</div>
@@ -215,7 +246,8 @@ onMounted(() => {
         <div class="t-label f-fl">所处阶段：</div>
         <a-form-item class="f-fl">
           <a-select v-model:value="formState.stage" :disabled="!canEdit">
-            <a-select-option value="0">阶段1</a-select-option>
+            <!-- <a-select-option value="0">阶段1</a-select-option> -->
+            <a-select-option v-for="item in stageMenu" :key="item.label" :value="item.value">{{ item.label }}</a-select-option>
           </a-select>
         </a-form-item>
       </div>

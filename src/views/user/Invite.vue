@@ -94,7 +94,7 @@ onMounted(() => {
             class="btn hover"
             style="margin: 14px 0px 0px 40px"
             @click="() => {
-              copy(`${origin}/home/login?invitecode=${$localStorage.getItem('phone')}`)
+              copy(`${origin}/home/register?invitecode=${$localStorage.getItem('phone')}`)
             }"
             >复制链接</a
           >

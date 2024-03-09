@@ -11,7 +11,7 @@ let imrUrl = reactive({
   value: ''
 });
 
-const props = defineProps(["props", 'payType', 'orderId', 'orderInfo']);
+const props = defineProps(["props", 'payType', 'orderId', 'orderInfo', "successCall"]);
 watch(props, async (newdata, olddata) => {
   getQrCode()
 })
@@ -51,6 +51,7 @@ const roll = () => {
     const res = await getOrderStatus(props.orderId);
     if (res?.code == 0 && res?.data == 3) {
       isPaySuccess.value = true;
+      props.successCall();
       clearInterval(interval.value);
     }
   }, 2000);

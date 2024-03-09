@@ -26,6 +26,11 @@ export const addOrder = (params) => {
   return api.post(`/sys/order/add`, params);
 }
 
+// 更新订单
+export const updateOrder = (param) => {
+  return api.post(`/sys/order/update`, param);
+}
+
 /** 获取项目详情 */
 export const getOrderDetail = (id) => {
   return api.get(`/sys/order/template?id=${id}`);

@@ -6,16 +6,19 @@ import WxScan from "../../components/WxScan.vue";
 import { notification, Form } from "ant-design-vue";
 import { regitry } from "../../services/user";
 import router from '../../router';
+import { useRoute, useRouter } from "vue-router";
 import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
 const activeKey = ref("1");
+const route = useRoute();
 const formState = reactive({
   layout: "horizontal",
   mobile: "",
   code: "",
   password: "",
   checked: false,
+  inviterMobile: route.query.invitecode
 });
 const state = reactive({
   checked: false,
@@ -160,6 +163,21 @@ const { resetFields, validate, validateInfos } = useForm(
                   style="width: 403px"
                   v-model:value="formState.password"
                   placeholder="请输入密码"
+                />
+              </a-form-item>
+            </div>
+          </div>
+          <div class="l-item clear">
+            <div class="t-item f-fl" style="width: 76px; text-align: right">
+              <span class="t-red">*</span>邀请人：
+            </div>
+            <div class="f-fl">
+              <a-form-item v-bind="validateInfos.inviterMobile">
+                <a-input
+                  disabled
+                  style="width: 403px"
+                  v-model:value="formState.inviterMobile"
+                  placeholder="邀请人手机号"
                 />
               </a-form-item>
             </div>

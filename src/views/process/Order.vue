@@ -34,7 +34,7 @@ const next = async(data) => {
   await getOrderCostCalcs(data);
   if (res?.code == 0) {
     order.id = res.data;
-    debugger
+    // debugger
     notification.success({
       description: "提交订单成功",
     });

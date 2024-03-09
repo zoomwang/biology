@@ -643,6 +643,26 @@ onMounted(async () => {
                         "
                         >修改</a
                       >
+                      <a-popconfirm
+                        title="你确定要删除吗？"
+                        ok-text="确定"
+                        cancel-text="取消"
+                        @confirm="
+                          () => {
+                            formState.recoveryAddress.splice(index, 1);
+                          }
+                        "
+                      >
+                        <a
+                          class="b-delete"
+                          @click="
+                            () => {
+                              formState.recoveryAddress.splice(index, 1);
+                            }
+                          "
+                          >删除</a
+                        >
+                      </a-popconfirm>
                     </div>
                   </div>
                 </div>
@@ -706,6 +726,27 @@ onMounted(async () => {
                               "
                               >修改</a
                             >
+                             <a-popconfirm
+                        title="你确定要删除吗？"
+                        ok-text="确定"
+                        cancel-text="取消"
+                        @confirm="
+                          () => {
+                            formState.recoveryAddress.splice(index, 1);
+                          }
+                        "
+                      >
+                        <a
+                          class="b-delete"
+                          style="margin-left: 10px"
+                          @click.stop="
+                            () => {
+                              formState.recoveryAddress.splice(index, 1);
+                            }
+                          "
+                          >删除</a
+                        >
+                      </a-popconfirm>
                           </div>
                         </div>
                       </div>
@@ -830,7 +871,7 @@ onMounted(async () => {
     <a-affix :offset-bottom="bottom">
       <div class="d-flex">
         <div class="cost">
-          合计费用：<a-button type="link">¥{{ cost.value }}</a-button>
+          待报价：<a-button type="link">¥{{ cost.value }}</a-button>
         </div>
         <a-button style="display: block" @click="saveData">保存草稿</a-button>
         <a-button
@@ -869,7 +910,7 @@ onMounted(async () => {
           }"
         >
           <a-input v-model:value="modelRef.receiver" placeholder="请输入" />
-          <a-input v-model:value="modelRef.id" hidden />
+          <a-input v-model:value="modelRef.id" v-show="false" />
         </a-form-item>
         <a-form-item
           label="联系电话"

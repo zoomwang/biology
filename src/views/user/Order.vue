@@ -16,7 +16,6 @@ import {
   getOrderInfo,
 } from "../../services/process";
 import { notification } from "ant-design-vue";
-// import moment from 'moment';
 import {formatTime} from "@/utils/index";
 
 let orderData = reactive({
@@ -24,7 +23,6 @@ let orderData = reactive({
 const drawerVisible = ref(false);
 const showDrawer = async (record) => {
   orderData = record;
-  debugger
   await getOrderInfos(record.orderId);
 };
 const orderDetail = ref({});
@@ -137,6 +135,10 @@ const getOrderInfos = async (params, type) => {
     }
   } catch (err) {}
 };
+
+const successCall = () => {
+  drawerVisible.value = false
+}
 
 const cancelOrders = async (orderId) => {
   try {
@@ -343,7 +345,7 @@ const menus = ["已创建", "可支付", "待实验", "实验中", "已完成", 
     v-model:visible="drawerVisible"
     :after-visible-change="afterVisibleChange"
   >
-    <FinalStep :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
+    <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
   </a-drawer>
 </template>
 <style lang="scss"></style>

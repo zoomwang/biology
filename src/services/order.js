@@ -56,6 +56,7 @@ export const payQrcodeStore = (param) => {
 export const getOrderStatus = (orderId) => {
   return api.get(`/sys/order/status?orderId=${orderId}`);
 }
+
 // 获取预存状态
 export const getStoreStatus = (storeId) => {
   return api.get(`/sys/store/status?storeId=${storeId}`);
