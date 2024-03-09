@@ -170,6 +170,8 @@ onMounted(() => {
         </p>
         <template v-for="item in costDetail.value" :key="item">
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
+        </template>
+        <template v-for="item in costDetail.value" :key="item">
           <p class="wait_pay" v-if="item.label == '支付金额'">待支付： <span>￥{{item.value > 0 ? item.value : 0}}</span></p>
         </template>
         <!-- <p>
