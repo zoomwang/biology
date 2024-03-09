@@ -47,8 +47,8 @@ const getOrderCostCalcs = async(data) => {
 }
 
 const handleChange = async(id) => {
-  formState.couponId = id;
   const data = Object.assign(formState, props.orderData);
+  formState.couponId = id;
   await getOrderCostCalcs(data);
   const res = await addOrder(data);
   if (res?.code == 0) {
@@ -170,7 +170,7 @@ onMounted(() => {
         </p>
         <template v-for="item in costDetail.value" :key="item">
           <p v-if="item.label != '支付金额'">{{item.label}}: {{item.value}}</p>
-          <p class="wait_pay" v-if="item.label == '支付金额'">待支付： <span>￥{{item.value}}</span></p>
+          <p class="wait_pay" v-if="item.label == '支付金额'">待支付： <span>￥{{item.value > 0 ? item.value : 0}}</span></p>
         </template>
         <!-- <p>
           优惠券选择：
@@ -196,7 +196,7 @@ onMounted(() => {
           font-weight: 500;
         "
       >
-        支付金额 <span class="amount">￥{{!isUpdata ? props.cost['支付金额'] : prop.cost['支付金额']}}</span>
+        支付金额 <span class="amount">￥{{!isUpdata ? (props.cost['支付金额'] > 0 ? props.cost['支付金额'] : 0) : (prop.cost['支付金额'] > 0 ? prop.cost['支付金额'] : 0)}}</span>
       </p>
       <a-card title="支付方式">
         <div class="payway_list">
