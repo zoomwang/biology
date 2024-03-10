@@ -120,6 +120,14 @@ getRebate();
 };
 
 const handleOk = () => {
+  if (!modelRef.title) {
+    message.error(`请填写发票抬头`);
+    return;
+  }
+  if (!modelRef.registrationo) {
+    message.error(`请填写企业税号`);
+    return;
+  }
   if (!editInvoice.isEditInvoice) {
     formState.invoiceTitle.push(modelRef);
   } else {
@@ -657,9 +665,9 @@ onMounted(() => {
             </a-collapse-panel>
           </a-collapse>
           <div class="invoice-add">
-            <div class="t-new-add t-blue">
+            <!-- <div class="t-new-add t-blue">
               <span class="text-add">+</span><span class="">新增发票抬头</span>
-            </div>
+            </div> -->
             <a-button
               type="primary"
               @click="
@@ -669,7 +677,7 @@ onMounted(() => {
                 }
               "
               class="t-add"
-            ></a-button>
+            >+新增发票抬头</a-button>
           </div>
           <div></div>
         </div>
@@ -1086,13 +1094,13 @@ onMounted(() => {
     background: #ffffff !important;
     // border-radius: 2px !important;
     border-radius: 2px !important;
-    border: 1px dashed #1677ff !important;
+    // border: 1px dashed #1677ff !important;
     // border:none;
     box-shadow: none;
     color: #1677ff;
     cursor: pointer;
     z-index: 999;
-    opacity: 0;
+    opacity: 1;
   }
 }
 .mail-tips {

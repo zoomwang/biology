@@ -226,3 +226,9 @@ a:hover{
 .ant-modal{
   width: 420px!important;
 }
+
+.ant-modal-wrap{
+  .ant-modal{
+    width: 600px!important;
+  }
+}

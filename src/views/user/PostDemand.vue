@@ -18,6 +18,7 @@ const formState = reactive({
   // completionCycle: "",
   fileUrl: "",
   demandDesc: "",
+  department: ""
 });
 
 const onSubmit = () => {
