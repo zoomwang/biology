@@ -51,13 +51,14 @@ let formState = reactive({
   userIdentity: "",
   university: "",
   additionUrl: "",
+  email: ""
 });
 const schoolState = ref([]);
 const userId = ref('');
 const {
-  resetFields: resetFieldsp,
-  validate: validatep,
-  validateInfos: validateInfosp,
+  resetFields,
+  validate,
+  validateInfos
 } = useForm(
   formState,
   reactive({
@@ -72,7 +73,14 @@ const {
       {
         required: true,
       },
-    ]
+    ],
+    email: [
+      {
+        // required: true,
+        message: "请输入正确格式邮箱",
+        pattern: /\w[-.\w]*\@[-a-z0-9]+(\.[-a-z0-9]+)*\.(com|cn|edu|uk)/gi,
+      },
+    ],
   })
 );
 const visible = ref(false);
@@ -111,9 +119,25 @@ const getUserInfo = async function () {
       res.data.address = Array.isArray(address) && address.map((item) => {
         return `${item}`;
       });
-      res.data.studyStart = ref(dayjs(formatLocalTime(res?.data?.studyStart, true), monthFormat));
-      res.data.studyEnd = ref(dayjs(formatLocalTime(res?.data?.studyEnd, true), monthFormat));
+      res.data.studyStart = dayjs(formatLocalTime(res?.data?.studyStart, true), monthFormat);
+      res.data.studyEnd = dayjs(formatLocalTime(res?.data?.studyEnd, true), monthFormat);
       formState = Object.assign(formState, res.data);
+      // formState.address = address;
+      // formState.university = university;
+      // formState.username = username;
+      // formState.type = type;
+      // formState.contacts = contacts;
+      // formState.phone = phone;
+      // formState.email = email;
+      // formState.samplesNumber = samplesNumber;
+      // formState.budgetRange = budgetRange;
+      // formState.department = department;
+      // formState.fileUrl = fileUrl;
+      // formState.demandDesc = demandDesc;
+      // formState.mentor = mentor;
+      // formState.studyStart = studyStart;
+      // formState.studyEnd = studyEnd;
+      // formState.stage = stage;
       userId.value = res.data.id;
       localStorage.setItem('userName', res.data.username);
     }
@@ -165,7 +189,7 @@ onMounted(() => {
           <a-input
             :disabled="!canEdit"
             v-model:value="formState.username"
-            placeholder="请姓名"
+            placeholder="请输入姓名"
           />
         </a-form-item>
       </div>
@@ -188,7 +212,7 @@ onMounted(() => {
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl">邀请人手机号：</div>
-        <a-form-item class="f-fl" v-bind="validateInfosp.inviterMobile">
+        <a-form-item class="f-fl" v-bind="validateInfos.inviterMobile">
           <a-input
             disabled
             v-model:value="formState.inviterMobile"
@@ -198,21 +222,22 @@ onMounted(() => {
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl">邮箱：</div>
-        <a-form-item class="f-fl" v-bind="validateInfosp.mailbox">
+        <a-form-item class="f-fl" v-bind="validateInfos.email">
           <a-input
-            v-model:value="formState.mailbox"
-            placeholder="请输入手机号"
+            :disabled="!canEdit"
+            v-model:value="formState.email"
+            placeholder="请输入正确格式"
           />
         </a-form-item>
       </div>
-      <div class="l-item clear">
+      <div class="l-item clear" style="position: relative;">
         <div class="t-label f-fl">附件上传：</div>
         <a-form-item class="f-fl">
            <UploadFile :onSuccess="(url) => {
              formState.additionUrl = url;
             }" />
         </a-form-item>
-        <span>上传工作证或学生证等真实信息</span>
+        <span style="position:absolute; left: 100px;top:5px;margin-left: 100px">上传工作证或学生证等真实信息</span>
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl">地区：</div>
