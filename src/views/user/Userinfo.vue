@@ -17,31 +17,31 @@ const useForm = Form.useForm;
 const stageMenu = [
   {
     label: '本科',
-    value: 0
+    value: '本科'
   },
   {
     label: '硕士',
-    value: 1
+    value: '硕士'
   },
   {
     label: '博士',
-    value: 2
+    value: '博士'
   },
   {
     label: '博士后',
-    value: 3
+    value: '博士后'
   },
   {
     label: '讲师',
-    value: 4
+    value: '讲师'
   },
   {
     label: '副教授/副研究员',
-    value: 5
+    value: '副教授/副研究员'
   },
   {
     label: '教授/研究员',
-    value: 6
+    value: '教授/研究员'
   }
 ]
 let formState = reactive({

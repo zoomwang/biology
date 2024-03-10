@@ -17,6 +17,7 @@ import {
 } from "../../services/process";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
+import DownLoad from "@/components/DownLoad.vue";
 
 let orderData = reactive({
 });
@@ -175,23 +176,6 @@ const menus = ["已创建", "可支付", "待实验", "实验中", "已完成", 
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <!-- <a-tabs
-      v-model:activeKey="activeKey"
-      @change="
-        (tab) => {
-          param.status = tab;
-          getOrderList();
-        }
-      "
-    >
-      <a-tab-pane key="0" tab="全部订单"></a-tab-pane>
-      <a-tab-pane
-        v-for="(item, index) in menus"
-        :key="++index"
-        :tab="item"
-        force-render
-      ></a-tab-pane>
-    </a-tabs> -->
     <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="订单创建时间" :wrapperCol="{
         span: 7
@@ -251,17 +235,23 @@ const menus = ["已创建", "可支付", "待实验", "实验中", "已完成", 
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
-        <br />
-        <a-popconfirm
-          title="你确认要取消订单吗?"
-          ok-text="确定"
-          v-if="record.status <= 3"
-          cancel-text="取消"
-          @confirm="cancelOrders(record.orderId)"
-          @cancel="cancel"
-        >
-          <a-button danger style="margin-bottom: 5px" type="text">取消订单</a-button>
-        </a-popconfirm>
+        <template v-if="record.status <= 3">
+          <br />
+          <a-popconfirm
+            title="你确认要取消订单吗?"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="cancelOrders(record.orderId)"
+            @cancel="cancel"
+          >
+            <a-button danger style="margin-bottom: 5px" type="text">取消订单</a-button>
+          </a-popconfirm>
+        </template>
+       
+        <template v-if="record.status >= 3 && record.status <=5">
+          <br />
+          <DownLoad :props="record" type="link" />
+        </template>
       </template>
     </a-table>
   </main>

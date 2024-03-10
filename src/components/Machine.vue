@@ -14,14 +14,16 @@ let orderDetails = reactive({
   }
 });
 
-// const id = route.query.id;
+const id = route.query.id;
 const toDetail = () => {
   router.push({name: "detail", query: { id: route.query.id } });
 }
 const getOrderDetails = async (id) => {
   const res = await getOrderDetail(id);
+
   if (res?.code == 0) {
     orderDetails.value = res.data;
+    debugger
   }
 }
 onMounted(async () => {
