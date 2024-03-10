@@ -253,9 +253,9 @@ const menus = ["已创建", "可支付", "待实验", "实验中", "已完成", 
           <DownLoad :props="record" type="link" />
         </template>
           
-        <template v-if="record.status == 5">
+        <template v-if="record.status == 5 && record.additionUrl">
           <br />
-          <a :href="record.additionUrl" download="实验结果.txt">下载实验结果</a>
+          <a :href="record.additionUrl" download="实验结果.png">下载实验结果</a>
         </template>
       </template>
     </a-table>
