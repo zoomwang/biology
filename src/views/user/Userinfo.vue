@@ -197,6 +197,15 @@ onMounted(() => {
         </a-form-item>
       </div>
       <div class="l-item clear">
+        <div class="t-label f-fl">邮箱：</div>
+        <a-form-item class="f-fl" v-bind="validateInfosp.mailbox">
+          <a-input
+            v-model:value="formState.mailbox"
+            placeholder="请输入手机号"
+          />
+        </a-form-item>
+      </div>
+      <div class="l-item clear">
         <div class="t-label f-fl">附件上传：</div>
         <a-form-item class="f-fl">
            <UploadFile :onSuccess="(url) => {
@@ -232,9 +241,6 @@ onMounted(() => {
       <div class="l-item clear">
         <div class="t-label f-fl">院系：</div>
         <a-form-item class="f-fl">
-          <!-- <a-select v-model:value="formState.department" :disabled="!canEdit">
-            <a-select-option value="lucy">Lucy</a-select-option>
-          </a-select> -->
           <a-input
           :disabled="!canEdit"
             v-model:value="formState.department"
@@ -246,7 +252,6 @@ onMounted(() => {
         <div class="t-label f-fl">所处阶段：</div>
         <a-form-item class="f-fl">
           <a-select v-model:value="formState.stage" :disabled="!canEdit">
-            <!-- <a-select-option value="0">阶段1</a-select-option> -->
             <a-select-option v-for="item in stageMenu" :key="item.label" :value="item.value">{{ item.label }}</a-select-option>
           </a-select>
         </a-form-item>
