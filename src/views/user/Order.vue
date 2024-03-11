@@ -255,7 +255,7 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成", 
           
         <template v-if="record.status == 5 && record.additionUrl">
           <br />
-          <a :href="record.additionUrl" download="实验结果.png">下载实验结果</a>
+          <a style="padding-left:10px" :href="record.additionUrl" download="实验结果.png">下载实验结果</a>
         </template>
       </template>
     </a-table>
@@ -279,6 +279,9 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成", 
       }}</a-descriptions-item>
       <a-descriptions-item label="运费支付方式">{{
         ["到付", "自付"][orderDetail.freightMode]
+      }}</a-descriptions-item>
+      <a-descriptions-item label="支付方式" v-if="orderDetail.status > 2">{{
+        (orderDetail?.payMode && orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
       }}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions

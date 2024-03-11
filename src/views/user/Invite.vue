@@ -86,7 +86,7 @@ onMounted(() => {
             class="btn invite-link"
             style="margin: 14px 0px 0px 0px"
           >
-            {{`${origin}/home/login?invitecode=${$localStorage.getItem("phone")}`}}
+            {{`${origin}/home/register?invitecode=${$localStorage.getItem("phone")}`}}
           </a>
           <a
             id="copyInviteLink"

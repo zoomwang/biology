@@ -1,44 +1,58 @@
 <script setup>
-import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
-import { onMounted, onBeforeMount } from "vue";
+import {
+  RouterLink,
+  RouterView,
+  useRoute,
+  useRouter,
+} from "vue-router";
+import { onMounted, onBeforeMount, onUpdated, watch } from "vue";
 import Header from "../src/components/Header.vue";
 import Footer from "../src/components/Footer.vue";
 import Wx from "../src/components/Wx.vue";
 import Machine from "../src/components/Machine.vue";
 import { isLogged } from "../src/services/user";
 import $localStorage from "@/hooks/localStorage";
-import router from './router';
-import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import router from "./router";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { blackList } from "@/utils/index.js";
 import { ref } from "vue";
 
 const routers = useRouter();
 const route = useRoute();
-console.log("当前路由：", route);
 const isNext = ref(false);
 
-const checkIslogged = async function() {
+const checkIslogged = async function () {
   try {
-      const res = await isLogged();
+    const res = await isLogged();
     if (res?.code == 0) {
-      localStorage.setItem("access_token", res?.data?.access_token)
+      localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("isLogin", true);
       isNext.value = true;
     } else {
       isNext.value = true;
       if (!blackList.includes(route?.fullPath)) {
-        router.push({name: "login"});
+        router.push({ name: "login" });
       }
     }
   } catch (err) {
     isNext.value = true;
   }
-}
+};
 
-onBeforeMount(async() => {
-  await checkIslogged()
-})
+watch(
+  () => route.path,
+  async(newPath, oldPath) => {
+    if (!newPath.includes('/process/1') && !newPath.includes('/process/index')) {
+      await checkIslogged();
+    }
+  },
+  { immediate: true }
+);
+
+onBeforeMount(async () => {
+  await checkIslogged();
+});
 
 </script>
 
@@ -48,9 +62,14 @@ onBeforeMount(async() => {
     <div class="wrap">
       <RouterView v-if="isNext" class="wrap-l" />
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
-      <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
+        <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
         <Machine v-if="route?.fullPath.includes('order')" />
-        <Wx v-if="!route.path.includes('/process/1') && !route.path.includes('/process/index')" />
+        <Wx
+          v-if="
+            !route.path.includes('/process/1') &&
+            !route.path.includes('/process/index')
+          "
+        />
       </div>
     </div>
     <Footer></Footer>
@@ -58,8 +77,8 @@ onBeforeMount(async() => {
 </template>
 
 <style scoped>
-.user-wrap{
-  width: 1080px!important;
+.user-wrap {
+  width: 1080px !important;
 }
 .wrap-l {
   width: 970px;

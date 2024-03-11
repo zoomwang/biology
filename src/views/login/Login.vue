@@ -14,6 +14,7 @@ import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common"
 
 const useForm = Form.useForm;
 const show = ref(false);
+const visible = ref(false);
 const activeKey = ref("password");
 const formState = reactive({
   layout: "horizontal",
@@ -193,10 +194,15 @@ const {
                 />
               </a-form-item>
               <a-form-item v-bind="validateInfos.password">
-                <a-input
+                <a-input-password
                   v-model:value="formState.password"
+                  v-model:visible="visible"
                   placeholder="请输入密码"
                 />
+                <!-- <a-input
+                  v-model:value="formState.password"
+                  placeholder="请输入密码"
+                /> -->
               </a-form-item>
               <a-button
                 type="primary"

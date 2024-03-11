@@ -328,7 +328,7 @@ onMounted(() => {
             canEdit = true;
           }
         "
-        >编辑用户信息</a-button
+        >编辑个人信息</a-button
       >
       <a-popconfirm
         v-if="canEdit"
