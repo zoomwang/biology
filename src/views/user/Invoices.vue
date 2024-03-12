@@ -50,7 +50,6 @@ const replaceChecked = (index) => {
 
 const deleteItem = async (data) => {
   const res = await deleteInvoice(data);
-  debugger
   if (res?.code == 0) {
     notification.success({
       description: "删除成功",

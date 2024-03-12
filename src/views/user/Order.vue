@@ -170,7 +170,7 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["待报价", "可支付", "待实验", "实验中", "已完成", "已取消"];
+const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","欠款中","已开票","已还款", "已取消"];
 </script>
 
 <template>
@@ -281,7 +281,7 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成", 
         ["到付", "自付"][orderDetail.freightMode]
       }}</a-descriptions-item>
       <a-descriptions-item label="支付方式" v-if="orderDetail.status > 2">{{
-        (orderDetail?.payMode && orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
+        (orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
       }}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions

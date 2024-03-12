@@ -696,7 +696,7 @@ onMounted(() => {
               >
               </a-input>
             </a-form-item>
-            <div class="t-red mail-tips" style="margin-left: 10px;">请输入邮箱</div>
+            <div class="t-red mail-tips" style="margin-left: 10px;position:relative;left:10px;top:5px;">请输入邮箱</div>
           </div>
         </div>
       </div>

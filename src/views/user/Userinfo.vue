@@ -119,25 +119,9 @@ const getUserInfo = async function () {
       res.data.address = Array.isArray(address) && address.map((item) => {
         return `${item}`;
       });
-      res.data.studyStart = dayjs(formatLocalTime(res?.data?.studyStart, true), monthFormat);
-      res.data.studyEnd = dayjs(formatLocalTime(res?.data?.studyEnd, true), monthFormat);
+      res.data.studyStart = dayjs(formatLocalTime((res?.data?.studyStart ? res?.data?.studyStart : new Date()), true), monthFormat);
+      res.data.studyEnd = dayjs(formatLocalTime(res?.data?.studyEnd ? res?.data?.studyEnd : new Date(), true), monthFormat);
       formState = Object.assign(formState, res.data);
-      // formState.address = address;
-      // formState.university = university;
-      // formState.username = username;
-      // formState.type = type;
-      // formState.contacts = contacts;
-      // formState.phone = phone;
-      // formState.email = email;
-      // formState.samplesNumber = samplesNumber;
-      // formState.budgetRange = budgetRange;
-      // formState.department = department;
-      // formState.fileUrl = fileUrl;
-      // formState.demandDesc = demandDesc;
-      // formState.mentor = mentor;
-      // formState.studyStart = studyStart;
-      // formState.studyEnd = studyEnd;
-      // formState.stage = stage;
       userId.value = res.data.id;
       localStorage.setItem('userName', res.data.username);
     }
@@ -328,7 +312,7 @@ onMounted(() => {
             canEdit = true;
           }
         "
-        >编辑个人信息</a-button
+        >编辑用户信息</a-button
       >
       <a-popconfirm
         v-if="canEdit"

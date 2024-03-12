@@ -23,7 +23,6 @@ const getOrderDetails = async (id) => {
 
   if (res?.code == 0) {
     orderDetails.value = res.data;
-    debugger
   }
 }
 onMounted(async () => {
