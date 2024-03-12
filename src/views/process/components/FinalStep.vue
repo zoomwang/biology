@@ -298,7 +298,7 @@ onMounted(() => {
     </a-affix>
       <!-- 支付弹层 -->
     <a-modal
-      class="prestore-modal-wrap"
+      class="order-modal-wrap"
       v-model:visible="payVisible"
       title="在线支付"
       width="400px"
