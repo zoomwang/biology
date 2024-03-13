@@ -188,11 +188,19 @@ const { resetFields, validate, validateInfos } = useForm(
     ],
   })
 );
+
 const visible = ref(false);
 const canEdit = ref(false);
 const onSubmit = async () => {
   validate().then(async (res) => {
     try {
+      // if (!formState.additionUrl) {
+      //   notification.error({
+      //     message: "",
+      //     description: "请上传附件",
+      //   });
+      //   return;
+      // }
       formState.id = userId.value || 2;
       if (formState.mobile == formState.inviterMobile) {
         notification.error({
@@ -289,7 +297,7 @@ onMounted(async() => {
 <template>
   <!-- <a-card title="用户注册资料" :bordered="false"> -->
   <div class="userinfo d-form">
-    <a-form :model="formState">
+    <a-form :model="formState" :rules="validateInfos">
       <div class="l-item clear">
         <div class="t-label f-fl">登录账号：</div>
         <a-form-item class="f-fl">
@@ -470,7 +478,7 @@ onMounted(async() => {
           </div>
         </template>
       </template>
-      <template v-else>
+      <template v-if="formState.userIdentity == 2 || formState.userIdentity == 3">
         <div class="l-item clear">
           <div class="t-label f-fl"><span class="t-red">*</span>请输入企业：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.corporation">

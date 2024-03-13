@@ -83,13 +83,16 @@ export const identity = [{
 },{
   label: "医院",
   value: 3,
-},{
-  label: "个人",
-  value: 4,
-},{
-  label: "其他",
-  value: 5,
-}]
+},
+// {
+//   label: "个人",
+//   value: 4,
+// },{
+//   label: "其他",
+//   value: 5,
+// }
+]
+
 
 // export const getLabelFromVal = (value) => {
 //   const 
