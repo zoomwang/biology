@@ -1135,7 +1135,7 @@ onMounted(async () => {
   line-height: 21px;
   background: #eff8f7;
   font-size: 12px;
-  color: #56beb2;
+  color: #1890ff;
   margin-right: 7px;
   display: inline-block;
   text-align: center;
@@ -1149,7 +1149,7 @@ onMounted(async () => {
 }
 .recovery-address .default .modify-button a {
   font-size: 14px;
-  color: #56beb2;
+  color: #1890ff;
 }
 .recovery-address .default .modify-button a:hover {
   color: #16b799;

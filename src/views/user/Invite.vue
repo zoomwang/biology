@@ -205,7 +205,7 @@ onMounted(() => {
   // background-color: #e0f6ed;
   margin: 41px 16px 0 0;
   font-size: 18px;
-  // color: #56beb2;
+  // color: #1890ff;
   text-align: center;
   font-weight: 500;
 }
@@ -214,7 +214,7 @@ onMounted(() => {
   color: #595959;
 }
 // .salary-list ~ .btn:hover {
-//   // background-color: #56beb2;
+//   // background-color: #1890ff;
 //   color: #fff;
 //   cursor: pointer;
 // }

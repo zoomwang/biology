@@ -69,7 +69,7 @@ onMounted(async () => {
   display: block;
   width: 4px;
   height: 18px;
-  background: #56BEB2;
+  background: #1890ff;
 }
 
 .sci-buffet-info-section a {
@@ -106,7 +106,7 @@ onMounted(async () => {
 .sci-buffet-info-section .sci-buffet-phone {
   line-height: 22px;
   font-size: 16px;
-  color: #56BEB2;
+  color: #1890ff;
   font-weight: bold;
   text-align: center;
 }

@@ -64,12 +64,7 @@ onBeforeMount(async () => {
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
         <!-- <div class="wrap-r f-fr" v-if="!route?.fullPath.includes('home')">  -->
         <Machine v-if="route?.fullPath.includes('order')" />
-        <Wx
-          v-if="
-            !route.path.includes('/process/1') &&
-            !route.path.includes('/process/index')
-          "
-        />
+        <Wx />
       </div>
     </div>
     <Footer></Footer>
@@ -78,14 +73,14 @@ onBeforeMount(async () => {
 
 <style scoped>
 .user-wrap {
-  width: 1080px !important;
+  width: 1280px !important;
 }
 .wrap-l {
-  width: 970px;
+  width: 1280px;
   margin: 0 auto 20px;
 }
 .wrap-r {
-  width: 220px;
+  /* width: 220px; */
 }
 .wrap {
   width: 1280px;

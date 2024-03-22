@@ -3,11 +3,13 @@ import { ref, defineProps } from "vue";
 import { notification } from "ant-design-vue";
 import $localStorage from "../hooks/localStorage";
 
-const props = defineProps(['onSuccess'])
+const props = defineProps(['onSuccess', 'fileList'])
 const header = {
   Authorization: $localStorage.getItem('access_token')
 };
-const fileList = ref([]);
+const fileList = ref([{
+  name: '附件1', url: props.fileList
+}]);
 const handleChange = (info) => {
   const fileMaxSize = 1024*1024*100
   let resFileList = [...info.fileList];

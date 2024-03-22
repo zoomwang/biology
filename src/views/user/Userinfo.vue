@@ -176,7 +176,7 @@ const { resetFields, validate, validateInfos } = useForm(
     mentor: [
       {
         required: formState.userIdentity != 1 ? false : true,
-        message: "请输入导师",
+        message: "请输入导师信息",
       },
     ],
     email: [
@@ -368,6 +368,7 @@ onMounted(async() => {
         <div class="t-label f-fl"><span class="t-red">*</span>附件上传：</div>
         <a-form-item class="f-fl">
           <UploadFile
+            :fileList="formState.additionUrl"
             :onSuccess="
               (url) => {
                 formState.additionUrl = url;

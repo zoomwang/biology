@@ -3,7 +3,7 @@ import wx from "../assets/wx.jpg";
 </script>
 
 <template>
-  <div class="sci-buffet-info-section">
+  <div class="wx-nav sci-buffet-info-section">
     <h3>技术顾问</h3>
     <div class="one">一对一为您答疑解惑</div>
     <a-image class="sci-buffet-avatar" :width="200" :src="wx" />
@@ -12,6 +12,11 @@ import wx from "../assets/wx.jpg";
 </template>
 
 <style scoped>
+.wx-nav.sci-buffet-info-section{
+  position: fixed;
+  top: 30%;
+  right: 10px;
+}
 .one {
   text-align: center;
   margin-top: 10px;
@@ -51,7 +56,7 @@ import wx from "../assets/wx.jpg";
   display: block;
   width: 4px;
   height: 18px;
-  background: #56beb2;
+  background: #1890ff;
 }
 
 .sci-buffet-info-section a {
@@ -59,7 +64,7 @@ import wx from "../assets/wx.jpg";
   width: 200px;
   height: 32px;
   line-height: 32px;
-  background: #56beb2;
+  background: #1890ff;
   font-size: 16px;
   color: #fff;
   text-align: center;
@@ -67,7 +72,7 @@ import wx from "../assets/wx.jpg";
 }
 
 .sci-buffet-info-section a:hover {
-  background: #16b799;
+  background: #1890ff;
   color: #fff;
 }
 
@@ -88,7 +93,7 @@ import wx from "../assets/wx.jpg";
 .sci-buffet-info-section .sci-buffet-phone {
   line-height: 22px;
   font-size: 16px;
-  color: #56beb2;
+  color: #1890ff !important;
   font-weight: bold;
   text-align: center;
 }

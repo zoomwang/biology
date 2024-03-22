@@ -147,7 +147,7 @@ const { resetFields, validate, validateInfos } = useForm(
             <a-input v-model:value="formState.completionCycle" placeholder="请填写" />
           </a-form-item>
         </div> -->
-          <div class="l-item clear" :style="{ 'height': formState.fileUrl ? '70px' : '50px' }">
+          <div class="l-item clear" :style="{ 'height': formState.fileUrl ? '70px' : '70px' }">
             <div class="t-title f-fl">添加附件：</div>
             <a-form-item class="f-fl">
               <UploadFile
@@ -212,7 +212,8 @@ const { resetFields, validate, validateInfos } = useForm(
     display: table;
     height: 36px;
     line-height: 36px;
-    margin: 32px 0 24px 165px;
+    // margin: 32px 0 24px 165px;
+    margin: 32px auto;
     font-size: 14px;
     font-family: PingFang-SC-Bold, PingFang-SC;
     font-weight: bold;
