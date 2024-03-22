@@ -846,7 +846,7 @@ onMounted(async () => {
                     <a
                       >{{
                         addressList.detail.detail_address
-                      }}非工作时间拒收同城，请提前联系）</a
+                      }}</a
                     >
                   </div>
                   <div class="sci-address-tips" style="display: none">
