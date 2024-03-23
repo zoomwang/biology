@@ -92,7 +92,7 @@ const { resetFields, validate, validateInfos } = useForm(
 <template>
   <div class="container">
     <h3 style="text-align: center">找回密码</h3>
-    <a-form class="find-password" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form class="find-password" style="width:980px;margin: 0 auto;" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="手机号" v-bind="validateInfos.mobile">
         <a-input v-model:value="formState.mobile" placeholder="请输入您注册时的手机号码" />
       </a-form-item>
@@ -114,7 +114,7 @@ const { resetFields, validate, validateInfos } = useForm(
         <a-input v-model:value="formState.newPassword" placeholder="请输入您的新密码" />
       </a-form-item>
       <!-- <a-form-item> -->
-        <a-button class="b-base" style="width: 407px;" type="primary" @click.prevent="onSubmit">更新密码</a-button>
+        <a-button class="b-base" style="width: 400px;margin: 0 auto;float: none;" type="primary" @click.prevent="onSubmit">更新密码</a-button>
       <!-- </a-form-item> -->
     </a-form>
   </div>

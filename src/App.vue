@@ -22,6 +22,9 @@ const route = useRoute();
 const isNext = ref(false);
 
 const checkIslogged = async function () {
+  if (blackList.includes(route?.fullPath)) {
+    return;
+  }
   try {
     const res = await isLogged();
     if (res?.code == 0) {
@@ -31,9 +34,9 @@ const checkIslogged = async function () {
       isNext.value = true;
     } else {
       isNext.value = true;
-      if (!blackList.includes(route?.fullPath)) {
+      // if (!blackList.includes(route?.fullPath)) {
         router.push({ name: "login" });
-      }
+      // }
     }
   } catch (err) {
     isNext.value = true;
@@ -43,7 +46,8 @@ const checkIslogged = async function () {
 watch(
   () => route.path,
   async(newPath, oldPath) => {
-    if (!newPath.includes('/process/1') && !newPath.includes('/process/index')) {
+    if (!blackList.includes(newPath)) {
+    // if (!newPath.includes('/process/1') && !newPath.includes('/process/index') && !newPath.includes('/home/registry') && !newPath.includes('/home/registry')) {
       await checkIslogged();
     }
   },
