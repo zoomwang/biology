@@ -1,4 +1,7 @@
 <script setup>
+import {
+  useRoute,
+} from "vue-router";
 import { ref, computed, defineComponent, reactive } from "vue";
 // import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
@@ -13,6 +16,7 @@ import $localStorage from "../../hooks/localStorage";
 import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
+const route = useRoute();
 const show = ref(false);
 const visible = ref(false);
 const activeKey = ref("password");
@@ -28,6 +32,14 @@ const { getVerifiCode } = useGetVerifiCode(formState, () => {
   changeSt(true);
   countDown.countDown();
 });
+
+const toRegistry = function() {
+  router.push({ name: "register" });
+}
+
+const findPassword = function() {
+  router.push({ name: "findPassword" });
+}
 
 function change(boo) {
   if (typeof boo == "booelan") {
@@ -159,7 +171,7 @@ const {
           "
           >手机号登录</a
         >｜
-        <a href="/home/register">立即注册</a>
+        <a @click="toRegistry">立即注册</a>
       </div>
     </div>
     <!-- 微信扫码成功后提示 -->
@@ -256,9 +268,9 @@ const {
         </a-tabs>
         <div class="login-tip" style="overflow: hidden">
           <div class="t-left f-fl">
-            还没账号？<a href="/home/register">立即注册</a>
+            还没账号？<a @click="toRegistry">立即注册</a>
           </div>
-          <div class="f-fr"><a href="/home/find-password">忘记密码？</a></div>
+          <div class="f-fr"><a @click="findPassword">忘记密码？</a></div>
         </div>
         <!-- <div class="weichat-tip" style="margin-top: 20px">
           <div class="t-grey">—— 第三方账号登录 ——</div>
