@@ -56,7 +56,7 @@ const checkLogin = async function (type) {
             $localStorage.setItem("refresh_token", data?.data?.refresh_token);
             $localStorage.setItem("isLogin", true);
             setTimeout(() => {
-              router.push({ name: "userinfo" });
+              router.push({ path: "/process/1" });
             }, 400);
           }
         } catch (err) {
