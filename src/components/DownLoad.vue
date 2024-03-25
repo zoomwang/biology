@@ -5,7 +5,7 @@ import { jstopdf, formatTime } from "@/utils/index";
 const props = defineProps(["props", "orderId", "type"]);
 console.log(props)
 const download = () => {
-  jstopdf("download", `${props?.props.orderId}对账单`);
+  jstopdf("download", `${props?.props.orderId}预约单`);
 };
 </script>
 

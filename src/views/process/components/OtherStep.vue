@@ -11,7 +11,7 @@ import {
 } from "vue";
 import { message } from "ant-design-vue";
 import areaData from "../../../public/area.js";
-import { Form, Modal } from "ant-design-vue";
+import { Form, Modal, notification } from "ant-design-vue";
 const emit = defineEmits(["save", "next"]);
 import { useRoute, useRouter } from "vue-router";
 import { useOfficeInfos } from "../../../hooks/common";
@@ -28,6 +28,7 @@ let visible = ref(false);
 const id = route.query.id;
 const type = route.query.type;
 const bottom = ref(10);
+let initAddress = ref('');
 let modelRef = reactive({
   id: 0,
   receiver: "",
@@ -121,16 +122,7 @@ let formState = reactive({
     },
   ],
   sameDeviceRelateOrderId: "",
-  recoveryAddress: [
-    {
-      id: 0,
-      receiver: "zoom",
-      phone: "12738921382",
-      detailAddress: "北京啊就是劳动",
-      address: ["130000", "130200", "130203"],
-      fullAddress: "北京市建立的撒开的",
-    },
-  ],
+  recoveryAddress: [],
   contactName: localStorage.userName,
   contactsPhone: localStorage.phone,
   needRecovery: 0,
@@ -197,6 +189,36 @@ const hideModal = () => {
 };
 
 const handleOk = () => {
+  if (!modelRef.receiver) {
+    notification.error({
+      message: "",
+      description: "请填写收件人",
+    });
+    return;
+  }
+
+  if (!modelRef.phone) {
+    notification.error({
+      message: "",
+      description: "请填写手机号",
+    });
+    return;
+  }
+  if (!modelRef.address) {
+    notification.error({
+      message: "",
+      description: "请选择地区",
+    });
+    return;
+  }
+  if (!modelRef.detailAddress) {
+    notification.error({
+      message: "",
+      description: "请填写详细地址",
+    });
+    return;
+  }
+  
   if (!editAddress.isEditInvoice) {
     formState.recoveryAddress.push({
       ...modelRef,
@@ -206,6 +228,8 @@ const handleOk = () => {
       ...modelRef,
     });
   }
+  // console.log(formState.recoveryAddress)
+  // debugger
   hideModal();
 };
 const deleteItem = (idx) => {
@@ -219,9 +243,13 @@ const initFullName = (e, option) => {
   option.forEach((item) => {
     fullName += item.label;
   });
-  modelRef.fullAddress =
-    fullName + formState.recoveryAddress[editAddress.editIndex].detailAddress;
-};
+  // if (!formState?.recoveryAddress) return;
+  modelRef.initAddress = fullName;
+  modelRef.fullAddress =  fullName + modelRef.detailAddress;
+  // modelRef.fullAddress =
+  //   fullName + formState?.recoveryAddress[editAddress.editIndex].detailAddress;
+  //   console.log(modelRef);
+  };
 const labelCol = {
   span: 3,
 };
@@ -947,6 +975,9 @@ onMounted(async () => {
           }"
         >
           <a-input
+            @input="(e) => {
+              modelRef.fullAddress =  modelRef.initAddress + e.target.value;
+            }"
             v-model:value="modelRef.detailAddress"
             placeholder="请输入"
           />

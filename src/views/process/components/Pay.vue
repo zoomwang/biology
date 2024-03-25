@@ -17,7 +17,7 @@ watch(props, async (newdata, olddata) => {
 })
 
 const download = () => {
-  jstopdf("download", "对账单");
+  jstopdf("download", "预约单");
 };
 
 const onRefrush = () => {
@@ -115,9 +115,9 @@ onUnmounted(() => {
             <!-- <a-button style="width: 220px" type="primary" @click="download"
               >下载预约单</a-button
             > -->
-            <div style="margin-left:60px;margin-top:20px">
+            <!-- <div style="margin-left:60px;margin-top:20px">
               <DownLoad :props="props.orderInfo" />
-            </div>
+            </div> -->
           </p>
         </template>
       </a-result>

@@ -169,7 +169,7 @@ const { resetFields, validate, validateInfos } = useForm(
           </div>
           <div class="l-item clear">
             <div class="t-item f-fl" style="width: 76px; text-align: right">
-              <span class="t-red">*</span>邀请人：
+              邀请人：
             </div>
             <div class="f-fl">
               <a-form-item v-bind="validateInfos.inviterMobile">
