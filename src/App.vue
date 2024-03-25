@@ -48,8 +48,8 @@ watch(
   () => route.path,
   async(newPath, oldPath) => {
     if (!blackList.includes(newPath)) {
-      isNext.value = true;
-      // await checkIslogged();
+      // isNext.value = true;
+      await checkIslogged();
     }
   },
   { immediate: true }
