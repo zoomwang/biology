@@ -20,6 +20,7 @@ import { ref } from "vue";
 const routers = useRouter();
 const route = useRoute();
 const isNext = ref(false);
+const isLoad = ref(false);
 
 const checkIslogged = async function () {
   if (blackList.includes(location?.pathname)) {
@@ -32,23 +33,25 @@ const checkIslogged = async function () {
       localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("access_token", res?.data?.access_token);
       $localStorage.setItem("isLogin", true);
+      isLoad.value = true;
       isNext.value = true;
     } else {
       isNext.value = true;
       // if (!blackList.includes(route?.fullPath)) {
         router.push({ name: "login" });
+        isLoad.value = true;
       // }
     }
   } catch (err) {
     isNext.value = true;
+    isLoad.value = true;
   }
 };
 
 watch(
   () => route.path,
   async(newPath, oldPath) => {
-    if (!blackList.includes(newPath)) {
-      // isNext.value = true;
+    if (!blackList.includes(newPath) && !isLoad) {
       await checkIslogged();
     }
   },
