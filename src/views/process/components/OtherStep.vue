@@ -185,6 +185,11 @@ const showModal = () => {
 };
 
 const hideModal = () => {
+  modelRef.receiver = '';
+  modelRef.phone = '';
+  modelRef.address = '';
+  modelRef.detailAddress = '';
+  modelRef.fullAddress = '';
   visible.value = false;
 };
 
