@@ -269,6 +269,7 @@ const canNext = () => {
   validate()
     .then(() => {
       console.log(formState)
+      debugger
       emit("next", formState);
     })
     .catch((error) => {
