@@ -75,6 +75,16 @@ export const getProjectInfo = (id) => {
   return api.get(`/sys/order/project/info?id=${id}`);
 }
 
+/** 获取退差价 */
+export const getReturnPriceDiff = (param) => {
+  return api.post(`/sys/order/refund/price_difference`, param);
+}
+
+/** 获取补差价 */
+export const getPayPriceDiff = (param) => {
+  return api.post(`/sys/order/pay/price_difference`, param);
+}
+
 /** 获取草稿信息 */
 export const getOrderDraftInfo = (id) => {
   return api.get(`/sys/order/draft/info?id=${id}`);

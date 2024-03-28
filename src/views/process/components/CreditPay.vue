@@ -21,11 +21,11 @@ const download = () => {
           <p>预约单号为：{{ props.orderId }}</p>
           <p>预约金额：{{ props.props.cost['支付金额'] }}</p>
           <p>预约时间：{{ formatTime(Date.now()) }}</p>
-          <p>
+          <!-- <p>
             <a-button style="width: 220px" type="primary" @click="download"
               >下载预约单</a-button
             >
-          </p>
+          </p> -->
         </template>
       </a-result>
     </div>

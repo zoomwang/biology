@@ -4,7 +4,9 @@ import { useStorage } from "@/hooks/useStorage";
 import $localStorage from "@/hooks/localStorage";
 import Menu from "./components/menu.vue";
 import { useRoute, useRouter } from "vue-router";
-import banner from "../../assets/home_benner.png";
+// import banner from "../../assets/home_benner.png";
+import banner1 from "../../assets/banner1.jpg";
+import banner2 from "../../assets/banner2.jpg";
 const key = useStorage("menu");
 const state = reactive({
   mode: "inline",
@@ -27,9 +29,10 @@ watch(key, async (newdata, olddata) => {
         route.path.includes('/process/1') ||
         route.path.includes('/process/index')
       "
-      style="position: relative; width: 1280px; left: -40px"
+      style="position: relative; width: 1280px;"
     >
-      <img :src="banner" width="1280" height="250" />
+      <img :src="banner1" width="1280" height="750" />
+      <img :src="banner2" width="1280" height="450" />
       <div data-v-5c81cf27="" class="bannerBottom">
         <div data-v-5c81cf27="" class="bannerBottomWrap">
           <div data-v-5c81cf27="" class="banner_bottom_once">

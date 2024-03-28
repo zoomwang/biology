@@ -10,10 +10,13 @@ import {
 } from "vue";
 import { isLogged } from "../../services/user";
 import FinalStep from "../process/components/FinalStep.vue";
+import DiffPay from "./DiffPay.vue";
 import {
   getOrderLists,
   cancelOrder,
   getOrderInfo,
+  getReturnPriceDiff,
+  getPayPriceDiff
 } from "../../services/process";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -22,6 +25,7 @@ import DownLoad from "@/components/DownLoad.vue";
 let orderData = reactive({
 });
 const drawerVisible = ref(false);
+const diffVisible = ref(false);
 const showDrawer = async (record) => {
   orderData = record;
   await getOrderInfos(record.orderId);
@@ -92,6 +96,10 @@ const columns = [
       customRender: "status",
     },
   },
+  {
+    title: "退补差价",
+    dataIndex: "priceDifference",
+  },
   // {
   //   title: "发票状态",
   //   dataIndex: "ticketStatus",
@@ -113,6 +121,13 @@ const labelCol = {
     width: "120px",
   },
 };
+// const codeUrl = ref('');
+// const payPlatform = ref('');
+const diffPayData = ref({
+  codeUrl: '',
+  payPlatform: '',
+  cost: ''
+})
 const wrapperCol = {
   span: 24,
 };
@@ -122,6 +137,45 @@ const formState = reactive({
 });
 
 const dataSource = ref([]);
+
+const getPayPriceDiffs = async (params) => {
+  try {
+    const res = await getPayPriceDiff({
+      orderId: params.orderId,
+      payPlatform: params.payPlatform
+    });
+    if (res?.code == 0) {
+      if (params.payPlatform > 0) {
+        diffPayData.value = {
+          codeUrl: res.data,
+          payType: params.payPlatform,
+          cost: params.priceDifference,
+          orderId: params.orderId
+        }
+        diffVisible.value = true;
+      } 
+      if (params.payPlatform  == 0) {
+        notification.success({
+          description: "补差价成功",
+        });
+      }
+    } else {}
+  } catch (err) {}
+};
+
+const getReturnPriceDiffs = async (params) => {
+  try {
+    const res = await getReturnPriceDiff({
+      orderId: params.orderId,
+      payPlatform: params.payPlatform
+    });
+    if (res?.code == 0) {
+      notification.success({
+        description: "退差价成功",
+      });
+    }
+  } catch (err) {}
+};
 
 const getOrderInfos = async (params, type) => {
   try {
@@ -138,7 +192,8 @@ const getOrderInfos = async (params, type) => {
 };
 
 const successCall = () => {
-  drawerVisible.value = false
+  drawerVisible.value = false;
+  diffVisible.value = false;
 }
 
 const cancelOrders = async (orderId) => {
@@ -231,7 +286,22 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
           @click="showDrawer(record)"
           >立即支付</a-button
         >
-        <br v-if="record.status <=2" />
+        <br v-if="record.priceDifferenceStatus == 1" />
+        <a-button
+          style="margin-bottom: 5px"
+          type="primary"
+          v-if="record.priceDifferenceStatus == 1 && record.priceDifference > 0"
+          @click="getPayPriceDiffs(record)"
+          >补差价{{record.priceDifference}}元</a-button
+        >
+        <a-button
+          style="margin-bottom: 5px"
+          type="primary"
+          v-if="record.priceDifferenceStatus == 1 && record.priceDifference < 0"
+          @click="getReturnPriceDiffs(record)"
+          >退差价{{Math.abs(record.priceDifference)}}元</a-button
+        >
+        <br v-if="record.status <=2 || record.priceDifferenceStatus == 1" />
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
@@ -345,5 +415,6 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
   >
     <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
   </a-drawer>
+  <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" />
 </template>
 <style lang="scss"></style>
