@@ -16,7 +16,7 @@ import {
   cancelOrder,
   getOrderInfo,
   getReturnPriceDiff,
-  getPayPriceDiff
+  getPayPriceDiff,
 } from "../../services/process";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -158,6 +158,7 @@ const getPayPriceDiffs = async (params) => {
         notification.success({
           description: "补差价成功",
         });
+        getOrderList();
       }
     } else {}
   } catch (err) {}
@@ -192,6 +193,7 @@ const getOrderInfos = async (params, type) => {
 };
 
 const successCall = () => {
+  getOrderLis();
   drawerVisible.value = false;
   diffVisible.value = false;
 }

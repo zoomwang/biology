@@ -127,7 +127,7 @@ const getUserAmount = async () => {
   try {
     const res = await getAmount();
     if (res?.code == 0) {
-      amount = res?.data;
+      amount.value = res?.data;
     }
   } catch (err) {}
 }

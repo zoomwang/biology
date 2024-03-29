@@ -57,6 +57,12 @@ export const getOrderStatus = (orderId) => {
   return api.get(`/sys/order/status?orderId=${orderId}`);
 }
 
+
+// 获取订单状态
+export const getDiffStatus = (orderId) => {
+  return api.get(`/sys/order/price_difference/status?orderId=${orderId}`);
+}
+
 // 获取预存状态
 export const getStoreStatus = (storeId) => {
   return api.get(`/sys/store/status?storeId=${storeId}`);

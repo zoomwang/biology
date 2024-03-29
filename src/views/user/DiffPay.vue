@@ -10,21 +10,14 @@ import {
   onMounted,
   defineProps,
 } from "vue";
-// import { getCredit, getAmount } from "@/services/user";
-// import { payAmount, payCredit } from "@/services/order";
 import {
-  // getOrderInfo,
-  // addOrder,
-  // getCouponList,
-  // getOrderCostCalc,
-  // updateOrder,
-} from "@/services/process";
+  getDiffStatus
+} from "@/services/order";
 import QRCode from 'qrcode';
 import { notification } from "ant-design-vue";
 
 let props = defineProps(["diffPayData","successCall"]);
 const { codeUrl, payType, cost, orderId, successCall } = props.diffPayData;
-console.log('payType===', payType)
 const isPaySuccess = ref(false);
 let interval = ref(null);
 let imgUrl = reactive({
@@ -44,13 +37,12 @@ const getQrCode = async() => {
   .catch(err => {
     console.error(err)
   })
-  
 }
 
 const roll = () => {
   interval.value = setInterval(async () => {
-    const res = await getOrderStatus(orderId);
-    if (res?.code == 0 && res?.data == 3) {
+    const res = await getDiffStatus(orderId);
+    if (res?.code == 0 && res?.data == 2) {
       isPaySuccess.value = true;
       props.successCall();
       clearInterval(interval.value);
@@ -62,14 +54,14 @@ let payVisible = ref(true);
 
 onMounted(() => {
   getQrCode();
-  // roll();
+  roll();
 })
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
-      <!-- 支付弹层 -->
+    <!-- 支付弹层 -->
     <a-modal
       class="order-modal-wrap"
       v-model:visible="payVisible"
