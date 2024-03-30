@@ -174,6 +174,7 @@ const getReturnPriceDiffs = async (params) => {
       notification.success({
         description: "退差价成功",
       });
+      getOrderList();
     }
   } catch (err) {}
 };

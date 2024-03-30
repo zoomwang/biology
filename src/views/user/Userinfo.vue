@@ -190,7 +190,7 @@ const { resetFields, validate, validateInfos } = useForm(
 );
 
 const visible = ref(false);
-const canEdit = ref(true);
+let canEdit = ref(true);
 const onSubmit = async () => {
   validate().then(async (res) => {
     try {
