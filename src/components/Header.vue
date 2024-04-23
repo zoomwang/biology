@@ -27,10 +27,10 @@ const route = useRoute();
       <div class="logo" style="display: inline-block;">
         <img :src="Logo" style="width: auto; height: 80px;" />
       </div>
-      <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
-      <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" />
+      <!-- <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
+      <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" /> -->
 
-      <!-- <a-popover placement="bottom" style="display: inline-block">
+      <a-popover placement="bottom" style="display: inline-block">
           <template #content>
             <img :src="Zhengshu1" style="width: auto; height: 500px" />
           </template>
@@ -38,8 +38,8 @@ const route = useRoute();
             <span></span>
           </template>
           <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
-        </a-popover> -->
-      <!-- <a-popover placement="bottom" style="display: inline-block">
+        </a-popover>
+      <a-popover placement="bottom" style="display: inline-block">
         <template #content>
           <img :src="Zhengshu" style="width: auto; height: 500px" />
         </template>
@@ -47,7 +47,7 @@ const route = useRoute();
           <span></span>
         </template>
         <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" />
-      </a-popover> -->
+      </a-popover>
       <LoginComponent class="f-fr" style="flex: 1" />
     </div>
   </div>

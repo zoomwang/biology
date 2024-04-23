@@ -194,7 +194,7 @@ const getOrderInfos = async (params, type) => {
 };
 
 const successCall = () => {
-  getOrderLis();
+  getOrderList();
   drawerVisible.value = false;
   diffVisible.value = false;
 }

@@ -30,9 +30,9 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="detail">
+<div class="detail project-detail">
   <!-- 用户注册资料 -->
-  <a-card :title="item.label" style="width: 100%;margin-bottom: 10px" v-for="(item) in data.value" :key="item">
+  <a-card :title="item.label" style="width: 100%;margin-bottom: 10px; font-weight: bold" v-for="(item) in data.value" :key="item">
     <p v-if="item.label != '项目图片'">
       <pre width="100" style="white-space:pre-wrap;text-indent: -7ch;">
         {{item.value}}
@@ -43,6 +43,7 @@ onMounted(() => {
   </div>
 </template>
 <style lang="scss" scoped>
+
 .detail{
   margin-top: 15px;
   position: relative;

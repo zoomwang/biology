@@ -97,6 +97,7 @@ const submit = async () => {
       });
       if (res?.code == 0) {
         payVisible.value = true;
+        props.successCall();
       }
     // }
   }
@@ -111,6 +112,7 @@ const submit = async () => {
     });
     if (res?.code == 0) {
       payVisible.value = true;
+      props.successCall();
     }
   }
 }
