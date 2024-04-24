@@ -67,6 +67,13 @@ const map = reactive({
           {{ item.label }}
         </a-menu-item>
       </template>
+      <h2>管理员菜单</h2>
+      <template v-for="item in menus" :key="item.value">
+        <a-menu-item  v-if="item.type == 'superManage'" :key="item.value">
+          <template #icon> </template>
+          {{ item.label }}
+        </a-menu-item>
+      </template>
     </a-menu>
     <div class="content">
       <a-card :bordered="false">

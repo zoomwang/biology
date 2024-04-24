@@ -69,6 +69,18 @@ export const menus = [{
   label: "预存管理",
   value: "11",
   type: "storeMenu"
+},{
+  label: "供应商管理",
+  value: "12",
+  type: "superManage"
+},{
+  label: "订单管理",
+  value: "13",
+  type: "superManage"
+},{
+  label: "用户管理",
+  value: "14",
+  type: "superManage"
 }];
 
 export const identity = [{
