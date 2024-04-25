@@ -8,23 +8,21 @@ import {
   onMounted,
   watch,
 } from "vue";
-import { isLogged } from "../../services/user";
-import FinalStep from "../process/components/FinalStep.vue";
-import DiffPay from "./DiffPay.vue";
 import {
   getOrderLists,
   cancelOrder,
   getOrderInfo,
   getReturnPriceDiff,
   getPayPriceDiff,
-} from "../../services/process";
+} from "../../../../services/process";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import DownLoad from "@/components/DownLoad.vue";
+import Create from "./Create.vue"
 
 let orderData = reactive({
 });
-const drawerVisible = ref(false);
+const drawerVisible = ref(true);
 const diffVisible = ref(false);
 const showDrawer = async (record) => {
   orderData = record;
@@ -235,15 +233,15 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
   <!-- 用户注册资料 -->
   <main>
     <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="订单创建时间" :wrapperCol="{
+      <a-form-item label="" :wrapperCol="{
         span: 7
       }">
-        <a-date-picker v-model:value="param.startTime" style="width:140px" />
+        <a-input v-model:value="param.name" placeholder="测试项目" style="width:140px" />
       </a-form-item>
-      <a-form-item label="订单结束时间" :wrapperCol="{
+      <a-form-item label="" :wrapperCol="{
         span: 5
       }">
-        <a-date-picker v-model:value="param.endTime" style="width:120px" />
+        <a-select v-model:value="param.status" placeholder="全部分组" style="width:120px" />
       </a-form-item>
       <a-form-item label="订单状态" :wrapperCol="{
         span: 7
@@ -408,16 +406,8 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
       </a-table>
     </a-card>
   </a-drawer>
-  <a-drawer
-    title="订单支付"
-    placement="right"
-    :closable="false"
-    width="70%"
-    v-model:visible="drawerVisible"
-    :after-visible-change="afterVisibleChange"
-  >
-    <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
-  </a-drawer>
-  <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" />
+  <a-modal v-model:open="drawerVisible" title="新增供应商" :footer="null" ok-text="确认" cancel-text="取消" @ok="hideModal">
+    <Create />
+  </a-modal>
 </template>
 <style lang="scss"></style>

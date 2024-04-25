@@ -8,16 +8,9 @@ import {
   onMounted,
   watch,
 } from "vue";
-import { isLogged } from "../../services/user";
-import FinalStep from "../process/components/FinalStep.vue";
-import DiffPay from "./DiffPay.vue";
 import {
-  getOrderLists,
-  cancelOrder,
-  getOrderInfo,
-  getReturnPriceDiff,
-  getPayPriceDiff,
-} from "../../services/process";
+
+} from "../../../../services/process";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import DownLoad from "@/components/DownLoad.vue";
@@ -100,13 +93,6 @@ const columns = [
     title: "退补差价",
     dataIndex: "priceDifference",
   },
-  // {
-  //   title: "发票状态",
-  //   dataIndex: "ticketStatus",
-  //   slots: {
-  //     customRender: "ticketStatus",
-  //   },
-  // },
   {
     title: "操作",
     key: "action",
@@ -121,8 +107,6 @@ const labelCol = {
     width: "120px",
   },
 };
-// const codeUrl = ref('');
-// const payPlatform = ref('');
 const diffPayData = ref({
   codeUrl: '',
   payPlatform: '',
@@ -416,8 +400,8 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
     v-model:visible="drawerVisible"
     :after-visible-change="afterVisibleChange"
   >
-    <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
+    <!-- <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" /> -->
   </a-drawer>
-  <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" />
+  <!-- <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" /> -->
 </template>
 <style lang="scss"></style>

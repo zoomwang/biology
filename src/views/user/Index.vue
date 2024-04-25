@@ -8,6 +8,9 @@ import Discount from './Discount.vue';
 import Assets from './Assets.vue';
 import Invoices from './Invoices.vue';
 import Store from './Store.vue';
+import ManageOrder from './Manage/order/Index.vue';
+import ManageSupplier from './Manage/supplier/Index.vue';
+import ManageUser from './Manage/supplier/Index.vue';
 import { reactive } from "vue";
 import { menus } from './config';
 import router from "../../router";
@@ -85,6 +88,9 @@ const map = reactive({
         <Invoices v-if="state.selectedKeys.includes('8')" />
         <Discount v-if="state.selectedKeys.includes('9')" />
         <Store v-if="state.selectedKeys.includes('11')" />
+        <ManageSupplier v-if="state.selectedKeys.includes('12')" />
+        <ManageOrder v-if="state.selectedKeys.includes('13')" />
+        <ManageUser v-if="state.selectedKeys.includes('14')" />
       </a-card>
     </div>
   </main>
