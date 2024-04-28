@@ -227,9 +227,13 @@ a:hover{
   width: 420px!important;
 }
 
+
 .ant-modal-wrap{
   .ant-modal{
     width: 600px!important;
+  }
+  .modal-tab.ant-modal{
+    width: 90%!important;
   }
 }
 
