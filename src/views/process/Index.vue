@@ -7,6 +7,7 @@ import { useRoute, useRouter } from "vue-router";
 // import banner from "../../assets/home_benner.png";
 import banner1 from "../../assets/banner1.jpg";
 import banner2 from "../../assets/banner2.jpg";
+import item from "../../assets/item.jpg";
 const key = useStorage("menu");
 const state = reactive({
   mode: "inline",
@@ -25,11 +26,8 @@ watch(key, async (newdata, olddata) => {
   <!-- 用户注册资料 -->
   <main class="d-flex home-wrap" style="position: relative">
     <div
-      v-if="
-        route.path.includes('/process/1') ||
-        route.path.includes('/process/index')
-      "
-      style="position: relative; width: 1280px;"
+      v-if="route.path == '/process/1' || route.path.includes('/process/index')"
+      style="position: relative; width: 1280px"
     >
       <img :src="banner1" width="1280" height="750" />
       <img :src="banner2" width="1280" height="450" />
@@ -1295,7 +1293,41 @@ watch(key, async (newdata, olddata) => {
         </div>
       </div>
     </div>
-    <Menu v-else :type="menuType" />
+    <Menu v-else-if="route.path != '/process/12'" :type="menuType" />
+    <div v-else style="padding: 20px">
+      <img :src="item" width="1280" height="auto" />
+      <ul>
+        <li style="margin-bottom: 20px">
+          1.1 <b style="font-weight: bold">描述</b>
+          <br />
+          全时域宽谱范围时间相关飞秒瞬态谱探测系统是一种用于研究物质在极短时间内的光谱变化的设备。这种设备可以捕捉到物质在飞秒（10^-15秒）级别的时间尺度上的瞬态光谱信息，这对于理解物质的动力学行为和反应机制至关重要。本系统适用于研究包括发生在表面、溶液、高分子、光电材料和生命科学中的各种动态过程。通常用于研究激发态、量子态的演化以及态态之间相互作用等动力学过程。研究超快光物理/化学过程的常用技术主要是监测激发态的布居及其光谱特征随时间的变化。
+        </li>
+        <li style="margin-bottom: 20px">
+          1.2 <b style="font-weight: bold">组成部分：</b>
+          <br />
+          <b style="font-weight: bold">光源</b>：通常使用的是超短脉冲激光，其脉冲宽度可以达到飞秒级别。这种激光能够提供足够的能量密度，从而引发物质的瞬态过程。
+          <br />
+          <b style="font-weight: bold">时间延迟线</b>：用于控制脉冲之间的延迟时间，从而实现对不同时间尺度的测量。
+          <br />
+          <b style="font-weight: bold">探测器</b>：用于检测经过样品后的光脉冲，并将其转化为电信号。这些信号随后被送入计算机进行处理和分析。
+          <br />
+          <b style="font-weight: bold">数据处理和分析软件</b>：用于处理和分析探测器输出的数据，得到物质在不同时间尺度上的光谱变化信息。
+          <br />
+          全时域宽谱范围时间相关飞秒瞬态谱探测系统的优点在于它可以同时覆盖宽广的光谱范围和多个时间尺度，这使得它能够用于研究各种复杂的过程，例如化学反应、物理过程和生物学过程等。此外，由于它可以提供关于物质在极短时间内的光谱变化的信息，因此对于理解这些过程的动力学行为和反应机制也具有重要意义
+        </li>
+        <li style="margin-bottom: 20px">
+          1.3<b style="font-weight: bold">参数</b>
+          <br />波段范围：可见-近红外（400-1070 nm）、太赫兹波段（0.3~2
+          THz）、微波波段（33-36GHZ） <br />测量时间窗口：可见-近红外（400-1070
+          nm）以时间分辨吸收测量方式进行，时间窗口200 fs~300 s;
+          <br />太赫兹波段（0.3~2 THz）以光学泵浦太赫兹探测方式进行，时间窗口200
+          fs~300 s;
+          <br />微波波段（33-36GHZ）以时间分辨微波光电导形式进行，时间窗口1
+          ns~300 s。
+          <br />备注：以上时间范围为典型参数，具体参数需依赖用户的飞秒激光器参数。
+        </li>
+      </ul>
+    </div>
   </main>
 </template>
 <style lang="scss">
@@ -1549,7 +1581,6 @@ watch(key, async (newdata, olddata) => {
   animation: numAnimation-5c81cf27 2s ease-out;
 }
 
-
 .HaveConfidenceInCenterContext[data-v-5c81cf27] {
   font-size: 18px;
   font-weight: 500;
@@ -1789,7 +1820,6 @@ watch(key, async (newdata, olddata) => {
   left: 1500px;
 }
 
-
 @keyframes slidein {
   0% {
     transform: translate(-192.6px, 0px);
@@ -1831,8 +1861,8 @@ watch(key, async (newdata, olddata) => {
   float: left;
 }
 
-.v-s-s{
-  &>div{
+.v-s-s {
+  & > div {
     animation: slidein 50s ease-out;
   }
 }
