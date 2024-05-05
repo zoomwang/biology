@@ -13,7 +13,9 @@ import {
 } from "../../../../services/supplier";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import ItemList from "./ItemList.vue"
+import DownLoad from "@/components/DownLoad.vue";
+import Create from "./Create.vue"
+import Detail from "./Detail.vue"
 
 let orderData = reactive({
 });
@@ -41,54 +43,54 @@ const param = reactive({
 
 const columns = [
   {
-    title: "供应商名称",
-    dataIndex: "supplierName",
-    key: "supplierName",
+    title: "项目名称",
+    dataIndex: "itemname",
+    key: "itemname",
   },
   {
-    title: "工作单位",
-    dataIndex: "company",
-    key: "company",
+    title: "说明文件",
+    dataIndex: "document",
+    key: "document",
   },
   {
-    title: "设备型号",
+    title: "上传说明文件",
+    dataIndex: "uploadDocument",
+    key: "uploadDocument",
+  },
+  {
+    title: "设备类型",
     dataIndex: "deviceType",
     key: "deviceType",
   },
   {
-    title: "仪器台数",
-    dataIndex: "deviceNmu",
-    key: "deviceNmu",
+    title: "成本价",
+    dataIndex: "costrice",
+    key: "costrice",
   },
   {
-    title: "负责人",
-    dataIndex: "head",
-    key: "head",
+    title: "备注",
+    dataIndex: "remark",
+    key: "remark",
   },
   {
-    title: "参考价",
-    dataIndex: "price",
-    key: "price",
+    title: "订单数",
+    dataIndex: "orderNum",
+    key: "orderNum",
   },
   {
-    title: "截止周容量",
-    dataIndex: "maxWeekSampleCapacity",
-    key: "maxWeekSampleCapacity",
+    title: "正在做的样品数/截止周容量",
+    dataIndex: "doingAndMaxWeekCapacityRatio",
+    key: "doingAndMaxWeekCapacityRatio",
   },
   {
-    title: "正在做样品数",
-    dataIndex: "doingSampleNum",
-    key: "doingSampleNum",
-  },
-  {
-    title: "已分派样品数",
+    title: "已分派的样品数",
     dataIndex: "assignedSampleNum",
     key: "assignedSampleNum",
   },
   {
-    title: "历史订单总数",
-    dataIndex: "historyOrderNum",
-    key: "historyOrderNum",
+    title: "状态",
+    dataIndex: "status",
+    key: "status",
   },
   {
     title: "状态",
@@ -203,7 +205,10 @@ const menus = ["已上架", "已下架"];
   <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="更多详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
-    <ItemList />
+    <Detail />
+  </a-modal>
+  <a-modal v-model:open="drawerVisible" title="新增供应商" :footer="null" ok-text="确认" cancel-text="取消" @ok="hideModal">
+    <Create />
   </a-modal>
 </template>
 <style lang="scss"></style>
