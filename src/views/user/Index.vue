@@ -70,13 +70,13 @@ const map = reactive({
           {{ item.label }}
         </a-menu-item>
       </template>
-      <h2>管理员菜单</h2>
+      <!-- <h2>管理员菜单</h2>
       <template v-for="item in menus" :key="item.value">
         <a-menu-item  v-if="item.type == 'superManage'" :key="item.value">
           <template #icon> </template>
           {{ item.label }}
         </a-menu-item>
-      </template>
+      </template> -->
     </a-menu>
     <div class="content">
       <a-card :bordered="false">
@@ -88,9 +88,9 @@ const map = reactive({
         <Invoices v-if="state.selectedKeys.includes('8')" />
         <Discount v-if="state.selectedKeys.includes('9')" />
         <Store v-if="state.selectedKeys.includes('11')" />
-        <ManageSupplier v-if="state.selectedKeys.includes('12')" />
+        <!-- <ManageSupplier v-if="state.selectedKeys.includes('12')" />
         <ManageOrder v-if="state.selectedKeys.includes('13')" />
-        <ManageUser v-if="state.selectedKeys.includes('14')" />
+        <ManageUser v-if="state.selectedKeys.includes('14')" /> -->
       </a-card>
     </div>
   </main>

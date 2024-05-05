@@ -1295,7 +1295,7 @@ watch(key, async (newdata, olddata) => {
     </div>
     <Menu v-else-if="route.path != '/process/12'" :type="menuType" />
     <div v-else style="padding: 20px">
-      <img :src="item" width="1280" height="auto" />
+      <img :src="item" width="1280" height="400" />
       <ul>
         <li style="margin-bottom: 20px">
           1.1 <b style="font-weight: bold">描述</b>
@@ -1319,11 +1319,11 @@ watch(key, async (newdata, olddata) => {
           1.3<b style="font-weight: bold">参数</b>
           <br />波段范围：可见-近红外（400-1070 nm）、太赫兹波段（0.3~2
           THz）、微波波段（33-36GHZ） <br />测量时间窗口：可见-近红外（400-1070
-          nm）以时间分辨吸收测量方式进行，时间窗口200 fs~300 s;
+          nm）以时间分辨吸收测量方式进行，时间窗口200 fs~300ms;
           <br />太赫兹波段（0.3~2 THz）以光学泵浦太赫兹探测方式进行，时间窗口200
-          fs~300 s;
+          fs~300ms;
           <br />微波波段（33-36GHZ）以时间分辨微波光电导形式进行，时间窗口1
-          ns~300 s。
+          ns~300ms。
           <br />备注：以上时间范围为典型参数，具体参数需依赖用户的飞秒激光器参数。
         </li>
       </ul>
