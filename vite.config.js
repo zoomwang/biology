@@ -45,7 +45,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/sys': {
-        target: 'http://47.113.192.227:8080',
+        target: 'http://47.113.192.227:8090',
         //target: 'http://test3.javablade.com',
         changeOrigin: true,
         // rewrite: path => path.replace(/^\/api/, ''),
