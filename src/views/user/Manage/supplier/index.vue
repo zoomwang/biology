@@ -8,11 +8,14 @@ import {
   onMounted,
   watch,
 } from "vue";
+import { message } from "ant-design-vue";
 import {
   getOrderLists,
 } from "../../../../services/process";
 import {
-  supplierItemList
+  supplierItemList,
+  supplierItemAdd,
+  supplierItemUpdate
 } from "../../../../services/supplier";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -26,6 +29,9 @@ const id = ref('');
 const diffVisible = ref(false);
 const orderDetail = ref({});
 const visible = ref(false);
+const isCreate = ref(true);
+const createShow = ref(false);
+const supplierDetail = ref(null);
 const showModal = async (orderId) => {
   getOrderInfos(orderId, "detail");
 };
@@ -37,7 +43,7 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    status: "",
+    status: "-1",
     itemname: ""
   }
 });
@@ -58,10 +64,10 @@ const columns = [
   },
   {
     title: "创建时间",
-    dataIndex: "createime",
-    key: "createime",
+    dataIndex: "createTime",
+    key: "createTime",
     slots: {
-      customRender: "createime",
+      customRender: "createTime",
     },
   },
   {
@@ -128,6 +134,12 @@ const getSupplierItemList = async () => {
   } catch (err) {}
 };
 
+const showEditDetail = async (record) => {
+  supplierDetail.value = record;
+  isCreate.value = false;
+  createShow.value = true;
+}
+
 onMounted(() => {
   getSupplierItemList();
 });
@@ -157,6 +169,11 @@ const menus = ["已上架", "已下架"];
           getSupplierItemList();
         }">搜索</a-button>
       </a-form-item>
+      <a-button type="primary" style="margin-left: 20px" @click="() => {
+          supplierDetail = null;
+          isCreate = true;
+          createShow = true;
+        }">新建</a-button>
     </a-form>
     <a-table
       :columns="columns"
@@ -170,9 +187,27 @@ const menus = ["已上架", "已下架"];
         </span>
       </template>
       <template #action="{ record }">
-        <a-button type="text" @click="showModal(record.id)"
+        <a-button type="link" @click="showEditDetail(record)"
+          >编辑</a-button
+        >
+        <a-button type="link" @click="showModal(record.id)"
           >更多详情</a-button
         >
+        <a-popconfirm
+          title="确认要删除吗?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="async() => {
+            record.delete = 1;
+            const res = await supplierItemUpdate(record);
+            if (res?.code == 0) {
+              message.success('删除成功');
+            }
+          }"
+          @cancel="cancel"
+        >
+          <a-button type="text" danger>删除</a-button>
+        </a-popconfirm>        
       </template>
     </a-table>
   </main>
@@ -180,6 +215,15 @@ const menus = ["已上架", "已下架"];
     visible = false;
   }">
     <Detail v-if="visible" :id="id" />
+  </a-modal>
+
+   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建供应商测试项目' :'编辑供应商测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    visible = false;
+  }">
+    <Create style="margin-top: 20px" :successCallBack="() => {
+      getSupplierItemList(); 
+      isCreate.value = true;
+    }" :detail="supplierDetail" :isCreate="isCreate" />
   </a-modal>
 </template>
 <style lang="scss"></style>

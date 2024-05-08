@@ -19,3 +19,14 @@ export const supplierItemList = (param) => {
 export const supplierItemDetailList = (param) => {
   return api.post(`/sys/supplier/item-detail/list`, param);
 }
+
+/** 更新供应商商项目 */
+export const supplierItemUpdate = (param) => {
+  return api.post(`/sys/supplier/item/update`, param);
+}
+
+/** 更新供应商商项目 */
+export const supplierItemAdd = (param) => {
+  return api.post(`/sys/supplier/item/add`, param);
+}
+

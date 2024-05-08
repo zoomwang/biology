@@ -21,6 +21,9 @@ const props = defineProps(['id']);
 const diffVisible = ref(false);
 const orderDetail = ref({});
 const visible = ref(false);
+const isCreate = ref(true);
+const createShow = ref(false);
+const supplierDetail = ref(null);
 const showModal = async (orderId) => {
   getOrderInfos(orderId, "detail");
 };
@@ -166,5 +169,6 @@ const menus = ["已上架", "已下架"];
   }">
     <ItemList :id="props.id" />
   </a-modal>
+ 
 </template>
 <style lang="scss"></style>
