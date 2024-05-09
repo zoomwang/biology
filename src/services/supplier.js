@@ -25,8 +25,18 @@ export const supplierItemUpdate = (param) => {
   return api.post(`/sys/supplier/item/update`, param);
 }
 
-/** 更新供应商商项目 */
+/** 新增供应商商项目 */
 export const supplierItemAdd = (param) => {
   return api.post(`/sys/supplier/item/add`, param);
+}
+
+/** 新增供应商 */
+export const supplierAdd = (param) => {
+  return api.post(`/sys/supplier/add`, param);
+}
+
+/** 编辑供应商 */
+export const supplierUpdate = (param) => {
+  return api.post(`/sys/supplier/update`, param);
 }
 

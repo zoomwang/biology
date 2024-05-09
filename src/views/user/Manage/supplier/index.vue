@@ -14,7 +14,7 @@ import {
 } from "../../../../services/process";
 import {
   supplierItemList,
-  supplierItemAdd,
+  // supplierItemAdd,
   supplierItemUpdate
 } from "../../../../services/supplier";
 import { notification } from "ant-design-vue";
@@ -23,8 +23,6 @@ import DownLoad from "@/components/DownLoad.vue";
 import Create from "./Create.vue"
 import Detail from "./Detail.vue"
 
-let orderData = reactive({
-});
 const id = ref('');
 const diffVisible = ref(false);
 const orderDetail = ref({});
@@ -56,10 +54,10 @@ const columns = [
   },
   {
     title: "状态",
-    dataIndex: "status",
-    key: "status",
+    dataIndex: "deleted",
+    key: "deleted",
     slots: {
-      customRender: "status",
+      customRender: "deleted",
     },
   },
   {
@@ -69,6 +67,11 @@ const columns = [
     slots: {
       customRender: "createTime",
     },
+  },
+  {
+    title: "对接分值",
+    dataIndex: "itemValues",
+    key: "itemValues",
   },
   {
     title: "供应商数量",
@@ -128,7 +131,7 @@ const getSupplierItemList = async () => {
   try {
     const res = await supplierItemList(param);
     res?.data?.list.forEach((item) => {
-      item.createime = formatTime(item.createime);
+      item.createime = formatTime(item.createTime);
     })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
@@ -181,7 +184,7 @@ const menus = ["已上架", "已下架"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #status="{ text }">
+      <template #deleted="{ text }">
         <span>
           {{ menus[text] }}
         </span>
@@ -222,7 +225,8 @@ const menus = ["已上架", "已下架"];
   }">
     <Create style="margin-top: 20px" :successCallBack="() => {
       getSupplierItemList(); 
-      isCreate.value = true;
+      isCreate = true;
+      createShow = false;
     }" :detail="supplierDetail" :isCreate="isCreate" />
   </a-modal>
 </template>

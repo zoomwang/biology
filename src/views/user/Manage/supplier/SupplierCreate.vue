@@ -1,8 +1,8 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  supplierItemAdd,
-  supplierItemUpdate
+  supplierAdd,
+  supplierUpdate
 } from "../../../../services/supplier";
 const props = defineProps(['detail', 'successCallBack', "isCreate"]);
 import { message } from "ant-design-vue";
@@ -10,16 +10,18 @@ const formRef = ref();
 const labelCol = { span: 3 };
 const wrapperCol = { span: 24 };
 const formState = reactive({
+  deleted: 1,
   id: "",
-  itemname:  '',
-  itemValues: 0,
+  supplierName:  '',
+  telephone: "",
+  company: ""
 });
 const rules = {
-  itemname: [
-    { required: true, message: '请输入项目名称', trigger: 'change' },
-    { min: 1, max: 15, message: '不能为空', trigger: 'blur' },
+  supplierName: [
+    { required: true, message: '请输入供应商名称', trigger: 'change' },
   ],
-  itemValues: [{ required: false, message: '请输入对接分值', trigger: 'change' }],
+  telephone: [{ required: false, message: '请输入手机号', trigger: 'change' }],
+  company: [{ required: false, message: '请输入公司', trigger: 'change' }],
 };
 const onSubmit = () => {
   formRef.value
@@ -27,13 +29,13 @@ const onSubmit = () => {
     .then(async() => {
        try {
          if (props.isCreate) {
-          const res = await supplierItemAdd(formState);
+          const res = await supplierAdd(formState);
           if (res?.code == 0) {
             message.success("新建成功");
             props.successCallBack();
           }
          } else {
-           const res = await supplierItemUpdate(formState);
+           const res = await supplierUpdate(formState);
           if (res?.code == 0) {
             message.success("编辑成功");
             props.successCallBack();
@@ -41,7 +43,7 @@ const onSubmit = () => {
          }
           
         } catch (err) {
-          debugger
+          // debugger
         }
     })
     .catch(error => {
@@ -52,15 +54,13 @@ const onSubmit = () => {
 onUpdated(() => {
   formState.id = props?.detail?.id;
   formState.itemname = props?.detail?.itemname;
-  formState.itemValues = props?.detail?.itemValues;
-  console.log(formState)
+  formState.itemValue = props?.detail?.itemValue;
 });
 
 onMounted(() => {
   formState.id = props?.detail?.id;
   formState.itemname = props?.detail?.itemname;
-  formState.itemValues = props?.detail?.itemValues;
-  console.log(formState)
+  formState.itemValue = props?.detail?.itemValue;
 });
 </script>
 
@@ -72,11 +72,14 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="项目名称" name="itemname">
-      <a-input v-model:value="formState.itemname" />
+    <a-form-item ref="name" label="供应商名称" name="supplierName">
+      <a-input v-model:value="formState.supplierName" />
     </a-form-item>
-    <a-form-item label="对接分值" name="itemValues">
-      <a-input type="number" v-model:value="formState.itemValues" />
+    <a-form-item label="手机号" name="telephone">
+      <a-input type="number" v-model:value="formState.telephone" />
+    </a-form-item>
+    <a-form-item label="公司名称" name="company">
+      <a-input type="number" v-model:value="formState.company" />
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">提交</a-button>

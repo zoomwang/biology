@@ -86,14 +86,6 @@ const columns = [
     key: "status",
   },
   {
-    title: "状态",
-    dataIndex: "status",
-    key: "status",
-    slots: {
-      customRender: "status",
-    },
-  },
-  {
     title: "操作",
     key: "action",
     slots: {

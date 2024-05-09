@@ -33,7 +33,7 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    id: ""
+    id: props.id
   }
 });
 
