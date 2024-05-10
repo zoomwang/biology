@@ -50,17 +50,11 @@ const onSubmit = () => {
 };
 
 onUpdated(() => {
-  formState.id = props?.detail?.id;
-  formState.itemname = props?.detail?.itemname;
-  formState.itemValues = props?.detail?.itemValues;
-  console.log(formState)
+  Object.assign(formState, props?.detail)
 });
 
 onMounted(() => {
-  formState.id = props?.detail?.id;
-  formState.itemname = props?.detail?.itemname;
-  formState.itemValues = props?.detail?.itemValues;
-  console.log(formState)
+  Object.assign(formState, props?.detail)
 });
 </script>
 

@@ -7,7 +7,7 @@ export const supplierOrderList = (param) => {
 
 /** 供应商列表 */
 export const supplierList = (param) => {
-  return api.post(`/sys/supplier/list`, param);
+  return api.post(`/sys/supplier/detail/list`, param);
 }
 
 /** 供应商界面列表 */
@@ -19,6 +19,11 @@ export const supplierItemList = (param) => {
 export const supplierItemDetailList = (param) => {
   return api.post(`/sys/supplier/item-detail/list`, param);
 }
+
+/** 供应商项目列表 */
+// export const supplierItemDetailList = (param) => {
+//   return api.post(`/sys/supplier/detail/list`, param);
+// }
 
 /** 更新供应商商项目 */
 export const supplierItemUpdate = (param) => {
@@ -38,5 +43,10 @@ export const supplierAdd = (param) => {
 /** 编辑供应商 */
 export const supplierUpdate = (param) => {
   return api.post(`/sys/supplier/update`, param);
+}
+
+/** 编辑供应商 */
+export const getSupplierDetail = (id) => {
+  return api.get(`/sys/supplier/${id}`);
 }
 

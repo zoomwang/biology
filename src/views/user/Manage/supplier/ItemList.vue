@@ -11,21 +11,14 @@ import {
 import {
   supplierItemDetailList
 } from "../../../../services/supplier";
-import { notification } from "ant-design-vue";
+// import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
-import Create from "./Create.vue"
-import Detail from "./Detail.vue"
+import ItemCreate from "./ItemCreate.vue"
 
-let orderData = reactive({
-});
-const orderDetail = ref({});
+const isCreate = ref(true);
+const createShow = ref(false);
+const supplierDetail = ref(null);
 const props = defineProps(['id']);
-const visible = ref(false);
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -93,6 +86,9 @@ const columns = [
     },
   },
 ];
+const showModal = async (orderId) => {
+  createShow.value = true;
+};
 
 const labelCol = {
   style: {
@@ -124,6 +120,9 @@ const menus = ["已上架", "已下架"];
 <template>
   <!-- 用户注册资料 -->
   <main>
+    <a-button type="primary" style="margin-bottom: 10px" @click="showModal()"
+      >新增项目</a-button
+    >
     <a-table
       :columns="columns"
       :data-source="dataSource"
@@ -135,7 +134,21 @@ const menus = ["已上架", "已下架"];
           {{ menus[--text] }}
         </span>
       </template>
+      <template #action="{ record }">
+        <a-button type="link" @click="showModal(record)"
+          >编辑</a-button
+        >
+      </template>
     </a-table>
+    <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建测试项目' :'编辑测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    visible = false;
+  }">
+    <ItemCreate style="margin-top: 20px" :successCallBack="() => {
+      getSupplierItemList(); 
+      isCreate = true;
+      createShow = false;
+    }" :detail="supplierDetail" :isCreate="isCreate" />
+  </a-modal>
   </main>
 </template>
 <style lang="scss"></style>

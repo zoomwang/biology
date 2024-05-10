@@ -1,50 +1,47 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  supplierAdd,
-  supplierUpdate
+  supplierItemAdd,
+  supplierItemUpdate
 } from "../../../../services/supplier";
-const props = defineProps(['detail', 'successCallBack']);
+const props = defineProps(['detail', 'successCallBack', "isCreate"]);
 import { message } from "ant-design-vue";
 const formRef = ref();
-const labelCol = { span: 4 };
+const labelCol = { span: 3 };
 const wrapperCol = { span: 24 };
-const isCanEdit = ref(false);
 const formState = reactive({
-  deleted: undefined,
   id: "",
-  supplierName:  '',
-  telephone: "",
-  company: ""
+  itemname:  '',
+  itemValues: 0,
 });
 const rules = {
-  supplierName: [
-    { required: true, message: '请输入供应商名称', trigger: 'change' },
+  itemname: [
+    { required: true, message: '请输入项目名称', trigger: 'change' },
+    { min: 1, max: 15, message: '不能为空', trigger: 'blur' },
   ],
-  telephone: [{ required: false, message: '请输入手机号', trigger: 'change' }],
-  company: [{ required: false, message: '请输入公司', trigger: 'change' }],
+  itemValues: [{ required: false, message: '请输入对接分值', trigger: 'change' }],
 };
 const onSubmit = () => {
   formRef.value
     .validate()
     .then(async() => {
        try {
-        //  if (props.isCreate) {
-        //   const res = await supplierAdd(formState);
-        //   if (res?.code == 0) {
-        //     message.success("新建成功");
-        //     props.successCallBack();
-        //   }
-        //  } else {
-          const res = await supplierUpdate(formState);
+         if (props.isCreate) {
+          const res = await supplierItemAdd(formState);
+          if (res?.code == 0) {
+            message.success("新建成功");
+            props.successCallBack();
+          }
+         } else {
+           const res = await supplierItemUpdate(formState);
           if (res?.code == 0) {
             message.success("编辑成功");
             props.successCallBack();
           }
-        //  }
+         }
           
         } catch (err) {
-          // debugger
+          debugger
         }
     })
     .catch(error => {
@@ -53,11 +50,17 @@ const onSubmit = () => {
 };
 
 onUpdated(() => {
-  Object.assign(formState,props?.detail);
+  formState.id = props?.detail?.id;
+  formState.itemname = props?.detail?.itemname;
+  formState.itemValues = props?.detail?.itemValues;
+  console.log(formState)
 });
 
 onMounted(() => {
-  Object.assign(formState,props?.detail);
+  formState.id = props?.detail?.id;
+  formState.itemname = props?.detail?.itemname;
+  formState.itemValues = props?.detail?.itemValues;
+  console.log(formState)
 });
 </script>
 
@@ -69,22 +72,13 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="供应商名称" name="supplierName">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.supplierName" />
+    <a-form-item ref="name" label="项目名称" name="itemname">
+      <a-input v-model:value="formState.itemname" />
     </a-form-item>
-    <a-form-item label="手机号" name="telephone">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.telephone" />
-    </a-form-item>
-    <a-form-item label="公司名称" name="company">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.company" />
-    </a-form-item>
-    <a-form-item label="是否上线" name="company">
-      <a-switch :disabled="!isCanEdit" v-model:checked="formState.deleted" />
+    <a-form-item label="对接分值" name="itemValues">
+      <a-input type="number" v-model:value="formState.itemValues" />
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button style="margin-right: 10px" type="primary" @click="() => {
-        isCanEdit = !isCanEdit;
-      }">{{isCanEdit ? '关闭' : '开启'}}编辑</a-button>
       <a-button type="primary" @click="onSubmit">提交</a-button>
     </a-form-item>
   </a-form>
