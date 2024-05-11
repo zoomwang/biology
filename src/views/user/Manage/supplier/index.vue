@@ -41,7 +41,7 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    status: "-1",
+    deleted: "",
     itemname: ""
   }
 });
@@ -162,7 +162,7 @@ const menus = ["已上架", "已下架"];
       <a-form-item label="订单状态" :wrapperCol="{
         span: 7
       }">
-        <a-select v-model:value="param.param.status" style="width: 100px">
+        <a-select v-model:value="param.param.deleted" style="width: 100px">
           <a-select-option value="-1">全部订单</a-select-option>
           <a-select-option v-for="(item, index) in menus" :key="item" :value="++index">{{ item }}</a-select-option>
         </a-select>

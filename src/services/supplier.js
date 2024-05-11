@@ -50,3 +50,13 @@ export const getSupplierDetail = (id) => {
   return api.get(`/sys/supplier/${id}`);
 }
 
+/** 新增供应商商项目 */
+export const supplierItemDetailAdd = (param) => {
+  return api.post(`/sys/supplier/item-detail/add`, param);
+}
+
+/** 新增供应商商项目 */
+export const supplierItemDetailEdit = (param) => {
+  return api.post(`/sys/supplier/item-detail/update`, param);
+}
+

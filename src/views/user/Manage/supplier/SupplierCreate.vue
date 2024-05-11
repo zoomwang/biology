@@ -36,6 +36,7 @@ const onSubmit = () => {
         //     props.successCallBack();
         //   }
         //  } else {
+          formState.deleted = formState.deleted ? 1 : 0;
           const res = await supplierUpdate(formState);
           if (res?.code == 0) {
             message.success("编辑成功");
@@ -54,10 +55,12 @@ const onSubmit = () => {
 
 onUpdated(() => {
   Object.assign(formState,props?.detail);
+  formState.deleted = !!props?.detail.deleted
 });
 
 onMounted(() => {
   Object.assign(formState,props?.detail);
+  formState.deleted = !!props?.detail.deleted
 });
 </script>
 

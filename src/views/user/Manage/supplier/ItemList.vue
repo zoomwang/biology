@@ -17,7 +17,9 @@ import ItemCreate from "./ItemCreate.vue"
 
 const isCreate = ref(true);
 const createShow = ref(false);
-const supplierDetail = ref(null);
+const supplierDetail = ref({
+  supplierId: ''
+});
 const props = defineProps(['id']);
 const param = reactive({
   pageSize: 999,
@@ -75,8 +77,11 @@ const columns = [
   },
   {
     title: "状态",
-    dataIndex: "status",
-    key: "status",
+    dataIndex: "deleted",
+    key: "deleted",
+    slots: {
+      customRender: "deleted",
+    },
   },
   {
     title: "操作",
@@ -86,7 +91,13 @@ const columns = [
     },
   },
 ];
-const showModal = async (orderId) => {
+const showModal = async (type, record) => {
+  if (type == 'create') {
+    supplierDetail.value.supplierId = props.id;
+  } else {
+    isCreate.value = false;
+    Object.assign(supplierDetail.value, record);
+  }
   createShow.value = true;
 };
 
@@ -120,7 +131,7 @@ const menus = ["已上架", "已下架"];
 <template>
   <!-- 用户注册资料 -->
   <main>
-    <a-button type="primary" style="margin-bottom: 10px" @click="showModal()"
+    <a-button type="primary" style="margin-bottom: 10px" @click="showModal('create')"
       >新增项目</a-button
     >
     <a-table
@@ -129,22 +140,22 @@ const menus = ["已上架", "已下架"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #status="{ text }">
+      <template #deleted="{ text }">
         <span>
-          {{ menus[--text] }}
+          {{ menus[text] }}
         </span>
       </template>
       <template #action="{ record }">
-        <a-button type="link" @click="showModal(record)"
+        <a-button type="link" @click="showModal('edit', record)"
           >编辑</a-button
         >
       </template>
     </a-table>
-    <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建测试项目' :'编辑测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新增测试项目' :'编辑测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
     <ItemCreate style="margin-top: 20px" :successCallBack="() => {
-      getSupplierItemList(); 
+      getSupplierItemDetailList(); 
       isCreate = true;
       createShow = false;
     }" :detail="supplierDetail" :isCreate="isCreate" />

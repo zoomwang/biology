@@ -95,14 +95,14 @@ const columns = [
     dataIndex: "historyOrderNum",
     key: "historyOrderNum",
   },
-  {
-    title: "状态",
-    dataIndex: "deleted",
-    key: "deleted",
-    slots: {
-      customRender: "deleted",
-    },
-  },
+  // {
+  //   title: "状态",
+  //   dataIndex: "deleted",
+  //   key: "deleted",
+  //   slots: {
+  //     customRender: "deleted",
+  //   },
+  // },
   {
     title: "操作",
     key: "action",
@@ -162,11 +162,11 @@ const menus = ["已上架", "已下架"];
           >{{ record.supplierName }}</a-button
         >
       </template>
-      <template #deleted="{ text }">
+      <!-- <template #deleted="{ text }">
         <span>
-          {{ menus[--text] }}
+          {{ menus[text] }}
         </span>
-      </template>
+      </template> -->
       <template #action="{ record }">
         <a-button type="link" @click="showModal(record.id)"
           >查看</a-button

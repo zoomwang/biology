@@ -1,13 +1,14 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  supplierItemAdd,
-  supplierItemUpdate
+  supplierItemDetailAdd,
+  supplierItemDetailEdit,
+  supplierItemList,
 } from "../../../../services/supplier";
 const props = defineProps(['detail', 'successCallBack', "isCreate"]);
 import { message } from "ant-design-vue";
 const formRef = ref();
-const labelCol = { span: 3 };
+const labelCol = { span: 5 };
 const wrapperCol = { span: 24 };
 const formState = reactive({
   id: "",
@@ -15,8 +16,25 @@ const formState = reactive({
   costprice: 0,
   remark: '',
   document: '',
-  uploadDocument: ''
+  uploadDocument: '',
+  supplierItemId: '',
+  supplierId: props?.detail?.supplierId
 });
+const param = reactive({
+  pageSize: 999,
+  curPage: 1,
+  param: {
+    status: "-1",
+    itemname: ""
+  }
+});
+const menus = ref([]);
+const getSupplierItemList = async () => {
+  try {
+    const res = await supplierItemList(param);
+    if (res?.code == 0) menus.value = res?.data?.list;
+  } catch (err) {}
+};
 
 const rules = {
   deviceType: [
@@ -30,13 +48,13 @@ const onSubmit = () => {
     .then(async() => {
        try {
          if (props.isCreate) {
-          const res = await supplierItemAdd(formState);
+          const res = await supplierItemDetailAdd(formState);
           if (res?.code == 0) {
             message.success("新建成功");
             props.successCallBack();
           }
          } else {
-           const res = await supplierItemUpdate(formState);
+           const res = await supplierItemDetailEdit(formState);
           if (res?.code == 0) {
             message.success("编辑成功");
             props.successCallBack();
@@ -57,6 +75,7 @@ onUpdated(() => {
 });
 
 onMounted(() => {
+  getSupplierItemList();
   Object.assign(formState, props?.detail)
 });
 </script>
@@ -69,6 +88,11 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
+    <a-form-item ref="name" label="测试项目大类" name="supplierItemId">
+      <a-select v-model:value="formState.supplierItemId">
+        <a-select-option v-for="item in menus" :value="item.id">{{ item.itemname }}</a-select-option>
+      </a-select>
+    </a-form-item>
     <a-form-item ref="name" label="设备类型" name="deviceType">
       <a-input v-model:value="formState.deviceType" />
     </a-form-item>
