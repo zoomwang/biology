@@ -93,7 +93,9 @@ const columns = [
 ];
 const showModal = async (type, record) => {
   if (type == 'create') {
+    supplierDetail.value = {};
     supplierDetail.value.supplierId = props.id;
+    isCreate.value = true;
   } else {
     isCreate.value = false;
     Object.assign(supplierDetail.value, record);

@@ -15,6 +15,7 @@ const formState = reactive({
   deviceType:  '',
   costprice: 0,
   remark: '',
+  deleted: 0,
   document: '',
   uploadDocument: '',
   supplierItemId: '',
@@ -71,10 +72,14 @@ const onSubmit = () => {
 };
 
 onUpdated(() => {
+  console.log(formRef)
+  formRef.value.resetFields();
   Object.assign(formState, props?.detail)
 });
 
 onMounted(() => {
+  console.log(formRef)
+  formRef.value.resetFields();
   getSupplierItemList();
   Object.assign(formState, props?.detail)
 });
@@ -90,7 +95,7 @@ onMounted(() => {
   >
     <a-form-item ref="name" label="测试项目大类" name="supplierItemId">
       <a-select v-model:value="formState.supplierItemId">
-        <a-select-option v-for="item in menus" :value="item.id">{{ item.itemname }}</a-select-option>
+        <a-select-option v-for="item in menus" :key="item.id" :value="item.id">{{ item.itemname }}</a-select-option>
       </a-select>
     </a-form-item>
     <a-form-item ref="name" label="设备类型" name="deviceType">
@@ -98,6 +103,12 @@ onMounted(() => {
     </a-form-item>
     <a-form-item label="成本价" name="costprice">
       <a-input type="number" v-model:value="formState.costprice" />
+    </a-form-item>
+    <a-form-item label="状态" name="deleted">
+      <a-select v-model:value="formState.deleted">
+        <a-select-option  :value="0">已上架</a-select-option>
+        <a-select-option  :value="1">已下架</a-select-option>
+      </a-select>    
     </a-form-item>
     <a-form-item label="备注" name="remark">
       <a-textarea v-model:value="formState.remark" />
