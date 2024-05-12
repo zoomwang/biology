@@ -164,7 +164,7 @@ const menus = ["已上架", "已下架"];
       }">
         <a-select v-model:value="param.param.deleted" style="width: 100px">
           <a-select-option value="-1">全部订单</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="++index">{{ item }}</a-select-option>
+          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">

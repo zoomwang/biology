@@ -80,6 +80,9 @@ const columns = [
     title: "订单类型",
     dataIndex: "orderType",
     key: "orderType",
+    slots: {
+      customRender: "orderType",
+    },
   },
   // {
   //   title: "操作",
@@ -139,6 +142,7 @@ onMounted(() => {
 });
 
 const menus = ["已上架", "已下架"];
+const type = ["内部订单", "外部订单"];
 </script>
 
 <template>
@@ -152,7 +156,12 @@ const menus = ["已上架", "已下架"];
     >
       <template #status="{ text }">
         <span>
-          {{ menus[--text] }}
+          {{ menus[text] }}
+        </span>
+      </template>
+      <template #orderType="{ text }">
+        <span>
+          {{ type[text] }}
         </span>
       </template>
       <!-- <template #action="{ record }">
