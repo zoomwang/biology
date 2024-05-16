@@ -131,7 +131,7 @@ const getSupplierItemList = async () => {
   try {
     const res = await supplierItemList(param);
     res?.data?.list.forEach((item) => {
-      item.createime = formatTime(item.createTime);
+      item.createTime = formatTime(item.createTime);
     })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}

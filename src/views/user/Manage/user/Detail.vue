@@ -1,18 +1,26 @@
 <script setup>
 import { ref } from 'vue';
 import OrderList from "./OrderList.vue"
-import SupplierList from "./SupplierList.vue"
+import PointsList from "./PointsList.vue"
+import UserInfo from "./Userinfo.vue"
+import PrestoreList from "./PrestoreList.vue"
 
-const activeKey = ref('1');
+const activeKey = ref('0');
 const props = defineProps(['id']);
 </script>
 <template>
   <a-tabs v-model:activeKey="activeKey">
-    <a-tab-pane key="1" tab="供应商列表">
-      <SupplierList :id="props.id" />
+    <a-tab-pane key="0" tab="用户信息">
+      <UserInfo :id="props.id" />
     </a-tab-pane>
-    <a-tab-pane key="2" tab="供应商订单列表" force-render>
+    <a-tab-pane key="1" tab="订单情况" force-render>
       <OrderList :id="props.id" />
+    </a-tab-pane>
+    <a-tab-pane key="2" tab="积分情况">
+      <PointsList :id="props.id" />
+    </a-tab-pane>
+    <a-tab-pane key="3" tab="预存情况">
+      <PrestoreList :id="props.id" />
     </a-tab-pane>
   </a-tabs>
 </template>
