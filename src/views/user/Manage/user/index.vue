@@ -24,8 +24,8 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    username: "",
-    cardStatus: 0
+    // username: "",
+    cardStatus: ""
   }
 });
 
@@ -106,37 +106,6 @@ const dataSource = ref([]);
 const getUserLists = async () => {
   try {
     const res = await getUserList(param);
-    res.data.list = [
-    {
-        "id": 0,
-        "username": "2334324",
-        "realName": "KHkajs",
-        "userIdentity": 0,
-        "email": "string",
-        "inviterMobile": "string",
-        "isCertified": 0,
-        "address": [
-          "string"
-        ],
-        "university": "string",
-        "department": "string",
-        "stage": "string",
-        "corporation": "string",
-        "branch": "string",
-        "position": "string",
-        "studyStart": "2024-05-16T12:13:18.281Z",
-        "studyEnd": "2024-05-16T12:13:18.281Z",
-        "mentor": "string",
-        "createTime": "2024-05-16T12:13:18.281Z",
-        "additionUrl": "string",
-        "cardStatus": 0,
-        "transMap": {
-          "additionalProp1": {},
-          "additionalProp2": {},
-          "additionalProp3": {}
-        }
-      }
-    ];
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
     })
@@ -144,9 +113,10 @@ const getUserLists = async () => {
   } catch (err) {}
 };
 
-const showModal = (id) => {
+const showModal = (item) => {
   visible.value = true;
-  id.value = id;
+  id.value = item;
+  debugger
 }
 
 onMounted(() => {

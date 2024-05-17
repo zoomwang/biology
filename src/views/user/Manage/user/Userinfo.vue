@@ -1,7 +1,8 @@
 <script setup>
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, reactive, onMounted } from "vue";
-import { editUser, getUser, getSchool } from "../../../../services/user";
+import { getSchool } from "../../../../services/user";
+import { getUserInfo } from "../../../../services/manage";
 import { identity } from "../../config";
 import areaData from "@/public/area.js";
 import { notification, Form } from "ant-design-vue";
@@ -9,6 +10,7 @@ import UploadFile from "@/components/UploadFile.vue";
 import { formatLocalTime } from "@/utils/index";
 import dayjs from "dayjs";
 
+const props = defineProps(['id']);
 const monthFormat = "YYYY/MM";
 const useForm = Form.useForm;
 const stageMenu1 = ref([
@@ -93,7 +95,7 @@ let formState = reactive({
   email: "",
 });
 const schoolState = ref([]);
-const userId = ref("");
+const userId = ref(props.id);
 const { resetFields, validate, validateInfos } = useForm(
   formState,
   reactive({
@@ -191,14 +193,8 @@ let canEdit = ref(true);
 const onSubmit = async () => {
   validate().then(async (res) => {
     try {
-      // if (!formState.additionUrl) {
-      //   notification.error({
-      //     message: "",
-      //     description: "请上传附件",
-      //   });
-      //   return;
-      // }
-      formState.id = userId.value || 2;
+      
+      formState.id = userId.value;
       if (formState.mobile == formState.inviterMobile) {
         notification.error({
           message: "",
@@ -213,7 +209,7 @@ const onSubmit = async () => {
           description: "编辑成功",
         });
         canEdit = false;
-        await getUserInfo();
+        await getUserInfos();
       } else {
         // notification.error({
         //   message: "",
@@ -227,7 +223,7 @@ const onSubmit = async () => {
     });
   });
 };
-const getUserInfo = async function () {
+const getUserInfos = async function () {
   try {
     const res = await getUser();
     if (res.code == 0) {
@@ -285,7 +281,7 @@ const initStageMenu = function (val){
     }
 }
 onMounted(async() => {
-  await getUserInfo();
+  await getUserInfos();
   initStageMenu(formState.userIdentity);
   getSchoolInfoInfo();
 });
