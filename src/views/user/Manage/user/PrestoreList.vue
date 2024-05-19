@@ -9,22 +9,15 @@ import {
   watch,
 } from "vue";
 import {
-  supplierOrderList
-} from "../../../../services/supplier";
+  getStoreList
+} from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
-// import Create from "./Create.vue"
-import Detail from "./Detail.vue"
 
-let orderData = reactive({
-});
 const props = defineProps(['id']);
 const orderDetail = ref({});
 const visible = ref(false);
-const showModal = async (orderId) => {
-  await getOrderInfos(orderId, "detail");
-};
+
 const handleOk = (e) => {
   console.log(e);
   visible.value = false;
@@ -33,64 +26,42 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    id: props.id
+    uid: props.id
   }
 });
 
 const columns = [
   {
-    title: "供应商名称",
-    dataIndex: "supplierName",
-    key: "supplierName",
+    title: "支付类型",
+    dataIndex: "payPlatform",
+    key: "payPlatform",
+    slots: {
+      customRender: "payPlatform",
+    },
   },
   {
-    title: "订单编号",
-    dataIndex: "orderId",
-    key: "orderId",
+    title: "预存福利",
+    dataIndex: "welfare",
+    key: "welfare",
+    slots: {
+      customRender: "welfare",
+    },
   },
   {
-    title: "预约仪器",
-    dataIndex: "itemName",
-    key: "itemName",
+    title: "金额",
+    dataIndex: "amount",
+    key: "amount",
   },
   {
-    title: "订单状态",
+    title: "变动时间",
     dataIndex: "orderStatus",
     key: "orderStatus",
-    slots: {
-      customRender: "orderStatus",
-    },
   },
   {
-    title: "订单金额",
-    dataIndex: "orderPrice",
-    key: "orderPrice",
+    title: "备注",
+    dataIndex: "remind",
+    key: "remind",
   },
-  {
-    title: "实付金额",
-    dataIndex: "realOrderPrice",
-    key: "realOrderPrice",
-  },
-  {
-    title: "成本金额",
-    dataIndex: "costPrice",
-    key: "costPrice",
-  },
-  {
-    title: "订单类型",
-    dataIndex: "orderType",
-    key: "orderType",
-    slots: {
-      customRender: "orderType",
-    },
-  },
-  // {
-  //   title: "操作",
-  //   key: "action",
-  //   slots: {
-  //     customRender: "action",
-  //   },
-  // },
 ];
 
 const labelCol = {
@@ -113,36 +84,18 @@ const formState = reactive({
 
 const dataSource = ref([]);
 
-const getOrderInfos = async (params, type) => {
+const getStoreLists = async () => {
   try {
-    const res = await getOrderInfo(params);
-    if (res?.code == 0) {
-      orderDetail.value = res?.data;
-      if (type == "detail") {
-        visible.value = true;
-      } else {
-        drawerVisible.value = true;
-      }
-    }
-  } catch (err) {}
-};
-
-const getOrderList = async () => {
-  try {
-    const res = await supplierOrderList(param);
-    res?.data?.list.forEach((item) => {
-      item.createTime = formatTime(item.createTime);
-    })
+    const res = await getStoreList(param);
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
 };
 
 onMounted(() => {
-  getOrderList();
+  getStoreLists();
 });
-
-const menus = ["已上架", "已下架"];
-const type = ["内部订单", "外部订单"];
+const payPlatform = ["","支付宝","微信","银联"];
+const welfare = ["测试费", "专属科研卡(JD卡)", "科研基金（现金）"];
 </script>
 
 <template>
@@ -154,21 +107,16 @@ const type = ["内部订单", "外部订单"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #status="{ text }">
+      <template #payPlatform="{ text }">
         <span>
-          {{ menus[text] }}
+          {{ payPlatform[text] }}
         </span>
       </template>
-      <template #orderType="{ text }">
+      <template #welfare="{ text }">
         <span>
-          {{ type[text] }}
+          {{ welfare[text] }}
         </span>
       </template>
-      <!-- <template #action="{ record }">
-        <a-button type="text" @click="showModal(record.orderId)"
-          >更多详情</a-button
-        >
-      </template> -->
     </a-table>
   </main>
 </template>

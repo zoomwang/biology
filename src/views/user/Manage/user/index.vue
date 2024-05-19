@@ -24,7 +24,7 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    // username: "",
+    username: "15975624649",
     cardStatus: ""
   }
 });
@@ -116,7 +116,6 @@ const getUserLists = async () => {
 const showModal = (item) => {
   visible.value = true;
   id.value = item;
-  debugger
 }
 
 onMounted(() => {
@@ -149,11 +148,11 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
           getUserLists();
         }">搜索</a-button>
       </a-form-item>
-      <a-button type="primary" style="margin-left: 20px" @click="() => {
+      <!-- <a-button type="primary" style="margin-left: 20px" @click="() => {
           supplierDetail = null;
           isCreate = true;
           createShow = true;
-        }">新建</a-button>
+        }">新建</a-button> -->
     </a-form>
     <a-table
       :columns="columns"
@@ -169,6 +168,11 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
       <template #cardStatus="{ text }">
         <span>
           {{ menus[text] }}
+        </span>
+      </template>
+      <template #status="{ text }">
+        <span>
+          {{ status[text] }}
         </span>
       </template>
       <template #action="{ record }">

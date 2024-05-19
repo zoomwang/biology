@@ -9,12 +9,10 @@ import {
   watch,
 } from "vue";
 import {
-  supplierOrderList
-} from "../../../../services/supplier";
+  getOrderList
+} from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
-// import Create from "./Create.vue"
 import Detail from "./Detail.vue"
 
 let orderData = reactive({
@@ -22,9 +20,6 @@ let orderData = reactive({
 const props = defineProps(['id']);
 const orderDetail = ref({});
 const visible = ref(false);
-const showModal = async (orderId) => {
-  await getOrderInfos(orderId, "detail");
-};
 const handleOk = (e) => {
   console.log(e);
   visible.value = false;
@@ -33,16 +28,11 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    id: props.id
+    uid: props.id
   }
 });
 
 const columns = [
-  {
-    title: "供应商名称",
-    dataIndex: "supplierName",
-    key: "supplierName",
-  },
   {
     title: "订单编号",
     dataIndex: "orderId",
@@ -50,38 +40,43 @@ const columns = [
   },
   {
     title: "预约仪器",
-    dataIndex: "itemName",
-    key: "itemName",
+    dataIndex: "itemname",
+    key: "itemname",
   },
   {
-    title: "订单状态",
-    dataIndex: "orderStatus",
-    key: "orderStatus",
+    title: "支付金额",
+    key: "realOrderPrice",
     slots: {
-      customRender: "orderStatus",
+      customRender: "realOrderPrice",
     },
   },
   {
-    title: "订单金额",
-    dataIndex: "orderPrice",
-    key: "orderPrice",
-  },
-  {
-    title: "实付金额",
-    dataIndex: "realOrderPrice",
-    key: "realOrderPrice",
-  },
-  {
-    title: "成本金额",
-    dataIndex: "costPrice",
-    key: "costPrice",
-  },
-  {
-    title: "订单类型",
-    dataIndex: "orderType",
-    key: "orderType",
+    title: "支付方式",
+    key: "types",
     slots: {
-      customRender: "orderType",
+      customRender: "types",
+    },
+  },
+  
+  {
+    title: "欠款金额",
+    dataIndex: "priceDifference",
+    key: "priceDifference",
+  },
+  {
+    title: "欠款状态",
+    dataIndex: "priceDifferenceStatus",
+    key: "priceDifferenceStatus",
+    slots: {
+      customRender: "priceDifferenceStatus",
+    },
+  },
+  {
+    title: "订单状态",
+    dataIndex: "status",
+    key: "status",
+    slots: {
+      customRender: "status",
     },
   },
   // {
@@ -113,23 +108,9 @@ const formState = reactive({
 
 const dataSource = ref([]);
 
-const getOrderInfos = async (params, type) => {
+const getOrderLists = async () => {
   try {
-    const res = await getOrderInfo(params);
-    if (res?.code == 0) {
-      orderDetail.value = res?.data;
-      if (type == "detail") {
-        visible.value = true;
-      } else {
-        drawerVisible.value = true;
-      }
-    }
-  } catch (err) {}
-};
-
-const getOrderList = async () => {
-  try {
-    const res = await supplierOrderList(param);
+    const res = await getOrderList(param);
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
     })
@@ -138,11 +119,13 @@ const getOrderList = async () => {
 };
 
 onMounted(() => {
-  getOrderList();
+  getOrderLists();
 });
 
-const menus = ["已上架", "已下架"];
-const type = ["内部订单", "外部订单"];
+const payPlatform = ["","支付宝","微信","银联"];
+const payMode = ["预存", "扫码", "信用"];
+const status = ["","待报价", "可支付", "待实验", "实验中", "已完成", "欠款中","已开票", "已还款", "已取消"];
+const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
 </script>
 
 <template>
@@ -154,14 +137,24 @@ const type = ["内部订单", "外部订单"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #status="{ text }">
+      <template #types="{ text }">
         <span>
-          {{ menus[text] }}
+          {{ text.payMode == "1" ?  payPlatform[text.payPlatform] : payMode[text.payMode]}}
         </span>
       </template>
-      <template #orderType="{ text }">
+      <template #priceDifferenceStatus="{ text }">
         <span>
-          {{ type[text] }}
+          {{ priceDifferenceStatus[text]}}
+        </span>
+      </template>
+      <template #status="{ text }">
+        <span>
+          {{ status[text]}}
+        </span>
+      </template>
+      <template #realOrderPrice="{ text }">
+        <span>
+          {{ text['costInfo']["支付金额"]}}
         </span>
       </template>
       <!-- <template #action="{ record }">

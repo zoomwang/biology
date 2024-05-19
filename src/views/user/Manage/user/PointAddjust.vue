@@ -1,45 +1,29 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  supplierAdd,
-  supplierUpdate
-} from "../../../../services/supplier";
-const props = defineProps(['detail', 'successCallBack']);
+  adjustPoints
+} from "../../../../services/manage";
+const props = defineProps(['id', 'successCallBack']);
 import { message } from "ant-design-vue";
 const formRef = ref();
 const labelCol = { span: 4 };
 const wrapperCol = { span: 24 };
 const isCanEdit = ref(false);
 const formState = reactive({
-  deleted: undefined,
-  id: "",
-  supplierName:  '',
-  telephone: "",
-  company: ""
+  uid: props.id,
+  adjustType:  1,
 });
 const rules = {
-  supplierName: [
-    { required: true, message: '请输入供应商名称', trigger: 'change' },
-  ],
-  telephone: [{ required: false, message: '请输入手机号', trigger: 'change' }],
-  company: [{ required: false, message: '请输入公司', trigger: 'change' }],
+  adjustAmount: [{ required: false, message: '请输入数值', trigger: 'change' }],
 };
 const onSubmit = () => {
   formRef.value
     .validate()
     .then(async() => {
        try {
-        //  if (props.isCreate) {
-        //   const res = await supplierAdd(formState);
-        //   if (res?.code == 0) {
-        //     message.success("新建成功");
-        //     props.successCallBack();
-        //   }
-        //  } else {
-          formState.deleted = formState.deleted ? 1 : 0;
-          const res = await supplierUpdate(formState);
+          const res = await adjustPoints(formState);
           if (res?.code == 0) {
-            message.success("编辑成功");
+            message.success(`${formState.adjustType == 1 ? "增加" : "减少"}成功`);
             props.successCallBack();
           }
         //  }
@@ -53,15 +37,6 @@ const onSubmit = () => {
     });
 };
 
-onUpdated(() => {
-  Object.assign(formState,props?.detail);
-  formState.deleted = !!props?.detail.deleted
-});
-
-onMounted(() => {
-  Object.assign(formState,props?.detail);
-  formState.deleted = !!props?.detail.deleted
-});
 </script>
 
 <template>
@@ -72,22 +47,16 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="供应商名称" name="supplierName">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.supplierName" />
+    <a-form-item ref="name" label="积分类型" name="adjustType">
+      <a-radio-group v-model:value="formState.adjustType">
+        <a-radio :style="radioStyle" :value="1">增加</a-radio>
+        <a-radio :style="radioStyle" :value="2">减少</a-radio>
+      </a-radio-group>    
     </a-form-item>
-    <a-form-item label="手机号" name="telephone">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.telephone" />
-    </a-form-item>
-    <a-form-item label="公司名称" name="company">
-      <a-input :disabled="!isCanEdit" v-model:value="formState.company" />
-    </a-form-item>
-    <a-form-item label="是否上线" name="company">
-      <a-switch :disabled="!isCanEdit" v-model:checked="formState.deleted" />
+    <a-form-item label="数值" name="adjustAmount">
+      <a-input  v-model:value="formState.adjustAmount" />
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button style="margin-right: 10px" type="primary" @click="() => {
-        isCanEdit = !isCanEdit;
-      }">{{isCanEdit ? '关闭' : '开启'}}编辑</a-button>
       <a-button type="primary" @click="onSubmit">提交</a-button>
     </a-form-item>
   </a-form>

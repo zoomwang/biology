@@ -9,22 +9,15 @@ import {
   watch,
 } from "vue";
 import {
-  supplierOrderList
-} from "../../../../services/supplier";
+  getOrderPointsList
+} from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
-// import Create from "./Create.vue"
-import Detail from "./Detail.vue"
+import PointAddjust from "./PointAddjust.vue"
 
-let orderData = reactive({
-});
 const props = defineProps(['id']);
 const orderDetail = ref({});
 const visible = ref(false);
-const showModal = async (orderId) => {
-  await getOrderInfos(orderId, "detail");
-};
 const handleOk = (e) => {
   console.log(e);
   visible.value = false;
@@ -33,64 +26,41 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    id: props.id
+    uid: props.id
   }
 });
 
+const showModal = (item) => {
+  visible.value = true;
+  id.value = item;
+}
+
 const columns = [
   {
-    title: "供应商名称",
-    dataIndex: "supplierName",
-    key: "supplierName",
+    title: "积分来源",
+    dataIndex: "fromDesc",
+    key: "fromDesc",
   },
   {
-    title: "订单编号",
-    dataIndex: "orderId",
-    key: "orderId",
+    title: "数量",
+    dataIndex: "points",
+    key: "points",
   },
   {
-    title: "预约仪器",
+    title: "领用时间",
     dataIndex: "itemName",
     key: "itemName",
   },
   {
-    title: "订单状态",
+    title: "过期时间",
     dataIndex: "orderStatus",
     key: "orderStatus",
-    slots: {
-      customRender: "orderStatus",
-    },
   },
   {
-    title: "订单金额",
+    title: "状态",
     dataIndex: "orderPrice",
     key: "orderPrice",
   },
-  {
-    title: "实付金额",
-    dataIndex: "realOrderPrice",
-    key: "realOrderPrice",
-  },
-  {
-    title: "成本金额",
-    dataIndex: "costPrice",
-    key: "costPrice",
-  },
-  {
-    title: "订单类型",
-    dataIndex: "orderType",
-    key: "orderType",
-    slots: {
-      customRender: "orderType",
-    },
-  },
-  // {
-  //   title: "操作",
-  //   key: "action",
-  //   slots: {
-  //     customRender: "action",
-  //   },
-  // },
 ];
 
 const labelCol = {
@@ -113,23 +83,9 @@ const formState = reactive({
 
 const dataSource = ref([]);
 
-const getOrderInfos = async (params, type) => {
+const getOrderPointsLists = async () => {
   try {
-    const res = await getOrderInfo(params);
-    if (res?.code == 0) {
-      orderDetail.value = res?.data;
-      if (type == "detail") {
-        visible.value = true;
-      } else {
-        drawerVisible.value = true;
-      }
-    }
-  } catch (err) {}
-};
-
-const getOrderList = async () => {
-  try {
-    const res = await supplierOrderList(param);
+    const res = await getOrderPointsList(param);
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
     })
@@ -138,16 +94,15 @@ const getOrderList = async () => {
 };
 
 onMounted(() => {
-  getOrderList();
+  getOrderPointsLists();
 });
 
-const menus = ["已上架", "已下架"];
-const type = ["内部订单", "外部订单"];
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
+    <a-button type="primary" @click="showModal" style="margin-bottom: 10px">积分调整</a-button>
     <a-table
       :columns="columns"
       :data-source="dataSource"
@@ -164,12 +119,15 @@ const type = ["内部订单", "外部订单"];
           {{ type[text] }}
         </span>
       </template>
-      <!-- <template #action="{ record }">
-        <a-button type="text" @click="showModal(record.orderId)"
-          >更多详情</a-button
-        >
-      </template> -->
     </a-table>
   </main>
+  <a-modal v-model:visible="visible" width="200px" title="积分调整" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    visible = false;
+  }">
+    <PointAddjust :successCallBack="() => {
+      getOrderPointsLists(); 
+      visible = true;
+    }" v-if="visible" :id="id" />
+  </a-modal>
 </template>
 <style lang="scss"></style>
