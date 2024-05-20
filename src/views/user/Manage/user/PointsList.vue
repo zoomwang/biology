@@ -58,8 +58,11 @@ const columns = [
   },
   {
     title: "状态",
-    dataIndex: "orderPrice",
-    key: "orderPrice",
+    dataIndex: "type",
+    key: "type",
+    slots: {
+      customRender: "type",
+    },
   },
 ];
 
@@ -97,6 +100,8 @@ onMounted(() => {
   getOrderPointsLists();
 });
 
+const types = ["兑换jd卡", "兑换测试费", "订单完成积分入账", "管理员调整积分"];
+
 </script>
 
 <template>
@@ -114,9 +119,9 @@ onMounted(() => {
           {{ menus[text] }}
         </span>
       </template>
-      <template #orderType="{ text }">
+      <template #type="{ text }">
         <span>
-          {{ type[text] }}
+          {{ types[text] }}
         </span>
       </template>
     </a-table>

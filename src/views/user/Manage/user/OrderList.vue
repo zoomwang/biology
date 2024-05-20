@@ -45,10 +45,11 @@ const columns = [
   },
   {
     title: "支付金额",
-    key: "realOrderPrice",
-    slots: {
-      customRender: "realOrderPrice",
-    },
+    key: "payAmount",
+    dataIndex: "payAmount"
+    // slots: {
+    //   customRender: "realOrderPrice",
+    // },
   },
   {
     title: "支付方式",
@@ -60,15 +61,15 @@ const columns = [
   
   {
     title: "欠款金额",
-    dataIndex: "priceDifference",
-    key: "priceDifference",
+    dataIndex: "debtAmount",
+    key: "debtAmount",
   },
   {
     title: "欠款状态",
-    dataIndex: "priceDifferenceStatus",
-    key: "priceDifferenceStatus",
+    dataIndex: "s",
+    key: "s",
     slots: {
-      customRender: "priceDifferenceStatus",
+      customRender: "s",
     },
   },
   {
@@ -142,9 +143,14 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
           {{ text.payMode == "1" ?  payPlatform[text.payPlatform] : payMode[text.payMode]}}
         </span>
       </template>
-      <template #priceDifferenceStatus="{ text }">
+      <!-- <template #priceDifferenceStatus="{ text }">
         <span>
           {{ priceDifferenceStatus[text]}}
+        </span>
+      </template> -->
+      <template #s="{ text }">
+        <span>
+          {{ s == '6' ? '已欠款' : '已还款'}}
         </span>
       </template>
       <template #status="{ text }">
@@ -152,11 +158,11 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
           {{ status[text]}}
         </span>
       </template>
-      <template #realOrderPrice="{ text }">
+      <!-- <template #realOrderPrice="{ text }">
         <span>
           {{ text['costInfo']["支付金额"]}}
         </span>
-      </template>
+      </template> -->
       <!-- <template #action="{ record }">
         <a-button type="text" @click="showModal(record.orderId)"
           >更多详情</a-button
