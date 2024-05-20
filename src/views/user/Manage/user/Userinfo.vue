@@ -2,7 +2,7 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, reactive, onMounted } from "vue";
 import { getSchool } from "../../../../services/user";
-import { getUserInfo } from "../../../../services/manage";
+import { getUserInfo, activeCreditPay } from "../../../../services/manage";
 import { identity } from "../../config";
 import areaData from "@/public/area.js";
 import { notification, Form } from "ant-design-vue";
@@ -10,7 +10,7 @@ import UploadFile from "@/components/UploadFile.vue";
 import { formatLocalTime } from "@/utils/index";
 import dayjs from "dayjs";
 
-const props = defineProps(['id']);
+const props = defineProps(['id', "username"]);
 const monthFormat = "YYYY/MM";
 const useForm = Form.useForm;
 const stageMenu1 = ref([
@@ -225,7 +225,7 @@ const onSubmit = async () => {
 };
 const getUserInfos = async function () {
   try {
-    const res = await getUser();
+    const res = await getUserInfo(props.username);
     if (res.code == 0) {
       const { username, university, address } = res.data;
       res.data.mobile = username;

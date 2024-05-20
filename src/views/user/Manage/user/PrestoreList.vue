@@ -54,8 +54,8 @@ const columns = [
   },
   {
     title: "变动时间",
-    dataIndex: "orderStatus",
-    key: "orderStatus",
+    dataIndex: "updateTime",
+    key: "updateTime",
   },
   {
     title: "备注",

@@ -1,13 +1,9 @@
 <script setup>
-// import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
 } from "vue";
-import { message } from "ant-design-vue";
 import {
   getUserList
 } from "../../../../services/manage";
@@ -15,6 +11,7 @@ import {formatTime} from "@/utils/index";
 import Detail from "./Detail.vue"
 
 const id = ref('');
+const username = ref('');
 const visible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
@@ -88,11 +85,6 @@ const labelCol = {
     width: "120px",
   },
 };
-const diffPayData = ref({
-  codeUrl: '',
-  payPlatform: '',
-  cost: ''
-})
 const wrapperCol = {
   span: 24,
 };
@@ -113,9 +105,10 @@ const getUserLists = async () => {
   } catch (err) {}
 };
 
-const showModal = (item) => {
-  visible.value = true;
+const showModal = (item, user) => {
   id.value = item;
+  username.value = user;
+  visible.value = true;
 }
 
 onMounted(() => {
@@ -179,7 +172,7 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
         <!-- <a-button type="link" @click="showEditDetail(record)"
           >编辑</a-button
         > -->
-        <a-button type="link" @click="showModal(record.id)"
+        <a-button type="link" @click="showModal(record.id, record.username)"
           >更多详情</a-button
         >
       </template>
@@ -188,7 +181,7 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
   <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="更多详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
-    <Detail v-if="visible" :id="id" />
+    <Detail v-if="visible" :id="id" :username="username" />
   </a-modal>
 
 </template>

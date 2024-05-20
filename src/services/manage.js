@@ -37,4 +37,4 @@ api.post(`/sys/user`, param);
 
 /** 管理段获取用户信息 */
 export const getUserInfo = (param) =>
-api.get(`/sys/user_admin/user_info`, param);
+api.get(`/sys/user_admin/user_info?username=${param}`);

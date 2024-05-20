@@ -2,28 +2,15 @@
 // import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
 import {
   getOrderList
 } from "../../../../services/manage";
-import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import Detail from "./Detail.vue"
 
-let orderData = reactive({
-});
 const props = defineProps(['id']);
-const orderDetail = ref({});
-const visible = ref(false);
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -80,13 +67,6 @@ const columns = [
       customRender: "status",
     },
   },
-  // {
-  //   title: "操作",
-  //   key: "action",
-  //   slots: {
-  //     customRender: "action",
-  //   },
-  // },
 ];
 
 const labelCol = {
@@ -143,11 +123,6 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
           {{ text.payMode == "1" ?  payPlatform[text.payPlatform] : payMode[text.payMode]}}
         </span>
       </template>
-      <!-- <template #priceDifferenceStatus="{ text }">
-        <span>
-          {{ priceDifferenceStatus[text]}}
-        </span>
-      </template> -->
       <template #s="{ text }">
         <span>
           {{ s == '6' ? '已欠款' : '已还款'}}
@@ -158,16 +133,6 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
           {{ status[text]}}
         </span>
       </template>
-      <!-- <template #realOrderPrice="{ text }">
-        <span>
-          {{ text['costInfo']["支付金额"]}}
-        </span>
-      </template> -->
-      <!-- <template #action="{ record }">
-        <a-button type="text" @click="showModal(record.orderId)"
-          >更多详情</a-button
-        >
-      </template> -->
     </a-table>
   </main>
 </template>

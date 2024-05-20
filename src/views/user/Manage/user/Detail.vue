@@ -6,12 +6,12 @@ import UserInfo from "./Userinfo.vue"
 import PrestoreList from "./PrestoreList.vue"
 
 const activeKey = ref('0');
-const props = defineProps(['id']);
+const props = defineProps(['id', "username"]);
 </script>
 <template>
   <a-tabs v-model:activeKey="activeKey">
     <a-tab-pane key="0" tab="用户信息">
-      <UserInfo :id="props.id" />
+      <UserInfo :id="props.id" :username="props?.username" />
     </a-tab-pane>
     <a-tab-pane key="1" tab="订单情况" force-render>
       <OrderList :id="props.id" />

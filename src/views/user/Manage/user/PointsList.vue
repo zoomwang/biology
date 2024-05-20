@@ -2,26 +2,17 @@
 // import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
 import {
   getOrderPointsList
 } from "../../../../services/manage";
-import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import PointAddjust from "./PointAddjust.vue"
 
 const props = defineProps(['id']);
-const orderDetail = ref({});
 const visible = ref(false);
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -48,13 +39,13 @@ const columns = [
   },
   {
     title: "领用时间",
-    dataIndex: "itemName",
-    key: "itemName",
+    dataIndex: "createTime",
+    key: "createTime",
   },
   {
     title: "过期时间",
-    dataIndex: "orderStatus",
-    key: "orderStatus",
+    dataIndex: "expireTime",
+    key: "expireTime",
   },
   {
     title: "状态",
@@ -91,6 +82,7 @@ const getOrderPointsLists = async () => {
     const res = await getOrderPointsList(param);
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
+      item.expireTime = formatTime(item.expireTime);
     })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
