@@ -10,6 +10,7 @@ import UploadFile from "@/components/UploadFile.vue";
 import { formatLocalTime } from "@/utils/index";
 import dayjs from "dayjs";
 
+const identitys = ["学生", "教职工", "企业", "医院"];
 const props = defineProps(['id', "username"]);
 const monthFormat = "YYYY/MM";
 const useForm = Form.useForm;
@@ -132,7 +133,7 @@ const { resetFields, validate, validateInfos } = useForm(
     ],
     position: [
       {
-        required: true,
+        required: false,
         message: "请输入职位",
       },
     ],
@@ -189,7 +190,7 @@ const { resetFields, validate, validateInfos } = useForm(
 );
 
 const visible = ref(false);
-let canEdit = ref(true);
+let canEdit = ref(false);
 const onSubmit = async () => {
   validate().then(async (res) => {
     try {
@@ -289,98 +290,46 @@ onMounted(async() => {
 
 <template>
   <!-- <a-card title="用户注册资料" :bordered="false"> -->
-  <div class="userinfo d-form">
-    <a-form :model="formState" :rules="validateInfos">
+  <div class="userinfo-manage d-form">
+    <a-form class="f-fl" :model="formState" :rules="validateInfos">
       <div class="l-item clear">
         <div class="t-label f-fl">登录账号：</div>
         <a-form-item class="f-fl">
-          <a-button
-            class="f-fl"
-            @click.prevent="
-              () => {
-                visible = true;
-              }
-            "
-            >点击查看联系方式</a-button
-          >
+          {{ formState.mobile }}
         </a-form-item>
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl"><span class="t-red">*</span>姓名：</div>
         <a-form-item class="f-fl" v-bind="validateInfos.realName">
-          <a-input
-            :disabled="!canEdit"
-            v-model:value="formState.realName"
-            placeholder="请输入姓名"
-          />
+          {{ formState.realName }}
         </a-form-item>
       </div>
       <div class="l-item clear l-identity">
         <div class="t-label f-fl"><span class="t-red">*</span>身份：</div>
         <a-form-item class="f-fl">
-          <a-radio-group
-            :disabled="!canEdit"
-            name="userIdentity"
-            @change="
-              (val) => {
-                initStageMenu(val.target.value)
-              }
-            "
-            v-model:value="formState.userIdentity"
-          >
-            <a-radio
-              v-for="item in identity"
-              :value="item.value"
-              :key="item.value"
-              >{{ item.label }}</a-radio
-            >
-          </a-radio-group>
+          {{ identitys[formState.userIdentity] }}
         </a-form-item>
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl">邀请人手机号：</div>
         <a-form-item class="f-fl" v-bind="validateInfos.inviterMobile">
-          <a-input
-            disabled
-            v-model:value="formState.inviterMobile"
-            placeholder="请输入手机号"
-          />
+          {{ formState.inviterMobile }}
         </a-form-item>
       </div>
       <div class="l-item clear">
         <div class="t-label f-fl"><span class="t-red">*</span>邮箱：</div>
         <a-form-item class="f-fl" v-bind="validateInfos.email">
-          <a-input
-            :disabled="!canEdit"
-            v-model:value="formState.email"
-            placeholder="请输入正确格式"
-          />
+          {{ formState.email }}
         </a-form-item>
       </div>
-      <div class="l-item clear" style="position: relative">
-        <div class="t-label f-fl"><span class="t-red">*</span>附件上传：</div>
-        <a-form-item class="f-fl">
-          <UploadFile
-            :fileList="formState.additionUrl"
-            :onSuccess="
-              (url) => {
-                formState.additionUrl = url;
-              }
-            "
-          />
-        </a-form-item>
-        <span
-          style="position: absolute; left: 100px; top: 5px; margin-left: 100px"
-          >上传工作证或学生证等真实信息</span
-        >
-      </div>
+      
       <div class="l-item clear">
         <div class="t-label f-fl"><span class="t-red">*</span>地区：</div>
         <a-form-item class="f-fl" v-bind="validateInfos.address">
           <a-cascader
             allowClear
-            :disabled="!canEdit"
             showSearch
+            class="ant-select-disabled-manage"
             :options="areaData"
             v-model:value="formState.address"
           />
@@ -434,11 +383,7 @@ onMounted(async() => {
         <div class="l-item clear">
           <div class="t-label f-fl"><span class="t-red" v-if="formState.userIdentity != 1">*</span>请输入导师：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.mentor">
-            <a-input
-              :disabled="!canEdit"
-              v-model:value="formState.mentor"
-              placeholder="请输入导师"
-            />
+            {{ formState.mentor }}
           </a-form-item>
         </div>
         <template v-if="formState.userIdentity != 1">
@@ -474,62 +419,34 @@ onMounted(async() => {
       </template>
       <template v-if="formState.userIdentity == 2 || formState.userIdentity == 3">
         <div class="l-item clear">
-          <div class="t-label f-fl"><span class="t-red">*</span>请输入企业：</div>
+          <div class="t-label f-fl"><span class="t-red">*</span>企业：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.corporation">
-            <a-input
-              :disabled="!canEdit"
-              v-model:value="formState.corporation"
-              placeholder="请输入"
-            />
+            {{ formState.corporation }}
           </a-form-item>
         </div>
         <div class="l-item clear">
-          <div class="t-label f-fl"><span class="t-red">*</span>请输入部门：</div>
+          <div class="t-label f-fl"><span class="t-red">*</span>部门：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.branch">
-            <a-input
-              :disabled="!canEdit"
-              v-model:value="formState.branch"
-              placeholder="请输入"
-            />
+            {{ formState.branch }}
           </a-form-item>
         </div>
         <div class="l-item clear">
-          <div class="t-label f-fl"><span class="t-red">*</span>请输入职位：</div>
+          <div class="t-label f-fl"><span class="t-red">*</span>职位：</div>
           <a-form-item class="f-fl" v-bind="validateInfos.position">
-            <a-input
-              :disabled="!canEdit"
-              v-model:value="formState.position"
-              placeholder="请输入"
-            />
+            {{ formState.position }}
           </a-form-item>
         </div>
       </template>
-      <a-button
-        type="primary"
-        class="b-submit-button"
-        v-if="!canEdit"
-        @click.prevent="
-          () => {
-            canEdit = true;
-          }
-        "
-        >编辑用户信息</a-button
-      >
-      <a-popconfirm
-        v-if="canEdit"
-        title="确认要提交用户信息吗?"
-        ok-text="是"
-        cancel-text="否"
-        @confirm="onSubmit"
-      >
-        <a-button
-          type="primary"
-          class="b-submit-button"
-          @click.prevent="() => {}"
-          >提交用户信息</a-button
-        >
-      </a-popconfirm>
     </a-form>
+    <div class="l-item f-fl" style="position: relative">
+        <div class="t-label f-fl"><span class="t-red">*</span>客户上传资料：</div>
+        
+        <a-form-item class="f-fl">
+          <a :href="formState.additionUrl">点击查看</a>
+        </a-form-item>
+        <br />
+        <a-button type="primary">开通信用支付</a-button>
+      </div>
   </div>
   <!-- 用户注册资料 -->
   <a-modal
@@ -545,10 +462,13 @@ onMounted(async() => {
   </a-modal>
 </template>
 <style lang="scss" scoped>
-.userinfo {
+.userinfo-manage {
+  .t-label{width: 120px}
   .ant-form-item {
+    width: 450px;
+    margin-top: 5px;
     .ant-select {
-      width: 600px !important;
+      width: 450px !important;
     }
   }
   .ant-radio-wrapper {
@@ -558,8 +478,8 @@ onMounted(async() => {
     width: auto;
   }
 }
-.ant-form-item {
-  width: 600px;
-  text-align: left;
-}
+// .ant-form-item {
+//   width: 600px;
+//   text-align: left;
+// }
 </style>
