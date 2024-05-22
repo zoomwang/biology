@@ -3,10 +3,9 @@
 import { ref, reactive, onMounted } from "vue";
 import { getSchool } from "../../../../services/user";
 import { getUserInfo, activeCreditPay } from "../../../../services/manage";
-import { identity } from "../../config";
 import areaData from "@/public/area.js";
+import PreStoreUpdate from "./PrestoreUpdate.vue";
 import { notification, Form } from "ant-design-vue";
-import UploadFile from "@/components/UploadFile.vue";
 import { formatLocalTime } from "@/utils/index";
 import dayjs from "dayjs";
 
@@ -95,6 +94,7 @@ let formState = reactive({
   additionUrl: "",
   email: "",
 });
+const　activeKey = ref(1)
 const schoolState = ref([]);
 const userId = ref(props.id);
 const { resetFields, validate, validateInfos } = useForm(
@@ -291,7 +291,9 @@ onMounted(async() => {
 <template>
   <!-- <a-card title="用户注册资料" :bordered="false"> -->
   <div class="userinfo-manage d-form">
-    <a-form class="f-fl" :model="formState" :rules="validateInfos">
+    <a-collapse v-model:activeKey="activeKey">
+      <a-collapse-panel key="0" header="用户基本信息">
+      <a-form  :model="formState" :rules="validateInfos">
       <div class="l-item clear">
         <div class="t-label f-fl">登录账号：</div>
         <a-form-item class="f-fl">
@@ -438,27 +440,35 @@ onMounted(async() => {
         </div>
       </template>
     </a-form>
-    <div class="l-item f-fl" style="">
+    </a-collapse-panel>
+    </a-collapse>
+    <div class="l-item" style="">
+      <div style="overflow: hidden;">
         <div class="t-label f-fl"><span class="t-red">*</span>客户上传资料：</div>
-        
         <a-form-item class="f-fl">
           <a :href="formState.additionUrl">点击查看</a>
         </a-form-item>
-        <br />
-        <a-button style="margin-left:20px" type="primary">更新授信信息</a-button>
+      </div>
+        <a-button class="f-fl" style="margin-left:20px" type="primary" @click="() => {
+          visible= true;
+        }">更新授信信息</a-button>
       </div>
   </div>
   <!-- 用户注册资料 -->
   <a-modal
     v-model:visible="visible"
-    title="登录账号"
+    title="信用金调整"
+    :footer="null"
     @ok="
       () => {
         visible = false;
       }
     "
   >
-    {{ formState.mobile }}
+    <PreStoreUpdate :uid="formState.id" :successCallBack="async() => {
+      await getUserInfos();
+      visible = false;
+    }" />
   </a-modal>
 </template>
 <style lang="scss" scoped>
