@@ -449,7 +449,7 @@ onMounted(async() => {
           <a :href="formState.additionUrl">点击查看</a>
         </a-form-item>
       </div>
-        <a-button class="f-fl" style="margin-left:20px" type="primary" @click="() => {
+        <a-button class="f-fl" style="margin-left:20px;margin-top: -15px" type="primary" @click="() => {
           visible= true;
         }">更新授信信息</a-button>
       </div>
