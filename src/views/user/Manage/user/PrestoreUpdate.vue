@@ -1,18 +1,17 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  activeCreditPay
+  activeCreditPay,
 } from "../../../../services/manage";
-const props = defineProps(['uid', 'successCallBack']);
+const props = defineProps(['uid', 'successCallBack', "amount"]);
 import { message } from "ant-design-vue";
 const formRef = ref();
 const labelCol = { span: 5 };
 const wrapperCol = { span: 24 };
 const formState = reactive({
   uid: props?.uid,
-  amount: 0
+  amount: props?.amount
 });
-
 const rules = {
   amount: [
     { required: true, message: '请输入信用金额度', trigger: 'change' },
@@ -37,6 +36,15 @@ const onSubmit = () => {
     });
 };
 
+// const getPreStore = async () => {
+//   try {
+//     const res = await getUserCredit(props?.uid);
+//     if (res?.code == 0) formState.amount = res?.data;
+//   } catch (err) {
+//     debugger
+//   }
+// };
+
 onUpdated(() => {
   formRef.value.resetFields();
   Object.assign(formState, props?.uid)
@@ -44,6 +52,7 @@ onUpdated(() => {
 
 onMounted(() => {
   formRef.value.resetFields();
+  // getPreStore(props?.uid)
   Object.assign(formState, props?.uid)
 });
 </script>

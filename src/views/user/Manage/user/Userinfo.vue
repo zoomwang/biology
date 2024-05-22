@@ -2,7 +2,7 @@
 // import TheWelcome from '@/components/Wx.vue';
 import { ref, reactive, onMounted } from "vue";
 import { getSchool } from "../../../../services/user";
-import { getUserInfo, activeCreditPay } from "../../../../services/manage";
+import { getUserInfo, activeCreditPay, getUserCredit } from "../../../../services/manage";
 import areaData from "@/public/area.js";
 import PreStoreUpdate from "./PrestoreUpdate.vue";
 import { notification, Form } from "ant-design-vue";
@@ -13,6 +13,7 @@ const identitys = ["学生", "教职工", "企业", "医院"];
 const props = defineProps(['id', "username"]);
 const monthFormat = "YYYY/MM";
 const useForm = Form.useForm;
+const amount = ref(0);
 const stageMenu1 = ref([
   {
     label: "讲师",
@@ -449,7 +450,9 @@ onMounted(async() => {
           <a :href="formState.additionUrl">点击查看</a>
         </a-form-item>
       </div>
-        <a-button class="f-fl" style="margin-left:20px;margin-top: -15px" type="primary" @click="() => {
+        <a-button class="f-fl" style="margin-left:20px;margin-top: -15px" type="primary" @click="async() => {
+          const res = await getUserCredit(formState.id);
+          if (res?.code == 0) amount = res?.data;
           visible= true;
         }">更新授信信息</a-button>
       </div>
@@ -465,7 +468,7 @@ onMounted(async() => {
       }
     "
   >
-    <PreStoreUpdate :uid="formState.id" :successCallBack="async() => {
+    <PreStoreUpdate v-if="visible" :uid="formState.id" :amount="amount" :successCallBack="async() => {
       await getUserInfos();
       visible = false;
     }" />

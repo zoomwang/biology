@@ -38,3 +38,8 @@ api.post(`/sys/user`, param);
 /** 管理段获取用户信息 */
 export const getUserInfo = (param) =>
 api.get(`/sys/user_admin/user_info?username=${param}`);
+
+/** 管理段获取用户信息 */
+export const getUserCredit = (param) =>
+api.get(`/sys/user_admin/get_user_credit?uid=${param}`);
+
