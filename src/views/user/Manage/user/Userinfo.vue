@@ -438,14 +438,14 @@ onMounted(async() => {
         </div>
       </template>
     </a-form>
-    <div class="l-item f-fl" style="position: relative">
+    <div class="l-item f-fl" style="">
         <div class="t-label f-fl"><span class="t-red">*</span>客户上传资料：</div>
         
         <a-form-item class="f-fl">
           <a :href="formState.additionUrl">点击查看</a>
         </a-form-item>
         <br />
-        <a-button type="primary">开通信用支付</a-button>
+        <a-button style="margin-left:20px" type="primary">更新授信信息</a-button>
       </div>
   </div>
   <!-- 用户注册资料 -->
