@@ -13,6 +13,8 @@ import {
 } from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
+import PrestoreAddjust from "./PrestoreAddjust.vue"
+
 
 const props = defineProps(['id']);
 const orderDetail = ref({});
@@ -94,6 +96,11 @@ const getStoreLists = async () => {
   } catch (err) {}
 };
 
+const showModal = (item) => {
+  visible.value = true;
+  id.value = item;
+}
+
 onMounted(() => {
   getStoreLists();
 });
@@ -104,6 +111,7 @@ const welfare = ["测试费", "专属科研卡(JD卡)", "科研基金（现金�
 <template>
   <!-- 用户注册资料 -->
   <main>
+    <a-button type="primary" @click="showModal" style="margin-bottom: 10px">预存金调整</a-button>
     <a-table
       :columns="columns"
       :data-source="dataSource"
@@ -122,5 +130,13 @@ const welfare = ["测试费", "专属科研卡(JD卡)", "科研基金（现金�
       </template>
     </a-table>
   </main>
+  <a-modal v-model:visible="visible" width="200px" title="预存金调整" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    visible = false;
+  }">
+    <PrestoreAddjust :successCallBack="() => {
+      getStoreLists(); 
+      visible = true;
+    }" v-if="visible" :id="id" />
+  </a-modal>
 </template>
 <style lang="scss"></style>

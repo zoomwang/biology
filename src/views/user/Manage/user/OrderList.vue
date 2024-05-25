@@ -9,7 +9,10 @@ import {
   getOrderList
 } from "../../../../services/manage";
 import {formatTime} from "@/utils/index";
-
+import FinalStep from "../../../process/components/FinalStep.vue";
+import {
+  getOrderInfo,
+} from "@/services/process";
 const props = defineProps(['id']);
 const param = reactive({
   pageSize: 999,
@@ -18,6 +21,23 @@ const param = reactive({
     uid: props.id
   }
 });
+const orderDetail = ref({});
+const orderData = ref({});
+const visible = ref(false)
+
+
+const getOrderInfos = async (params) => {
+  try {
+    const res = await getOrderInfo(params);
+    if (res?.code == 0) {
+      orderDetail.value = res?.data;
+      visible.value = true;
+    }
+  } catch (err) {}
+};
+const showModal = async (orderId) => {
+  await getOrderInfos(orderId);
+};
 
 const columns = [
   {
@@ -65,6 +85,13 @@ const columns = [
     key: "status",
     slots: {
       customRender: "status",
+    },
+  },
+  {
+    title: "操作",
+    key: "action",
+    slots: {
+      customRender: "action",
     },
   },
 ];
@@ -133,7 +160,87 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
           {{ status[text]}}
         </span>
       </template>
+      <template #action="{ record }">
+        <a-button type="text" @click="showModal(record.orderId)"
+          >订单详情</a-button
+        >
+      </template>
     </a-table>
+     <a-drawer
+    title="订单详情"
+    placement="right"
+    :closable="false"
+    width="75%"
+    v-model:visible="visible"
+  >
+    <a-descriptions title="联系方式" bordered :column="2">
+      <a-descriptions-item label="联系人">{{
+        orderDetail.contactName
+      }}</a-descriptions-item>
+      <a-descriptions-item label="联系号码">{{
+        orderDetail.contactsPhone
+      }}</a-descriptions-item>
+      <a-descriptions-item label="寄样地址">{{
+        orderDetail.officeDetailAddress
+      }}</a-descriptions-item>
+      <a-descriptions-item label="运费支付方式">{{
+        ["到付", "自付"][orderDetail.freightMode]
+      }}</a-descriptions-item>
+      <a-descriptions-item label="支付方式" v-if="orderDetail.status > 2">{{
+        (orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
+      }}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions
+      title="支付金额"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="订单金额"
+        >¥{{ orderDetail.costInfo["订单金额"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="优惠券抵扣"
+        >¥{{ orderDetail.costInfo["优惠券"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="样品回收费"
+        >¥{{ orderDetail.costInfo["样品回收费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="运费"
+        >¥{{ orderDetail.costInfo["运费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="支付金额"
+        >¥{{ orderDetail.costInfo["支付金额"] }}</a-descriptions-item
+      >
+    </a-descriptions>
+    <a-descriptions
+      title="订单要求"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="样品是否要回收"
+        >¥{{
+          ["不需要", "需要"][orderDetail.needRecovery]
+        }}</a-descriptions-item
+      >
+      <a-descriptions-item label="实验留言">{{
+        orderDetail.remark
+      }}</a-descriptions-item>
+    </a-descriptions>
+    <h3 style="margin-top: 10px">订单信息</h3>
+    <a-card size="small" style="width: 100%">
+      <a-table
+        :dataSource="orderDetail.sampleInfo || []"
+        :columns="orderColums"
+      >
+        <template #costInfo="{ numberList }">
+          <span>
+            {{ numberList.join(",") }}
+          </span>
+        </template>
+      </a-table>
+    </a-card>
+  </a-drawer>
   </main>
 </template>
 <style lang="scss"></style>

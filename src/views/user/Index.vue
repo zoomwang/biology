@@ -26,7 +26,7 @@ const state = reactive({
   selectedKeys: [route.query.selectedKeys || "1"],
   openKeys: ["sub1"],
 });
-// const openKeys = ref('sub1');
+const drawerVisible = ref(false);
 const map = reactive({
   "userData": "userData",
   "userIntegral": "userIntegral"
