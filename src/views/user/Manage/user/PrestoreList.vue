@@ -87,6 +87,9 @@ const dataSource = ref([]);
 const getStoreLists = async () => {
   try {
     const res = await getStoreList(param);
+    res?.data?.list.forEach((item) => {
+      item.updateTime = formatTime(item.updateTime);
+    })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
 };

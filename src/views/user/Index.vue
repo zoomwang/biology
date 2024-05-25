@@ -1,4 +1,7 @@
 <script setup>
+import {
+  ref
+} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import UserInfo from './Userinfo.vue';
 import Integral from './Integral.vue';
@@ -21,8 +24,9 @@ const state = reactive({
   mode: "inline",
   theme: "light",
   selectedKeys: [route.query.selectedKeys || "1"],
-  openKeys: [route.query.selectedKeys || "1"],
+  openKeys: ["sub1"],
 });
+// const openKeys = ref('sub1');
 const map = reactive({
   "userData": "userData",
   "userIntegral": "userIntegral"
@@ -37,46 +41,52 @@ const map = reactive({
       class="user-menu"
       v-model:selectedKeys="state.selectedKeys"
       :mode="state.mode"
+      v-model:openKeys="state.openKeys"
       :theme="state.theme"
       @select="() => {
         router.push({ path: '/user/userinfo', query: { selectedKeys: state.selectedKeys } })
       }"
     >
-      <h2>账号管理</h2>
-      <template v-for="item in menus" :key="item.value">
-        <a-menu-item  v-if="item.type == 'userMenu'" :key="item.value">
-          <template #icon> </template>
-          {{ item.label }}
-        </a-menu-item>
-      </template>
-      <h2>订单管理</h2>
-      <template v-for="item in menus" :key="item.value">
-        <a-menu-item  v-if="item.type == 'orderMenu'" :key="item.value">
-          <template #icon> </template>
-          {{ item.label }}
-        </a-menu-item>
-      </template>
-      <h2>发票管理</h2>
-      <template v-for="item in menus" :key="item.value">
-        <a-menu-item  v-if="item.type == 'invoiceMenu'" :key="item.value">
-          <template #icon> </template>
-          {{ item.label }}
-        </a-menu-item>
-      </template>
-      <h2>预存管理</h2>
-      <template v-for="item in menus" :key="item.value">
-        <a-menu-item  v-if="item.type == 'storeMenu'" :key="item.value">
-          <template #icon> </template>
-          {{ item.label }}
-        </a-menu-item>
-      </template>
-      <h2>管理员菜单</h2>
-      <template v-for="item in menus" :key="item.value">
-        <a-menu-item  v-if="item.type == 'superManage'" :key="item.value">
-          <template #icon> </template>
-          {{ item.label }}
-        </a-menu-item>
-      </template>
+      <a-sub-menu key="sub1">
+        <template #title><span class="title">账号管理</span></template>
+        <a-menu-item-group>
+          <template v-for="item in menus" :key="item.value">
+            <a-menu-item v-if="item.type == 'userMenu'" :key="item.value">{{ item.label }}</a-menu-item>
+          </template>
+        </a-menu-item-group>
+      </a-sub-menu>
+      <a-sub-menu key="sub2">
+        <template #title><span class="title">订单管理</span></template>
+        <a-menu-item-group>
+          <template v-for="item in menus" :key="item.value">
+            <a-menu-item v-if="item.type == 'orderMenu'" :key="item.value">{{ item.label }}</a-menu-item>
+          </template>
+        </a-menu-item-group>
+      </a-sub-menu>
+      <a-sub-menu key="sub3">
+        <template #title><span class="title">发票管理</span></template>
+        <a-menu-item-group>
+          <template v-for="item in menus" :key="item.value">
+            <a-menu-item v-if="item.type == 'invoiceMenu'" :key="item.value">{{ item.label }}</a-menu-item>
+          </template>
+        </a-menu-item-group>
+      </a-sub-menu>
+      <a-sub-menu key="sub4">
+        <template #title><span class="title">预存管理</span></template>
+        <a-menu-item-group>
+          <template v-for="item in menus" :key="item.value">
+            <a-menu-item v-if="item.type == 'storeMenu'" :key="item.value">{{ item.label }}</a-menu-item>
+          </template>
+        </a-menu-item-group>
+      </a-sub-menu>
+      <a-sub-menu key="sub5">
+        <template #title><span class="title">管理员菜单</span></template>
+        <a-menu-item-group>
+          <template v-for="item in menus" :key="item.value">
+            <a-menu-item v-if="item.type == 'superManage'" :key="item.value">{{ item.label }}</a-menu-item>
+          </template>
+        </a-menu-item-group>
+      </a-sub-menu>
     </a-menu>
     <div class="content">
       <a-card :bordered="false">
@@ -109,6 +119,9 @@ const map = reactive({
   height: 100%;
   padding: 10px 0;
   // margin-left: 40px;
+  .title{
+    font-size: 16px;
+  }
   .ant-menu-item {
     padding-left: 0!important;
     padding-right: 0!important;

@@ -21,8 +21,9 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    username: "15975624649",
-    cardStatus: ""
+    username: "",
+    cardStatus: "",
+    university: ""
   }
 });
 
@@ -48,11 +49,11 @@ const columns = [
       customRender: "userIdentity",
     },
   },
-  {
-    title: "邀请人手机号",
-    dataIndex: "inviterMobile",
-    key: "inviterMobile",
-  },
+  // {
+  //   title: "邀请人手机号",
+  //   dataIndex: "inviterMobile",
+  //   key: "inviterMobile",
+  // },
   {
     title: "学校/单位",
     dataIndex: "university",
@@ -128,11 +129,16 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
       }">
         <a-input v-model:value="param.param.username" placeholder="用户名" style="width:140px" />
       </a-form-item>
+      <a-form-item label="学校/单位" :wrapperCol="{
+        span: 7
+      }">
+        <a-input v-model:value="param.param.university" placeholder="学校/单位" style="width:140px" />
+      </a-form-item>
       <a-form-item label="开卡状态" :wrapperCol="{
         span: 7
       }">
-        <a-select v-model:value="param.param.deleted" style="width: 100px">
-          <a-select-option value="-1">全部状态</a-select-option>
+        <a-select v-model:value="param.param.cardStatus" style="width: 100px">
+          <a-select-option value="">全部状态</a-select-option>
           <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
         </a-select>
       </a-form-item>
