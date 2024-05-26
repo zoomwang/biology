@@ -123,7 +123,7 @@ const types = ["兑换jd卡", "兑换测试费", "订单完成积分入账", "�
   }">
     <PointAddjust :successCallBack="() => {
       getOrderPointsLists(); 
-      visible = true;
+      visible = false;
     }" v-if="visible" :id="id" />
   </a-modal>
 </template>

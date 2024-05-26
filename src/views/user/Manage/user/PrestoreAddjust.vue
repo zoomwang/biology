@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
 import {
-  adjustPoints
+  adjustAmount
 } from "../../../../services/manage";
 const props = defineProps(['id', 'successCallBack']);
 import { message } from "ant-design-vue";
@@ -21,7 +21,7 @@ const onSubmit = () => {
     .validate()
     .then(async() => {
        try {
-          const res = await adjustPoints(formState);
+          const res = await adjustAmount(formState);
           if (res?.code == 0) {
             message.success(`${formState.adjustType == 1 ? "增加" : "减少"}成功`);
             props.successCallBack();

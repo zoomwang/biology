@@ -21,6 +21,14 @@ api.post(`/sys/user_admin/order_list`, param);
 export const adjustPoints = (param) =>
 api.post(`/sys/user_admin/adjust_points`, param);
 
+/** 调整用户预存金 */
+export const adjustAmount = (param) =>
+api.post(`/sys/user_admin/adjust_amount`, param);
+
+/** 调整用户备注 */
+export const updateUserRemark = (param) =>
+api.post(`/sys/user_admin/update_user_remark`, param);
+
 /** 调整用户信用金额度 */
 export const activeCreditPay = (param) =>
 api.post(`/sys/user_admin/active_credit_pay`, param);
@@ -42,4 +50,3 @@ api.get(`/sys/user_admin/user_info?username=${param}`);
 /** 管理段获取用户信息 */
 export const getUserCredit = (param) =>
 api.get(`/sys/user_admin/get_user_credit?uid=${param}`);
-

@@ -5,14 +5,17 @@ import {
   onMounted,
 } from "vue";
 import {
-  getUserList
+  getUserList,
+  updateUserRemark
 } from "../../../../services/manage";
 import {formatTime} from "@/utils/index";
 import Detail from "./Detail.vue"
+import { message } from "ant-design-vue";
 
 const id = ref('');
 const username = ref('');
 const visible = ref(false);
+const updateRemarkVisible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
 const supplierDetail = ref(null);
@@ -26,6 +29,15 @@ const param = reactive({
     university: ""
   }
 });
+const remarkFormState = reactive({
+  uid: "",
+  remark:  "",
+});
+
+const updateRemark = (record) => {
+  remarkFormState.uid = record.id;
+  updateRemarkVisible.value = true;
+}
 
 const columns = [
   {
@@ -73,6 +85,14 @@ const columns = [
     },
   },
   {
+    title: "备注",
+    // dataIndex: "remarks",
+    key: "remarks",
+    slots: {
+      customRender: "remarks",
+    },
+  },
+  {
     title: "操作",
     key: "action",
     slots: {
@@ -93,6 +113,20 @@ const formState = reactive({
   startTime: "",
   endTime: "",
 });
+
+const onRemarkSubmit = async() => {
+  try {
+    const res = await updateUserRemark(remarkFormState);
+    if (res?.code == 0) {
+      message.success(`编辑成功`);
+      updateRemarkVisible.value = false;
+    }
+  //  }
+    
+  } catch (err) {
+    // debugger
+  }
+};
 
 const dataSource = ref([]);
 
@@ -174,6 +208,12 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
           {{ status[text] }}
         </span>
       </template>
+      <template #remarks="{ text }">
+        <span>
+          {{text.remark}}
+           <a-button type="link" @click="updateRemark(text)">修改备注</a-button>
+        </span>
+      </template>
       <template #action="{ record }">
         <!-- <a-button type="link" @click="showEditDetail(record)"
           >编辑</a-button
@@ -188,6 +228,23 @@ const identity = ["学生", "教职工", "企业", "医院", "个人", "未知"]
     visible = false;
   }">
     <Detail v-if="visible" :id="id" :username="username" />
+  </a-modal>
+  <a-modal class="modal-tab" v-model:visible="updateRemarkVisible" width="80%" title="更多详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    updateRemarkVisible = false;
+  }">
+    <a-form
+    ref="formRef"
+    :model="formState"
+    :label-col="labelCol"
+    :wrapper-col="wrapperCol"
+  >
+    <a-form-item ref="remark" label="备注" name="remark">
+        <a-textarea v-model:value="remarkFormState.remark" :rows="4" />
+    </a-form-item>
+    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+      <a-button type="primary" @click="onRemarkSubmit">提交</a-button>
+    </a-form-item>
+  </a-form>
   </a-modal>
 
 </template>

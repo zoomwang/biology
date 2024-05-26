@@ -34,19 +34,16 @@ const param = reactive({
 
 const columns = [
   {
-    title: "支付类型",
-    dataIndex: "payPlatform",
-    key: "payPlatform",
-    slots: {
-      customRender: "payPlatform",
-    },
+    title: "来源",
+    dataIndex: "fromDesc",
+    key: "fromDesc",
   },
   {
-    title: "预存福利",
-    dataIndex: "welfare",
-    key: "welfare",
+    title: "类型",
+    dataIndex: "type",
+    key: "type",
     slots: {
-      customRender: "welfare",
+      customRender: "type",
     },
   },
   {
@@ -59,11 +56,11 @@ const columns = [
     dataIndex: "updateTime",
     key: "updateTime",
   },
-  {
-    title: "备注",
-    dataIndex: "remind",
-    key: "remind",
-  },
+  // {
+  //   title: "备注",
+  //   dataIndex: "remind",
+  //   key: "remind",
+  // },
 ];
 
 const labelCol = {
@@ -104,8 +101,10 @@ const showModal = (item) => {
 onMounted(() => {
   getStoreLists();
 });
-const payPlatform = ["","支付宝","微信","银联"];
+// const payPlatform = ["","支付宝","微信","银联"];
 const welfare = ["测试费", "专属科研卡(JD卡)", "科研基金（现金）"];
+const payPlatform = ["预存单支付成功", "预存单退款", "用户用余额支付订单消耗", "用户取消订单，退款到余额", "用户使用余额补差价", "用户退差价到余额", "被邀请人三个月内订单完成，返利", "用户使用积分兑换测试费，余额入账", "管理员调整"];
+
 </script>
 
 <template>
@@ -135,7 +134,7 @@ const welfare = ["测试费", "专属科研卡(JD卡)", "科研基金（现金�
   }">
     <PrestoreAddjust :successCallBack="() => {
       getStoreLists(); 
-      visible = true;
+      visible = false;
     }" v-if="visible" :id="id" />
   </a-modal>
 </template>
