@@ -50,3 +50,7 @@ api.get(`/sys/user_admin/user_info?username=${param}`);
 /** 管理段获取用户信息 */
 export const getUserCredit = (param) =>
 api.get(`/sys/user_admin/get_user_credit?uid=${param}`);
+
+/** 设置用户订单状态为已还款 */
+export const setOrderRepaid = (param) =>
+  api.post(`/sys/user_admin/set_order_repaid`, param);

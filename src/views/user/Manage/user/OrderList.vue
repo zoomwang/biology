@@ -6,10 +6,10 @@ import {
   onMounted,
 } from "vue";
 import {
-  getOrderList
+  getOrderList,
+  setOrderRepaid
 } from "../../../../services/manage";
 import {formatTime} from "@/utils/index";
-import FinalStep from "../../../process/components/FinalStep.vue";
 import {
   getOrderInfo,
 } from "@/services/process";
@@ -73,7 +73,6 @@ const columns = [
   },
   {
     title: "欠款状态",
-    dataIndex: "s",
     key: "s",
     slots: {
       customRender: "s",
@@ -152,7 +151,14 @@ const priceDifferenceStatus = ["不欠款", "还款中", "已还款"]
       </template>
       <template #s="{ text }">
         <span>
-          {{ s == '6' ? '已欠款' : '已还款'}}
+          {{ text.status == '6' ? '欠款中' : '已还款'}}
+          <a-button type="primary" @click="async(s) => {
+            const res = await setOrderRepaid({
+              orderId: text.orderId,
+            })
+          }"
+          >设为已还款</a-button
+        >
         </span>
       </template>
       <template #status="{ text }">
