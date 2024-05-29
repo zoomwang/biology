@@ -136,6 +136,26 @@ const payPlatform = ["预存单支付成功", "预存单退款", "用户用余�
       getStoreLists(); 
       visible = false;
     }" v-if="visible" :id="id" />
+    <a-form
+    ref="formRef"
+    :model="formState"
+    :rules="rules"
+    :label-col="labelCol"
+    :wrapper-col="wrapperCol"
+  >
+    <a-form-item ref="name" label="预存金类型" name="adjustType">
+      <a-radio-group v-model:value="formState.adjustType">
+        <a-radio :style="radioStyle" :value="1">增加</a-radio>
+        <a-radio :style="radioStyle" :value="2">减少</a-radio>
+      </a-radio-group>    
+    </a-form-item>
+    <a-form-item label="数值" name="adjustAmount">
+      <a-input  v-model:value="formState.adjustAmount" />
+    </a-form-item>
+    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+      <a-button type="primary" @click="onSubmit">提交</a-button>
+    </a-form-item>
+  </a-form>
   </a-modal>
 </template>
 <style lang="scss"></style>

@@ -9,12 +9,8 @@ import {
   watch,
 } from "vue";
 import {
-  getOrderLists,
-  cancelOrder,
-  getOrderInfo,
-  getReturnPriceDiff,
-  getPayPriceDiff,
-} from "../../../../services/process";
+  getOrderMgtList
+} from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import DownLoad from "@/components/DownLoad.vue";
@@ -39,52 +35,61 @@ const handleOk = (e) => {
 const param = reactive({
   pageSize: 999,
   curPage: 1,
-  status: "0",
   startTime: "",
   endTime: "",
+  param: {
+    status: 0,
+  }
 });
 
 const orderColums = [
   {
-    title: "样品数量",
-    dataIndex: "count",
-    key: "count",
+    title: "预约仪器",
+    dataIndex: "device",
+    // key: "device",
   },
   {
-    title: "实验目的",
-    dataIndex: "goal",
-    key: "age",
+    title: "用户所在分部",
+    dataIndex: "officeName",
+    // key: "age",
   },
   {
-    title: "样品编号",
-    dataIndex: "numberList",
-    key: "address",
-    slots: {
-      customRender: "numberList",
-    },
+    title: "订单号",
+    dataIndex: "orderId",
+    key: "orderId",
   },
 ];
 
 const columns = [
   {
-    title: "项目名称",
-    dataIndex: "itemname",
+    title: "预约仪器",
+    dataIndex: "device",
+    // key: "device",
   },
   {
-    title: "下单时间",
-    className: "column-money",
-    dataIndex: "createTime",
+    title: "用户所在分部",
+    dataIndex: "officeName",
+    // key: "age",
   },
   {
     title: "订单号",
     dataIndex: "orderId",
+    key: "orderId",
   },
   {
-    title: "实付款",
-    dataIndex: "costInfo",
+    title: "是否需要回收",
+    dataIndex: "needRecovery",
     slots: {
-      customRender: "costInfo",
+      customRender: "needRecovery",
     },
+  },
+  {
+    title: "预约会员",
+    dataIndex: "contactName",
+  },
+  {
+    title: "下单金额",
+    dataIndex: "orderAmount",
   },
   {
     title: "订单状态",
@@ -94,16 +99,13 @@ const columns = [
     },
   },
   {
-    title: "退补差价",
-    dataIndex: "priceDifference",
+    title: "沟通",
+    dataIndex: "remark",
   },
-  // {
-  //   title: "发票状态",
-  //   dataIndex: "ticketStatus",
-  //   slots: {
-  //     customRender: "ticketStatus",
-  //   },
-  // },
+  {
+    title: "供应商反馈",
+    dataIndex: "supplierFeedback",
+  },
   {
     title: "操作",
     key: "action",
@@ -135,46 +137,6 @@ const formState = reactive({
 
 const dataSource = ref([]);
 
-const getPayPriceDiffs = async (params) => {
-  try {
-    const res = await getPayPriceDiff({
-      orderId: params.orderId,
-      payPlatform: params.payPlatform
-    });
-    if (res?.code == 0) {
-      if (params.payPlatform > 0) {
-        diffPayData.value = {
-          codeUrl: res.data,
-          payType: params.payPlatform,
-          cost: params.priceDifference,
-          orderId: params.orderId
-        }
-        diffVisible.value = true;
-      } 
-      if (params.payPlatform  == 0) {
-        notification.success({
-          description: "补差价成功",
-        });
-        getOrderList();
-      }
-    } else {}
-  } catch (err) {}
-};
-
-const getReturnPriceDiffs = async (params) => {
-  try {
-    const res = await getReturnPriceDiff({
-      orderId: params.orderId,
-      payPlatform: params.payPlatform
-    });
-    if (res?.code == 0) {
-      notification.success({
-        description: "退差价成功",
-      });
-      getOrderList();
-    }
-  } catch (err) {}
-};
 
 const getOrderInfos = async (params, type) => {
   try {
@@ -212,7 +174,7 @@ const cancelOrders = async (orderId) => {
 
 const getOrderList = async () => {
   try {
-    const res = await getOrderLists(param);
+    const res = await getOrderMgtList(param);
     res?.data?.list.forEach((item) => {
       item.createTime = formatTime(item.createTime);
     })
@@ -225,7 +187,9 @@ onMounted(() => {
   getOrderList();
 });
 
-const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","欠款中","已开票","已还款", "已取消"];
+const menus = ["待实验", "实验中", "已完成"];
+const statusMenus = ["","待报价", "可支付", "待实验", "实验中", "已完成", "欠款中","已开票", "已还款", "已取消"];
+const needRecoveryMenus = ["不需要", "需要"]
 </script>
 
 <template>
@@ -246,8 +210,8 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
         span: 7
       }">
         <a-select v-model:value="param.status" style="width: 100px">
-          <a-select-option value="0">全部订单</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="++index">{{ item }}</a-select-option>
+          <a-select-option value="">全部订单</a-select-option>
+          <a-select-option v-for="(item, index) in menus" :key="item" :value="index+2">{{ item }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
@@ -264,17 +228,7 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
     >
       <template #status="{ text }">
         <span>
-          {{ menus[--text] }}
-        </span>
-      </template>
-      <template #costInfo="{ text }">
-        <span>
-          {{ text["支付金额"] }}
-        </span>
-      </template>
-      <template #ticketStatus="{ text }">
-        <span>
-          {{ ["无需开票", "无", "待申请"][text] }}
+          {{ statusMenus[text] }}
         </span>
       </template>
       <template #action="{ record }">
@@ -330,82 +284,7 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
       </template>
     </a-table>
   </main>
-  <a-drawer
-    title="订单详情"
-    placement="right"
-    :closable="false"
-    width="75%"
-    v-model:visible="visible"
-  >
-    <a-descriptions title="联系方式" bordered :column="2">
-      <a-descriptions-item label="联系人">{{
-        orderDetail.contactName
-      }}</a-descriptions-item>
-      <a-descriptions-item label="联系号码">{{
-        orderDetail.contactsPhone
-      }}</a-descriptions-item>
-      <a-descriptions-item label="寄样地址">{{
-        orderDetail.officeDetailAddress
-      }}</a-descriptions-item>
-      <a-descriptions-item label="运费支付方式">{{
-        ["到付", "自付"][orderDetail.freightMode]
-      }}</a-descriptions-item>
-      <a-descriptions-item label="支付方式" v-if="orderDetail.status > 2">{{
-        (orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
-      }}</a-descriptions-item>
-    </a-descriptions>
-    <a-descriptions
-      title="支付金额"
-      bordered
-      :column="2"
-      style="margin-top: 10px"
-    >
-      <a-descriptions-item label="订单金额"
-        >¥{{ orderDetail.costInfo["订单金额"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="优惠券抵扣"
-        >¥{{ orderDetail.costInfo["优惠券"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="样品回收费"
-        >¥{{ orderDetail.costInfo["样品回收费"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="运费"
-        >¥{{ orderDetail.costInfo["运费"] }}</a-descriptions-item
-      >
-      <a-descriptions-item label="支付金额"
-        >¥{{ orderDetail.costInfo["支付金额"] }}</a-descriptions-item
-      >
-    </a-descriptions>
-    <a-descriptions
-      title="订单要求"
-      bordered
-      :column="2"
-      style="margin-top: 10px"
-    >
-      <a-descriptions-item label="样品是否要回收"
-        >¥{{
-          ["不需要", "需要"][orderDetail.needRecovery]
-        }}</a-descriptions-item
-      >
-      <a-descriptions-item label="实验留言">{{
-        orderDetail.remark
-      }}</a-descriptions-item>
-    </a-descriptions>
-    <h3 style="margin-top: 10px">订单信息</h3>
-    <a-card size="small" style="width: 100%">
-      <a-table
-        :dataSource="orderDetail.sampleInfo || []"
-        :columns="orderColums"
-      >
-        <template #costInfo="{ numberList }">
-          <span>
-            {{ numberList.join(",") }}
-          </span>
-        </template>
-      </a-table>
-    </a-card>
-  </a-drawer>
-  <a-drawer
+  <!-- <a-drawer
     title="订单支付"
     placement="right"
     :closable="false"
@@ -414,7 +293,7 @@ const menus = ["待报价", "可支付", "待实验", "实验中", "已完成","
     :after-visible-change="afterVisibleChange"
   >
     <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
-  </a-drawer>
-  <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" />
+  </a-drawer> -->
+  <!-- <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" /> -->
 </template>
 <style lang="scss"></style>

@@ -54,3 +54,7 @@ api.get(`/sys/user_admin/get_user_credit?uid=${param}`);
 /** 设置用户订单状态为已还款 */
 export const setOrderRepaid = (param) =>
   api.post(`/sys/user_admin/set_order_repaid`, param);
+
+/** 获取管理段订单列表 */
+export const getOrderMgtList = (param) =>
+  api.post(`/sys/order-mgt/list`, param);
