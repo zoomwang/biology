@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/icons-vue": "^7.0.1",
+    "@formily/core": "^2.3.1",
+    "@formily/vue": "^2.3.1",
     "ant-design-vue": "^4.0.0-rc.6",
+    "@ant-design/icons-vue": "^7.0.1",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
     "dayjs": "^1.11.10",
