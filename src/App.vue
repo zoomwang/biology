@@ -66,7 +66,7 @@ onBeforeMount(async () => {
 
 <template :locale="zhCN">
   <a-config-provider :locale="zhCN">
-    <Header></Header>
+    <!-- <Header></Header> -->
     <div class="wrap">
       <RouterView v-if="isNext" class="wrap-l" />
       <div class="wrap-r" v-if="!route?.fullPath.includes('home')">
@@ -75,7 +75,7 @@ onBeforeMount(async () => {
         <!-- <Wx /> -->
       </div>
     </div>
-    <Footer></Footer>
+    <!-- <Footer></Footer> -->
   </a-config-provider>
 </template>
 

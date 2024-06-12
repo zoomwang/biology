@@ -2,7 +2,8 @@ export const blackList = [
   "/home/register",
   "/home/find-password",
   "/process/index",
-  "/process/1"
+  "/process/1",
+  "/login/test"
   // "/user/prestore",
   // "/user/publish-demand",
   // "/user/userinfo"

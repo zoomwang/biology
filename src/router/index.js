@@ -74,6 +74,11 @@ const router = createRouter({
       name: "publishDemand",
       component: () => import("../views/user/PostDemand.vue"),
     },
+    {
+      path: "/login/test",
+      name: "test",
+      component: () => import("../views/login/Test.vue"),
+    },
   ],
 });
 export default router;
