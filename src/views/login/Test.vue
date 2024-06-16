@@ -78,12 +78,12 @@ export default {
         form.values.confirm_password &&
         field.value &&
         form.values[equalName] !== field.value
-      ) {·
+      ) {
         field.selfErrors = ['Password does not match Confirm Password.']
       } else {
         field.selfErrors = []
       }
-    }·
+    }
     return {
       FormItem,
       Input,
