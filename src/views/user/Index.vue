@@ -11,7 +11,7 @@ import Discount from './Discount.vue';
 import Assets from './Assets.vue';
 import Invoices from './Invoices.vue';
 import Store from './Store.vue';
-import ManageOrder from './Manage/order/Index.vue';
+import ManageOrder from './Manage/order/index.vue';
 import ManageSupplier from './Manage/supplier/index.vue';
 import ManageUser from './Manage/user/index.vue';
 import BuffetBuild from './Manage/BuffetBuild/index.vue';
