@@ -58,3 +58,44 @@ export const setOrderRepaid = (param) =>
 /** 获取管理段订单列表 */
 export const getOrderMgtList = (param) =>
   api.post(`/sys/order-mgt/list`, param);
+
+/** 获取管理段待实验订单列表 */
+export const getPendingOrderList = (param) =>
+  api.post(`/sys/order-mgt/pending-experiment/list`, param);
+
+/** 获取管理段实验中订单列表 */
+export const getExperieOrderList = (param) =>
+  api.post(`/sys/order-mgt/experimenting/list`, param);
+
+/** 获取管理端已完成订单列表 */
+export const getCompletedOrderList = (param) =>
+  api.post(`/sys/order-mgt/completed-order/list`, param);
+
+/** 查询小铅笔备注列表 */
+export const getRemarkList = (param) =>
+  api.post(`/sys/order-mgt/remark/list`, param);
+
+/** 添加小铅笔备注列表 */
+export const addRemark = (param) =>
+  api.post(`/sys/order-mgt/remark/add`, param);
+
+/** 上传实验结果 */
+export const addExperimentResult = (param) =>
+  api.post(`/sys/order-mgt/experimentResult/add`, param);
+
+/** 确定查询费用 */
+export const determinefee = (param) =>
+  api.post(`/sys/order-mgt/determinefee/query`, param);
+
+/** 提交确定费用 */
+export const addDetermineFee = (param) =>
+  api.post(`/sys/order-mgt/determineFee/add`, param);
+
+/** 分配订单 */
+export const assignOrder = (param) =>
+  api.post(`/sys/order-mgt/assign-order/query`, param);
+
+/** 寄样给供应商 */
+export const addAssignOrder = (param) =>
+  api.post(`/sys/order-mgt/assign-order/add`, param);
+

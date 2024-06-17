@@ -1,15 +1,13 @@
 <script setup>
-// import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
 import {
-  getOrderMgtList
+  getPendingOrderList,
+  getExperieOrderList,
+  getCompletedOrderList
 } from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -28,39 +26,22 @@ const visible = ref(false);
 const showModal = async (orderId) => {
   await getOrderInfos(orderId, "detail");
 };
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
+// const handleOk = (e) => {
+//   console.log(e);
+//   visible.value = false;
+// };
 const param = reactive({
   pageSize: 999,
   curPage: 1,
   startTime: "",
   endTime: "",
-  param: {
-    status: 0,
-  }
+  status: 0,
 });
 
-const orderColums = [
-  {
-    title: "预约仪器",
-    dataIndex: "device",
-    // key: "device",
-  },
-  {
-    title: "用户所在分部",
-    dataIndex: "officeName",
-    // key: "age",
-  },
-  {
-    title: "订单号",
-    dataIndex: "orderId",
-    key: "orderId",
-  },
-];
+const columns = ref([
+]);
 
-const columns = [
+const peddingColumns =[
   {
     title: "预约仪器",
     dataIndex: "device",
@@ -107,10 +88,162 @@ const columns = [
     dataIndex: "supplierFeedback",
   },
   {
+    title: "是否已分派供应商",
+    dataIndex: "dispatch",
+  },
+  {
+    title: "寄样",
+    dataIndex: "sendSamples",
+  },
+  {
+    title: "样品数",
+    dataIndex: "sampleNum",
+  },
+  {
     title: "操作",
     key: "action",
     slots: {
       customRender: "action",
+    },
+  },
+];
+const experieColumns =[
+  {
+    title: "预约仪器",
+    dataIndex: "device",
+    // key: "device",
+  },
+  {
+    title: "用户所在分部",
+    dataIndex: "officeName",
+    // key: "age",
+  },
+  {
+    title: "对接人",
+    dataIndex: "dispatchContactPerson",
+    // key: "age",
+  },
+  {
+    title: "订单号",
+    dataIndex: "orderId",
+    key: "orderId",
+  },
+  {
+    title: "是否需要回收",
+    dataIndex: "needRecovery",
+    slots: {
+      customRender: "needRecovery",
+    },
+  },
+  {
+    title: "样品抵达时间",
+    dataIndex: "sampleArrivalTime",
+  },
+  {
+    title: "要求供应商出结果时间",
+    dataIndex: "supplierResultDeadline",
+  },
+  {
+    title: "承诺用户出结果时间",
+    dataIndex: "promisedUserResultTime",
+  },
+  {
+    title: "下单金额",
+    dataIndex: "orderAmount",
+  },
+  {
+    title: "供应商反馈",
+    dataIndex: "supplierFeedback",
+  },
+  {
+    title: "是否已分派供应商",
+    dataIndex: "dispatch",
+  },
+  {
+    title: "操作",
+    key: "action1",
+    slots: {
+      customRender: "action1",
+    },
+  },
+];
+
+const completedColumns = [
+  {
+    title: "预约仪器",
+    dataIndex: "device",
+    // key: "device",
+  },
+  {
+    title: "用户所在分部",
+    dataIndex: "officeName",
+    // key: "age",
+  },
+  {
+    title: "对接人",
+    dataIndex: "dispatchContactPerson",
+    // key: "age",
+  },
+  {
+    title: "订单号",
+    dataIndex: "orderId",
+    key: "orderId",
+  },
+  {
+    title: "预约人",
+    dataIndex: "contactName",
+  },
+  {
+    title: "下单金额",
+    dataIndex: "orderAmount",
+  },
+  {
+    title: "确认费用",
+    dataIndex: "confirmedCost",
+  },
+  {
+    title: "实际支付金额",
+    dataIndex: "actualPayment",
+  },
+  {
+    title: "完成时间",
+    dataIndex: "completionTime",
+  },
+  {
+    title: "订单时长",
+    dataIndex: "orderDuration",
+  },
+  {
+    title: "发票状态",
+    dataIndex: "invoiceStatus",
+    slots: {
+      customRender: "invoiceStatus",
+    },
+  },
+  {
+    title: "还款状态",
+    dataIndex: "repaymentStatus",
+    slots: {
+      customRender: "invoiceStatus",
+    },
+  },
+  {
+    title: "费用",
+    dataIndex: "cost",
+  },
+  {
+    title: "文件上传信息",
+    dataIndex: "uploadFileInfo",
+  },
+  {
+    title: "是否已分派供应商",
+    dataIndex: "dispatch",
+  },
+  {
+    title: "操作",
+    key: "action2",
+    slots: {
+      customRender: "action2",
     },
   },
 ];
@@ -120,8 +253,6 @@ const labelCol = {
     width: "120px",
   },
 };
-// const codeUrl = ref('');
-// const payPlatform = ref('');
 const diffPayData = ref({
   codeUrl: '',
   payPlatform: '',
@@ -174,11 +305,25 @@ const cancelOrders = async (orderId) => {
 
 const getOrderList = async () => {
   try {
-    const res = await getOrderMgtList(param);
+    let res;
+    if (param.status == 0) {
+      columns.value = peddingColumns;
+      res = await getPendingOrderList(param);
+    }
+    if (param.status == 1) {
+      columns.value = experieColumns;
+      res = await getExperieOrderList(param);
+    }
+    if (param.status == 2) {
+      columns.value = completedColumns;
+      res = await getCompletedOrderList(param);
+    }
     res?.data?.list.forEach((item) => {
-      item.createTime = formatTime(item.createTime);
+      item.sampleArrivalTime = formatTime(item.sampleArrivalTime);
+      item.supplierResultDeadline = formatTime(item.supplierResultDeadline);
+      item.promisedUserResultTime = formatTime(item.promisedUserResultTime);
+      item.completionTime = formatTime(item.completionTime);
     })
-    // console.log(res?.data?.list)
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
 };
@@ -210,8 +355,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         span: 7
       }">
         <a-select v-model:value="param.status" style="width: 100px">
-          <a-select-option value="">全部订单</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="index+2">{{ item }}</a-select-option>
+          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
@@ -284,16 +428,5 @@ const needRecoveryMenus = ["不需要", "需要"]
       </template>
     </a-table>
   </main>
-  <!-- <a-drawer
-    title="订单支付"
-    placement="right"
-    :closable="false"
-    width="70%"
-    v-model:visible="drawerVisible"
-    :after-visible-change="afterVisibleChange"
-  >
-    <FinalStep :successCall="successCall" :cost="orderDetail.costInfo" :orderId="orderDetail.orderId" :orderData="orderData" />
-  </a-drawer> -->
-  <!-- <DiffPay v-if="diffVisible" :diffPayData="diffPayData" :successCall="successCall" /> -->
 </template>
 <style lang="scss"></style>
