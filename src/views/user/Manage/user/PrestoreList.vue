@@ -2,9 +2,7 @@
 // import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
   watch,
 } from "vue";

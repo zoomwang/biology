@@ -7,11 +7,13 @@ import {
 import {
   getPendingOrderList,
   getExperieOrderList,
-  getCompletedOrderList
+  getCompletedOrderList,
+  addAssignOrder
 } from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import DownLoad from "@/components/DownLoad.vue";
+import { message } from "ant-design-vue";
 
 let orderData = reactive({
 });
@@ -26,10 +28,6 @@ const visible = ref(false);
 const showModal = async (orderId) => {
   await getOrderInfos(orderId, "detail");
 };
-// const handleOk = (e) => {
-//   console.log(e);
-//   visible.value = false;
-// };
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -37,6 +35,15 @@ const param = reactive({
   endTime: "",
   status: 0,
 });
+
+const sendSample = async(record) => {
+  try {
+    const res = await addAssignOrder(record);
+    if (res.code == 0) {
+      message.success("新建成功");
+    }
+  } catch (err) {}
+}
 
 const columns = ref([
 ]);
@@ -94,6 +101,9 @@ const peddingColumns =[
   {
     title: "寄样",
     dataIndex: "sendSamples",
+    slots: {
+      customRender: "sendSamples",
+    },
   },
   {
     title: "样品数",
@@ -101,9 +111,9 @@ const peddingColumns =[
   },
   {
     title: "操作",
-    key: "action",
+    key: "remark",
     slots: {
-      customRender: "action",
+      customRender: "remark",
     },
   },
 ];
@@ -374,6 +384,20 @@ const needRecoveryMenus = ["不需要", "需要"]
         <span>
           {{ statusMenus[text] }}
         </span>
+      </template>
+      <template #remark="{ text }">
+        <a-button
+          type="link"
+          @click="sendRemark(record)"
+          >备注</a-button
+        >
+      </template>
+      <template #sendSamples="{ record }">
+        <a-button
+          type="link"
+          @click="sendSample(record)"
+          >寄样</a-button
+        >
       </template>
       <template #action="{ record }">
         <!-- <space> -->
