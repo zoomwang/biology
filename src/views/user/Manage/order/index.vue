@@ -8,17 +8,23 @@ import {
   getPendingOrderList,
   getExperieOrderList,
   getCompletedOrderList,
-  addAssignOrder
+  addAssignOrder,
+  addRemark
 } from "../../../../services/manage";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
 import { message } from "ant-design-vue";
+import RemarkList from './RemarkList.vue'
+import SupplierList from './SupplierList.vue';
 
 let orderData = reactive({
 });
 const drawerVisible = ref(false);
 const diffVisible = ref(false);
+const remarkVisible = ref(false);
+const remarkListVisible = ref(false);
+const supplierListVisible = ref(false);
+const remarkOrderId = ref("");
 const showDrawer = async (record) => {
   orderData = record;
   await getOrderInfos(record.orderId);
@@ -97,6 +103,13 @@ const peddingColumns =[
   {
     title: "是否已分派供应商",
     dataIndex: "dispatch",
+  },
+  {
+    title: "分派",
+    dataIndex: "dispatch",
+    slots: {
+      customRender: "dispatch",
+    },
   },
   {
     title: "寄样",
@@ -263,17 +276,12 @@ const labelCol = {
     width: "120px",
   },
 };
-const diffPayData = ref({
-  codeUrl: '',
-  payPlatform: '',
-  cost: ''
-})
 const wrapperCol = {
   span: 24,
 };
 const formState = reactive({
-  startTime: "",
-  endTime: "",
+  orderId: "",
+  remark: "",
 });
 
 const dataSource = ref([]);
@@ -338,6 +346,19 @@ const getOrderList = async () => {
   } catch (err) {}
 };
 
+const onRemarkSubmit = async () => {
+  try {
+    const res = await addRemark(formState);
+    if (res?.code == 0) {
+      message.success("添加成功");
+      // getOrderList();
+      remarkVisible.value = false;
+    }
+  } catch (err) {
+    debugger
+  }
+};
+
 onMounted(() => {
   getOrderList();
 });
@@ -385,11 +406,32 @@ const needRecoveryMenus = ["不需要", "需要"]
           {{ statusMenus[text] }}
         </span>
       </template>
-      <template #remark="{ text }">
+      <template #remark="{ record }">
         <a-button
           type="link"
-          @click="sendRemark(record)"
-          >备注</a-button
+          @click="() => {
+            formState.orderId = record.orderId;
+            remarkVisible = true;
+          }"
+          >添加备注</a-button
+        >
+        <a-button
+          type="link"
+          @click="() => {
+            remarkOrderId = record.orderId;
+            remarkListVisible = true;
+          }"
+          >查看备注</a-button
+        >
+      </template>
+      <template #dispatch="{ record }">
+        <a-button
+          type="link"
+          @click="() => {
+            remarkOrderId = record.orderId;
+            supplierListVisible = true;
+          }"
+          >分派</a-button
         >
       </template>
       <template #sendSamples="{ record }">
@@ -401,56 +443,39 @@ const needRecoveryMenus = ["不需要", "需要"]
       </template>
       <template #action="{ record }">
         <!-- <space> -->
-        <a-button
-          style="margin-bottom: 5px"
-          type="primary"
-          v-if="record.status == 2"
-          @click="showDrawer(record)"
-          >立即支付</a-button
-        >
-        <br v-if="record.priceDifferenceStatus == 1" />
-        <a-button
-          style="margin-bottom: 5px"
-          type="primary"
-          v-if="record.priceDifferenceStatus == 1 && record.priceDifference > 0"
-          @click="getPayPriceDiffs(record)"
-          >补差价{{record.priceDifference}}元</a-button
-        >
-        <a-button
-          style="margin-bottom: 5px"
-          type="primary"
-          v-if="record.priceDifferenceStatus == 1 && record.priceDifference < 0"
-          @click="getReturnPriceDiffs(record)"
-          >退差价{{Math.abs(record.priceDifference)}}元</a-button
-        >
-        <br v-if="record.status <=2 || record.priceDifferenceStatus == 1" />
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
-        <template v-if="record.status <= 3">
-          <br />
-          <a-popconfirm
-            title="你确认要取消订单吗?"
-            ok-text="确定"
-            cancel-text="取消"
-            @confirm="cancelOrders(record.orderId)"
-            @cancel="cancel"
-          >
-            <a-button danger style="margin-bottom: 5px" type="text">取消订单</a-button>
-          </a-popconfirm>
-        </template>
-       
-        <template v-if="record.status >= 3 && record.status <=5">
-          <br />
-          <DownLoad :props="record" type="link" />
-        </template>
-          
-        <template v-if="record.status == 5 && record.additionUrl">
-          <br />
-          <a style="padding-left:10px" :href="record.additionUrl" download="实验结果.png">下载实验结果</a>
-        </template>
       </template>
     </a-table>
+    <a-modal v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      remarkVisible = false;
+    }">
+      <a-form
+      ref="formRef"
+      :model="formState"
+      :rules="rules"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+    >
+      <a-form-item label="备注" name="remark">
+        <a-textarea  v-model:value="formState.remark" />
+      </a-form-item>
+      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+        <a-button style="" type="primary" @click="onRemarkSubmit">提交</a-button>
+      </a-form-item>
+    </a-form>
+    </a-modal>
+    <a-modal v-model:visible="remarkListVisible" width="50%" title="备注详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      remarkListVisible = false;
+    }">
+      <RemarkList :id="remarkOrderId" />
+    </a-modal>
+    <a-modal class="width-80" v-model:visible="supplierListVisible" width="80%" title="分派详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      supplierListVisible = false;
+    }">
+      <SupplierList :id="remarkOrderId" />
+    </a-modal>
   </main>
 </template>
 <style lang="scss"></style>
