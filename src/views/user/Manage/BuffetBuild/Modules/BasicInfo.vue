@@ -43,10 +43,10 @@
       </a-select>
     </a-form-item>
     <a-form-item label="下单通知邮箱">
-      <a-input v-model:value="formState.name" />
+      <a-input v-model:value="formState.email" />
     </a-form-item>
     <a-form-item label="注意事项">
-      <a-input v-model:value="formState.name" />
+      <Editor style="height: 500px;" v-model:value="formState.notify" placeholder="请输入注意事项" />
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">Create</a-button>
@@ -55,12 +55,13 @@
   </a-form>
 </template>
 <script  setup>
-import { reactive, toRaw } from "vue";
+import { reactive, toRaw, ref } from "vue";
 import { DETECT_CATEGORY_TYPES } from "@/utils/const";
+import Editor from "@/components/Editor.vue";
 const userList = reactive([
-  {label: '张总', value: '张总'},
-  {label: '张总1', value: '张总1'},
-])
+  { label: "张总", value: "张总" },
+  { label: "张总1", value: "张总1" },
+]);
 const formState = reactive({
   name: "",
   delivery: false,
@@ -68,6 +69,8 @@ const formState = reactive({
   subCategorys: {},
   resource: "",
   desc: "",
+  email: "",
+  notify: "",
 });
 const onSubmit = () => {
   console.log("submit!", toRaw(formState));
