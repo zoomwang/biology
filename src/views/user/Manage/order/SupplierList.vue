@@ -4,17 +4,29 @@ import {
   reactive,
   onMounted,
 } from "vue";
+import { message } from "ant-design-vue";
 import {
   assignOrder
 } from "../../../../services/manage";
-import {formatTime} from "@/utils/index";
+// import {formatTime} from "@/utils/index";
 
-const props = defineProps(['id']);
+const props = defineProps(['id', 'onOk']);
 const param = reactive({
-  orderId: props.id,
+  orderId: props.id || '1234567890',
   dispatchContactPerson: "",
   sampleNum: "",
 });
+
+const onSubmit = () => {
+  if (state.selectedRowKeys.length != 1){
+    message.error('请选择一个供应商');
+    return;
+  }
+  const data = dataSource.value.filter((item) => {
+    return item.supplierId == state.selectedRowKeys[0];
+  })
+  props.onOk(data);
+}
 
 const columns = [
   {
@@ -23,47 +35,47 @@ const columns = [
     key: "supplierName",
   },
   {
-    title: "订单编号",
-    dataIndex: "orderId",
-    key: "orderId",
+    title: "说明文件",
+    dataIndex: "document",
   },
   {
-    title: "预约仪器",
-    dataIndex: "itemName",
-    key: "itemName",
+    title: "设备类型",
+    dataIndex: "deviceType",
   },
   {
-    title: "订单状态",
-    dataIndex: "orderStatus",
-    key: "orderStatus",
-    slots: {
-      customRender: "orderStatus",
-    },
+    title: "负责人",
+    dataIndex: "head",
   },
   {
-    title: "订单金额",
-    dataIndex: "orderPrice",
-    key: "orderPrice",
+    title: "成本价",
+    dataIndex: "costprice",
   },
   {
-    title: "实付金额",
-    dataIndex: "realOrderPrice",
-    key: "realOrderPrice",
+    title: "备注",
+    dataIndex: "remark",
   },
   {
-    title: "成本金额",
-    dataIndex: "costPrice",
-    key: "costPrice",
+    title: "订单数",
+    dataIndex: "orderNum",
   },
   {
-    title: "订单类型",
-    dataIndex: "orderType",
-    key: "orderType",
-    slots: {
-      customRender: "orderType",
-    },
+    title: "正在做样品数",
+    dataIndex: "doingAndMaxWeekCapacityRatio",
   },
+  {
+    title: "已分派样品数",
+    dataIndex: "assignedSampleNum",
+  },
+  
 ];
+
+const state = reactive({
+  selectedRowKeys: [],
+})
+
+const onSelectChange = (selectedRowKeys) => {
+  state.selectedRowKeys = selectedRowKeys;
+};
 
 const wrapperCol = {
   span: 24,
@@ -74,7 +86,11 @@ const dataSource = ref([]);
 const getSupplierList = async () => {
   try {
     const res = await assignOrder(param);
-    if (res?.code == 0) dataSource.value = res?.data;
+    const sysSupplierVOList = res?.data?.sysSupplierVOList;
+    Array.isArray(sysSupplierVOList) && sysSupplierVOList.forEach((item) => {
+      item.key = item.supplierId
+    })
+    if (res?.code == 0) dataSource.value = res?.data?.sysSupplierVOList;
   } catch (err) {}
 };
 
@@ -89,11 +105,11 @@ onMounted(() => {
   <!-- 用户注册资料 -->
   <main>
     <a-form style="margin: 10px 10px 20px 0" :model="param" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <!-- <a-form-item label="订单号" :wrapperCol="{
+      <a-form-item label="订单号" :wrapperCol="{
         span: 7
       }">
         <a-input v-model:value="param.orderId" style="width: 250px"></a-input>
-      </a-form-item> -->
+      </a-form-item>
       <a-form-item label="对接人" :wrapperCol="{
         span: 7
       }">
@@ -114,6 +130,7 @@ onMounted(() => {
       :columns="columns"
       :data-source="dataSource"
       :pagination="{ pageSize: 5 }"
+      :row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
       bordered
     >
       <template #status="{ text }">
@@ -127,6 +144,7 @@ onMounted(() => {
         </span>
       </template>
     </a-table>
+    <a-button type="primary" @click="onSubmit">提交</a-button>
   </main>
 </template>
 <style lang="scss"></style>

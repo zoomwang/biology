@@ -20,17 +20,14 @@ import SupplierList from './SupplierList.vue';
 let orderData = reactive({
 });
 const drawerVisible = ref(false);
-const diffVisible = ref(false);
+const assignOrderVisible = ref(false);
 const remarkVisible = ref(false);
 const remarkListVisible = ref(false);
 const supplierListVisible = ref(false);
 const remarkOrderId = ref("");
-const showDrawer = async (record) => {
-  orderData = record;
-  await getOrderInfos(record.orderId);
-};
 const orderDetail = ref({});
 const visible = ref(false);
+const supplierDetail = ref({});
 const showModal = async (orderId) => {
   await getOrderInfos(orderId, "detail");
 };
@@ -301,26 +298,6 @@ const getOrderInfos = async (params, type) => {
   } catch (err) {}
 };
 
-const successCall = () => {
-  getOrderList();
-  drawerVisible.value = false;
-  diffVisible.value = false;
-}
-
-const cancelOrders = async (orderId) => {
-  try {
-    const res = await cancelOrder({
-      orderId,
-    });
-    if (res?.code == 0) {
-      getOrderList();
-      notification.success({
-        description: "取消订单成功",
-      });
-    }
-  } catch (err) {}
-};
-
 const getOrderList = async () => {
   try {
     let res;
@@ -358,6 +335,27 @@ const onRemarkSubmit = async () => {
     debugger
   }
 };
+
+const onOk = (data) => {
+  supplierListVisible.value = false;
+  assignOrderVisible.value = true;
+  supplierDetail.value = data[0];
+}
+
+const onSubmit = async() => {
+  try {
+    const res = await addAssignOrder({
+      orderId: remarkOrderId.value,
+      ...supplierDetail.value
+    });
+    if (res?.code == 0) {
+      message.success("寄样成功");
+      assignOrderVisible.value = false;
+    }
+  } catch (err) {
+    debugger
+  }
+}
 
 onMounted(() => {
   getOrderList();
@@ -471,10 +469,22 @@ const needRecoveryMenus = ["不需要", "需要"]
     }">
       <RemarkList :id="remarkOrderId" />
     </a-modal>
-    <a-modal class="width-80" v-model:visible="supplierListVisible" width="80%" title="分派详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-80" v-model:visible="supplierListVisible" width="80%" title="分派订单" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       supplierListVisible = false;
     }">
-      <SupplierList :id="remarkOrderId" />
+      <SupplierList :id="remarkOrderId" :onOk="onOk" />
+    </a-modal>
+    <a-modal class="width-80" v-model:visible="assignOrderVisible" width="80%" title="寄样" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      assignOrderVisible = false;
+    }">
+      <div>
+        收件人：{{ supplierDetail.head }}
+        <br />
+        联系电话：{{ supplierDetail.supplierName }}
+        <br />
+        寄样地址：{{ supplierDetail.supplierName }}
+      </div>
+      <a-button type="primary" @click="onSubmit">确认寄样</a-button>
     </a-modal>
   </main>
 </template>
