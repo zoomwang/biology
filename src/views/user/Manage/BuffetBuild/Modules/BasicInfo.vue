@@ -1,6 +1,8 @@
 <template>
   <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <div style="word-wrap: break-word;white-space:pre-wrap; ">
     {{ formState }}
+  </div>
     <a-form-item label="设备信息">
       <a-input v-model:value="formState.name" />
     </a-form-item>
@@ -33,10 +35,7 @@
       </a-checkbox-group>
     </a-form-item>
     <a-form-item label="列表图">
-      <a-radio-group v-model:value="formState.resource">
-        <a-radio value="1">Sponsor</a-radio>
-        <a-radio value="2">Venue</a-radio>
-      </a-radio-group>
+      <Upload v-model:value="formState.listPic" :max-count="3"></Upload>
     </a-form-item>
     <a-form-item label="设备总负责人">
       <a-select v-model:value="formState.resource" :options="userList">
@@ -58,6 +57,7 @@
 import { reactive, toRaw, ref } from "vue";
 import { DETECT_CATEGORY_TYPES } from "@/utils/const";
 import Editor from "@/components/Editor.vue";
+import Upload from "@/components/Upload.vue";
 const userList = reactive([
   { label: "张总", value: "张总" },
   { label: "张总1", value: "张总1" },
@@ -71,11 +71,33 @@ const formState = reactive({
   desc: "",
   email: "",
   notify: "",
+  listPic: ['https://etest-oss.oss-cn-beijing.aliyuncs.com/20240623/xps656_6531_52f68dec4e4202247f184d71bc40b9c4.png'],
 });
 const onSubmit = () => {
   console.log("submit!", toRaw(formState));
 };
 const labelCol = { style: { width: "150px" } };
 const wrapperCol = { span: 14 };
+
+const fileList = ref([
+  {
+    uid: '-1',
+    name: 'image.png',
+    status: 'done',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-xxx',
+    percent: 50,
+    name: 'image.png',
+    status: 'uploading',
+    url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    uid: '-5',
+    name: 'image.png',
+    status: 'error',
+  },
+]);
 </script>
 
