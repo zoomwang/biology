@@ -1,4 +1,4 @@
-// import EnumOptions from "./enum-options";
+import EnumOptions from "./enum-options";
 export const DETECT_CATEGORY_TYPES = {
   材料加工: ["加热/加湿/干燥", "制膜", "环境试验箱", "其他"],
   力学性能: ["拉压折弯", "微观力学", "冲击"],
@@ -17,3 +17,20 @@ export const DETECT_CATEGORY_TYPES = {
   结构组成: ["光谱类", "色谱质谱", "晶体结构", "X射线类", "其他"],
   其他: ["云现场", "原位测试"],
 };
+
+export const PRICE_MODE_TYPES = new EnumOptions([
+  [0, '自动计算价格', 'AUTO_CALC', ''],
+  [1, '自填/报价', 'CONSUMER_PRICE', '用户可以自填后交付，也可以等经理报价后支付'],
+  [2, '经理报价', 'MANAGER_PRICE', '必须由经理报价后才能支付'],
+], 'value,label,alias,desc')
+
+export const ORDER_QUESTION_TYPES = new EnumOptions([
+  [0, '是否需要回收', 'HAS_NEED_RECYCLE'],
+  [1, '实验有问题联系谁', 'HAS_QUESTION'],
+  [2, '是否需要同设备', 'HAS_NEED_SAME_DEVICE'],
+], 'value,label,alias')
+
+export const PICKUP_SAMPLE_TYPES = new EnumOptions([
+  [0, '自行寄样/上门取件/自己送样'],
+  [1, '询问护送方式：您的样式是否需要低温寄送'],
+], 'value,label')
