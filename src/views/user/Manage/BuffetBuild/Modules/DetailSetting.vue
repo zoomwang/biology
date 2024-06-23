@@ -1,55 +1,109 @@
 <template>
   <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
-    <a-form-item label="详细设置">
-      <a-input v-model:value="formState.name" />
+    {{ formState }}
+    <a-form-item label="测试项目">
+      <Editor
+        style="height: 320px"
+        v-model:value="formState.notify"
+        placeholder="请输入"
+      />
     </a-form-item>
-    <a-form-item label="Instant delivery">
-      <a-switch v-model:checked="formState.delivery" />
+    <a-form-item label="样品要求">
+      <Editor
+        style="height: 320px"
+        v-model:value="formState.notify"
+        placeholder="请输入"
+      />
     </a-form-item>
-    <a-form-item label="Activity type">
-      <a-checkbox-group v-model:value="formState.type">
-        <a-checkbox value="1" name="type">Online</a-checkbox>
-        <a-checkbox value="2" name="type">Promotion</a-checkbox>
-        <a-checkbox value="3" name="type">Offline</a-checkbox>
-      </a-checkbox-group>
+    <a-form-item label="结果展示">
+      <Editor
+        style="height: 320px"
+        v-model:value="formState.notify"
+        placeholder="请输入注意事项"
+      />
     </a-form-item>
-    <a-form-item label="Resources">
-      <a-radio-group v-model:value="formState.resource">
-        <a-radio value="1">Sponsor</a-radio>
-        <a-radio value="2">Venue</a-radio>
-      </a-radio-group>
-    </a-form-item>
-    <a-form-item label="Activity form">
-      <a-textarea v-model:value="formState.desc" />
-    </a-form-item>
+    <div>
+      <a-form-item :colon="false">
+        <template v-slot:label>
+          <a-button type="primary" @click="handleQuestionAdd">
+            添加问题
+          </a-button>
+        </template>
+      </a-form-item>
+
+      <div>
+        <a-collapse v-model:activeKey="activeKey">
+          <a-collapse-panel
+            :key="item.uid"
+            :header="`问题${idx + 1}`"
+            v-for="(item, idx) in formState.questions"
+          >
+            <template #extra>
+              <DeleteOutlined @click="handleQuestionRemove(idx)" />
+            </template>
+            <div style="margin-left: -16px">
+              <a-form-item label="常见问题">
+                <a-input v-model:value="item.problem" />
+              </a-form-item>
+              <a-form-item label="解决方案">
+                <Editor
+                  style="height: 320px"
+                  v-model:value="item.solution"
+                  placeholder="请输入注意事项"
+                />
+              </a-form-item>
+            </div>
+          </a-collapse-panel>
+        </a-collapse>
+      </div>
+    </div>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">Create</a-button>
       <a-button style="margin-left: 10px">Cancel</a-button>
     </a-form-item>
   </a-form>
 </template>
-<script lang="ts" setup>
-import { reactive, toRaw } from 'vue';
-import type { UnwrapRef } from 'vue';
+<script setup>
+import { reactive, toRaw, ref } from "vue";
+import { DETECT_CATEGORY_TYPES } from "@/utils/const";
+import Editor from "@/components/Editor.vue";
+import Upload from "@/components/Upload.vue";
+import { DeleteOutlined } from "@ant-design/icons-vue";
 
-interface FormState {
-  name: string;
-  delivery: boolean;
-  type: string[];
-  resource: string;
-  desc: string;
-}
-const formState: UnwrapRef<FormState> = reactive({
-  name: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+const genQuestionForm = () => ({
+  uid: Date.now(),
+  problem: undefined,
+  solution: undefined,
 });
-const onSubmit = () => {
-  console.log('submit!', toRaw(formState));
+const defaultQuestionForm = genQuestionForm();
+const formState = reactive({
+  name: "",
+  delivery: false,
+  categorys: [],
+  subCategorys: {},
+  resource: "",
+  desc: "",
+  email: "",
+  notify: "",
+  listPic: [
+    "https://etest-oss.oss-cn-beijing.aliyuncs.com/20240623/xps656_6531_52f68dec4e4202247f184d71bc40b9c4.png",
+  ],
+  questions: [defaultQuestionForm],
+});
+const activeKey = ref([defaultQuestionForm.uid]);
+
+const handleQuestionAdd = () => {
+  const questionForm = genQuestionForm();
+  formState.questions.push(questionForm);
+  activeKey.value.push(questionForm.uid);
 };
-const labelCol = { style: { width: '150px' } };
+const handleQuestionRemove = idx => {
+  const questionForm = formState.questions.splice(idx, 1);
+  activeKey.value = activeKey.value.filter(v => v !== questionForm.uid);
+};
+const onSubmit = () => {
+  console.log("submit!", toRaw(formState));
+};
+const labelCol = { style: { width: "150px" } };
 const wrapperCol = { span: 14 };
 </script>
-
