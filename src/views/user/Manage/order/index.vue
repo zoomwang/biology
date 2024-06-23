@@ -9,13 +9,14 @@ import {
   getExperieOrderList,
   getCompletedOrderList,
   addAssignOrder,
-  addRemark
+  addRemark,
+  addExperimentResult
 } from "../../../../services/manage";
-import { notification } from "ant-design-vue";
+import { notification, message } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import { message } from "ant-design-vue";
 import RemarkList from './RemarkList.vue'
 import SupplierList from './SupplierList.vue';
+import { DollarCircleOutlined } from "@ant-design/icons-vue";
 
 let orderData = reactive({
 });
@@ -24,10 +25,15 @@ const assignOrderVisible = ref(false);
 const remarkVisible = ref(false);
 const remarkListVisible = ref(false);
 const supplierListVisible = ref(false);
+const orderUploadVisible = ref(false);
 const remarkOrderId = ref("");
 const orderDetail = ref({});
 const visible = ref(false);
 const supplierDetail = ref({});
+const orderUpload = ref({
+  orderId: '',
+  ossUrl: '',
+});
 const showModal = async (orderId) => {
   await getOrderInfos(orderId, "detail");
 };
@@ -172,6 +178,13 @@ const experieColumns =[
     dataIndex: "orderAmount",
   },
   {
+    title: "分派",
+    dataIndex: "dispatch",
+    slots: {
+      customRender: "dispatch",
+    },
+  },
+  {
     title: "供应商反馈",
     dataIndex: "supplierFeedback",
   },
@@ -179,30 +192,27 @@ const experieColumns =[
     title: "是否已分派供应商",
     dataIndex: "dispatch",
   },
-  {
-    title: "操作",
-    key: "action1",
-    slots: {
-      customRender: "action1",
-    },
-  },
+  // {
+  //   title: "操作",
+  //   key: "action1",
+  //   slots: {
+  //     customRender: "action1",
+  //   },
+  // },
 ];
 
 const completedColumns = [
   {
     title: "预约仪器",
     dataIndex: "device",
-    // key: "device",
   },
   {
     title: "用户所在分部",
     dataIndex: "officeName",
-    // key: "age",
   },
   {
     title: "对接人",
     dataIndex: "dispatchContactPerson",
-    // key: "age",
   },
   {
     title: "订单号",
@@ -250,6 +260,15 @@ const completedColumns = [
   {
     title: "费用",
     dataIndex: "cost",
+    slots: {
+      customRender: "cost",
+    },
+  },
+  {
+    title: "上传",
+    slots: {
+      customRender: "uploadData",
+    },
   },
   {
     title: "文件上传信息",
@@ -258,13 +277,6 @@ const completedColumns = [
   {
     title: "是否已分派供应商",
     dataIndex: "dispatch",
-  },
-  {
-    title: "操作",
-    key: "action2",
-    slots: {
-      customRender: "action2",
-    },
   },
 ];
 
@@ -375,6 +387,7 @@ const needRecoveryMenus = ["不需要", "需要"]
       }">
         <a-date-picker v-model:value="param.startTime" style="width:140px" />
       </a-form-item>
+      <DollarCircleOutlined />
       <a-form-item label="订单结束时间" :wrapperCol="{
         span: 5
       }">
@@ -399,6 +412,13 @@ const needRecoveryMenus = ["不需要", "需要"]
       :pagination="{ pageSize: 5 }"
       bordered
     >
+      <template #uploadData="{ text }">
+        <DollarCircleOutlined style="cursor:pointer" @click="()=>{
+          console.log(text)
+          orderUpload.orderId = text?.orderId;
+          orderUploadVisible = true;
+        }" />
+      </template>
       <template #status="{ text }">
         <span>
           {{ statusMenus[text] }}
@@ -433,11 +453,11 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
       </template>
       <template #sendSamples="{ record }">
-        <a-button
+        <!-- <a-button
           type="link"
           @click="sendSample(record)"
           >寄样</a-button
-        >
+        > -->
       </template>
       <template #action="{ record }">
         <!-- <space> -->
@@ -474,17 +494,38 @@ const needRecoveryMenus = ["不需要", "需要"]
     }">
       <SupplierList :id="remarkOrderId" :onOk="onOk" />
     </a-modal>
-    <a-modal class="width-80" v-model:visible="assignOrderVisible" width="80%" title="寄样" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-40" v-model:visible="assignOrderVisible" title="寄样" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       assignOrderVisible = false;
     }">
-      <div>
-        收件人：{{ supplierDetail.head }}
-        <br />
-        联系电话：{{ supplierDetail.supplierName }}
-        <br />
-        寄样地址：{{ supplierDetail.supplierName }}
-      </div>
-      <a-button type="primary" @click="onSubmit">确认寄样</a-button>
+      <a-descriptions title="" bordered>
+        <a-descriptions-item :span="3" label="收件人：">{{ supplierDetail.head }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="联系电话：">{{ supplierDetail.supplierName }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="寄样地址：">{{ supplierDetail.supplierName }}</a-descriptions-item>
+      </a-descriptions>
+      <a-button style="margin-top:20px" type="primary" @click="onSubmit">确认寄样</a-button>
+    </a-modal>
+    <a-modal class="width-40" v-model:visible="orderUploadVisible" title="结果上传" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      orderUploadVisible = false;
+    }">
+      <UploadFile
+        :onSuccess="
+          async(url) => {
+            orderUpload.ossUrl = url;
+          }
+        "
+      />      
+      <a-button style="margin-top:20px" type="primary" @click="async() => {
+        const res = await addExperimentResult({
+              ossUrl: orderUpload.ossUrl,
+              orderId: orderUpload.orderId,
+            });
+            if (res.code == 0) {
+              message.success('上传成功');
+              orderUploadVisible = false;
+            } else {
+              message.error(res?.msg || '上传失败');
+            }
+      }">确认寄样</a-button>
     </a-modal>
   </main>
 </template>
