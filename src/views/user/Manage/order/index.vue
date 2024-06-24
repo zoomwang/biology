@@ -10,22 +10,23 @@ import {
   getCompletedOrderList,
   addAssignOrder,
   addRemark,
-  addExperimentResult
+  addExperimentResult,
+  determinefee,
+  addDetermineFee
 } from "../../../../services/manage";
 import { notification, message } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import RemarkList from './RemarkList.vue'
 import SupplierList from './SupplierList.vue';
-import { DollarCircleOutlined } from "@ant-design/icons-vue";
+import { DollarCircleOutlined, UploadOutlined } from "@ant-design/icons-vue";
 
-let orderData = reactive({
-});
 const drawerVisible = ref(false);
 const assignOrderVisible = ref(false);
 const remarkVisible = ref(false);
 const remarkListVisible = ref(false);
 const supplierListVisible = ref(false);
 const orderUploadVisible = ref(false);
+const orderFeeVisible = ref(false);
 const remarkOrderId = ref("");
 const orderDetail = ref({});
 const visible = ref(false);
@@ -33,6 +34,9 @@ const supplierDetail = ref({});
 const orderUpload = ref({
   orderId: '',
   ossUrl: '',
+});
+const orderFee = ref({
+  orderId: '',
 });
 const showModal = async (orderId) => {
   await getOrderInfos(orderId, "detail");
@@ -45,14 +49,14 @@ const param = reactive({
   status: 0,
 });
 
-const sendSample = async(record) => {
-  try {
-    const res = await addAssignOrder(record);
-    if (res.code == 0) {
-      message.success("新建成功");
-    }
-  } catch (err) {}
-}
+// const sendSample = async(record) => {
+//   try {
+//     const res = await addAssignOrder(record);
+//     if (res.code == 0) {
+//       message.success("新建成功");
+//     }
+//   } catch (err) {}
+// }
 
 const columns = ref([
 ]);
@@ -192,13 +196,6 @@ const experieColumns =[
     title: "是否已分派供应商",
     dataIndex: "dispatch",
   },
-  // {
-  //   title: "操作",
-  //   key: "action1",
-  //   slots: {
-  //     customRender: "action1",
-  //   },
-  // },
 ];
 
 const completedColumns = [
@@ -259,9 +256,8 @@ const completedColumns = [
   },
   {
     title: "费用",
-    dataIndex: "cost",
     slots: {
-      customRender: "cost",
+      customRender: "feeData",
     },
   },
   {
@@ -412,9 +408,20 @@ const needRecoveryMenus = ["不需要", "需要"]
       :pagination="{ pageSize: 5 }"
       bordered
     >
+      <template #feeData="{ text }">
+        <DollarCircleOutlined style="cursor:pointer" @click="async()=>{
+          orderFee.orderId = text?.orderId;
+          const res = await determinefee({
+            orderId: text?.orderId
+          })
+          if (res.code == 0) {
+            Object.assign(orderFee, res?.data);
+          }
+          orderFeeVisible = true;
+        }" />
+      </template>
       <template #uploadData="{ text }">
-        <DollarCircleOutlined style="cursor:pointer" @click="()=>{
-          console.log(text)
+        <UploadOutlined style="cursor:pointer" @click="()=>{
           orderUpload.orderId = text?.orderId;
           orderUploadVisible = true;
         }" />
@@ -453,11 +460,6 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
       </template>
       <template #sendSamples="{ record }">
-        <!-- <a-button
-          type="link"
-          @click="sendSample(record)"
-          >寄样</a-button
-        > -->
       </template>
       <template #action="{ record }">
         <!-- <space> -->
@@ -515,6 +517,10 @@ const needRecoveryMenus = ["不需要", "需要"]
         "
       />      
       <a-button style="margin-top:20px" type="primary" @click="async() => {
+        if (!orderUpload.ossUrl) {
+          message.error('请先上传文件');
+          return;
+        }
         const res = await addExperimentResult({
               ossUrl: orderUpload.ossUrl,
               orderId: orderUpload.orderId,
@@ -526,6 +532,31 @@ const needRecoveryMenus = ["不需要", "需要"]
               message.error(res?.msg || '上传失败');
             }
       }">确认寄样</a-button>
+    </a-modal>
+    <a-modal class="width-60" v-model:visible="orderFeeVisible" title="费用确认" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      orderFeeVisible = false;
+    }">
+      <a-descriptions title="" bordered>
+        <a-descriptions-item :span="3" label="预约人登录手机号：">{{ orderFee.username }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="预约人姓名：">{{ orderFee.realName }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="供应商名称：">{{ orderFee.supplierName }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="供应商电话：">{{ orderFee.telephone }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="寄样地方：">{{ orderFee.address }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="优惠前原价：">{{ orderFee.originalPrice }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="优惠：">{{ orderFee.discount }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="用户实付：">{{ orderFee.actualPayment }}</a-descriptions-item>
+      </a-descriptions>
+      <a-button style="margin-top:20px" type="primary" @click="async() => {
+        const res = await addDetermineFee({
+              orderId: orderFee.orderId,
+            });
+            if (res.code == 0) {
+              message.success('确认成功');
+              orderFeeVisible = false;
+            } else {
+              message.error(res?.msg || '确认失败');
+            }
+      }">确认费用</a-button>
     </a-modal>
   </main>
 </template>

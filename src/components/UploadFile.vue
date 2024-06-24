@@ -7,9 +7,7 @@ const props = defineProps(['onSuccess', 'fileList'])
 const header = {
   Authorization: $localStorage.getItem('access_token')
 };
-const fileList = ref([{
-  name: '附件1', url: props.fileList
-}]);
+const fileList = ref([]);
 const handleChange = (info) => {
   const fileMaxSize = 1024*1024*100
   let resFileList = [...info.fileList];
