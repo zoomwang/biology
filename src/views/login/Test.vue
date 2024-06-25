@@ -1,6 +1,7 @@
 <template>
   <div>
-  <FormProvider :form="form">
+  <AdminForm :type="3"></AdminForm>
+  <FormProvider :form="form" v-if="0">
     <Field
       name="name"
       title="Name"
@@ -45,6 +46,7 @@ import {
   connect,
   mapProps,
 } from '@formily/vue'
+import AdminForm from '@/components/DynamicQuestion/AdminForm/index.vue'
 
 setValidateLanguage('en')
 

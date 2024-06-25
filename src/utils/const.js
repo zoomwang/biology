@@ -34,3 +34,14 @@ export const PICKUP_SAMPLE_TYPES = new EnumOptions([
   [0, '自行寄样/上门取件/自己送样'],
   [1, '询问护送方式：您的样式是否需要低温寄送'],
 ], 'value,label')
+
+export const QUESTION_TYPES = new EnumOptions([
+  [1, '单选问题', 'RADIO'],
+  [2, '多选问题', 'CHECKBOX'],
+  [3, '单行填空问题', 'TEXT'],
+  [4, '多行填空问题', 'TEXTAREA'],
+  [5, '区间填空问题', 'RANGE'],
+  [6, '下拉问题', 'SELECT'],
+  [7, '文件上传', 'FILE'],
+  [8, '富文本编辑框', 'RICH_TEXT'],
+], 'value,label')
