@@ -30,6 +30,7 @@ export default defineConfig({
     }),
     codeInspectorPlugin({
       bundler: 'vite',
+      hideDomPathAttr: true
     }),
 
   ],
