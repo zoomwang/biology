@@ -1,6 +1,6 @@
 <template>
   <div>
-  <AdminForm style="width: 500px;margin-left: 16px" :type="3"></AdminForm>
+  <AdminForm style="width: 750px;margin-left: 16px" :type="1"></AdminForm>
   <FormProvider :form="form" v-if="0">
     <Field
       name="name"
