@@ -45,3 +45,8 @@ export const QUESTION_TYPES = new EnumOptions([
   [7, '文件上传', 'FILE'],
   [8, '富文本编辑框', 'RICH_TEXT'],
 ], 'value,label')
+
+export const VALUE_MODE_TYPES =new EnumOptions([
+  ['placeholder', '提示文字（键入消失）', 'PLACEHOLDER'],
+  ['defaultValue', '初始内容（键入保留）', 'DEFAULT_VALUE'],
+], 'value,label')
