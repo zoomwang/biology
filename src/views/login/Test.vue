@@ -1,6 +1,7 @@
 <template>
   <div>
-  <AdminForm style="width: 750px;margin-left: 16px" :type="1"></AdminForm>
+  <a-select :options="questionTypeOptions" v-model:value="type"></a-select>
+  <AdminForm style="width: 750px;margin-left: 16px" :type="type"></AdminForm>
   <FormProvider :form="form" v-if="0">
     <Field
       name="name"
@@ -47,7 +48,8 @@ import {
   mapProps,
 } from '@formily/vue'
 import AdminForm from '@/components/DynamicQuestion/AdminForm/index.vue'
-
+import {QUESTION_TYPES} from '@/utils/const'
+const questionTypeOptions = QUESTION_TYPES.toObjectArray()
 setValidateLanguage('en')
 
 const FormItem = connect(
@@ -91,6 +93,8 @@ export default {
       Input,
       form,
       createPasswordEqualValidate,
+      questionTypeOptions,
+      type: 8,
     }
   },
 }

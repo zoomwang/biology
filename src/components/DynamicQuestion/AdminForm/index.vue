@@ -1,7 +1,9 @@
 <script lang="jsx">
 import { reactive, ref } from "vue";
-import Options from './options.vue'
-import { QUESTION_TYPES } from "@/utils/const";
+import Options from "./options.vue";
+import Editor from "@/components/Editor.vue";
+import { QUESTION_TYPES, VALUE_MODE_TYPES } from "@/utils/const";
+
 export default {
   props: {
     type: {
@@ -11,7 +13,9 @@ export default {
   },
   setup(props) {
     const labelCol = { style: { width: "5em" } };
-    const labelAutoWidthCol = { style: { width: "auto", minWidth: "auto !important" } };
+    const labelAutoWidthCol = {
+      style: { width: "auto", minWidth: "auto !important" },
+    };
     const wrapperCol = { span: 24 };
     const formState = reactive({
       name: "xxx",
@@ -21,17 +25,20 @@ export default {
         value: undefined,
       },
       options: [],
+      valueMode: VALUE_MODE_TYPES.PLACEHOLDER,
     });
 
     const rules = {
       required: { required: true, message: "必填项" },
     };
 
-    const renderOptions = () => {
-      return <a-form-item name="options" label="选项">
-        <Options show-keys="price"></Options>
-      </a-form-item>
-    }
+    const renderOptions = ({ showKeys = "" } = {}) => {
+      return (
+        <a-form-item name="options" label="选项">
+          <Options show-keys={showKeys}></Options>
+        </a-form-item>
+      );
+    };
 
     const renderPrice = () => {
       return (
@@ -44,7 +51,6 @@ export default {
         </a-form-item>
       );
     };
-
 
     const renderBase = () => {
       const nameJsx = (
@@ -104,10 +110,10 @@ export default {
     };
 
     const renderRadio = () => {
-      return renderOptions()
+      return renderOptions({ showKeys: "price,isPriceMode" });
     };
     const renderCheckbox = () => {
-      return "多选问题";
+      return renderOptions({ showKeys: "price,checked,required,isPriceMode" });
     };
     const renderText = () => {
       const valueTypeJsx = (
@@ -155,9 +161,28 @@ export default {
     };
     const renderTextarea = () => {};
     const renderRange = () => {};
-    const renderSelect = () => {};
+    const renderSelect = () => {
+      return renderOptions();
+    };
     const renderFileUpload = () => {};
-    const renderRichText = () => {};
+    const renderRichText = () => {
+      const oldValueMode = formState.valueMode
+      const valueModeJsx = (
+        <a-radio-group
+          style="margin-bottom: 16px"
+          v-model:value={formState.valueMode}
+          options={VALUE_MODE_TYPES.toObjectArray()}
+          onChange={() => {
+            formState[formState.valueMode] = formState[oldValueMode]
+            formState[oldValueMode] = ''
+          }}
+        />
+      );
+      const editorJsx = (
+        <Editor v-model:value={formState[formState.valueMode]}></Editor>
+      );
+      return [valueModeJsx, editorJsx];
+    };
 
     const renderControlMap = {
       [QUESTION_TYPES.RADIO]: renderRadio,
