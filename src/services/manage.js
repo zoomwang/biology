@@ -95,6 +95,19 @@ export const addDetermineFee = (param) =>
 export const assignOrder = (param) =>
   api.post(`/sys/order-mgt/assign-order/query`, param);
 
+/** 删除派单信息 */
+export const deleteOrder = (param) =>
+  api.post(`/sys/order-mgt/assign-order/del`, param);
+
+/** 删除寄样信息 */
+export const deleteSendOrder = (param) =>
+  api.post(`/sys/order-mgt/send-samples-order/del`, param);
+
+
+/** 寄样 */
+export const sendOrder = (param) =>
+  api.post(`/sys/order-mgt/send-samples-order/add`, param);
+
 /** 寄样给供应商 */
 export const addAssignOrder = (param) =>
   api.post(`/sys/order-mgt/assign-order/add`, param);

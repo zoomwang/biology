@@ -12,7 +12,10 @@ import {
   addRemark,
   addExperimentResult,
   determinefee,
-  addDetermineFee
+  addDetermineFee,
+  sendOrder,
+  deleteOrder,
+  deleteSendOrder
 } from "../../../../services/manage";
 import { notification, message } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
@@ -46,6 +49,7 @@ const param = reactive({
   curPage: 1,
   startTime: "",
   endTime: "",
+  param: {},
   status: 0,
 });
 
@@ -92,32 +96,35 @@ const peddingColumns =[
     title: "下单金额",
     dataIndex: "orderAmount",
   },
+  // {
+  //   title: "订单状态",
+  //   dataIndex: "status",
+  //   slots: {
+  //     customRender: "status",
+  //   },
+  // },
+  // {
+  //   title: "沟通",
+  //   dataIndex: "remark",
+  // },
+  // {
+  //   title: "供应商反馈",
+  //   dataIndex: "supplierFeedback",
+  // },
   {
-    title: "订单状态",
-    dataIndex: "status",
-    slots: {
-      customRender: "status",
-    },
-  },
-  {
-    title: "沟通",
-    dataIndex: "remark",
-  },
-  {
-    title: "供应商反馈",
-    dataIndex: "supplierFeedback",
-  },
-  {
-    title: "是否已分派供应商",
-    dataIndex: "dispatch",
-  },
-  {
-    title: "分派",
+    title: "是否已派单",
     dataIndex: "dispatch",
     slots: {
-      customRender: "dispatch",
+      customRender: "dispatchAction",
     },
   },
+  // {
+  //   title: "分派",
+  //   dataIndex: "dispatch",
+  //   slots: {
+  //     customRender: "dispatch",
+  //   },
+  // },
   {
     title: "寄样",
     dataIndex: "sendSamples",
@@ -182,19 +189,22 @@ const experieColumns =[
     dataIndex: "orderAmount",
   },
   {
-    title: "分派",
-    dataIndex: "dispatch",
-    slots: {
-      customRender: "dispatch",
-    },
-  },
-  {
     title: "供应商反馈",
     dataIndex: "supplierFeedback",
   },
   {
-    title: "是否已分派供应商",
+    title: "是否已派单",
     dataIndex: "dispatch",
+    slots: {
+      customRender: "dispatchAction",
+    },
+  },
+  {
+    title: "寄样",
+    dataIndex: "sendSamples",
+    slots: {
+      customRender: "sendSamples",
+    },
   },
 ];
 
@@ -271,7 +281,7 @@ const completedColumns = [
     dataIndex: "uploadFileInfo",
   },
   {
-    title: "是否已分派供应商",
+    title: "是否已派单",
     dataIndex: "dispatch",
   },
 ];
@@ -344,26 +354,35 @@ const onRemarkSubmit = async () => {
   }
 };
 
-const onOk = (data) => {
-  supplierListVisible.value = false;
-  assignOrderVisible.value = true;
-  supplierDetail.value = data[0];
-}
-
-const onSubmit = async() => {
+const onOk = async(data) => {
   try {
     const res = await addAssignOrder({
       orderId: remarkOrderId.value,
-      ...supplierDetail.value
+      id: data[0].id,
     });
     if (res?.code == 0) {
-      message.success("寄样成功");
-      assignOrderVisible.value = false;
+      supplierListVisible.value = false;
+      getOrderList();
+      message.success("派单成功");
     }
   } catch (err) {
     debugger
   }
 }
+
+// const onSubmit = async(data) => {
+//   try {
+//     const res = await sendOrder({
+//       orderId: data.orderId,
+//     });
+//     if (res?.code == 0) {
+//       getOrderList();
+//       message.success("寄样成功");
+//     }
+//   } catch (err) {
+//     debugger
+//   }
+// }
 
 onMounted(() => {
   getOrderList();
@@ -431,6 +450,40 @@ const needRecoveryMenus = ["不需要", "需要"]
           {{ statusMenus[text] }}
         </span>
       </template>
+      <template #needRecovery="{ text }">
+        <span>
+          {{ needRecoveryMenus[text] }}
+        </span>
+      </template>
+      <template #dispatchAction="{ record }">
+        <span>
+          <div :style="{
+            color: record?.dispatch ? 'green': 'red'
+          }">{{ record?.dispatch ? '已派单' : '未派单' }}</div>
+          <a-button
+            v-if="!record?.dispatch"
+            type="link"
+            @click="() => {
+              remarkOrderId = record.orderId;
+              supplierListVisible = true;
+            }"
+            >派单</a-button>
+            <a-button
+              v-if="record?.dispatch"
+              type="link"
+              @click="async () => {
+                try {
+                  const res = await deleteOrder({
+                    orderId: record.orderId
+                  });
+                  if (res.code == 0) {
+                    message.success('删除派单成功');
+                  }
+                } catch (err) {}
+              }"
+            ><span style="color: red">删除派单</span></a-button>
+        </span>
+      </template>
       <template #remark="{ record }">
         <a-button
           type="link"
@@ -449,17 +502,64 @@ const needRecoveryMenus = ["不需要", "需要"]
           >查看备注</a-button
         >
       </template>
-      <template #dispatch="{ record }">
+      <!-- <template #dispatch="{ record }">
         <a-button
           type="link"
           @click="() => {
             remarkOrderId = record.orderId;
             supplierListVisible = true;
           }"
-          >分派</a-button
+          >派单</a-button
         >
-      </template>
+      </template> -->
       <template #sendSamples="{ record }">
+        <div :style="{
+            textAlign: 'center',
+            color: record?.sendSamples ? 'green': 'red'
+          }">{{ record?.sendSamples ? '已寄样' : '未寄样' }}</div>
+
+        <a-popconfirm
+          title="确定要寄样嘛?"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="async()=>{
+            if (!record?.sendSamples) {
+              try {
+                const res = await sendOrder({
+                  orderId: record.orderId,
+                });
+                if (res?.code == 0) {
+                  getOrderList();
+                  message.success('寄样成功');
+                }
+              } catch (err) {
+                debugger
+              }
+            } else {
+              
+              try {
+              const res = await deleteSendOrder({
+                orderId: record.orderId,
+              });
+              if (res?.code == 0) {
+                getOrderList();
+                message.success('删除寄样成功');
+              }
+            } catch (err) {
+              debugger
+            }
+            }
+            
+          }"
+          @cancel="()=>{}"
+        >
+        <a-button
+          type="link"
+          ><span :style="{
+            color: record.sendSamples ? 'red' : 'green'
+          }">{{ record.sendSamples ? '删除寄样':'寄样' }}</span></a-button
+        >
+        </a-popconfirm>
       </template>
       <template #action="{ record }">
         <!-- <space> -->

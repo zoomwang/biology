@@ -86,11 +86,11 @@ const dataSource = ref([]);
 const getSupplierList = async () => {
   try {
     const res = await assignOrder(param);
-    const sysSupplierVOList = res?.data?.sysSupplierVOList;
+    const sysSupplierVOList = res?.data?.sysSupplierDetailItemVOs;
     Array.isArray(sysSupplierVOList) && sysSupplierVOList.forEach((item) => {
       item.key = item.supplierId
     })
-    if (res?.code == 0) dataSource.value = res?.data?.sysSupplierVOList;
+    if (res?.code == 0) dataSource.value = res?.data?.sysSupplierDetailItemVOs;
   } catch (err) {}
 };
 
