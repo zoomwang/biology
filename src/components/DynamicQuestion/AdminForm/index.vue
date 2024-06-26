@@ -10,8 +10,8 @@ export default {
   },
   setup(props) {
     const labelCol = { style: { width: "5em" } };
-    const labelAutoWidthCol = { style: { width: "auto" } };
-    const wrapperCol = { span: 14 };
+    const labelAutoWidthCol = { style: { width: "auto", minWidth: "auto !important" } };
+    const wrapperCol = { span: 24 };
     const formState = reactive({
       name: "xxx",
       required: false,
@@ -28,7 +28,11 @@ export default {
     const renderPrice = () => {
       return (
         <a-form-item name="price" label="价格">
-          <a-input-number style="width: 100%"  min={0} v-model:value={formState.price} />
+          <a-input-number
+            style="width: 100%"
+            min={0}
+            v-model:value={formState.price}
+          />
         </a-form-item>
       );
     };
@@ -121,16 +125,20 @@ export default {
       );
       const maxJsx = (
         <a-form-item label="max" name="min" label-col={labelAutoWidthCol}>
-          <a-input-number v-model:value={formState.max} min={formState.min} style="width: 100%" />
+          <a-input-number
+            v-model:value={formState.max}
+            min={formState.min}
+            style="width: 100%"
+          />
         </a-form-item>
       );
 
       return [
         renderPrice(),
         <a-row gutter={8}>
-          <a-col span1={6}>{valueTypeJsx}</a-col>
-          <a-col span1={6}>{minJsx}</a-col>
-          <a-col span1={6}>{maxJsx}</a-col>
+          <a-col span={12}>{valueTypeJsx}</a-col>
+          <a-col span={6}>{minJsx}</a-col>
+          <a-col span={6}>{maxJsx}</a-col>
         </a-row>,
       ];
     };
