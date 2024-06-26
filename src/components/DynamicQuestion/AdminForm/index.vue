@@ -1,5 +1,6 @@
 <script lang="jsx">
 import { reactive, ref } from "vue";
+import Options from './options.vue'
 import { QUESTION_TYPES } from "@/utils/const";
 export default {
   props: {
@@ -19,11 +20,18 @@ export default {
         key: undefined,
         value: undefined,
       },
+      options: [],
     });
 
     const rules = {
       required: { required: true, message: "必填项" },
     };
+
+    const renderOptions = () => {
+      return <a-form-item name="options" label="选项">
+        <Options show-keys="price"></Options>
+      </a-form-item>
+    }
 
     const renderPrice = () => {
       return (
@@ -36,6 +44,7 @@ export default {
         </a-form-item>
       );
     };
+
 
     const renderBase = () => {
       const nameJsx = (
@@ -94,7 +103,9 @@ export default {
       return [nameJsx, requiredJsx, relJsx, descJsx];
     };
 
-    const renderRadio = () => {};
+    const renderRadio = () => {
+      return renderOptions()
+    };
     const renderCheckbox = () => {
       return "多选问题";
     };
