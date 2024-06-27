@@ -166,15 +166,15 @@ export default {
     };
     const renderFileUpload = () => {};
     const renderRichText = () => {
-      const oldValueMode = formState.valueMode
+      const oldValueMode = formState.valueMode;
       const valueModeJsx = (
         <a-radio-group
           style="margin-bottom: 16px"
           v-model:value={formState.valueMode}
           options={VALUE_MODE_TYPES.toObjectArray()}
           onChange={() => {
-            formState[formState.valueMode] = formState[oldValueMode]
-            formState[oldValueMode] = ''
+            formState[formState.valueMode] = formState[oldValueMode];
+            formState[oldValueMode] = "";
           }}
         />
       );
