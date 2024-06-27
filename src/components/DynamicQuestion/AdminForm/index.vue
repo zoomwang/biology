@@ -2,7 +2,9 @@
 import { reactive, ref } from "vue";
 import Options from "./options.vue";
 import Editor from "@/components/Editor.vue";
-import { QUESTION_TYPES, VALUE_MODE_TYPES } from "@/utils/const";
+import Upload from "@/components/Upload.vue";
+import { QUESTION_TYPES, VALUE_MODE_TYPES, VALUE_TYPES } from "@/utils/const";
+import { UploadOutlined } from "@ant-design/icons-vue";
 
 export default {
   props: {
@@ -12,6 +14,7 @@ export default {
     },
   },
   setup(props) {
+    const valueTypeOptions = VALUE_TYPES.toObjectArray();
     const labelCol = { style: { width: "5em" } };
     const labelAutoWidthCol = {
       style: { width: "auto", minWidth: "auto !important" },
@@ -50,6 +53,24 @@ export default {
           />
         </a-form-item>
       );
+    };
+
+    const renderValueMode = () => {
+      const oldValueMode = formState.valueMode;
+      const valueModeJsx = (
+        <a-form-item name="valueMode">
+          <a-radio-group
+            style="margin-bottom: 16px"
+            v-model:value={formState.valueMode}
+            options={VALUE_MODE_TYPES.toObjectArray()}
+            onChange={() => {
+              formState[formState.valueMode] = formState[oldValueMode];
+              formState[oldValueMode] = "";
+            }}
+          />
+        </a-form-item>
+      );
+      return valueModeJsx;
     };
 
     const renderBase = () => {
@@ -122,11 +143,43 @@ export default {
             v-model:value={formState.valueType}
             placeholder="清选择属性类型"
             style="width: 100%"
-          >
-            <a-select-option value="字符">字符</a-select-option>
-            <a-select-option value="整型">整型</a-select-option>
-            <a-select-option value="小数">小数</a-select-option>
-          </a-select>
+            options={valueTypeOptions}
+          />
+        </a-form-item>
+      );
+
+      return [renderPrice(), valueTypeJsx];
+    };
+    const renderTextarea = () => {
+      const valueModeJsx = renderValueMode();
+      const textareaJsx = (
+        <a-form-item name={formState.valueMode}>
+          <a-textarea
+            v-model:value={formState[formState.valueMode]}
+            placeholder="请输入"
+            auto-size={{ minRows: 3, maxRows: 6 }}
+            show-count
+            maxlength={512}
+          />
+        </a-form-item>
+      );
+      const configJsx = (
+        <a-form-item label="配置">
+          {valueModeJsx}
+          {textareaJsx}
+        </a-form-item>
+      );
+      return [renderPrice(), configJsx];
+    };
+    const renderRange = () => {
+      const valueTypeJsx = (
+        <a-form-item label="属性类型" name="valueType">
+          <a-select
+            v-model:value={formState.valueType}
+            placeholder="清选择属性类型"
+            style="width: 100%"
+            options={valueTypeOptions}
+          />
         </a-form-item>
       );
 
@@ -159,29 +212,54 @@ export default {
         </a-row>,
       ];
     };
-    const renderTextarea = () => {};
-    const renderRange = () => {};
     const renderSelect = () => {
-      return renderOptions();
+      return renderOptions({ showKeys: "price" });
     };
-    const renderFileUpload = () => {};
+    const renderFileUpload = () => {
+      const slots = {
+        "upload-button": () => (
+          <a-button>
+            <UploadOutlined></UploadOutlined>
+            上传模板
+          </a-button>
+        ),
+      };
+      const uploadJsx = (
+        <Upload
+          v-model:value={formState.templateUrl}
+          listType="text"
+          v-slots={slots}
+          style="display: flex;item-align: center;"
+        ></Upload>
+      );
+      const acceptExtJsx = (
+        <a-input
+          placeholder="支持扩展名，小写逗号分隔"
+          v-model:value={formState.acceptExt}
+        ></a-input>
+      );
+      const configJsx = (
+        <a-space style="display: flex" align="start">
+          {acceptExtJsx}
+          {uploadJsx}
+        </a-space>
+      );
+      return [renderPrice(), configJsx];
+    };
     const renderRichText = () => {
-      const oldValueMode = formState.valueMode;
-      const valueModeJsx = (
-        <a-radio-group
-          style="margin-bottom: 16px"
-          v-model:value={formState.valueMode}
-          options={VALUE_MODE_TYPES.toObjectArray()}
-          onChange={() => {
-            formState[formState.valueMode] = formState[oldValueMode];
-            formState[oldValueMode] = "";
-          }}
-        />
-      );
+      const valueModeJsx = renderValueMode();
       const editorJsx = (
-        <Editor v-model:value={formState[formState.valueMode]}></Editor>
+        <a-form-item name={formState.valueMode}>
+          <Editor v-model:value={formState[formState.valueMode]}></Editor>
+        </a-form-item>
       );
-      return [valueModeJsx, editorJsx];
+      const configJsx = (
+        <a-form-item label="配置">
+          {valueModeJsx}
+          {editorJsx}
+        </a-form-item>
+      );
+      return [renderPrice(), configJsx];
     };
 
     const renderControlMap = {

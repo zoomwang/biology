@@ -46,7 +46,13 @@ export const QUESTION_TYPES = new EnumOptions([
   [8, '富文本编辑框', 'RICH_TEXT'],
 ], 'value,label')
 
-export const VALUE_MODE_TYPES =new EnumOptions([
+export const VALUE_MODE_TYPES = new EnumOptions([
   ['placeholder', '提示文字（键入消失）', 'PLACEHOLDER'],
   ['defaultValue', '初始内容（键入保留）', 'DEFAULT_VALUE'],
 ], 'value,label')
+
+export const VALUE_TYPES = new EnumOptions([
+  ['integer', '整数', 'INTEGER'],
+  ['decimal', '小数', 'DECIMAL'],
+  ['string', '字符', 'STRING'],
+], 'value,label') 

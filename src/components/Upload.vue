@@ -9,10 +9,14 @@
       @change="handleChange"
       v-bind="$attrs"
     >
-      <div v-if="showUploadBtn">
-        <plus-outlined />
-        <div style="margin-top: 8px">Upload</div>
-      </div>
+      <template v-if="showUploadBtn">
+        <slot name="upload-button">
+          <div>
+          <plus-outlined />
+          <div style="margin-top: 8px">Upload</div>
+        </div>
+        </slot>
+      </template>
     </a-upload>
     <a-modal
       :open="previewVisible"
