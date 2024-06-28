@@ -261,7 +261,7 @@ const completedColumns = [
     title: "还款状态",
     dataIndex: "repaymentStatus",
     slots: {
-      customRender: "invoiceStatus",
+      customRender: "repaymentStatus",
     },
   },
   {
@@ -280,10 +280,10 @@ const completedColumns = [
     title: "文件上传信息",
     dataIndex: "uploadFileInfo",
   },
-  {
-    title: "是否已派单",
-    dataIndex: "dispatch",
-  },
+  // {
+  //   title: "是否已派单",
+  //   dataIndex: "dispatch",
+  // },
 ];
 
 const labelCol = {
@@ -458,21 +458,25 @@ const needRecoveryMenus = ["不需要", "需要"]
       <template #dispatchAction="{ record }">
         <span>
           <div :style="{
-            color: record?.dispatch ? 'green': 'red'
+            color: record?.dispatch ? 'green': 'red',
+            textAlign: 'center'
           }">{{ record?.dispatch ? '已派单' : '未派单' }}</div>
           <a-button
             v-if="!record?.dispatch"
             type="link"
+            style="display: block;width: 100%;text-align: center;"
             @click="() => {
               remarkOrderId = record.orderId;
               supplierListVisible = true;
             }"
             >派单</a-button>
-            <a-button
-              v-if="record?.dispatch"
-              type="link"
-              @click="async () => {
-                try {
+            <a-popconfirm
+            v-if="record?.dispatch"
+          title="确定要删除派单吗?"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="async()=>{
+            try {
                   const res = await deleteOrder({
                     orderId: record.orderId
                   });
@@ -480,8 +484,16 @@ const needRecoveryMenus = ["不需要", "需要"]
                     message.success('删除派单成功');
                   }
                 } catch (err) {}
-              }"
-            ><span style="color: red">删除派单</span></a-button>
+          }"
+          @cancel="()=>{}"
+        >
+        <a-button
+          type="link"
+          ><span :style="{
+            color: 'red'
+          }">删除派单</span></a-button
+        >
+        </a-popconfirm>
         </span>
       </template>
       <template #remark="{ record }">
@@ -502,16 +514,7 @@ const needRecoveryMenus = ["不需要", "需要"]
           >查看备注</a-button
         >
       </template>
-      <!-- <template #dispatch="{ record }">
-        <a-button
-          type="link"
-          @click="() => {
-            remarkOrderId = record.orderId;
-            supplierListVisible = true;
-          }"
-          >派单</a-button
-        >
-      </template> -->
+
       <template #sendSamples="{ record }">
         <div :style="{
             textAlign: 'center',
@@ -556,7 +559,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         <a-button
           type="link"
           ><span :style="{
-            color: record.sendSamples ? 'red' : 'green'
+            color: record.sendSamples ? 'red' : '#1677ff'
           }">{{ record.sendSamples ? '删除寄样':'寄样' }}</span></a-button
         >
         </a-popconfirm>
@@ -566,6 +569,12 @@ const needRecoveryMenus = ["不需要", "需要"]
         <a-button type="text" @click="showModal(record.orderId)"
           >订单详情</a-button
         >
+      </template>
+      <template #invoiceStatus="{ record }">
+        {{ record ? '已开票' : '未开票' }}
+      </template>
+      <template #repaymentStatus="{ record }">
+        {{ record ? '已还款' : '未还款' }}
       </template>
     </a-table>
     <a-modal v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
