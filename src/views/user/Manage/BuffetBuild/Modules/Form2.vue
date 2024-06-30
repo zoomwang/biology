@@ -1,11 +1,11 @@
 <template>
   <a-form
+    ref="formRef"
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
     layout="vertical"
   >
-    {{ formState }}
     <a-form-item label="价格模式">
       <a-radio-group v-model:value="formState.priceMode" class="flex flex-col">
         <a-radio
@@ -17,86 +17,108 @@
       </a-radio-group>
     </a-form-item>
     <a-form-item label="订单问题（可多选）">
-      <a-checkbox-group
-        v-model:value="formState.orderQuestion"
-        class="flex flex-col"
-      >
-        <div v-for="item in orderQuestionOptions" :key="item.value">
-          <a-checkbox :value="item.value">
-            {{ item.label }}
-          </a-checkbox>
-          <div
-            style="margin-top: 8px"
-            v-if="
-              item.value === ORDER_QUESTION_TYPES.HAS_NEED_RECYCLE &&
-              formState.orderQuestion.includes(
-                ORDER_QUESTION_TYPES.HAS_NEED_RECYCLE
-              )
-            "
+      <div class="flex flex-col">
+        <a-checkbox v-model:checked="formState.needRecovery"
+          >是否需要回收</a-checkbox
+        >
+        <div v-if="formState.needRecovery" style="margin-top: 8px">
+          <a-form-item
+            label="回收费"
+            class="inner-form-item"
+            :wrapperCol="{ span: 8 }"
           >
-            <a-form-item label="回收费" class="inner-form-item" :wrapperCol="{span: 8}">
-              <a-input v-model:value="formState.name" placeholder="请输入" />
-            </a-form-item>
-            <a-form-item label="回收提示" class="inner-form-item" :wrapperCol="{span: 8}">
-              <a-textarea v-model:value="formState.desc" placeholder="请输入" />
-            </a-form-item>
-          </div>
-          <div
-            style="margin-top: 8px"
-            v-if="
-              item.value === ORDER_QUESTION_TYPES.HAS_QUESTION &&
-              formState.orderQuestion.includes(
-                ORDER_QUESTION_TYPES.HAS_QUESTION
-              )
-            "
+            <a-input
+              v-model:value="formState.recoveryCost"
+              placeholder="请输入"
+            />
+          </a-form-item>
+          <a-form-item
+            label="回收提示"
+            class="inner-form-item"
+            :wrapperCol="{ span: 8 }"
           >
-            <a-form-item label="联系电话" class="inner-form-item" :wrapperCol="{span: 8}">
-              <a-input v-model:value="formState.phone" placeholder="请输入" />
-            </a-form-item>
-          </div>
+            <a-textarea
+              v-model:value="formState.recoveryTip"
+              placeholder="请输入"
+            />
+          </a-form-item>
         </div>
-      </a-checkbox-group>
+        <a-checkbox v-model:checked="formState.hasContacts">
+          实验有问题联系谁
+        </a-checkbox>
+        <div style="margin-top: 8px" v-if="formState.hasContacts">
+          <a-form-item
+            label="联系电话"
+            class="inner-form-item"
+            :wrapperCol="{ span: 8 }"
+          >
+            <a-input v-model:value="formState.contacts" placeholder="请输入" />
+          </a-form-item>
+        </div>
+        <a-checkbox v-model:checked="formState.needSameDevice">
+          是否需要同设备
+        </a-checkbox>
+      </div>
     </a-form-item>
     <a-form-item label="取件方式">
-      <a-checkbox-group
-        v-model:value="formState.type"
-        class="flex flex-col"
-        :options="pickupSampleOptions"
-      >
-      </a-checkbox-group>
-    </a-form-item>
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="onSubmit">Create</a-button>
-      <a-button style="margin-left: 10px">Cancel</a-button>
+      <div class="flex flex-col">
+        <a-checkbox v-model:checked="formState.samplingMethod">
+          自行寄样/上门取件/自己送样
+        </a-checkbox>
+        <a-checkbox v-model:checked="formState.needLowTemperature">
+          询问护送方式：您的样式是否需要低温寄送
+        </a-checkbox>
+      </div>
     </a-form-item>
   </a-form>
 </template>
 <script setup>
-import { reactive, toRaw } from "vue";
-import {
-  PRICE_MODE_TYPES,
-  ORDER_QUESTION_TYPES,
-  PICKUP_SAMPLE_TYPES,
-} from "@/utils/const";
+import { ref, reactive, toRaw, watch } from "vue";
+import { PRICE_MODE_TYPES } from "@/utils/const";
 
-const priceModeOptions = PRICE_MODE_TYPES.toObjectArray();
-const pickupSampleOptions = PICKUP_SAMPLE_TYPES.toObjectArray();
-const orderQuestionOptions = ORDER_QUESTION_TYPES.toObjectArray();
-console.log("pickupSampleOptions", pickupSampleOptions);
+const props = defineProps({ model: Object });
 
-const formState = reactive({
-  name: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
-  orderQuestion: [],
-});
-const onSubmit = () => {
-  console.log("submit!", toRaw(formState));
-};
 const labelCol = { style: { width: "150px" } };
 const wrapperCol = {};
+const priceModeOptions = PRICE_MODE_TYPES.toObjectArray();
+
+const formRef = ref();
+const formState = reactive({
+  priceMode: undefined,
+  needRecovery: undefined,
+  recoveryCost: undefined,
+  recoveryTip: undefined,
+  hasContacts: false,
+  contacts: undefined,
+  needSameDevice: false,
+  samplingMethod: 0,
+  needLowTemperature: false,
+});
+
+watch(
+  () => props.model?.extInfo,
+  model => {
+    setFormValue(model || {});
+  },
+  { immediate: true }
+);
+
+function setFormValue(model) {
+  Object.assign(formState, model, {hasContacts: !!model.contacts});
+}
+function getFormValue() {
+  return { extInfo: {...toRaw(formState), samplingMethod: Number(formState.samplingMethod)} };
+}
+
+async function validate() {
+  await formRef.value.validate();
+  return getFormValue();
+}
+
+defineExpose({
+  getFormValue,
+  validate,
+});
 </script>
 
 <style scoped lang="scss">
@@ -111,7 +133,7 @@ const wrapperCol = {};
 }
 .inner-form-item {
   &::v-deep {
-    .ant-form-item-label  {
+    .ant-form-item-label {
       padding-top: 4px;
       padding-bottom: 0;
       margin-right: 8px;

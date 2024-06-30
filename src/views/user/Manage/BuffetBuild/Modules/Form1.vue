@@ -1,55 +1,112 @@
 <template>
-  <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
-    <a-form-item label="下单页面一">
-      <a-input v-model:value="formState.name" />
-    </a-form-item>
-    <a-form-item label="Instant delivery">
-      <a-switch v-model:checked="formState.delivery" />
-    </a-form-item>
-    <a-form-item label="Activity type">
-      <a-checkbox-group v-model:value="formState.type">
-        <a-checkbox value="1" name="type">Online</a-checkbox>
-        <a-checkbox value="2" name="type">Promotion</a-checkbox>
-        <a-checkbox value="3" name="type">Offline</a-checkbox>
-      </a-checkbox-group>
-    </a-form-item>
-    <a-form-item label="Resources">
-      <a-radio-group v-model:value="formState.resource">
-        <a-radio value="1">Sponsor</a-radio>
-        <a-radio value="2">Venue</a-radio>
-      </a-radio-group>
-    </a-form-item>
-    <a-form-item label="Activity form">
-      <a-textarea v-model:value="formState.desc" />
-    </a-form-item>
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="onSubmit">Create</a-button>
-      <a-button style="margin-left: 10px">Cancel</a-button>
-    </a-form-item>
-  </a-form>
+  <div>
+    <a-row>
+      <a-span v-for="item in questionTypeOptions" :key="item.value">
+        <a-button type="text" @click="handleQuestionAdd(item.value)">{{
+          item.label
+        }}</a-button>
+      </a-span>
+    </a-row>
+    <a-form
+      ref="formRef"
+      :model="formState"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+    >
+    {{ relOptions }}
+      <div v-for="(item, idx) in formState.sampleQuestions" :key="item.id">
+        <a-button type="text" @click="handleQuestionRemove(idx)">删除</a-button>
+        <DynamicQuestionForm
+          :model="item"
+          :rel-options="relOptions"
+          :type="item.type"
+        ></DynamicQuestionForm>
+      </div>
+    </a-form>
+  </div>
 </template>
-<script lang="ts" setup>
-import { reactive, toRaw } from 'vue';
-import type { UnwrapRef } from 'vue';
+<script setup>
+import { ref, reactive, toRaw, watch, computed } from "vue";
+import { QUESTION_TYPES } from "@/utils/const";
+import DynamicQuestionForm from "@/components/DynamicQuestion/AdminForm/index.vue";
+import { genQuestionItem } from "@/components/DynamicQuestion/utils";
 
-interface FormState {
-  name: string;
-  delivery: boolean;
-  type: string[];
-  resource: string;
-  desc: string;
-}
-const formState: UnwrapRef<FormState> = reactive({
-  name: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
+const props = defineProps({ model: Object });
+
+const labelCol = { style: { width: "150px" } };
+const wrapperCol = {};
+const questionTypeOptions = QUESTION_TYPES.toObjectArray();
+
+const formRef = ref();
+const formState = reactive({
+  sampleQuestions: [],
 });
-const onSubmit = () => {
-  console.log('submit!', toRaw(formState));
+
+const relOptions = computed(() => {
+  return (formState.sampleQuestions || [])
+    .filter(item =>
+      [QUESTION_TYPES.RADIO, QUESTION_TYPES.CHECKBOX].includes(item.type)
+    )
+    .filter(item => item.label);
+});
+
+watch(
+  () => props.model?.sampleQuestions,
+  model => {
+    setFormValue(model || []);
+  },
+  { immediate: true }
+);
+
+function setFormValue(model) {
+  formState.sampleQuestions = model || [];
+}
+function getFormValue() {
+  return toRaw(formState);
+}
+
+async function validate() {
+  await formRef.value.validate();
+  return getFormValue();
+}
+
+const handleQuestionAdd = type => {
+  const questionItem = genQuestionItem(type)
+  formState.sampleQuestions.push(questionItem);
 };
-const labelCol = { style: { width: '150px' } };
-const wrapperCol = { span: 14 };
+const handleQuestionRemove = index => {
+  if (index >= 0 && index < formState.sampleQuestions.length) {
+    formState.sampleQuestions.splice(index, 1);
+  }
+};
+const handleQuestionMoveUp = () => {};
+const handleQuestionMoveDown = () => {};
+
+defineExpose({
+  getFormValue,
+  validate,
+});
 </script>
 
+<style scoped lang="scss">
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-center {
+  align-items: center;
+}
+.inner-form-item {
+  &::v-deep {
+    .ant-form-item-label {
+      padding-top: 4px;
+      padding-bottom: 0;
+      margin-right: 8px;
+      width: 4em;
+      min-width: 4em !important;
+    }
+  }
+}
+</style>

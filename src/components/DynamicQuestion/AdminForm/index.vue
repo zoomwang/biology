@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { reactive, ref } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import Options from "./options.vue";
 import Editor from "@/components/Editor.vue";
 import Upload from "@/components/Upload.vue";
@@ -12,6 +12,13 @@ export default {
       type: Number,
       required: true,
     },
+    model: {
+      type: Object,
+    },
+    relOptions: {
+      type: Array,
+      default: () => [],
+    },
   },
   setup(props) {
     const valueTypeOptions = VALUE_TYPES.toObjectArray();
@@ -20,16 +27,38 @@ export default {
       style: { width: "auto", minWidth: "auto !important" },
     };
     const wrapperCol = { span: 24 };
-    const formState = reactive({
-      name: "xxx",
-      required: false,
-      rel: {
-        key: undefined,
-        value: undefined,
+    const formState = ref({});
+
+    watch(
+      () => props.model,
+      model => {
+        model.valueMode = model.defaultValue
+          ? VALUE_MODE_TYPES.DEFAULT_VALUE
+          : VALUE_MODE_TYPES.PLACEHOLDER;
+        formState.value = model;
       },
-      options: [],
-      valueMode: VALUE_MODE_TYPES.PLACEHOLDER,
+      { immediate: true }
+    );
+
+
+    const currentRelIdOptions = computed(() => {
+      return (props.relOptions)
+        .filter(item => item.id !== props.model.id)
     });
+    const currentRelValueOptions = computed(() => {
+      return currentRelIdOptions.value.find(item => item.id === formState.value.dep.depId)?.options || []
+    })
+    watch(() => currentRelIdOptions.value, (options) => {
+      if(!options.includes(formState.value.dep.depId)) {
+        formState.value.dep.depId = ''
+        formState.value.dep.value = ''
+      }
+    })  
+    watch(( ) => currentRelValueOptions.value, (options) => {
+      if(!options.includes(formState.value.dep.value)) {
+        formState.value.dep.value = ''
+      }
+    })
 
     const rules = {
       required: { required: true, message: "必填项" },
@@ -38,7 +67,10 @@ export default {
     const renderOptions = ({ showKeys = "" } = {}) => {
       return (
         <a-form-item name="options" label="选项">
-          <Options show-keys={showKeys}></Options>
+          <Options
+            v-model:options={formState.value.options}
+            show-keys={showKeys}
+          ></Options>
         </a-form-item>
       );
     };
@@ -49,23 +81,24 @@ export default {
           <a-input-number
             style="width: 100%"
             min={0}
-            v-model:value={formState.price}
+            v-model:value={formState.value.price}
           />
         </a-form-item>
       );
     };
 
     const renderValueMode = () => {
-      const oldValueMode = formState.valueMode;
+      const oldValueMode = formState.value.valueMode;
       const valueModeJsx = (
         <a-form-item name="valueMode">
           <a-radio-group
             style="margin-bottom: 16px"
-            v-model:value={formState.valueMode}
+            v-model:value={formState.value.valueMode}
             options={VALUE_MODE_TYPES.toObjectArray()}
             onChange={() => {
-              formState[formState.valueMode] = formState[oldValueMode];
-              formState[oldValueMode] = "";
+              formState.value[formState.value.valueMode] =
+                formState.value[oldValueMode];
+              formState.value[oldValueMode] = "";
             }}
           />
         </a-form-item>
@@ -75,35 +108,35 @@ export default {
 
     const renderBase = () => {
       const nameJsx = (
-        <a-form-item name="name" label="问题名称" rules={[rules.required]}>
-          <a-input v-model:value={formState.name} />
+        <a-form-item name="label" label="问题名称" rules={[rules.required]}>
+          <a-input v-model:value={formState.value.label} />
         </a-form-item>
       );
       const requiredJsx = (
         <a-form-item name="required" label="是否必填">
-          <a-checkbox v-model:checked={formState.required} />
+          <a-checkbox v-model:checked={formState.value.required} />
         </a-form-item>
       );
-
       const relKey = (
-        <a-form-item name="rel.key">
+        <a-form-item name="dep.depId">
           <a-select
-            v-model:value={formState.rel.key}
+            v-model:value={formState.value.dep.depId}
             placeholder="清选择前置条件问题"
+            options={currentRelIdOptions}
+            field-names={{ label: 'label', value: 'id', options: 'children' }}
           >
-            <a-select-option value="shanghai">Zone one</a-select-option>
-            <a-select-option value="beijing">Zone two</a-select-option>
+      
           </a-select>
         </a-form-item>
       );
       const relValue = (
-        <a-form-item name="rel.value">
+        <a-form-item name="dep.value">
           <a-select
-            v-model:value={formState.rel.value}
+            v-model:value={formState.value.dep.value}
             placeholder="清选择前置条件的问题选中值"
+            options={currentRelValueOptions}
+            field-names={{ label: 'label', value: 'id' }}
           >
-            <a-select-option value="shanghai">Zone one</a-select-option>
-            <a-select-option value="beijing">Zone two</a-select-option>
           </a-select>
         </a-form-item>
       );
@@ -119,7 +152,7 @@ export default {
       const descJsx = (
         <a-form-item name="desc" label="描述">
           <a-textarea
-            v-model:value={formState.desc}
+            v-model:value={formState.value.desc}
             placeholder="请输入"
             auto-size={{ minRows: 2, maxRows: 6 }}
             show-count
@@ -140,7 +173,7 @@ export default {
       const valueTypeJsx = (
         <a-form-item label="属性类型" name="valueType">
           <a-select
-            v-model:value={formState.valueType}
+            v-model:value={formState.value.valueType}
             placeholder="清选择属性类型"
             style="width: 100%"
             options={valueTypeOptions}
@@ -153,9 +186,9 @@ export default {
     const renderTextarea = () => {
       const valueModeJsx = renderValueMode();
       const textareaJsx = (
-        <a-form-item name={formState.valueMode}>
+        <a-form-item name={formState.value.valueMode}>
           <a-textarea
-            v-model:value={formState[formState.valueMode]}
+            v-model:value={formState.value[formState.value.valueMode]}
             placeholder="请输入"
             auto-size={{ minRows: 3, maxRows: 6 }}
             show-count
@@ -175,7 +208,7 @@ export default {
       const valueTypeJsx = (
         <a-form-item label="属性类型" name="valueType">
           <a-select
-            v-model:value={formState.valueType}
+            v-model:value={formState.value.valueType}
             placeholder="清选择属性类型"
             style="width: 100%"
             options={valueTypeOptions}
@@ -186,9 +219,9 @@ export default {
       const minJsx = (
         <a-form-item label="min" name="min" label-col={labelAutoWidthCol}>
           <a-input-number
-            v-model:value={formState.min}
+            v-model:value={formState.value.minValue}
             min={0}
-            max={formState.max}
+            max={formState.value.maxValue}
             style="width: 100%"
           />
         </a-form-item>
@@ -196,8 +229,8 @@ export default {
       const maxJsx = (
         <a-form-item label="max" name="min" label-col={labelAutoWidthCol}>
           <a-input-number
-            v-model:value={formState.max}
-            min={formState.min}
+            v-model:value={formState.value.maxValue}
+            min={formState.value.minValue}
             style="width: 100%"
           />
         </a-form-item>
@@ -226,8 +259,9 @@ export default {
       };
       const uploadJsx = (
         <Upload
-          v-model:value={formState.templateUrl}
+          v-model:value={formState.value.templateFile}
           listType="text"
+          maxCount={1}
           v-slots={slots}
           style="display: flex;item-align: center;"
         ></Upload>
@@ -235,7 +269,7 @@ export default {
       const acceptExtJsx = (
         <a-input
           placeholder="支持扩展名，小写逗号分隔"
-          v-model:value={formState.acceptExt}
+          v-model:value={formState.value.fileAccessExt}
         ></a-input>
       );
       const configJsx = (
@@ -249,8 +283,11 @@ export default {
     const renderRichText = () => {
       const valueModeJsx = renderValueMode();
       const editorJsx = (
-        <a-form-item name={formState.valueMode}>
-          <Editor v-model:value={formState[formState.valueMode]}></Editor>
+        <a-form-item name={formState.value.valueMode}>
+          <Editor
+            style="height: 320px"
+            v-model:value={formState.value[formState.value.valueMode]}
+          ></Editor>
         </a-form-item>
       );
       const configJsx = (
@@ -277,10 +314,12 @@ export default {
       const baseJsx = renderBase();
       const controlJsx = renderControlMap[props.type]();
       return (
-        <a-form model={formState} label-col={labelCol} wrapper-col={wrapperCol}>
+        <a-form
+          model={formState.value}
+          label-col={labelCol}
+          wrapper-col={wrapperCol}
+        >
           <div>
-            {JSON.stringify(formState)}
-            type:{props.type}
             {baseJsx}
             {controlJsx}
           </div>

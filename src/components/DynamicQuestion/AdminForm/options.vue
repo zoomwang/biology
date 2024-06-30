@@ -74,28 +74,19 @@
         </a-space>
       </a-form-item>
     </a-space>
-    <a-form-item>
-      <a-button type="primary" html-type="submit">Submit</a-button>
-    </a-form-item>
   </a-form>
 </template>
 <script lang="ts" setup>
-import { PropType, computed, reactive, ref } from "vue";
+import { PropType, computed, reactive,watch, ref } from "vue";
 import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   DoubleRightOutlined,
 } from "@ant-design/icons-vue";
 import type { FormInstance } from "ant-design-vue";
+import { genOption, Option  } from "../utils";
 
-interface Option {
-  id: number;
-  label?: string;
-  price?: number;
-  required: boolean;
-  checked: boolean;
-  isPriceMode: boolean;
-}
+const options = defineModel<Option[]>("options", { required: true });
 
 const props = defineProps({
   showKeys: {
@@ -123,21 +114,16 @@ const labelAutoWidthCol = {
   style: { width: "auto", minWidth: "auto !important" },
 };
 
-const genOption = (): Option => {
-  return {
-    id: Date.now(),
-    label: undefined,
-    price: undefined,
-    required: false,
-    checked: false,
-    isPriceMode: false,
-  };
-};
 
 const formRef = ref<FormInstance>();
 const dynamicValidateForm = reactive<{ options: Option[] }>({
-  options: [genOption()],
+  options: [],
 });
+
+watch(() => options.value, (options: Option[]) => {
+  dynamicValidateForm.options = options
+},{immediate: true})
+
 const removeOption = (idx: number) => {
   dynamicValidateForm.options.splice(idx, 1);
 };
