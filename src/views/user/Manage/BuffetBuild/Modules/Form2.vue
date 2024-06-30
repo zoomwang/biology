@@ -4,7 +4,6 @@
     :model="formState"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
-    layout="vertical"
   >
     <a-form-item label="价格模式">
       <a-radio-group v-model:value="formState.priceMode" class="flex flex-col">
@@ -25,7 +24,7 @@
           <a-form-item
             label="回收费"
             class="inner-form-item"
-            :wrapperCol="{ span: 8 }"
+            :wrapperCol="{ span: 12 }"
           >
             <a-input
               v-model:value="formState.recoveryCost"
@@ -35,7 +34,7 @@
           <a-form-item
             label="回收提示"
             class="inner-form-item"
-            :wrapperCol="{ span: 8 }"
+            :wrapperCol="{ span: 12 }"
           >
             <a-textarea
               v-model:value="formState.recoveryTip"
@@ -50,7 +49,7 @@
           <a-form-item
             label="联系电话"
             class="inner-form-item"
-            :wrapperCol="{ span: 8 }"
+            :wrapperCol="{ span: 12 }"
           >
             <a-input v-model:value="formState.contacts" placeholder="请输入" />
           </a-form-item>
@@ -79,7 +78,7 @@ import { PRICE_MODE_TYPES } from "@/utils/const";
 const props = defineProps({ model: Object });
 
 const labelCol = { style: { width: "150px" } };
-const wrapperCol = {};
+const wrapperCol = { span: 14 };
 const priceModeOptions = PRICE_MODE_TYPES.toObjectArray();
 
 const formRef = ref();

@@ -39,7 +39,7 @@
         <a-collapse v-model:activeKey="activeKey">
           <a-collapse-panel
             :key="item.uid"
-            :header="`问题${idx + 1}`"
+            :header="`问题${idx + 1}${item.question ? '-' + item.question : ''}`"
             v-for="(item, idx) in formState.qaList"
           >
             <template #extra>

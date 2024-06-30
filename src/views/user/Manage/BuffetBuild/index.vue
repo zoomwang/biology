@@ -5,7 +5,10 @@
         <component ref="formRef" :is="item.comp" :model="buffetBuildData" />
       </a-tab-pane>
     </a-tabs>
-    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+    <a-form-item
+      :wrapper-col="{ span: 24, }"
+      style="margin-top: 16px"
+    >
       <a-button type="primary" :loading="submitting" @click="onSubmit"
         >保存</a-button
       >
@@ -68,7 +71,7 @@ const onSubmit = async () => {
       ? updateConfig({ ...form, orderTypeId: orderTypeId.value })
       : createConfig({ ...form, orderTypeId: 0 }));
     message.success(isEdit.value ? "修改成功" : "新增成功");
-    
+
     if (!isEdit.value) {
       router.replace({
         query: {
@@ -93,6 +96,6 @@ onMounted(() => {
 
 <style>
 .ant-menu-root {
-  display: none;
+  /* display: none; */
 }
 </style>
