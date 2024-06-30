@@ -19,9 +19,9 @@ export const DETECT_CATEGORY_TYPES = {
 };
 
 export const PRICE_MODE_TYPES = new EnumOptions([
-  [0, '自动计算价格', 'AUTO_CALC', ''],
-  [1, '自填/报价', 'CONSUMER_PRICE', '用户可以自填后交付，也可以等经理报价后支付'],
-  [2, '经理报价', 'MANAGER_PRICE', '必须由经理报价后才能支付'],
+  [1, '自动计算价格', 'AUTO_CALC', ''],
+  [2, '自填/报价', 'CONSUMER_PRICE', '用户可以自填后交付，也可以等经理报价后支付'],
+  [3, '经理报价', 'MANAGER_PRICE', '必须由经理报价后才能支付'],
 ], 'value,label,alias,desc')
 
 export const ORDER_QUESTION_TYPES = new EnumOptions([
@@ -52,7 +52,7 @@ export const VALUE_MODE_TYPES = new EnumOptions([
 ], 'value,label')
 
 export const VALUE_TYPES = new EnumOptions([
-  ['integer', '整数', 'INTEGER'],
-  ['decimal', '小数', 'DECIMAL'],
-  ['string', '字符', 'STRING'],
+  [1, '整数', 'INTEGER'],
+  [2, '小数', 'DECIMAL'],
+  [3, '字符', 'STRING'],
 ], 'value,label') 
