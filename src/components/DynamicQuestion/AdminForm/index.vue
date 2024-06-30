@@ -22,11 +22,11 @@ export default {
   },
   setup(props) {
     const valueTypeOptions = VALUE_TYPES.toObjectArray();
-    const labelCol = { style: { width: "5em" } };
+    const labelCol = { style: { width: "150px" } };
     const labelAutoWidthCol = {
       style: { width: "auto", minWidth: "auto !important" },
     };
-    const wrapperCol = { span: 24 };
+    const wrapperCol = { span: 12 };
     const formState = ref({});
 
     watch(
