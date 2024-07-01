@@ -70,6 +70,11 @@ const router = createRouter({
       component: () => import("../views/user/Index.vue"),
     },
     {
+      path: "/user/buffet-build/create-and-update",
+      name: "buffetBuildCreateAndUpdate",
+      component: () => import("../views/user/Manage/BuffetBuild/CreateAndUpdate.vue"),
+    },
+    {
       path: "/user/publish-demand",
       name: "publishDemand",
       component: () => import("../views/user/PostDemand.vue"),

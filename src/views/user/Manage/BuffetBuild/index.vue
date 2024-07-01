@@ -1,101 +1,118 @@
 <template>
-  <a-form>
-    <a-tabs v-model:activeKey="activeKey" type="card">
-      <a-tab-pane v-for="item in tabs" :key="item.value" :tab="item.label">
-        <component ref="formRef" :is="item.comp" :model="buffetBuildData" />
-      </a-tab-pane>
-    </a-tabs>
-    <a-form-item
-      :wrapper-col="{ span: 24, }"
-      style="margin-top: 16px"
+  <div>
+    <div style="padding: 16px">
+      <a-button @click="handleCreate">新建</a-button>
+    </div>
+    <a-table
+      :columns="columns"
+      :data-source="dataSource"
+      :pagination="pagination"
+      :loading="loading"
+      @change="handleTableChange"
     >
-      <a-button type="primary" :loading="submitting" @click="onSubmit"
-        >保存</a-button
-      >
-    </a-form-item>
-  </a-form>
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'action'">
+          <a
+            :href="`/user/buffet-build/create-and-update?typeId=${record.orderTypeId}`"
+            >编辑</a
+          >
+        </template>
+      </template>
+    </a-table>
+  </div>
 </template>
 <script setup>
-import { onMounted, reactive, ref, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { message } from "ant-design-vue";
-
-import BasicInfo from "./Modules/BasicInfo.vue";
-import Form1 from "./Modules/Form1.vue";
-import Form2 from "./Modules/Form2.vue";
-import DetailSetting from "./Modules/DetailSetting.vue";
-import {
-  createConfig,
-  updateConfig,
-  fetchConfig,
-} from "@/services/buffet-build";
-const route = useRoute();
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { usePagination } from "vue-request";
+import { fetchConfigList } from "@/services/buffet-build";
 const router = useRouter();
 
-// const props = defineProps({
-//   orderTypeId: String,
-// });
-const orderTypeId = computed(() => route.query.typeId);
-
-const isEdit = computed(() => !!orderTypeId.value);
-
-const formRef = ref();
-const submitting = ref(false);
-const tabs = [
-  { label1: "1", label: "基础信息", value: "BasicInfo", comp: BasicInfo },
-  { label1: "1", label: "下单页面一", value: "form1", comp: Form1 },
-  { label1: "1", label: "下单页面二", value: "form2", comp: Form2 },
+const columns = [
   {
-    label1: "1",
-    label: "详细设置",
-    value: "detailSetting",
-    comp: DetailSetting,
+    title: "设备名称",
+    dataIndex: "deviceName",
+  },
+  {
+    title: "设备别名",
+    dataIndex: "deviceAliases",
+  },
+  {
+    title: "设备型号",
+    dataIndex: "deviceModel",
+  },
+  {
+    title: "品牌",
+    dataIndex: "brand",
+  },
+  // {
+  //   title: "类别",
+  //   dataIndex: "projectType",
+  // },
+  {
+    title: "操作",
+    key: "action",
   },
 ];
-const activeKey = ref(tabs[1].value);
-const buffetBuildData = reactive({
-  baseInfo: {},
-});
 
-const getConfig = async () => {
-  const { data } = await fetchConfig({ orderTypeId: orderTypeId.value });
-  Object.assign(buffetBuildData, data);
-};
-
-const onSubmit = async () => {
-  try {
-    submitting.value = true;
-    const idx = tabs.findIndex(item => item.value === activeKey.value);
-    const form = await formRef.value[0].validate();
-    const { data } = await (isEdit.value
-      ? updateConfig({ ...form, orderTypeId: orderTypeId.value })
-      : createConfig({ ...form, orderTypeId: 0 }));
-    message.success(isEdit.value ? "修改成功" : "新增成功");
-
-    if (!isEdit.value) {
-      router.replace({
-        query: {
-          ...route.query,
-          typeId: data,
-        },
+const total = ref(0);
+const queryData = params => {
+  return fetchConfigList(params).then(res => {
+    const list = res.data.list
+      .filter(
+        item =>
+          item.dynamicFormConfig?.orderTypeId &&
+          item.dynamicFormConfig?.baseInfo
+      )
+      .map(item => {
+        return {
+          orderTypeId: item.id,
+          ...item.dynamicFormConfig.baseInfo,
+        };
       });
-    }
-  } catch (error) {
-    console.error("submit error", error);
-  } finally {
-    submitting.value = false;
-  }
+    console.log(list);
+    total.value = list.length;
+    return list;
+  });
 };
 
-onMounted(() => {
-  if (isEdit.value) {
-    getConfig();
-  }
+const {
+  data: dataSource,
+  run,
+  loading,
+  pageSize,
+  current,
+} = usePagination(queryData, {
+  defaultParams: [
+    {
+      pageSize: 100,
+    },
+  ],
+  // formatResult: res => {
+  //   debugger
+  //   return res.data.list;
+  // },
+  pagination: {
+    currentKey: "curPage",
+    pageSizeKey: "pageSize",
+  },
 });
-</script>
 
-<style>
-.ant-menu-root {
-  /* display: none; */
-}
-</style>
+const pagination = computed(() => ({
+  total: total.value,
+  current: current.value,
+  pageSize: pageSize.value,
+}));
+
+const handleTableChange = (pag, filters) => {
+  run({
+    pageSize: pag.pageSize,
+    curPage: pag?.current,
+    ...filters,
+  });
+};
+
+const handleCreate = () => {
+  router.push("/user/buffet-build/create-and-update");
+};
+</script>
