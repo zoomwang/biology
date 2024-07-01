@@ -12,7 +12,8 @@ import {
 
 const props = defineProps(['id', 'onOk']);
 const param = reactive({
-  orderId: props.id || '1234567890',
+  // orderId: props.id || '1234567890',
+  orderId: props.id,
   dispatchContactPerson: "",
   sampleNum: "",
 });
@@ -103,8 +104,8 @@ onMounted(() => {
 
 <template>
   <!-- 用户注册资料 -->
-  <main>
-    <a-form style="margin: 10px 10px 20px 0" :model="param" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
+  <main class="supplier-wrap">
+    <a-form  style="margin: 10px 10px 20px 0" :model="param" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="订单号" :wrapperCol="{
         span: 7
       }">
@@ -147,4 +148,10 @@ onMounted(() => {
     <a-button type="primary" @click="onSubmit">提交</a-button>
   </main>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.supplier-wrap{
+  // .ant-modal-body{
+    overflow: hidden;
+  // }
+}
+</style>

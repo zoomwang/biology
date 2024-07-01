@@ -577,22 +577,21 @@ const needRecoveryMenus = ["不需要", "需要"]
         {{ record ? '已还款' : '未还款' }}
       </template>
     </a-table>
-    <a-modal v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="remark-wrap" v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       remarkVisible = false;
     }">
       <a-form
       ref="formRef"
       :model="formState"
       :rules="rules"
-      :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
       <a-form-item label="备注" name="remark">
         <a-textarea  v-model:value="formState.remark" />
       </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button style="" type="primary" @click="onRemarkSubmit">提交</a-button>
-      </a-form-item>
+      <!-- <a-form-item :wrapper-col="{ span: 14, offset: 4 }"> -->
+        <a-button type="primary" @click="onRemarkSubmit">提交</a-button>
+      <!-- </a-form-item> -->
     </a-form>
     </a-modal>
     <a-modal v-model:visible="remarkListVisible" width="50%" title="备注详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
@@ -615,17 +614,27 @@ const needRecoveryMenus = ["不需要", "需要"]
       </a-descriptions>
       <a-button style="margin-top:20px" type="primary" @click="onSubmit">确认寄样</a-button>
     </a-modal>
-    <a-modal class="width-40" v-model:visible="orderUploadVisible" title="结果上传" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-40 upload-wrap" v-model:visible="orderUploadVisible" title="结果上传" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       orderUploadVisible = false;
     }">
-      <UploadFile
+      <!-- <UploadFile
         :onSuccess="
           async(url) => {
             orderUpload.ossUrl = url;
           }
         "
-      />      
-      <a-button style="margin-top:20px" type="primary" @click="async() => {
+      />       -->
+      <a-form
+        ref="formRef"
+        :model="orderUpload"
+        :rules="rules"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-item label="oss链接" name="ossUrl">
+          <a-textarea  v-model:value="formState.ossUrl" />
+        </a-form-item>
+      </a-form>
+      <a-button style="margin-top:20px;" type="primary" @click="async() => {
         if (!orderUpload.ossUrl) {
           message.error('请先上传文件');
           return;
@@ -640,7 +649,7 @@ const needRecoveryMenus = ["不需要", "需要"]
             } else {
               message.error(res?.msg || '上传失败');
             }
-      }">确认寄样</a-button>
+      }">确认</a-button>
     </a-modal>
     <a-modal class="width-60" v-model:visible="orderFeeVisible" title="费用确认" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       orderFeeVisible = false;
@@ -669,4 +678,10 @@ const needRecoveryMenus = ["不需要", "需要"]
     </a-modal>
   </main>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.upload-wrap,.remark-wrap{
+  .ant-modal-body{
+    overflow: hidden;
+  }
+}
+</style>
