@@ -32,3 +32,7 @@ export const fetchCatalog = (params) => {
     return res;
   })
 }
+
+export const fetchConfigList = (params) => {
+  return api.post(`/sys/dynamic_form/fetch_order_template_list`, params);
+}
