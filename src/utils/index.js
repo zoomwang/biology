@@ -118,3 +118,19 @@ export function trimLeft(s){
 export const genUid = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
+
+export const genTreeParent = (list) => {
+  const valueMap = {};
+  const loop = (list, parent) => {
+    return (list || []).map(({ children, value }) => {
+      const node = (valueMap[value] = {
+        parent,
+        value
+      });
+      node.children = loop(children, node);
+      return node;
+    });
+  }
+  loop(list)
+  return valueMap
+}

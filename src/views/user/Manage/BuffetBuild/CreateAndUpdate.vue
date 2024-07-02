@@ -76,13 +76,15 @@ const onSubmit = async () => {
     message.success(isEdit.value ? "修改成功" : "新增成功");
 
     if (!isEdit.value) {
-      router.replace({
+      await router.replace({
         query: {
           ...route.query,
           typeId: data,
         },
-      });
+      })
+      
     }
+    getConfig()
   } catch (error) {
     console.error("submit error", error);
   } finally {

@@ -37,7 +37,7 @@
         </div>
       </a-checkbox-group>
       <a-tree-select
-        v-model:value="formState.projectType"
+        v-model:value="formState.projectSubType"
         show-search
         style="width: 100%"
         :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
@@ -79,8 +79,9 @@
   </a-form>
 </template>
 <script setup>
-import { reactive, toRaw, ref, onMounted, watch } from "vue";
+import { reactive, toRaw, ref, onMounted, watch, computed } from "vue";
 import { DETECT_CATEGORY_TYPES } from "@/utils/const";
+import { genTreeParent  } from "@/utils";
 import { fetchCatalog } from "@/services/buffet-build";
 import Editor from "@/components/Editor.vue";
 import Upload from "@/components/Upload.vue";
@@ -91,6 +92,18 @@ const labelCol = { style: { width: "150px" } };
 const wrapperCol = { span: 14 };
 // const userList = ref([]);
 const projectTypeTree = ref([]);
+const projectTypeTreeMap = computed(() => {
+  return genTreeParent(projectTypeTree.value)
+})
+function getNodeById(id) {
+  const nodes = [];
+  let current = projectTypeTreeMap.value[id];
+  while (current) {
+    nodes.unshift(current);
+    current = current.parent;
+  }
+  return nodes;
+}
 
 const formRef = ref();
 const formState = reactive({
@@ -102,6 +115,8 @@ const formState = reactive({
   deviceSuperintendent: undefined,
   notificationEmail: undefined,
   attention: undefined,
+  projectType: undefined,
+  projectSubType: undefined,
   // categorys: [],
   // subCategorys: {}
 });
@@ -121,13 +136,17 @@ function setFormValue(model) {
   Object.assign(formState, model);
 }
 function getFormValue() {
-  return { baseInfo: toRaw(formState) };
+  const baseInfo = toRaw(formState);
+  const nodes = getNodeById(baseInfo.projectSubType).map(item => item.value)
+  baseInfo.projectType = nodes[0]
+  return { baseInfo };
 }
 
 async function validate() {
   await formRef.value.validate();
   return getFormValue();
 }
+
 
 defineExpose({
   getFormValue,
