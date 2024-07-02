@@ -34,5 +34,26 @@ export const fetchCatalog = (params) => {
 }
 
 export const fetchConfigList = (params) => {
-  return api.post(`/sys/dynamic_form/fetch_order_template_list`, params);
+  return api.post(`/sys/dynamic_form/fetch_dynamic_form_config_list`, params).then(res => {
+    res.data.list = (res.data.list || []).map(item => {
+      const {baseInfo, detailInfo, extInfo, sampleQuestions, ...rest} = item
+      return {
+        ...baseInfo,
+        ...rest,
+      }
+    })
+    return res
+  })
+}
+
+export const deleteConfig = (params) => {
+  return api.post(`/sys/dynamic_form/delete_dynamic_form_config`, params)
+}
+
+export const shelveOnConfig = (params) => {
+  return api.post(`/sys/dynamic_form/set_listing_dynamic_form_config`, params)
+}
+
+export const shelveOffConfig = (params) => {
+  return api.post(`/sys/dynamic_form/set_un_listing_dynamic_form_config`, params)
 }
