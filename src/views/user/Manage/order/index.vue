@@ -172,26 +172,26 @@ const experieColumns =[
       customRender: "needRecovery",
     },
   },
-  {
-    title: "样品抵达时间",
-    dataIndex: "sampleArrivalTime",
-  },
-  {
-    title: "要求供应商出结果时间",
-    dataIndex: "supplierResultDeadline",
-  },
-  {
-    title: "承诺用户出结果时间",
-    dataIndex: "promisedUserResultTime",
-  },
+  // {
+  //   title: "样品抵达时间",
+  //   dataIndex: "sampleArrivalTime",
+  // },
+  // {
+  //   title: "要求供应商出结果时间",
+  //   dataIndex: "supplierResultDeadline",
+  // },
+  // {
+  //   title: "承诺用户出结果时间",
+  //   dataIndex: "promisedUserResultTime",
+  // },
   {
     title: "下单金额",
     dataIndex: "orderAmount",
   },
-  {
-    title: "供应商反馈",
-    dataIndex: "supplierFeedback",
-  },
+  // {
+  //   title: "供应商反馈",
+  //   dataIndex: "supplierFeedback",
+  // },
   {
     title: "是否已派单",
     dataIndex: "dispatch",
@@ -234,22 +234,22 @@ const completedColumns = [
     title: "下单金额",
     dataIndex: "orderAmount",
   },
-  {
-    title: "确认费用",
-    dataIndex: "confirmedCost",
-  },
-  {
-    title: "实际支付金额",
-    dataIndex: "actualPayment",
-  },
-  {
-    title: "完成时间",
-    dataIndex: "completionTime",
-  },
-  {
-    title: "订单时长",
-    dataIndex: "orderDuration",
-  },
+  // {
+  //   title: "确认费用",
+  //   dataIndex: "confirmedCost",
+  // },
+  // {
+  //   title: "实际支付金额",
+  //   dataIndex: "actualPayment",
+  // },
+  // {
+  //   title: "完成时间",
+  //   dataIndex: "completionTime",
+  // },
+  // {
+  //   title: "订单时长",
+  //   dataIndex: "orderDuration",
+  // },
   {
     title: "发票状态",
     dataIndex: "invoiceStatus",
@@ -277,8 +277,11 @@ const completedColumns = [
     },
   },
   {
-    title: "文件上传信息",
+    title: "是否已上传文件",
     dataIndex: "uploadFileInfo",
+    slots: {
+      customRender: "uploadFileInfo",
+    },
   },
   // {
   //   title: "是否已派单",
@@ -448,6 +451,11 @@ const needRecoveryMenus = ["不需要", "需要"]
       <template #status="{ text }">
         <span>
           {{ statusMenus[text] }}
+        </span>
+      </template>
+      <template #uploadFileInfo="{ text }">
+        <span>
+          {{ uploadFileInfo ? '已上传' : '未上传' }}
         </span>
       </template>
       <template #needRecovery="{ text }">
@@ -631,7 +639,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         :wrapper-col="wrapperCol"
       >
         <a-form-item label="oss链接" name="ossUrl">
-          <a-textarea  v-model:value="formState.ossUrl" />
+          <a-textarea  v-model:value="orderUpload.ossUrl" />
         </a-form-item>
       </a-form>
       <a-button style="margin-top:20px;" type="primary" @click="async() => {
@@ -646,8 +654,6 @@ const needRecoveryMenus = ["不需要", "需要"]
             if (res.code == 0) {
               message.success('上传成功');
               orderUploadVisible = false;
-            } else {
-              message.error(res?.msg || '上传失败');
             }
       }">确认</a-button>
     </a-modal>
