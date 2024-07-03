@@ -405,7 +405,6 @@ const needRecoveryMenus = ["不需要", "需要"]
       }">
         <a-date-picker v-model:value="param.startTime" style="width:140px" />
       </a-form-item>
-      <DollarCircleOutlined />
       <a-form-item label="订单结束时间" :wrapperCol="{
         span: 5
       }">
