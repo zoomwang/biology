@@ -622,7 +622,7 @@ const needRecoveryMenus = ["不需要", "需要"]
       </a-descriptions>
       <a-button style="margin-top:20px" type="primary" @click="onSubmit">确认寄样</a-button>
     </a-modal>
-    <a-modal class="width-40 upload-wrap" v-model:visible="orderUploadVisible" title="结果上传" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-40 upload-wrap" v-model:visible="orderUploadVisible" title="文件上传" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       orderUploadVisible = false;
     }">
       <!-- <UploadFile
