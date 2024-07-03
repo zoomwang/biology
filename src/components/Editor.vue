@@ -1,19 +1,8 @@
 <template>
   <div style="border: 1px solid #ccc" class="editor-wrap">
-    <Toolbar
-      style="border-bottom: 1px solid #ccc"
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      :mode="mode"
-    />
-    <Editor
-      :modelValue="valueHtml"
-      @onChange="handleChange"
-      :defaultConfig="editorConfig"
-      :mode="mode"
-      @onCreated="handleCreated"
-      class="editor-container"
-    />
+    <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+    <Editor :modelValue="valueHtml" @onChange="handleChange" :defaultConfig="editorConfig" :mode="mode"
+      @onCreated="handleCreated" @customUploadImg="handleCustomUploadImg" class="editor-container" />
   </div>
 </template>
 <script setup>
@@ -27,6 +16,8 @@ import {
 } from "vue";
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import { uploadFile } from "@/services/common";
+
 
 const valueHtml = defineModel("value");
 const props = defineProps({
@@ -41,7 +32,18 @@ const emit = defineEmits(["change"]);
 const toolbarConfig = {};
 const editorConfig = computed(() => ({
   placeholder: props.placeholder,
+  MENU_CONF: {
+    uploadImage: {
+      customUpload: async (resultFiles, insertImgFn) => {
+        const formData = new FormData();
+        formData.append("file", resultFiles);
+        const { data } = await uploadFile(formData)
+        insertImgFn(data.url)
+      },
+    }
+  }
 }));
+
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -59,13 +61,14 @@ const handleChange = (editor) => {
   emit("change", html);
   emit("update:value", html);
 };
-</script>    
+</script>
 
 <style lang="less" scoped>
 .editor-wrap {
   display: flex;
   flex-direction: column;
 }
+
 .editor-container {
   flex: 1;
   overflow: hidden;
