@@ -11,10 +11,10 @@
             <a-button type="link" :href="`/user/buffet-build/create-and-update?typeId=${record.orderTypeId}`">
               编辑
             </a-button>
-            <a-popconfirm v-if="!record.isListing" title="确定要上架吗?" @confirm="handleshelveOn(record)">
+            <a-popconfirm v-if="!record.isListing" title="确定要上架吗?" @confirm="handleShelveOn(record)">
               <a-button type="link">上架</a-button>
             </a-popconfirm>
-            <a-popconfirm v-if="record.isListing" title="确定要下架吗?" @confirm="handleshelveOff(record)">
+            <a-popconfirm v-if="record.isListing" title="确定要下架吗?" @confirm="handleShelveOff(record)">
               <a-button type="link">下架</a-button>
             </a-popconfirm>
             <a-popconfirm title="确定要删除吗?" @confirm="handleDelete(record)">
@@ -125,14 +125,14 @@ const handleDelete = async (row) => {
   refresh()
 }
 
-const handleshelveOn = async (row) => {
+const handleShelveOn = async (row) => {
   console.log(row)
   await shelveOnConfig({ orderTypeId: row.orderTypeId })
   message.success('操作成功');
   refresh()
 }
 
-const handleshelveOff = async (row) => {
+const handleShelveOff = async (row) => {
   console.log(row)
   await shelveOffConfig({ orderTypeId: row.orderTypeId })
   message.success('操作成功');
