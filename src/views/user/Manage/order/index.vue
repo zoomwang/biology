@@ -206,6 +206,25 @@ const experieColumns =[
       customRender: "sendSamples",
     },
   },
+  {
+    title: "费用",
+    slots: {
+      customRender: "feeData",
+    },
+  },
+  {
+    title: "上传",
+    slots: {
+      customRender: "uploadData",
+    },
+  },
+  {
+    title: "是否已上传文件",
+    dataIndex: "uploadFileInfo",
+    slots: {
+      customRender: "uploadFileInfo",
+    },
+  },
 ];
 
 const completedColumns = [
@@ -405,7 +424,6 @@ const needRecoveryMenus = ["不需要", "需要"]
       }">
         <a-date-picker v-model:value="param.startTime" style="width:140px" />
       </a-form-item>
-      <DollarCircleOutlined />
       <a-form-item label="订单结束时间" :wrapperCol="{
         span: 5
       }">
