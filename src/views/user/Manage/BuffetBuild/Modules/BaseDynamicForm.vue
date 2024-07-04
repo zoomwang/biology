@@ -18,7 +18,7 @@
     >
       <a-collapse v-model:activeKey="activeKey">
         <a-collapse-panel
-          v-for="(item, idx) in formState.sampleQuestions"
+          v-for="(item, idx) in formState.questions"
           :key="item.id"
           :header="`问题${idx + 1} - ${QUESTION_TYPES.get(item.type)}${
             item.label ? ' - ' + item.label : ''
@@ -33,7 +33,7 @@
               />
               <DoubleRightOutlined
                 :rotate="90"
-                :disabled="idx === formState.sampleQuestions.length - 1"
+                :disabled="idx === formState.questions.length - 1"
                 @click.stop="handleQuestionMoveDown(idx)"
               />
               <DeleteOutlined @click.stop="handleQuestionRemove(idx)" />
@@ -62,7 +62,7 @@ import {
   DoubleRightOutlined,
 } from "@ant-design/icons-vue";
 
-const props = defineProps({ model: Object });
+const props = defineProps({ model: Array });
 
 const activeKey = ref([]);
 
@@ -72,11 +72,11 @@ const questionTypeOptions = QUESTION_TYPES.toObjectArray();
 
 const formRef = ref();
 const formState = reactive({
-  sampleQuestions: [],
+  questions: [],
 });
 
 const relOptions = computed(() => {
-  return (formState.sampleQuestions || [])
+  return (formState.questions || [])
     .filter(item =>
       [QUESTION_TYPES.RADIO, QUESTION_TYPES.CHECKBOX].includes(item.type)
     )
@@ -84,7 +84,7 @@ const relOptions = computed(() => {
 });
 
 watch(
-  () => props.model?.sampleQuestions,
+  () => props.model,
   model => {
     setFormValue(model || []);
     activeKey.value = (model || []).map(item => item.id);
@@ -93,10 +93,10 @@ watch(
 );
 
 function setFormValue(model) {
-  formState.sampleQuestions = model || [];
+  formState.questions = model || [];
 }
 function getFormValue() {
-  return toRaw(formState);
+  return formState.questions;
 }
 
 async function validate() {
@@ -106,18 +106,18 @@ async function validate() {
 
 const handleQuestionAdd = type => {
   const questionItem = genQuestionItem(type);
-  formState.sampleQuestions.push(questionItem);
+  formState.questions.push(questionItem);
   activeKey.value.push(questionItem.id);
 };
 const handleQuestionRemove = index => {
-  const questionItem = formState.sampleQuestions[index];
-  if (index >= 0 && index < formState.sampleQuestions.length) {
-    formState.sampleQuestions.splice(index, 1);
+  const questionItem = formState.questions[index];
+  if (index >= 0 && index < formState.questions.length) {
+    formState.questions.splice(index, 1);
   }
   activeKey.value = activeKey.value.filter(key => key !== questionItem.id);
 };
 const handleQuestionMoveUp = idx => {
-  const items = formState.sampleQuestions;
+  const items = formState.questions;
   // 确保索引在有效范围内
   if (idx > 0 && idx < items.length) {
     // 交换当前元素和上一个元素
@@ -127,7 +127,7 @@ const handleQuestionMoveUp = idx => {
   }
 };
 const handleQuestionMoveDown = idx => {
-  const items = formState.sampleQuestions;
+  const items = formState.questions;
   // 确保索引在有效范围内，且不是最后一个元素
   if (idx >= 0 && idx < items.length - 1) {
     // 交换当前元素和下一个元素
