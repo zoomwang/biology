@@ -27,7 +27,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { usePagination } from "vue-request";
 import { message } from "ant-design-vue";
@@ -71,34 +71,32 @@ const columns = [
   },
 ];
 
-const total = ref(0);
 const queryData = params => {
-  return fetchConfigList(params).then(res => {
-    const list = res.data.list
-    console.log(list);
-    total.value = list.length;
-    return list;
-  });
+  return fetchConfigList(params).then(res => res.data)
 };
 
 const {
-  data: dataSource,
+  data,
   run,
   loading,
   pageSize,
   current,
+  total,
   refresh,
 } = usePagination(queryData, {
   defaultParams: [
     {
-      pageSize: 100,
+      pageSize: 20,
     },
   ],
   pagination: {
     currentKey: "curPage",
     pageSizeKey: "pageSize",
+    totalPageKey: 'data.total'
   },
 });
+
+const dataSource = computed(() => data.value?.list);
 
 const pagination = computed(() => ({
   total: total.value,
