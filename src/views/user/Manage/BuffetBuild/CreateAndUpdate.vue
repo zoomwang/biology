@@ -18,7 +18,8 @@ import { useRoute, useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 
 import BasicInfo from "./Modules/BasicInfo.vue";
-import Form1 from "./Modules/Form1.vue";
+import SampleQuestions from "./Modules/SampleQuestions.vue";
+import GlobalQuestions from "./Modules/GlobalQuestions.vue";
 import Form2 from "./Modules/Form2.vue";
 import DetailSetting from "./Modules/DetailSetting.vue";
 import {
@@ -40,7 +41,8 @@ const formRef = ref();
 const submitting = ref(false);
 const tabs = [
   { label1: "1", label: "基础信息", value: "BasicInfo", comp: BasicInfo },
-  { label1: "1", label: "下单页面一", value: "form1", comp: Form1 },
+  { label1: "1", label: "样品问题", value: "SampleQuestions", comp: SampleQuestions },
+  { label1: "1", label: "全局问题", value: "GlobalQuestions", comp: GlobalQuestions },
   { label1: "1", label: "下单页面二", value: "form2", comp: Form2 },
   {
     label1: "1",
@@ -62,8 +64,8 @@ const getConfig = async () => {
 const onSubmit = async () => {
   try {
     submitting.value = true;
-    const idx = tabs.findIndex(item => item.value === activeKey.value);
-    console.log(formRef.value);
+    // const idx = tabs.findIndex(item => item.value === activeKey.value);
+    // console.log(formRef.value);
 
     // const form = await formRef.value[0].validate();
     const form = formRef.value.reduce((sum, item) => {
