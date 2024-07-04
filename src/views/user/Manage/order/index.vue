@@ -473,7 +473,7 @@ const needRecoveryMenus = ["不需要", "需要"]
       </template>
       <template #uploadFileInfo="{ text }">
         <span>
-          {{ uploadFileInfo ? '已上传' : '未上传' }}
+          {{ text ? '已上传' : '未上传' }}
         </span>
       </template>
       <template #needRecovery="{ text }">
