@@ -225,6 +225,13 @@ const experieColumns =[
       customRender: "resultUploaded",
     },
   },
+  {
+    title: "操作",
+    key: "remark",
+    slots: {
+      customRender: "remark",
+    },
+  },
 ];
 
 const completedColumns = [
