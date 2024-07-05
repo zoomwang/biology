@@ -220,9 +220,9 @@ const experieColumns =[
   },
   {
     title: "是否已上传文件",
-    dataIndex: "uploadFileInfo",
+    dataIndex: "resultUploaded",
     slots: {
-      customRender: "uploadFileInfo",
+      customRender: "resultUploaded",
     },
   },
 ];
@@ -271,19 +271,19 @@ const completedColumns = [
   // },
   {
     title: "发票状态",
-    dataIndex: "invoiceStatus",
+    // dataIndex: "invoiceStatus",
     slots: {
       customRender: "invoiceStatus",
     },
   },
   {
     title: "还款状态",
-    dataIndex: "repaymentStatus",
+    // dataIndex: "repaymentStatus",
     slots: {
       customRender: "repaymentStatus",
     },
   },
-  {
+  /**{
     title: "费用",
     slots: {
       customRender: "feeData",
@@ -301,7 +301,7 @@ const completedColumns = [
     slots: {
       customRender: "uploadFileInfo",
     },
-  },
+  },***/
   // {
   //   title: "是否已派单",
   //   dataIndex: "dispatch",
@@ -450,6 +450,12 @@ const needRecoveryMenus = ["不需要", "需要"]
     >
       <template #feeData="{ text }">
         <DollarCircleOutlined style="cursor:pointer" @click="async()=>{
+          if (!text.resultUploaded) {
+            notification.error({
+              description: '请先上传文件',
+            });
+            return;
+          }
           orderFee.orderId = text?.orderId;
           const res = await determinefee({
             orderId: text?.orderId
@@ -471,7 +477,7 @@ const needRecoveryMenus = ["不需要", "需要"]
           {{ statusMenus[text] }}
         </span>
       </template>
-      <template #uploadFileInfo="{ text }">
+      <template #resultUploaded="{ text }">
         <span>
           {{ text ? '已上传' : '未上传' }}
         </span>
@@ -671,6 +677,7 @@ const needRecoveryMenus = ["不需要", "需要"]
             });
             if (res.code == 0) {
               message.success('上传成功');
+              getOrderList();
               orderUploadVisible = false;
             }
       }">确认</a-button>
@@ -694,6 +701,7 @@ const needRecoveryMenus = ["不需要", "需要"]
             });
             if (res.code == 0) {
               message.success('确认成功');
+              getOrderList();
               orderFeeVisible = false;
             } else {
               message.error(res?.msg || '确认失败');
