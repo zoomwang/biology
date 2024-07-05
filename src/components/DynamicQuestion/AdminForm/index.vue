@@ -285,7 +285,7 @@ export default {
       const editorJsx = (
         <a-form-item name={formState.value.valueMode}>
           <Editor
-            style="height: 320px"
+            style="height: 420px"
             v-model:value={formState.value[formState.value.valueMode]}
           ></Editor>
         </a-form-item>

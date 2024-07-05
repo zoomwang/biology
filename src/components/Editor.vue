@@ -2,7 +2,7 @@
   <div style="border: 1px solid #ccc" class="editor-wrap">
     <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
     <Editor :modelValue="valueHtml" @onChange="handleChange" :defaultConfig="editorConfig" :mode="mode"
-      @onCreated="handleCreated" @customUploadImg="handleCustomUploadImg" class="editor-container" />
+      @onCreated="handleCreated" class="editor-container" />
   </div>
 </template>
 <script setup>

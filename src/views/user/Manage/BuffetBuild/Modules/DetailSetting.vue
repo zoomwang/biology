@@ -7,21 +7,21 @@
   >
     <a-form-item label="测试项目">
       <Editor
-        style="height: 320px"
+        style="height: 420px"
         v-model:value="formState.testProject"
         placeholder="请输入"
       />
     </a-form-item>
     <a-form-item label="样品要求">
       <Editor
-        style="height: 320px"
+        style="height: 420px"
         v-model:value="formState.sampleRequirement"
         placeholder="请输入"
       />
     </a-form-item>
     <a-form-item label="结果展示">
       <Editor
-        style="height: 320px"
+        style="height: 420px"
         v-model:value="formState.resultShow"
         placeholder="请输入"
       />
@@ -51,7 +51,7 @@
               </a-form-item>
               <a-form-item label="解决方案">
                 <Editor
-                  style="height: 320px"
+                  style="height: 420px"
                   v-model:value="item.answer"
                   placeholder="请输入注意事项"
                 />
