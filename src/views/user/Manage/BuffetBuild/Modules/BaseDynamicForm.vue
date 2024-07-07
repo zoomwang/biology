@@ -1,14 +1,16 @@
 <template>
   <div style="margin-top: 12px;">
-    <a-space-compact block>
-      <a-button
-        v-for="item in questionTypeOptions"
-        :key="item.value"
-        @click="handleQuestionAdd(item.value)"
-      >
-        {{ item.label }}
-      </a-button>
-    </a-space-compact>
+    <a-affix :offset-top="20">
+      <a-space-compact block>
+        <a-button
+          v-for="item in questionTypeOptions"
+          :key="item.value"
+          @click="handleQuestionAdd(item.value)"
+        >
+          {{ item.label }}
+        </a-button>
+      </a-space-compact>
+    </a-affix>
     <a-form
       style="margin-top: 16px"
       ref="formRef"
