@@ -112,3 +112,8 @@ export const sendOrder = (param) =>
 export const addAssignOrder = (param) =>
   api.post(`/sys/order-mgt/assign-order/add`, param);
 
+/** 更新发票状态 */
+export const updateOrderProcess = (param) =>
+  api.post(`/sys/order-mgt/order-process/update`, param);
+
+
