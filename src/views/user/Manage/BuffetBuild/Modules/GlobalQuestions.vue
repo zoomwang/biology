@@ -1,5 +1,5 @@
 <template>
-  <BaseDynamicForm ref="formRef" :model="model.globalQuestions" />
+  <BaseDynamicForm ref="formRef" :questions="model.globalQuestions" />
 </template>
 
 <script setup >
@@ -12,7 +12,7 @@ const formRef = ref();
 
 function getFormValue() {
   const form = formRef.value.getFormValue()
-  return {globalQuestions: form}
+  return {globalQuestions: form.questions}
 }
 
 async function validate() {

@@ -1,5 +1,5 @@
 <template>
-  <BaseDynamicForm ref="formRef" :model="model.sampleQuestions" />
+  <BaseDynamicForm ref="formRef" :questions="model.sampleQuestions" :sampleNumberOption="(model.extInfo||{}).sampleNumberOption" showSampleQualtiyAffect />
 </template>
 
 <script setup >
@@ -12,7 +12,7 @@ const formRef = ref();
 
 function getFormValue() {
   const form = formRef.value.getFormValue()
-  return {sampleQuestions: form}
+  return {sampleQuestions: form.questions, sampleNumberOption: form.sampleNumberOption}
 }
 
 async function validate() {

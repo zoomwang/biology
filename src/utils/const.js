@@ -56,3 +56,9 @@ export const VALUE_TYPES = new EnumOptions([
   [2, '小数', 'DECIMAL'],
   [3, '字符', 'STRING'],
 ], 'value,label') 
+
+export const SAMPLE_QUALTITY_AFFECT_TYPES = new EnumOptions([
+  [1, '需要该问题，影响价格', 'AFFECT_PRICE'],
+  [2, '需要该问题，不影响价格', 'NO_AFFECT_PRICE'],
+  [3, '不需要该问题', 'NONE'],
+], 'value,label') 

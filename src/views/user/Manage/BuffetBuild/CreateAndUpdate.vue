@@ -54,6 +54,7 @@ const tabs = [
 const activeKey = ref(tabs[0].value);
 const buffetBuildData = reactive({
   baseInfo: {},
+  extInfo: {},
 });
 
 const getConfig = async () => {
@@ -72,9 +73,12 @@ const onSubmit = async () => {
       Object.assign(sum, item.getFormValue());
       return sum;
     }, {});
+    const extInfo = form.extInfo || buffetBuildData.extInfo || {}
+    extInfo.sampleNumberOption = form.sampleNumberOption
+    delete form.sampleNumberOption
     const { data } = await (isEdit.value
-      ? updateConfig({ ...form, orderTypeId: orderTypeId.value })
-      : createConfig({ ...form, orderTypeId: 0 }));
+      ? updateConfig({ ...form, extInfo, orderTypeId: orderTypeId.value })
+      : createConfig({ ...form, extInfo, orderTypeId: 0 }));
     message.success(isEdit.value ? "修改成功" : "新增成功");
 
     if (!isEdit.value) {
