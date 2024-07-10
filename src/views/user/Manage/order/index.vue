@@ -342,7 +342,7 @@ const labelCol = {
   },
 };
 const wrapperCol = {
-  span: 24,
+  span: 18,
 };
 const formState = reactive({
   orderId: "",
@@ -506,11 +506,13 @@ const needRecoveryMenus = ["不需要", "需要"]
         </span>
       </template>
       <template #resultUploaded="{ text }">
-        <span>
+        <span :style="{
+            color: text ? 'green': 'red'
+          }">
           {{ text.resultUploaded ? '已上传' : '未上传' }}
           <br />
           <a v-if="text.resultUploaded" target="_blank" :href="text.uploadFileInfo"
-            >下载文件</a
+            >下载</a
           >
         </span>
       </template>
@@ -571,6 +573,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
         <a-button
           type="link"
+          :disabled="!record.message"
           @click="() => {
             remarkOrderId = record.orderId;
             remarkListVisible = true;
@@ -641,7 +644,9 @@ const needRecoveryMenus = ["不需要", "需要"]
         </span>
       </template>
       <template #invoiceStatus="{ record }">
-        {{ record?.invoiceStatus ? '已开票' : '未开票' }}
+        <span :style="{
+            color: record?.invoiceStatus ? 'green': 'red'
+          }">{{ record?.invoiceStatus ? '已开票' : '未开票' }}</span>
         <a-button
           type="link"
           @click="() => {
@@ -655,7 +660,9 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
       </template>
       <template #repaymentStatus="{ record }">
-        {{ record?.repaymentStatus ? '已还款' : '未还款' }}
+        <span :style="{
+            color: record?.repaymentStatus ? 'green': 'red'
+          }">{{ record?.repaymentStatus ? '已还款' : '未还款' }}</span>
         <a-button
           type="link"
           @click="() => {
@@ -670,21 +677,21 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
       </template>
     </a-table>
-    <a-modal class="remark-wrap" v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="remark-wrap" v-model:visible="remarkVisible" width="200px" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       remarkVisible = false;
     }">
       <a-form
       ref="formRef"
       :model="formState"
-      :rules="rules"
-      :wrapper-col="wrapperCol"
+      :label-col="{ span: 1 }"
+      :wrapper-col="{ span: 16 }"
     >
       <a-form-item label="备注" name="remark">
         <a-textarea  v-model:value="formState.remark" />
       </a-form-item>
-      <!-- <a-form-item :wrapper-col="{ span: 14, offset: 4 }"> -->
+      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="onRemarkSubmit">提交</a-button>
-      <!-- </a-form-item> -->
+      </a-form-item>
     </a-form>
     </a-modal>
     <a-modal v-model:visible="remarkListVisible" width="50%" title="备注详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
@@ -769,7 +776,7 @@ const needRecoveryMenus = ["不需要", "需要"]
             }
       }">确认费用</a-button>
     </a-modal>
-    <a-modal class="width-60" v-model:visible="invoiceVisible" title="发票状态修改" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-60" v-model:visible="invoiceVisible" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       invoiceVisible = false;
     }">
       <a-form
@@ -801,7 +808,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         }">确认费用</a-button>
       </a-form>
     </a-modal>
-    <a-modal class="width-60" v-model:visible="repaymentVisible" title="还款状态修改" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="width-60" v-model:visible="repaymentVisible" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       repaymentVisible = false;
     }">
       <a-form
