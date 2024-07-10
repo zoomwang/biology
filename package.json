@@ -10,12 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@formily/core": "^2.3.1",
     "@formily/vue": "^2.3.1",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "ant-design-vue": "^4.0.0-rc.6",
-    "@ant-design/icons-vue": "^7.0.1",
     "antd": "^5.11.0",
     "axios": "^1.6.0",
     "dayjs": "^1.11.10",
@@ -30,6 +30,7 @@
     "unplugin-vue-components": "^0.26.0",
     "vue": "^3.3.4",
     "vue-area-cascader": "^1.0.0",
+    "vue-dompurify-html": "^5.1.0",
     "vue-request": "^2.0.4",
     "vue-router": "^4.2.5"
   },

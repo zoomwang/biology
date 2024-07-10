@@ -1847,6 +1847,11 @@ dompurify@^2.2.0:
   resolved "https://registry.npmmirror.com/dompurify/-/dompurify-2.4.7.tgz"
   integrity sha512-kxxKlPEDa6Nc5WJi+qRgPbOAbgTpSULL+vI3NUXsZMlkJxTqYI9wg5ZTay2sFrdZRWHPWNi+EdAhcJf81WtoMQ==
 
+dompurify@^3.0.0:
+  version "3.1.6"
+  resolved "https://registry.npmmirror.com/dompurify/-/dompurify-3.1.6.tgz#43c714a94c6a7b8801850f82e756685300a027e2"
+  integrity sha512-cTOAhc36AalkjtBpfG6O8JimdTMWNXjiePT2xQH/ppBGi/4uIpmj8eKyIkMJErXWARyINV/sB38yf8JCLF5pbQ==
+
 dot-case@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmmirror.com/dot-case/-/dot-case-3.0.4.tgz#9b2b670d00a431667a8a75ba29cd1b98809ce751"
@@ -4415,6 +4420,13 @@ vue-demi@latest:
   version "0.14.7"
   resolved "https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.7.tgz"
   integrity sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==
+
+vue-dompurify-html@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.npmmirror.com/vue-dompurify-html/-/vue-dompurify-html-5.1.0.tgz#7f720ad0043804642af7d65d4e002c574ce3c951"
+  integrity sha512-616o2/PBdOLM2bwlRWLdzeEC9NerLkwiudqNgaIJ5vBQWXec+u7Kuzh+45DtQQrids67s4pHnTnJZLVfyPMxbA==
+  dependencies:
+    dompurify "^3.0.0"
 
 vue-frag@^1.1.4:
   version "1.4.3"

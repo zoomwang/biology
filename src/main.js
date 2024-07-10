@@ -13,10 +13,12 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 dayjs.locale('zh-cn');
 
+import VueDOMPurifyHTML from 'vue-dompurify-html';
 const app = createApp(App);
 app.config.globalProperties.$http = axios;
 
 app.use(router);
 // app.use(Antd).mount('#app');
+app.use(VueDOMPurifyHTML);
 
 app.mount('#app')
