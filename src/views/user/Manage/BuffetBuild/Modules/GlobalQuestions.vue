@@ -6,7 +6,7 @@
 import { ref, reactive, toRaw, watch, computed } from "vue";
 import BaseDynamicForm from './BaseDynamicForm.vue'
 
-const props = defineProps({ model: Array });
+const props = defineProps({ model: Object });
 
 const formRef = ref();
 

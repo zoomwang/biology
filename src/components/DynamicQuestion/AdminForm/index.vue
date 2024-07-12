@@ -40,25 +40,33 @@ export default {
       { immediate: true }
     );
 
-
     const currentRelIdOptions = computed(() => {
-      return (props.relOptions)
-        .filter(item => item.id !== props.model.id)
+      return props.relOptions.filter(item => item.id !== props.model.id);
     });
     const currentRelValueOptions = computed(() => {
-      return currentRelIdOptions.value.find(item => item.id === formState.value.dep.depId)?.options || []
-    })
-    watch(() => currentRelIdOptions.value, (options) => {
-      if(!options.includes(formState.value.dep.depId)) {
-        formState.value.dep.depId = ''
-        formState.value.dep.value = ''
+      return (
+        currentRelIdOptions.value.find(
+          item => item.id === formState.value.dep.depId
+        )?.options || []
+      );
+    });
+    watch(
+      () => currentRelIdOptions.value,
+      options => {
+        if (!options.includes(formState.value.dep.depId)) {
+          formState.value.dep.depId = "";
+          formState.value.dep.value = "";
+        }
       }
-    })  
-    watch(( ) => currentRelValueOptions.value, (options) => {
-      if(!options.includes(formState.value.dep.value)) {
-        formState.value.dep.value = ''
+    );
+    watch(
+      () => currentRelValueOptions.value,
+      options => {
+        if (!options.includes(formState.value.dep.value)) {
+          formState.value.dep.value = "";
+        }
       }
-    })
+    );
 
     const rules = {
       required: { required: true, message: "必填项" },
@@ -121,23 +129,20 @@ export default {
         <a-form-item name="dep.depId">
           <a-select
             v-model:value={formState.value.dep.depId}
-            placeholder="清选择前置条件问题"
-            options={currentRelIdOptions}
-            field-names={{ label: 'label', value: 'id', options: 'children' }}
-          >
-      
-          </a-select>
+            placeholder="请选择前置条件问题"
+            options={currentRelIdOptions.value}
+            field-names={{ label: "label", value: "id", options: "children" }}
+          ></a-select>
         </a-form-item>
       );
       const relValue = (
         <a-form-item name="dep.value">
           <a-select
             v-model:value={formState.value.dep.value}
-            placeholder="清选择前置条件的问题选中值"
-            options={currentRelValueOptions}
-            field-names={{ label: 'label', value: 'id' }}
-          >
-          </a-select>
+            placeholder="请选择前置条件的问题选中值"
+            options={currentRelValueOptions.value}
+            field-names={{ label: "label", value: "id" }}
+          ></a-select>
         </a-form-item>
       );
       const relJsx = (
@@ -174,7 +179,7 @@ export default {
         <a-form-item label="属性类型" name="valueType">
           <a-select
             v-model:value={formState.value.valueType}
-            placeholder="清选择属性类型"
+            placeholder="请选择属性类型"
             style="width: 100%"
             options={valueTypeOptions}
           />
@@ -209,7 +214,7 @@ export default {
         <a-form-item label="属性类型" name="valueType">
           <a-select
             v-model:value={formState.value.valueType}
-            placeholder="清选择属性类型"
+            placeholder="请选择属性类型"
             style="width: 100%"
             options={valueTypeOptions}
           />
