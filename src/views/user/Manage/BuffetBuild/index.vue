@@ -7,7 +7,10 @@
       @change="handleTableChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
-          <a-space :gap="4">
+          <a-space :size="0">
+            <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/detail`">
+              预览详情
+            </a-button>
             <a-button type="link" :href="`/user/buffet-build/create-and-update?typeId=${record.orderTypeId}`">
               编辑
             </a-button>
