@@ -53,7 +53,7 @@ export default {
     watch(
       () => currentRelIdOptions.value,
       options => {
-        if (!options.includes(formState.value.dep.depId)) {
+        if (!options.some(option => option.id === formState.value.dep.depId)) {
           formState.value.dep.depId = "";
           formState.value.dep.value = "";
         }
@@ -62,7 +62,7 @@ export default {
     watch(
       () => currentRelValueOptions.value,
       options => {
-        if (!options.includes(formState.value.dep.value)) {
+        if (!options.some(option => option.id === formState.value.dep.value)) {
           formState.value.dep.value = "";
         }
       }
