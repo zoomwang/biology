@@ -31,7 +31,9 @@
             </a-space>
           </template>
           <div style="margin-left: -16px">
-            <DynamicQuestionForm :model="item" :rel-options="relOptions" :type="item.type"></DynamicQuestionForm>
+            <a-skeleton :loading="item.loading">
+              <DynamicQuestionForm v-if="!item.loading" :model="item" :rel-options="relOptions" :type="item.type"></DynamicQuestionForm>
+            </a-skeleton>
           </div>
         </a-collapse-panel>
       </a-collapse>
@@ -39,7 +41,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, toRaw, watch, computed } from "vue";
+import { ref, reactive, toRaw, watch, computed, nextTick } from "vue";
 import { QUESTION_TYPES, SAMPLE_QUALTITY_AFFECT_TYPES } from "@/utils/const";
 import DynamicQuestionForm from "@/components/DynamicQuestion/AdminForm/index.vue";
 import { genQuestionItem } from "@/components/DynamicQuestion/utils";
@@ -88,8 +90,14 @@ watch(
 );
 
 function setFormValue(questions, sampleNumberOption) {
-  formState.questions = questions || [];
+  questions.forEach((item, idx) => {
+    item.loading = idx < 2 ? false : true
+  })
+  formState.questions = (questions || [])
   formState.sampleNumberOption = sampleNumberOption;
+  setTimeout(() => {
+    formState.questions.forEach((item) => item.loading = false)
+  }, 1500)
 }
 function getFormValue() {
   return toRaw(formState);
@@ -153,7 +161,7 @@ defineExpose({
 }
 
 .inner-form-item {
-  &::v-deep {
+  &::deep {
     .ant-form-item-label {
       padding-top: 4px;
       padding-bottom: 0;
