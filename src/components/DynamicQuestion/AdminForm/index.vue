@@ -251,7 +251,7 @@ export default {
       ];
     };
     const renderSelect = () => {
-      return renderOptions({ showKeys: "price" });
+      return renderOptions({ showKeys: "price,isPriceMode" });
     };
     const renderFileUpload = () => {
       const slots = {
