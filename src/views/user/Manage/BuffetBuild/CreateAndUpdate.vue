@@ -1,5 +1,5 @@
 <template>
-  <a-form>
+  <a-form class="buffet-build-form">
     <a-tabs v-model:activeKey="activeKey" type="card">
       <a-tab-pane v-for="item in tabs" :key="item.value" :tab="item.label">
         <component ref="formRef" :is="item.comp" :model="buffetBuildData" />
@@ -105,8 +105,16 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style lang="less">
 .ant-menu-root {
   /* display: none; */
+}
+.buffet-build-form {
+  table {
+    border-spacing: 0;
+    td,th {
+      border-width: 1px !important ;
+    }
+  }
 }
 </style>

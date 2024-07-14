@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="buffet-detail">
     <a-spin :spinning="loading">
       <a-descriptions layout="vertical" bordered v-if="!loading">
         <a-descriptions-item :span="3" label="设备名称">{{
@@ -18,11 +18,7 @@
           <span v-dompurify-html="detailInfo.resultShow"></span>
         </a-descriptions-item>
         <a-descriptions-item :span="3" label="常见问题" v-if="qaList.length">
-          <a-list
-            size="small"
-            :bordered="false"
-            :data-source="qaList"
-          >
+          <a-list size="small" :bordered="false" :data-source="qaList">
             <template #renderItem="{ item }">
               <a-list-item>
                 <div>
@@ -30,7 +26,10 @@
                     <QuestionCircleOutlined />
                     <h2>{{ item.question }}</h2>
                   </a-space>
-                  <div style="margin: 16px 0" v-dompurify-html="item.answer"></div>
+                  <div
+                    style="margin: 16px 0"
+                    v-dompurify-html="item.answer"
+                  ></div>
                 </div>
               </a-list-item>
             </template>
@@ -52,7 +51,7 @@ const { orderTypeId } = route.params;
 console.log(11, orderTypeId);
 
 const { data, loading, run } = useRequest(
-  () => fetchConfig({ orderTypeId }).then(res => res.data),
+  () => fetchConfig({ orderTypeId }).then((res) => res.data),
   {
     manual: true,
   }
@@ -61,10 +60,26 @@ const { data, loading, run } = useRequest(
 const baseInfo = computed(() => data.value?.baseInfo || {});
 const detailInfo = computed(() => data.value?.detailInfo || {});
 const qaList = computed(() => {
-  return (detailInfo.value.qaList || []).filter(item => item.question)
+  return (detailInfo.value.qaList || []).filter((item) => item.question);
 });
 
 onMounted(() => {
   run();
 });
 </script>
+
+<style lang="less">
+.buffet-detail {
+  table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    th,
+    td {
+      border: 1px solid #d9d9d9;
+      line-height: 1.5;
+      min-width: 30px;
+      padding: 3px 5px;
+    }
+  }
+}
+</style>
