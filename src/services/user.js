@@ -59,3 +59,7 @@ api.get(`/sys/user/credit`);
 /** 获取账户余额 */
 export const getAmount = () =>
 api.get(`/sys/user/amount`);
+
+/** 获取用户是否管理员信息 */
+export const getUserIsPriviage = () =>
+  api.get(`/sys/user/check-priviage`);
