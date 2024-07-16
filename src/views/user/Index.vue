@@ -15,6 +15,7 @@ import Store from './Store.vue';
 import ManageOrder from './Manage/order/Index.vue';
 import ManageSupplier from './Manage/supplier/index.vue';
 import ManageUser from './Manage/user/index.vue';
+import ManageSQL from './Manage/sql/index.vue';
 import { reactive } from "vue";
 import { menus } from './config';
 import router from "../../router";
@@ -110,6 +111,7 @@ onMounted(() => {
         <ManageSupplier v-if="state.selectedKeys.includes('12')" />
         <ManageOrder v-if="state.selectedKeys.includes('13')" />
         <ManageUser v-if="state.selectedKeys.includes('14')" />
+        <ManageSQL v-if="state.selectedKeys.includes('15')" />
       </a-card>
     </div>
   </main>

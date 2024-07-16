@@ -116,4 +116,6 @@ export const addAssignOrder = (param) =>
 export const updateOrderProcess = (param) =>
   api.post(`/sys/order-mgt/order-process/update`, param);
 
-
+/** SQL查询日志 */
+export const getSql = (param) =>
+  api.post(`/sys/sql/list`, param);
