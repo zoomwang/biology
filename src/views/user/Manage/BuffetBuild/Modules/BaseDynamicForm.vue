@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 6px;">
+  <div style="margin-top: 6px;" class="base-dynamic-form">
     <div style="margin-bottom: 12px">
       <p>1.点击问题类型可添加问题到右侧。</p>
       <p>2.单选问题或多选问题可以作为其他问题的前置条件。</p>
@@ -157,22 +157,25 @@ defineExpose({
 });
 </script>
 
-<style scoped lang="scss">
-.flex {
-  display: flex;
-}
+<style lang="less">
+.base-dynamic-form {
+  .ant-form-item-label label {
+    pointer-events: none;
+  }
+  .flex {
+    display: flex;
+  }
 
-.flex-col {
-  flex-direction: column;
-}
+  .flex-col {
+    flex-direction: column;
+  }
 
-.items-center {
-  align-items: center;
-}
+  .items-center {
+    align-items: center;
+  }
 
-.inner-form-item {
-  &::deep {
-    .ant-form-item-label {
+  .inner-form-item {
+    &.ant-form-item-label {
       padding-top: 4px;
       padding-bottom: 0;
       margin-right: 8px;

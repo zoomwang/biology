@@ -166,7 +166,6 @@ const onFinish = (values: any) => {
 };
 
 const handleCheckedChange = (index: number) => {
-  debugger;
   if (!isMultipleControl.value) {
     dynamicValidateForm.options.forEach((option, idx) => {
       if (idx !== index) {
