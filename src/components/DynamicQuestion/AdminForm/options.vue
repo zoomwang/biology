@@ -36,7 +36,10 @@
           :label-col="labelAutoWidthCol"
           label="默认选中"
         >
-          <a-checkbox v-model:checked="option.checked" />
+          <a-checkbox
+            @change="handleCheckedChange(index)"
+            v-model:checked="option.checked"
+          />
         </a-form-item>
         <a-form-item
           v-if="showKeyMap.required"
@@ -77,18 +80,19 @@
   </a-form>
 </template>
 <script lang="ts" setup>
-import { PropType, computed, reactive,watch, ref } from "vue";
+import { PropType, computed, reactive, watch, ref } from "vue";
 import {
   MinusCircleOutlined,
   PlusCircleOutlined,
   DoubleRightOutlined,
 } from "@ant-design/icons-vue";
 import type { FormInstance } from "ant-design-vue";
-import { genOption, Option  } from "../utils";
+import { genOption, Option, QuestionType, QUESTION_TYPES } from "../utils";
 
 const options = defineModel<Option[]>("options", { required: true });
 
 const props = defineProps({
+  type: Number as PropType<QuestionType>,
   showKeys: {
     type: [Array, String] as PropType<string[] | string>, // 接受数组或字符串类型
     default: () => [], // 默认值为空数组
@@ -109,20 +113,26 @@ const showKeyMap = computed(() => {
     isPriceMode: shouldShowKey("isPriceMode"),
   };
 });
+const isMultipleControl = computed(() => {
+  return props.type === QUESTION_TYPES.CHECKBOX;
+});
 
 const labelAutoWidthCol = {
   style: { width: "auto", minWidth: "auto !important" },
 };
-
 
 const formRef = ref<FormInstance>();
 const dynamicValidateForm = reactive<{ options: Option[] }>({
   options: [],
 });
 
-watch(() => options.value, (options: Option[]) => {
-  dynamicValidateForm.options = options
-},{immediate: true})
+watch(
+  () => options.value,
+  (options: Option[]) => {
+    dynamicValidateForm.options = options;
+  },
+  { immediate: true }
+);
 
 const removeOption = (idx: number) => {
   dynamicValidateForm.options.splice(idx, 1);
@@ -153,5 +163,16 @@ const moveDown = (idx: number) => {
 const onFinish = (values: any) => {
   console.log("Received values of form:", values);
   console.log("dynamicValidateForm.users:", dynamicValidateForm.options);
+};
+
+const handleCheckedChange = (index: number) => {
+  debugger;
+  if (!isMultipleControl.value) {
+    dynamicValidateForm.options.forEach((option, idx) => {
+      if (idx !== index) {
+        option.checked = false;
+      }
+    });
+  }
 };
 </script>

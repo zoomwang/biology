@@ -33,7 +33,7 @@ export const VALUE_MODE_TYPES = new EnumOptions(
 );
 
 type ValueMode = (typeof VALUE_MODE_TYPES)[keyof typeof VALUE_MODE_TYPES];
-type QuestionType = (typeof QUESTION_TYPES)[keyof typeof QUESTION_TYPES];
+export type QuestionType = (typeof QUESTION_TYPES)[keyof typeof QUESTION_TYPES];
 
 export interface Option {
   id: string;
@@ -93,7 +93,7 @@ export const genQuestionItem = (type: QuestionType): QuestionItem => {
       QUESTION_TYPES.SELECT,
     ].includes(type)
       ? [genOption()]
-      : undefined,
+      : [],
     valueMode: VALUE_MODE_TYPES.PLACEHOLDER,
     defaultValue: "",
     placeholder: "",

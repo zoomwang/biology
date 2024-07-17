@@ -72,10 +72,11 @@ export default {
       required: { required: true, message: "必填项" },
     };
 
-    const renderOptions = ({ showKeys = "" } = {}) => {
+    const renderOptions = ({ showKeys = "", type="" } = {}) => {
       return (
         <a-form-item name="options" label="选项">
           <Options
+            type={type}
             v-model:options={formState.value.options}
             show-keys={showKeys}
           ></Options>
@@ -169,10 +170,10 @@ export default {
     };
 
     const renderRadio = () => {
-      return renderOptions({ showKeys: "price,isPriceMode" });
+      return renderOptions({ showKeys: "price,checked,isPriceMode", type: QUESTION_TYPES.RADIO });
     };
     const renderCheckbox = () => {
-      return renderOptions({ showKeys: "price,checked,required,isPriceMode" });
+      return renderOptions({ showKeys: "price,checked,required,isPriceMode", type: QUESTION_TYPES.CHECKBOX });
     };
     const renderText = () => {
       const valueTypeJsx = (

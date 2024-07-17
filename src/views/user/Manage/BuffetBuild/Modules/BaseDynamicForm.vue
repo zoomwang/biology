@@ -118,9 +118,10 @@ const handleQuestionAdd = type => {
   activeKey.value.push(questionItem.id);
 };
 const handleQuestionCopy = (index) => {
-  const questionItem = {...formState.questions[index], id: genUid()};
-  formState.questions.splice(index + 1, 0, questionItem);
-  activeKey.value.push(questionItem.id);
+  const  questionItem = formState.questions[index]
+  const copyQuestionItem = {...questionItem, id: genUid(), options: (questionItem.options||[]).map(item => ({...item, id: genUid()}))};
+  formState.questions.splice(index + 1, 0, copyQuestionItem);
+  activeKey.value.push(copyQuestionItem.id);
 };
 const handleQuestionRemove = index => {
   const questionItem = formState.questions[index];
