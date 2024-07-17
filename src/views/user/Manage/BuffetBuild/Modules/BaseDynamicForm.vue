@@ -24,10 +24,11 @@
           }`">
           <template #extra>
             <a-space>
-              <DoubleRightOutlined :rotate="-90" :disabled="idx === 0" @click.stop="handleQuestionMoveUp(idx)" />
-              <DoubleRightOutlined :rotate="90" :disabled="idx === formState.questions.length - 1"
+              <DoubleRightOutlined title="上移" :rotate="-90" :disabled="idx === 0" @click.stop="handleQuestionMoveUp(idx)" />
+              <DoubleRightOutlined title="下移" :rotate="90" :disabled="idx === formState.questions.length - 1"
                 @click.stop="handleQuestionMoveDown(idx)" />
-              <DeleteOutlined @click.stop="handleQuestionRemove(idx)" />
+              <CopyOutlined title="复制" @click.stop="handleQuestionCopy(idx)" />
+              <DeleteOutlined title="删除" @click.stop="handleQuestionRemove(idx)" />
             </a-space>
           </template>
           <div style="margin-left: -16px">
@@ -45,9 +46,12 @@ import { ref, reactive, toRaw, watch, computed, nextTick } from "vue";
 import { QUESTION_TYPES, SAMPLE_QUALTITY_AFFECT_TYPES } from "@/utils/const";
 import DynamicQuestionForm from "@/components/DynamicQuestion/AdminForm/index.vue";
 import { genQuestionItem } from "@/components/DynamicQuestion/utils";
+import {genUid} from "@/utils";
+
 import {
   DeleteOutlined,
   DoubleRightOutlined,
+  CopyOutlined,
 } from "@ant-design/icons-vue";
 
 const props = defineProps({
@@ -111,6 +115,11 @@ async function validate() {
 const handleQuestionAdd = type => {
   const questionItem = genQuestionItem(type);
   formState.questions.push(questionItem);
+  activeKey.value.push(questionItem.id);
+};
+const handleQuestionCopy = (index) => {
+  const questionItem = {...formState.questions[index], id: genUid()};
+  formState.questions.splice(index + 1, 0, questionItem);
   activeKey.value.push(questionItem.id);
 };
 const handleQuestionRemove = index => {
