@@ -62,6 +62,7 @@ export interface QuestionItem {
   maxValue?: number;
   templateFile: string;
   fileAccessExt: string;
+  loading?: boolean;
 }
 
 export const genOption = (): Option => {
@@ -100,5 +101,6 @@ export const genQuestionItem = (type: QuestionType): QuestionItem => {
     maxValue: undefined,
     templateFile: "",
     fileAccessExt: "",
+    loading: false,
   };
 };
