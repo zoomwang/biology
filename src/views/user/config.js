@@ -81,6 +81,10 @@ export const menus = [{
   label: "用户管理",
   value: "14",
   type: "superManage"
+},{
+  label: "sql管理",
+  value: "15",
+  type: "superManage"
 }];
 
 export const identity = [{

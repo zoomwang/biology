@@ -1,6 +1,7 @@
 <script setup>
 import {
-  ref
+  ref,
+  onMounted
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import UserInfo from './Userinfo.vue';
@@ -14,9 +15,11 @@ import Store from './Store.vue';
 import ManageOrder from './Manage/order/Index.vue';
 import ManageSupplier from './Manage/supplier/index.vue';
 import ManageUser from './Manage/user/index.vue';
+import ManageSQL from './Manage/sql/index.vue';
 import { reactive } from "vue";
 import { menus } from './config';
 import router from "../../router";
+import { getUserIsPriviage } from "../../services/user";
 
 const routers = useRouter();
 const route = useRoute();
@@ -25,13 +28,20 @@ const state = reactive({
   theme: "light",
   selectedKeys: [route.query.selectedKeys || "1"],
   openKeys: ["sub1"],
+  userIsPriviage: false,
 });
-const drawerVisible = ref(false);
+// const drawerVisible = ref(false);
 const map = reactive({
   "userData": "userData",
   "userIntegral": "userIntegral"
 });
-
+const getUserIsPriviages = async() => {
+  const res = await getUserIsPriviage();
+  if (res?.code == 0) state.userIsPriviage = res.data;
+}
+onMounted(() => {
+  getUserIsPriviages();
+});
 </script>
 
 <template>
@@ -79,7 +89,7 @@ const map = reactive({
           </template>
         </a-menu-item-group>
       </a-sub-menu>
-      <a-sub-menu key="sub5">
+      <a-sub-menu key="sub5" v-if="state.userIsPriviage">
         <template #title><span class="title">管理员菜单</span></template>
         <a-menu-item-group>
           <template v-for="item in menus" :key="item.value">
@@ -101,6 +111,7 @@ const map = reactive({
         <ManageSupplier v-if="state.selectedKeys.includes('12')" />
         <ManageOrder v-if="state.selectedKeys.includes('13')" />
         <ManageUser v-if="state.selectedKeys.includes('14')" />
+        <ManageSQL v-if="state.selectedKeys.includes('15')" />
       </a-card>
     </div>
   </main>

@@ -15,8 +15,12 @@ import {
   addDetermineFee,
   sendOrder,
   deleteOrder,
-  deleteSendOrder
+  deleteSendOrder,
+  updateOrderProcess
 } from "../../../../services/manage";
+import {
+  getOrderInfo,
+} from "../../../../services/process";
 import { notification, message } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import RemarkList from './RemarkList.vue'
@@ -27,6 +31,8 @@ const drawerVisible = ref(false);
 const assignOrderVisible = ref(false);
 const remarkVisible = ref(false);
 const remarkListVisible = ref(false);
+const invoiceVisible = ref(false);
+const repaymentVisible = ref(false);
 const supplierListVisible = ref(false);
 const orderUploadVisible = ref(false);
 const orderFeeVisible = ref(false);
@@ -37,6 +43,11 @@ const supplierDetail = ref({});
 const orderUpload = ref({
   orderId: '',
   ossUrl: '',
+});
+const invoiceData = ref({
+  orderId: '',
+  invoiceStatus: '',
+  repaymentStatus: '',
 });
 const orderFee = ref({
   orderId: '',
@@ -52,6 +63,7 @@ const param = reactive({
   param: {},
   status: 0,
 });
+
 
 // const sendSample = async(record) => {
 //   try {
@@ -80,6 +92,9 @@ const peddingColumns =[
     title: "订单号",
     dataIndex: "orderId",
     key: "orderId",
+    slots: {
+      customRender: "orderId",
+    },
   },
   {
     title: "是否需要回收",
@@ -164,6 +179,9 @@ const experieColumns =[
     title: "订单号",
     dataIndex: "orderId",
     key: "orderId",
+    slots: {
+      customRender: "orderId",
+    },
   },
   {
     title: "是否需要回收",
@@ -206,6 +224,32 @@ const experieColumns =[
       customRender: "sendSamples",
     },
   },
+  {
+    title: "费用",
+    slots: {
+      customRender: "feeData",
+    },
+  },
+  {
+    title: "上传",
+    slots: {
+      customRender: "uploadData",
+    },
+  },
+  {
+    title: "是否已上传文件",
+    // dataIndex: "resultUploaded",
+    slots: {
+      customRender: "resultUploaded",
+    },
+  },
+  {
+    title: "操作",
+    key: "remark",
+    slots: {
+      customRender: "remark",
+    },
+  },
 ];
 
 const completedColumns = [
@@ -225,6 +269,9 @@ const completedColumns = [
     title: "订单号",
     dataIndex: "orderId",
     key: "orderId",
+    slots: {
+      customRender: "orderId",
+    },
   },
   {
     title: "预约人",
@@ -252,19 +299,19 @@ const completedColumns = [
   // },
   {
     title: "发票状态",
-    dataIndex: "invoiceStatus",
+    // dataIndex: "invoiceStatus",
     slots: {
       customRender: "invoiceStatus",
     },
   },
   {
     title: "还款状态",
-    dataIndex: "repaymentStatus",
+    // dataIndex: "repaymentStatus",
     slots: {
       customRender: "repaymentStatus",
     },
   },
-  {
+  /**{
     title: "费用",
     slots: {
       customRender: "feeData",
@@ -282,7 +329,7 @@ const completedColumns = [
     slots: {
       customRender: "uploadFileInfo",
     },
-  },
+  },***/
   // {
   //   title: "是否已派单",
   //   dataIndex: "dispatch",
@@ -295,7 +342,7 @@ const labelCol = {
   },
 };
 const wrapperCol = {
-  span: 24,
+  span: 18,
 };
 const formState = reactive({
   orderId: "",
@@ -431,6 +478,12 @@ const needRecoveryMenus = ["不需要", "需要"]
     >
       <template #feeData="{ text }">
         <DollarCircleOutlined style="cursor:pointer" @click="async()=>{
+          if (!text.resultUploaded) {
+            notification.error({
+              description: '请先上传文件',
+            });
+            return;
+          }
           orderFee.orderId = text?.orderId;
           const res = await determinefee({
             orderId: text?.orderId
@@ -452,9 +505,15 @@ const needRecoveryMenus = ["不需要", "需要"]
           {{ statusMenus[text] }}
         </span>
       </template>
-      <template #uploadFileInfo="{ text }">
-        <span>
-          {{ uploadFileInfo ? '已上传' : '未上传' }}
+      <template #resultUploaded="{ text }">
+        <span :style="{
+            color: text ? 'green': 'red'
+          }">
+          {{ text.resultUploaded ? '已上传' : '未上传' }}
+          <br />
+          <a v-if="text.resultUploaded" target="_blank" :href="text.uploadFileInfo"
+            >下载</a
+          >
         </span>
       </template>
       <template #needRecovery="{ text }">
@@ -514,6 +573,7 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
         <a-button
           type="link"
+          :disabled="!record.message"
           @click="() => {
             remarkOrderId = record.orderId;
             remarkListVisible = true;
@@ -571,34 +631,67 @@ const needRecoveryMenus = ["不需要", "需要"]
         >
         </a-popconfirm>
       </template>
-      <template #action="{ record }">
-        <!-- <space> -->
-        <a-button type="text" @click="showModal(record.orderId)"
-          >订单详情</a-button
-        >
+      <template #orderId="{ text }">
+        <span>
+          {{ text }}
+          <a-button
+            type="link"
+            @click="() => {
+              showModal(text)
+            }"
+            >查看详情</a-button
+          >
+        </span>
       </template>
       <template #invoiceStatus="{ record }">
-        {{ record ? '已开票' : '未开票' }}
+        <span :style="{
+            color: record?.invoiceStatus ? 'green': 'red'
+          }">{{ record?.invoiceStatus ? '已开票' : '未开票' }}</span>
+        <a-button
+          type="link"
+          @click="() => {
+            const { orderId, invoiceStatus, repaymentStatus } = record;
+            invoiceData.orderId = orderId;
+            invoiceVisible = true;
+            invoiceData.invoiceStatus = invoiceStatus;
+            invoiceData.repaymentStatus = repaymentStatus;
+          }"
+          >修改</a-button
+        >
       </template>
       <template #repaymentStatus="{ record }">
-        {{ record ? '已还款' : '未还款' }}
+        <span :style="{
+            color: record?.repaymentStatus ? 'green': 'red'
+          }">{{ record?.repaymentStatus ? '已还款' : '未还款' }}</span>
+        <a-button
+          type="link"
+          @click="() => {
+            console.log('record===', record);
+            const { orderId, invoiceStatus, repaymentStatus } = record;
+            invoiceData.orderId = orderId;
+            repaymentVisible = true;
+            invoiceData.invoiceStatus = invoiceStatus;
+            invoiceData.repaymentStatus = repaymentStatus;
+          }"
+          >修改</a-button
+        >
       </template>
     </a-table>
-    <a-modal class="remark-wrap" v-model:visible="remarkVisible" width="200px" title="添加备注" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    <a-modal class="remark-wrap" v-model:visible="remarkVisible" width="200px" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
       remarkVisible = false;
     }">
       <a-form
       ref="formRef"
       :model="formState"
-      :rules="rules"
-      :wrapper-col="wrapperCol"
+      :label-col="{ span: 1 }"
+      :wrapper-col="{ span: 16 }"
     >
       <a-form-item label="备注" name="remark">
         <a-textarea  v-model:value="formState.remark" />
       </a-form-item>
-      <!-- <a-form-item :wrapper-col="{ span: 14, offset: 4 }"> -->
+      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="onRemarkSubmit">提交</a-button>
-      <!-- </a-form-item> -->
+      </a-form-item>
     </a-form>
     </a-modal>
     <a-modal v-model:visible="remarkListVisible" width="50%" title="备注详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
@@ -652,6 +745,7 @@ const needRecoveryMenus = ["不需要", "需要"]
             });
             if (res.code == 0) {
               message.success('上传成功');
+              getOrderList();
               orderUploadVisible = false;
             }
       }">确认</a-button>
@@ -675,12 +769,153 @@ const needRecoveryMenus = ["不需要", "需要"]
             });
             if (res.code == 0) {
               message.success('确认成功');
+              getOrderList();
               orderFeeVisible = false;
             } else {
               message.error(res?.msg || '确认失败');
             }
       }">确认费用</a-button>
     </a-modal>
+    <a-modal class="width-60" v-model:visible="invoiceVisible" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      invoiceVisible = false;
+    }">
+      <a-form
+        ref="formRef"
+        :model="invoiceData"
+        :rules="rules"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-item label="发票状态确认" name="">
+          <a-radio-group v-model:value="invoiceData.invoiceStatus">
+            <a-radio :value="true">已开票</a-radio>
+            <a-radio :value="false">未开票</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-button style="margin-top:20px" type="primary" @click="async() => {
+          const { orderId, invoiceStatus, repaymentStatus } = invoiceData;
+          const res = await updateOrderProcess({
+                orderId,
+                invoiceStatus,
+                repaymentStatus,
+              });
+              if (res.code == 0) {
+                message.success('确认成功');
+                getOrderList();
+                invoiceVisible  = false;
+              } else {
+                message.error(res?.msg || '修改失败');
+              }
+        }">确认费用</a-button>
+      </a-form>
+    </a-modal>
+    <a-modal class="width-60" v-model:visible="repaymentVisible" title="" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+      repaymentVisible = false;
+    }">
+      <a-form
+        ref="formRef"
+        :model="invoiceData"
+        :rules="rules"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-item label="还款状态确认" name="">
+          <a-radio-group v-model:value="invoiceData.repaymentStatus">
+            <a-radio :value="true">已还款</a-radio>
+            <a-radio :value="false">未还款</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-button style="margin-top:20px" type="primary" @click="async() => {
+          const { orderId, invoiceStatus, repaymentStatus } = invoiceData;
+          const res = await updateOrderProcess({
+                orderId,
+                invoiceStatus,
+                repaymentStatus,
+              });
+              if (res.code == 0) {
+                message.success('修改成功');
+                getOrderList();
+                repaymentVisible = false;
+              } else {
+                message.error(res?.msg || '修改失败');
+              }
+        }">确认费用</a-button>
+      </a-form>
+    </a-modal>
+    <!-- 订单详情 -->
+    <a-drawer
+    title="订单详情"
+    placement="right"
+    :closable="false"
+    width="75%"
+    v-model:visible="visible"
+  >
+    <a-descriptions title="联系方式" bordered :column="2">
+      <a-descriptions-item label="联系人">{{
+        orderDetail.contactName
+      }}</a-descriptions-item>
+      <a-descriptions-item label="联系号码">{{
+        orderDetail.contactsPhone
+      }}</a-descriptions-item>
+      <a-descriptions-item label="寄样地址">{{
+        orderDetail.officeDetailAddress
+      }}</a-descriptions-item>
+      <a-descriptions-item label="运费支付方式">{{
+        ["到付", "自付"][orderDetail.freightMode]
+      }}</a-descriptions-item>
+      <a-descriptions-item label="支付方式" v-if="orderDetail.status > 2">{{
+        (orderDetail?.payMode != 1) ? ['预存支付', '', '信用支付'][orderDetail.payMode] : ["","支付宝", "微信","银联"][orderDetail.payPlatform]
+      }}</a-descriptions-item>
+    </a-descriptions>
+    <a-descriptions
+      title="支付金额"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="订单金额"
+        >¥{{ orderDetail.costInfo["订单金额"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="优惠券抵扣"
+        >¥{{ orderDetail.costInfo["优惠券"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="样品回收费"
+        >¥{{ orderDetail.costInfo["样品回收费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="运费"
+        >¥{{ orderDetail.costInfo["运费"] }}</a-descriptions-item
+      >
+      <a-descriptions-item label="支付金额"
+        >¥{{ orderDetail.costInfo["支付金额"] }}</a-descriptions-item
+      >
+    </a-descriptions>
+    <a-descriptions
+      title="订单要求"
+      bordered
+      :column="2"
+      style="margin-top: 10px"
+    >
+      <a-descriptions-item label="样品是否要回收"
+        >¥{{
+          ["不需要", "需要"][orderDetail.needRecovery]
+        }}</a-descriptions-item
+      >
+      <a-descriptions-item label="实验留言">{{
+        orderDetail.remark
+      }}</a-descriptions-item>
+    </a-descriptions>
+    <h3 style="margin-top: 10px">订单信息</h3>
+    <a-card size="small" style="width: 100%">
+      <a-table
+        :dataSource="orderDetail.sampleInfo || []"
+        :columns="orderColums"
+      >
+        <template #costInfo="{ numberList }">
+          <span>
+            {{ numberList.join(",") }}
+          </span>
+        </template>
+      </a-table>
+    </a-card>
+  </a-drawer>
   </main>
 </template>
 <style lang="scss">

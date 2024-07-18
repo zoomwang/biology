@@ -17,9 +17,9 @@ import {formatTime} from "@/utils/index";
 let orderData = reactive({
 });
 const drawerVisible = ref(false);
-const showDrawer = async (record) => {
-  orderData = record;
-};
+// const showDrawer = async (record) => {
+//   orderData = record;
+// };
 const orderDetail = ref({});
 const visible = ref(false);
 const showModal = async (record) => {
