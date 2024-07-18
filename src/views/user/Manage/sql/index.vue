@@ -22,11 +22,6 @@ const param = reactive({
 
 const columns =[
   {
-    title: "用户id",
-    dataIndex: "id",
-    // key: "device",
-  },
-  {
     title: "用户账号",
     dataIndex: "userName",
     // key: "age",
@@ -36,8 +31,17 @@ const columns =[
     dataIndex: "realName",
   },
   {
-    title: "sql",
-    dataIndex: "sql",
+    title: "变更内容",
+    dataIndex: "paramJson",
+    // key: "device",
+  },
+  {
+    title: "函数名",
+    dataIndex: "methodName",
+  },
+  {
+    title: "函数注解",
+    dataIndex: "methodAnnotation",
   },
   {
     title: "执行时间",
