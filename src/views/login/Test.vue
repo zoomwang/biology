@@ -1,101 +1,132 @@
 <template>
   <div>
-  <a-select :options="questionTypeOptions" v-model:value="type"></a-select>
-  <AdminForm style="width: 750px;margin-left: 16px" :type="type"></AdminForm>
-  <FormProvider :form="form" v-if="0">
-    <Field
-      name="name"
-      title="Name"
-      required
-      :decorator="[FormItem]"
-      :component="[Input, { placeholder: 'Please Input' }]"
-    />
-    <Field
-      name="password"
-      title="Password"
-      required
-      :decorator="[FormItem]"
-      :component="[Input, { type: 'password', placeholder: 'Please Input' }]"
-      :reactions="createPasswordEqualValidate('confirm_password')"
-    />
-    <Field
-      name="confirm_password"
-      title="Confirm Password"
-      required
-      :decorator="[FormItem]"
-      :component="[Input, { type: 'password', placeholder: 'Please Input' }]"
-      :reactions="createPasswordEqualValidate('password')"
-    />
-    <FormConsumer>
-      <template #default="{ form }">
-        <div style="white-space: pre">
-          {{ JSON.stringify(form.values, null, 2) }}
-        </div>
-      </template>
-    </FormConsumer>
-  </FormProvider>
-</div>
+    <FormProvider :form="form">
+      <SchemaField :schema="schema"> </SchemaField>
+      <FormConsumer>
+        <template #default="{ form }">
+          <div style="white-space: pre">
+            {{ JSON.stringify(form.values, null, 2) }}
+          </div>
+        </template>
+      </FormConsumer>
+    </FormProvider>
+  </div>
 </template>
 
-<script>
-import { Form, Input } from 'ant-design-vue'
-import { createForm, isVoidField, setValidateLanguage } from '@formily/core'
+<script setup>
+import { Form, Input, FormItem, Select } from "ant-design-vue";
+import { createForm, isVoidField, setValidateLanguage } from "@formily/core";
 import {
   FormProvider,
   FormConsumer,
+  createSchemaField,
   Field,
   connect,
   mapProps,
-} from '@formily/vue'
-import AdminForm from '@/components/DynamicQuestion/AdminForm/index.vue'
-import {QUESTION_TYPES} from '@/utils/const'
-const questionTypeOptions = QUESTION_TYPES.toObjectArray()
-setValidateLanguage('en')
+} from "@formily/vue";
+setValidateLanguage("en");
+const form = createForm();
 
-const FormItem = connect(
-  Form.Item,
-  mapProps(
-    { validateStatus: true, title: 'label', required: true },
-    (props, field) => {
-      return {
-        help: !isVoidField(field)
-          ? field.selfErrors.length
-            ? field.selfErrors
-            : undefined
-          : undefined,
-        extra: field.description,
-      }
-    }
-  )
-)
+const FormSelect = connect(Select, mapProps({ enum: "options" }));
 
-export default {
+const { SchemaField } = createSchemaField({
   components: {
-    FormProvider,
-    FormConsumer,
-    Field,
+    Input,
+    Select,
+    FormSelect,
+    FormItem,
   },
-  data() {
-    const form = createForm({ validateFirst: true })
-    const createPasswordEqualValidate = (equalName) => (field) => {
-      if (
-        form.values.confirm_password &&
-        field.value &&
-        form.values[equalName] !== field.value
-      ) {
-        field.selfErrors = ['Password does not match Confirm Password.']
-      } else {
-        field.selfErrors = []
-      }
-    }
-    return {
-      FormItem,
-      Input,
-      form,
-      createPasswordEqualValidate,
-      questionTypeOptions,
-      type: 8,
-    }
+});
+const schema = {
+  type: "object",
+  properties: {
+    select: {
+      type: "string",
+      "x-decorator": "FormItem",
+      "x-component": "Select",
+      "x-component-props": {
+        style: {
+          width: "240px",
+        },
+        options: [
+          { label: "显示", value: "visible" },
+          { label: "隐藏", value: "none" },
+          { label: "隐藏-保留值", value: "hidden" },
+        ],
+      },
+      "x-decorator-props": {
+        label: "选择器",
+      },
+      "x-reactions": {
+        target: "input",
+        fulfill: {
+          state: {
+            display: "{{$self.value}}",
+          },
+        },
+      },
+    },
+    input: {
+      type: "string",
+      "x-decorator": "FormItem",
+      "x-component": "Input",
+      "x-component-props": {
+        placeholder: "请输入",
+        style: "width: 240px;",
+      },
+      "x-decorator-props": {
+        label: "输入框",
+      },
+    },
+    input1: {
+      type: "string",
+      "x-decorator": "FormItem",
+      "x-component": "Input",
+      "x-component-props": {
+        placeholder: "请输入",
+        style: "width: 240px;",
+      },
+      "x-decorator-props": {
+        label: "输入框1",
+      },
+      'x-reactions':{
+          dependencies: ['select', ],
+          fulfill: {
+            state: {
+              display: "{{$deps[0] === 'none' ? 'none' : 'visible'}}",
+            },
+          },
+        }
+    },
+    input2: {
+      type: "string",
+      "x-decorator": "FormItem",
+      "x-component": "Input",
+      "x-component-props": {
+        placeholder: "请输入",
+        style: "width: 240px;",
+      },
+      "x-decorator-props": {
+        label: "输入框2",
+      },
+      'x-reactions':{
+          dependencies: ['input1'],
+          fulfill: {
+            state: {
+              display: "{{$deps[0] === 'visible' ? 'visible' : 'none'}}",
+            },
+          },
+        }
+    },
+    
+
   },
-}
+};
 </script>
+<style>
+.header-wrap,
+.login-footer,
+.bg {
+  display: none;
+}
+</style>
