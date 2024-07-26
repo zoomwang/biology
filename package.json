@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@formily/antdv": "^2.0.1-beta.3",
     "@formily/core": "^2.3.1",
     "@formily/vue": "^2.3.1",
     "@wangeditor/editor": "^5.1.23",

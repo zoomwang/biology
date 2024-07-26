@@ -524,6 +524,20 @@
   resolved "https://registry.npmmirror.com/@esbuild/win32-x64/-/win32-x64-0.18.20.tgz#786c5f41f043b07afb1af37683d7c33668858f6d"
   integrity sha512-kTdfRcSiDfQca/y9QIkng02avJ+NCaQvrMejlsB3RRv5sE9rRoeBPISaZpKxHELzRxZyLvNts1P27W3wV+8geQ==
 
+"@formily/antdv@^2.0.1-beta.3":
+  version "2.0.1-beta.3"
+  resolved "https://registry.npmmirror.com/@formily/antdv/-/antdv-2.0.1-beta.3.tgz#be9aec010905616e101c4adca79f2b41c322613a"
+  integrity sha512-MqSmbRFIASTb66+IPSaGhbSRduvXs8MatULZonUmeNraVpYhhLugMFxR0edJLg9wGBBYCeFhHqcRxwVxCpOBYQ==
+  dependencies:
+    "@formily/core" "^2.0.8"
+    "@formily/grid" "^2.0.8"
+    "@formily/json-schema" "^2.0.8"
+    "@formily/reactive" "^2.0.8"
+    "@formily/reactive-vue" "^2.0.8"
+    "@formily/shared" "^2.0.8"
+    "@formily/vue" "^2.0.8"
+    vue-slicksort "^2.0.0"
+
 "@formily/core@2.3.1", "@formily/core@^2.3.1":
   version "2.3.1"
   resolved "https://registry.npmmirror.com/@formily/core/-/core-2.3.1.tgz#76c823d81a5dc8c9d40e7a197fe57c63e1f8b7cb"
@@ -532,6 +546,23 @@
     "@formily/reactive" "2.3.1"
     "@formily/shared" "2.3.1"
     "@formily/validator" "2.3.1"
+
+"@formily/core@2.3.2", "@formily/core@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/core/-/core-2.3.2.tgz#72e5e5e75cb2eb84d6058557aa5a5e8d86ff0abc"
+  integrity sha512-qS02mKWDRdm5IYnx3b6L4i/i7oFEBbVotF6B3xdqgbkeSjdzSz81/aJnEr0Sbi3yCgh1FhA0x+QKkpWnE8/GDQ==
+  dependencies:
+    "@formily/reactive" "2.3.2"
+    "@formily/shared" "2.3.2"
+    "@formily/validator" "2.3.2"
+
+"@formily/grid@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/grid/-/grid-2.3.2.tgz#452c1a63724bada7ef2ecd714f1fb17dfaef89ed"
+  integrity sha512-cbPBOZKHT5xp3DIcn+Tsqm9B2VMWDsfnhbGl7qvKza8v7cDn7io2aFp8a7sQTeZVmRT+A8H30LjCAKJS9n6+2w==
+  dependencies:
+    "@formily/reactive" "2.3.2"
+    "@juggle/resize-observer" "^3.3.1"
 
 "@formily/json-schema@2.3.1":
   version "2.3.1"
@@ -542,10 +573,24 @@
     "@formily/reactive" "2.3.1"
     "@formily/shared" "2.3.1"
 
+"@formily/json-schema@2.3.2", "@formily/json-schema@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/json-schema/-/json-schema-2.3.2.tgz#38dbf38d45586bd99b77517a90b2115fedfb0ea8"
+  integrity sha512-DFsdrbxFvdxUtrD5mVRb8USUWJV6KkhSiz83wxA779lgntGDLrwuE0DI2dVg8Vm4dZsK79iB+XhWidaNqH41fQ==
+  dependencies:
+    "@formily/core" "2.3.2"
+    "@formily/reactive" "2.3.2"
+    "@formily/shared" "2.3.2"
+
 "@formily/path@2.3.1":
   version "2.3.1"
   resolved "https://registry.npmmirror.com/@formily/path/-/path-2.3.1.tgz#b7adb91f7d3bb0f2efc90672dda466a0590dcb1b"
   integrity sha512-BVo89K5nAFntx02+EV696If1b1bVIm5I1tRPtVyCVIjBIfAgga5hK4k80GZ01Dlk3tpReHpiIbZVg2DNVfw7jA==
+
+"@formily/path@2.3.2":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/path/-/path-2.3.2.tgz#9385d9ba1eabd5e3ed916f2b1953be6257bb192e"
+  integrity sha512-KK8h/CupHOs4HIgu9JucqwWvIr8Nbmof++Kby0NdNFHdTN5nAyVzStS8VEPFPGRkQaXV3AH+FVGAxgucmEy4ZA==
 
 "@formily/reactive-vue@2.3.1":
   version "2.3.1"
@@ -555,10 +600,23 @@
     "@formily/reactive" "2.3.1"
     vue-demi "^0.13.6"
 
+"@formily/reactive-vue@2.3.2", "@formily/reactive-vue@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/reactive-vue/-/reactive-vue-2.3.2.tgz#1e77f075a0c751731ef50d37b34d8a11919ef2a1"
+  integrity sha512-3zthr5V2uM3tyjvQid4WUy/rK1XgiFangjIiUDHa1OhkGoKh6h8Xi0l2pGVffLFuvpLtWTQdvU3ipDhjHGCBNw==
+  dependencies:
+    "@formily/reactive" "2.3.2"
+    vue-demi ">=0.13.6"
+
 "@formily/reactive@2.3.1":
   version "2.3.1"
   resolved "https://registry.npmmirror.com/@formily/reactive/-/reactive-2.3.1.tgz#8607d29643ba06c0d40c12bb0eca2233e42ac04f"
   integrity sha512-IVHOZW7VBc+Gq9eB/gPldi7pEC3wDonDb99KvHlS8SmzsY6+a/iAdrw2mDagXXUficsC2gT4y4EcJ2f1ALMKtQ==
+
+"@formily/reactive@2.3.2", "@formily/reactive@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/reactive/-/reactive-2.3.2.tgz#8cb7aa90e7912d68cf5e6544a28ce880c62185f6"
+  integrity sha512-fw9EBWyBNSo3d1diX+HW3v6fBYqmn5zRM+L8le03XGft847LaajCYkjXiZXSzj7v8U4qzjhURIcqVYgmi4OW8g==
 
 "@formily/shared@2.3.1":
   version "2.3.1"
@@ -573,12 +631,47 @@
     pascal-case "^3.1.1"
     upper-case "^2.0.1"
 
+"@formily/shared@2.3.2", "@formily/shared@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/shared/-/shared-2.3.2.tgz#1cea158491280a267278e0c9dc4f6cc7a69d4485"
+  integrity sha512-hb8eL28Dqe4WQzGtxC3h7OwG9VPPBXtfKUfmnRkaBMJ8zn2KmdYOP8YnAkwdO2ZMgxtkOl0hku0Ufm2PwP3ziA==
+  dependencies:
+    "@formily/path" "2.3.2"
+    camel-case "^4.1.1"
+    lower-case "^2.0.1"
+    no-case "^3.0.4"
+    param-case "^3.0.4"
+    pascal-case "^3.1.1"
+    upper-case "^2.0.1"
+
 "@formily/validator@2.3.1":
   version "2.3.1"
   resolved "https://registry.npmmirror.com/@formily/validator/-/validator-2.3.1.tgz#94ac89bcff96c3e028dd0b81bf92fb7f50ecf292"
   integrity sha512-hM/IDvU/bachpS3fOUe02C9f5EytlNu6OJzDy+AyhWBmZYIVd6QVvPtjV8nyLOXIBJM9N4sxnGSliYQNAPjR1w==
   dependencies:
     "@formily/shared" "2.3.1"
+
+"@formily/validator@2.3.2":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/validator/-/validator-2.3.2.tgz#102d0f4222fa986c884a8fb998e0e1b8dc22e8cf"
+  integrity sha512-XoY31kUypHB8MIw9jhp/Pb0fDFan5wPhR9Hgz/HiTPUdpg8l7kxzHRMZieqtL4YbtFzJD4wpk1+XrylILpPGYg==
+  dependencies:
+    "@formily/shared" "2.3.2"
+
+"@formily/vue@^2.0.8":
+  version "2.3.2"
+  resolved "https://registry.npmmirror.com/@formily/vue/-/vue-2.3.2.tgz#e25aca9705a22f6becb13f9e1e297d3ef652d489"
+  integrity sha512-DvaQTVZPgGeyYoEnC4llJZdipkVpHmnDkK63VVpFHWnDLS1LQL9FeOEt6Ww1JZoRz4+aNDj8eFupKPn19CtNFw==
+  dependencies:
+    "@formily/core" "2.3.2"
+    "@formily/json-schema" "2.3.2"
+    "@formily/reactive" "2.3.2"
+    "@formily/reactive-vue" "2.3.2"
+    "@formily/shared" "2.3.2"
+    "@formily/validator" "2.3.2"
+    fs-extra "^10.0.0"
+    vue-demi ">=0.13.6"
+    vue-frag "^1.1.4"
 
 "@formily/vue@^2.3.1":
   version "2.3.1"
@@ -645,6 +738,11 @@
   dependencies:
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
+
+"@juggle/resize-observer@^3.3.1":
+  version "3.4.0"
+  resolved "https://registry.npmmirror.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
+  integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -4411,6 +4509,11 @@ vue-area-cascader@^1.0.0:
     rollup-plugin-less "^1.1.2"
     vue "^2.6.12"
 
+vue-demi@>=0.13.6:
+  version "0.14.9"
+  resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.14.9.tgz#db2be43705e2bc8501f01ca6163e34ada2f2eb21"
+  integrity sha512-dC1TJMODGM8lxhP6wLToncaDPPNB3biVxxRDuNCYpuXwi70ou7NsGd97KVTJ2omepGId429JZt8oaZKeXbqxwg==
+
 vue-demi@^0.13.6:
   version "0.13.11"
   resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.13.11.tgz#7d90369bdae8974d87b1973564ad390182410d99"
@@ -4451,6 +4554,11 @@ vue-router@^4.2.5:
   integrity sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
+
+vue-slicksort@^2.0.0:
+  version "2.0.5"
+  resolved "https://registry.npmmirror.com/vue-slicksort/-/vue-slicksort-2.0.5.tgz#d080829de9d04b16e8d194ed8b4e219a501091a2"
+  integrity sha512-fXz1YrNjhUbJK7o0tMk27mIr4pMAZYLSYvtmLazCtfpvz+zafPCn34ILDL8B7hT7WLVZKreYs6JVe5VWymqmzA==
 
 vue-types@^3.0.0:
   version "3.0.2"

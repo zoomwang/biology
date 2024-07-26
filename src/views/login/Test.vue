@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormProvider :form="form">
+    <FormProvider  :form="form" :label-col="5">
       <SchemaField :schema="schema1"> </SchemaField>
       <FormConsumer>
         <template #default="{ form }">
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { Form, Input, FormItem, Select } from "ant-design-vue";
+import { Form, Input, FormItem, Select, Radio } from "ant-design-vue";
 import { createForm, isVoidField, setValidateLanguage } from "@formily/core";
 import {
   FormProvider,
@@ -30,15 +30,37 @@ setValidateLanguage("en");
 const form = createForm();
 
 const FormSelect = connect(Select, mapProps({ enum: "options" }));
+const FormItem1 = connect(
+  Form.Item,
+  mapProps(
+    {
+      title: 'label',
+      description: 'extra',
+      required: true,
+      validateStatus: true,
+    },
+    (props, field) => {
+      console.log('formItem', props, field)
+      return {
+        ...props,
+        help: field.selfErrors?.length ? field.selfErrors : undefined,
+      }
+    }
+  )
+)
+
+
 
 const { SchemaField } = createSchemaField({
   components: {
     Input,
     Select,
     FormSelect,
-    FormItem,
+    FormItem: FormItem1,
+    Radio,
   },
 });
+
 
 const res = {
   "code": 0,
@@ -69,8 +91,8 @@ const res = {
           "value": ""
         },
         "options": [],
-        "defaultValue": "",
-        "placeholder": "",
+        "defaultValue": "11",
+        "placeholder": "22",
         "templateFile": "",
         "fileAccessExt": ""
       },
@@ -242,7 +264,7 @@ const res = {
             "checked": false
           }
         ],
-        "defaultValue": "",
+        "defaultValue": "lywrerwvfa29mp1ny6e",
         "placeholder": "",
         "templateFile": "",
         "fileAccessExt": ""
@@ -774,22 +796,36 @@ const schema = {
 };
 
 const schema1 = computed(() => {
+  const initialValues = {}
   const properties = res.data.sampleQuestions.reduce((sum, item) => {
-    console.log(111, item)
+    console.log(111,item.id, item.label, item.dep, item.options, item)
     const property = {
-      type: "string",
+      title: item.label,
+      type: "boolean",
       "x-decorator": "FormItem",
-      "x-component": [QUESTION_TYPES.TEXT, QUESTION_TYPES.TEXTAREA].includes(item.type) ? 'Input' : "Select",
+      "x-component": {
+// [QUESTION_TYPES.TEXT, QUESTION_TYPES.TEXTAREA].includes(item.type) ? 'Input' : "Select"
+        [QUESTION_TYPES.TEXT]: 'Input',
+        [QUESTION_TYPES.TEXTAREA]: 'TEXTAREA',
+        [QUESTION_TYPES.RADIO]: 'Radio.Group',
+        [QUESTION_TYPES.CHECKBOX]: 'Select',
+
+      }[item.type],
       "x-component-props": {
         style: {
           width: "240px",
         },
         options: item.options,
         fieldNames: {label: 'label', value: 'id'},
+        placeholder: item.placeholder,
       },
       "x-decorator-props": {
-        label: item.label,
+        // label: item.label,
+        labelCol: {span: 4},
       },
+      description: item.desc,
+      'x-validator':{ required: true, message: '必填项' },
+
     }
     if (item.dep.depId && item.dep.value) {
       property["x-reactions"] = {
@@ -802,19 +838,29 @@ const schema1 = computed(() => {
       }
     }
     sum[item.id] = property
+    if(item.defaultValue) {
+      initialValues[item.id] = item.defaultValue
+    }
     return sum
-
   }, {})
   return {
     type: "object",
-    properties
+    properties,
+    initialValues,
   }
 })
+
+form.setInitialValues(schema1.value.initialValues)
+
 </script>
 <style>
 .header-wrap,
 .login-footer,
 .bg {
   display: none;
+}
+
+.ant-form-item-extra {
+  white-space: pre-wrap;
 }
 </style>
