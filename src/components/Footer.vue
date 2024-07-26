@@ -18,7 +18,7 @@ defineProps({
         color: rgba(0, 0, 0, 0.65);
       "
     >
-      —— 易研易测 ——
+      —— 快易测 ——
     </p>
     <p
       style="text-align: center; color: rgba(0, 0, 0, 0.45); line-height: 20px"

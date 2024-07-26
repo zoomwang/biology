@@ -846,7 +846,7 @@ watch(key, async (newdata, olddata) => {
                       ><span
                         data-v-5c81cf27=""
                         class="GoodReputationBodyReview_long"
-                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，易研易测就是会测试</span
+                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，快易测就是会测试</span
                       >
                     </li>
                     <li data-v-5c81cf27="" class="GoodReputationLI fl">
@@ -920,7 +920,7 @@ watch(key, async (newdata, olddata) => {
                       ><span
                         data-v-5c81cf27=""
                         class="GoodReputationBodyReview_long"
-                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，易研易测就是会测试</span
+                        >测试结果得到导师认可，还咨询了是在哪个平台测试的，快易测就是会测试</span
                       >
                     </li>
                     <li data-v-5c81cf27="" class="GoodReputationLI fl">
@@ -1174,7 +1174,7 @@ watch(key, async (newdata, olddata) => {
                       ><span
                         data-v-5c81cf27=""
                         class="GoodReputationBodyReview_long"
-                        >感谢易研易测平台，论文给我很大帮助，漂亮！</span
+                        >感谢快易测平台，论文给我很大帮助，漂亮！</span
                       >
                     </li>
                     <li data-v-5c81cf27="" class="GoodReputationLI fl">
@@ -1250,7 +1250,7 @@ watch(key, async (newdata, olddata) => {
                       ><span
                         data-v-5c81cf27=""
                         class="GoodReputationBodyReview_long"
-                        >感谢易研易测平台，论文给我很大帮助，漂亮！</span
+                        >感谢快易测平台，论文给我很大帮助，漂亮！</span
                       >
                     </li>
                     <li data-v-5c81cf27="" class="GoodReputationLI fl">
