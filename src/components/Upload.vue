@@ -46,7 +46,9 @@ const props = defineProps({
   maxCount: {
     type: Number,
   },
+  onChange: Function,
 });
+
 
 const customRequest = ({ file, onProgress, onSuccess, onError }) => {
   const form = new FormData();
@@ -119,6 +121,7 @@ function handleChange(info: UploadChangeParam) {
   if (info.file.status === "done") {
     modelValue.value = getFileListValue(info.fileList);
   }
+  if (props.onChange) props.onChange(modelValue.value);
 }
 
 const previewVisible = ref(false);
