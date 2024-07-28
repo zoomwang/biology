@@ -14,6 +14,8 @@ import Invoices from './Invoices.vue';
 import Store from './Store.vue';
 import ManageOrder from './Manage/order/Index.vue';
 import ManageSupplier from './Manage/supplier/index.vue';
+import ManageList from './Manage/supplierList/index.vue';
+import ManageSum from './Manage/supplierSum/index.vue';
 import ManageUser from './Manage/user/index.vue';
 import ManageSQL from './Manage/sql/index.vue';
 import { reactive } from "vue";
@@ -112,6 +114,8 @@ onMounted(() => {
         <ManageOrder v-if="state.selectedKeys.includes('13')" />
         <ManageUser v-if="state.selectedKeys.includes('14')" />
         <ManageSQL v-if="state.selectedKeys.includes('15')" />
+        <ManageList v-if="state.selectedKeys.includes('16')" />
+        <ManageSum v-if="state.selectedKeys.includes('17')" />
       </a-card>
     </div>
   </main>

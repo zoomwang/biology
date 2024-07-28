@@ -70,8 +70,16 @@ export const menus = [{
   value: "11",
   type: "storeMenu"
 },{
-  label: "供应商管理",
+  label: "测试项目",
   value: "12",
+  type: "superManage"
+},{
+  label: "供应商管理",
+  value: "16",
+  type: "superManage"
+},{
+  label: "测试总表",
+  value: "17",
   type: "superManage"
 },{
   label: "订单管理",
