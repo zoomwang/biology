@@ -2,42 +2,28 @@
 // import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
 import { message } from "ant-design-vue";
 import {
-  getOrderLists,
-} from "../../../../services/process";
-import {
   supplierList,
   supplierItemList,
-  supplierPersonList,
+  // supplierPersonList,
   supplierItemUpdate
 } from "../../../../services/supplier";
 import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
 import Create from "./Create.vue"
-import Detail from "./Detail.vue"
 
 const id = ref('');
-const diffVisible = ref(false);
-const orderDetail = ref({});
+const data = ref([]);
+const data1 = ref([]);
 const visible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
 const supplierDetail = ref(null);
-const showModal = async (orderId) => {
-  getOrderInfos(orderId, "detail");
-};
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
+
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -46,6 +32,47 @@ const param = reactive({
     itemname: ""
   }
 });
+
+async function fake() {
+  const data2 = [];
+  const res = await supplierItemList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res?.code == 0) {
+    Array.isArray(res?.data.list) &&
+      res?.data.list.forEach((item) => {
+        data2.push({
+          label: item.itemname,
+          value: item.id,
+        });
+      });
+    data.value = data2;
+    // callback(data);
+  }
+  const data3 = [];
+  const res1 = await supplierList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res1?.code == 0) {
+    Array.isArray(res1?.data.list) &&
+      res1?.data.list.forEach((item) => {
+        data3.push({
+          label: item.itemname,
+          value: item.supplierId,
+        });
+      });
+    data1.value = data3;
+    // callback(data);
+  }
+}
 
 const columns = [
   {
@@ -93,11 +120,6 @@ const labelCol = {
     width: "120px",
   },
 };
-const diffPayData = ref({
-  codeUrl: '',
-  payPlatform: '',
-  cost: ''
-})
 const wrapperCol = {
   span: 24,
 };
@@ -107,15 +129,6 @@ const formState = reactive({
 });
 
 const dataSource = ref([]);
-
-const getOrderInfos = (params, type) => {
-  if (type == "detail") {
-    visible.value = true;
-    id.value = params;
-  } else {
-    drawerVisible.value = true;
-  }
-};
 
 const getSupplierItemList = async () => {
   try {
@@ -127,17 +140,16 @@ const getSupplierItemList = async () => {
   } catch (err) {}
 };
 
-const showEditDetail = async (record) => {
-  supplierDetail.value = record;
-  isCreate.value = false;
-  createShow.value = true;
-}
+
+const filterOption = (inputValue, option) => {
+  return option.label.includes(inputValue);
+};
 
 onMounted(() => {
   getSupplierItemList();
+  fake();
 });
 
-const menus = ["已上架", "已下架"];
 </script>
 
 <template>
@@ -147,18 +159,28 @@ const menus = ["已上架", "已下架"];
       <a-form-item label="供应商姓名" :wrapperCol="{
         span: 7
       }">
-        <a-select v-model:value="param.param.deleted" style="width: 100px">
-          <a-select-option value="-1">供应商姓名</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
-        </a-select>
+        <a-select
+        style="width: 200px"
+        show-search
+        allowClear
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data"
+        v-model:value="param.param.supplierItemId"
+      />
       </a-form-item>
       <a-form-item label="测试项目" :wrapperCol="{
         span: 7
       }">
-        <a-select v-model:value="param.param.deleted" style="width: 100px">
-          <a-select-option value="-1">测试项目</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
-        </a-select>
+        <a-select
+        allowClear
+        style="width: 200px"
+        show-search
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data1"
+        v-model:value="param.param.supplierId"
+      />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
         <a-button type="primary" @click="() => {
@@ -177,50 +199,17 @@ const menus = ["已上架", "已下架"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #deleted="{ text }">
-        <span>
-          {{ menus[text] }}
-        </span>
-      </template>
-      <template #action="{ record }">
-        <a-button type="link" @click="showEditDetail(record)"
-          >编辑</a-button
-        >
-        <a-button type="link" @click="showModal(record.id)"
-          >更多详情</a-button
-        >
-        <a-popconfirm
-          title="确认要删除吗?"
-          ok-text="Yes"
-          cancel-text="No"
-          @confirm="async() => {
-            record.delete = 1;
-            const res = await supplierItemUpdate(record);
-            if (res?.code == 0) {
-              message.success('删除成功');
-            }
-          }"
-          @cancel="cancel"
-        >
-          <a-button type="text" danger>删除</a-button>
-        </a-popconfirm>        
-      </template>
     </a-table>
   </main>
-  <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="更多详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
-    visible = false;
-  }">
-    <Detail v-if="visible" :id="id" />
-  </a-modal>
 
-   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建供应商测试项目' :'编辑供应商测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+   <a-modal v-model:visible="createShow" width="50%" title="新增总表" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
     <Create style="margin-top: 20px" :successCallBack="() => {
       getSupplierItemList(); 
       isCreate = true;
       createShow = false;
-    }" :detail="supplierDetail" :isCreate="isCreate" />
+    }" :isCreate="isCreate" />
   </a-modal>
 </template>
 <style lang="scss"></style>

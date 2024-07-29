@@ -2,41 +2,25 @@
 // import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
-import { message } from "ant-design-vue";
 import {
-  getOrderLists,
-} from "../../../../services/process";
-import {
+  supplierList,
   supplierItemList,
-  // supplierItemAdd,
-  supplierItemUpdate
+  supplierPersonList,
 } from "../../../../services/supplier";
-import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
 import Create from "./Create.vue"
-import Detail from "./Detail.vue"
 
 const id = ref('');
-const diffVisible = ref(false);
-const orderDetail = ref({});
+const data = ref([]);
+const data1 = ref([]);
 const visible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
 const supplierDetail = ref(null);
-const showModal = async (orderId) => {
-  getOrderInfos(orderId, "detail");
-};
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
-};
+
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -46,47 +30,99 @@ const param = reactive({
   }
 });
 
+async function fake() {
+  const data2 = [];
+  const res = await supplierItemList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res?.code == 0) {
+    Array.isArray(res?.data.list) &&
+      res?.data.list.forEach((item) => {
+        data2.push({
+          label: item.itemname,
+          value: item.id,
+        });
+      });
+    data.value = data2;
+    // callback(data);
+  }
+  const data3 = [];
+  const res1 = await supplierList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res1?.code == 0) {
+    Array.isArray(res1?.data.list) &&
+      res1?.data.list.forEach((item) => {
+        data3.push({
+          label: item.itemname,
+          value: item.supplierId,
+        });
+      });
+    data1.value = data3;
+    // callback(data);
+  }
+}
+
 const columns = [
   {
-    title: "项目名称",
-    dataIndex: "itemname",
-    key: "itemname",
+    title: "供应商名称",
+    dataIndex: "supplierName",
   },
   {
-    title: "状态",
-    dataIndex: "deleted",
-    key: "deleted",
+    title: "供应商电话",
+    dataIndex: "telephone",
+  },
+  {
+    title: "工作单位",
+    dataIndex: "company",
+  },
+  {
+    title: "寄样地方",
+    dataIndex: "deviceNum",
+  },
+  {
+    title: "转账方式",
+    dataIndex: "transferMethod",
     slots: {
-      customRender: "deleted",
+      customRender: "transfer",
     },
+  },
+  {
+    title: "支付方式",
+    dataIndex: "payMethod",
+    slots: {
+      customRender: "pay",
+    },
+  },
+  {
+    title: "发票信息",
+    dataIndex: "invoiceInformation",
+  },
+  {
+    title: "创建者",
+    dataIndex: "creator",
   },
   {
     title: "创建时间",
     dataIndex: "createTime",
-    key: "createTime",
-    slots: {
-      customRender: "createTime",
-    },
   },
   {
-    title: "对接分值",
-    dataIndex: "itemValues",
-    key: "itemValues",
+    title: "更新时间",
+    dataIndex: "updateTime",
   },
   {
-    title: "供应商数量",
-    dataIndex: "supplierNumber",
-    key: "supplierNumber",
+    title: "状态",
+    dataIndex: "deleted",
     slots: {
-      customRender: "supplierNumber",
-    },
-  },
-  {
-    title: "订单数量",
-    dataIndex: "orderNumber",
-    key: "orderNumber",
-    slots: {
-      customRender: "orderNumber",
+      customRender: "deleted",
     },
   },
   {
@@ -103,11 +139,7 @@ const labelCol = {
     width: "120px",
   },
 };
-const diffPayData = ref({
-  codeUrl: '',
-  payPlatform: '',
-  cost: ''
-})
+
 const wrapperCol = {
   span: 24,
 };
@@ -118,20 +150,13 @@ const formState = reactive({
 
 const dataSource = ref([]);
 
-const getOrderInfos = (params, type) => {
-  if (type == "detail") {
-    visible.value = true;
-    id.value = params;
-  } else {
-    drawerVisible.value = true;
-  }
-};
 
 const getSupplierItemList = async () => {
   try {
-    const res = await supplierItemList(param);
+    const res = await supplierPersonList(param);
     res?.data?.list.forEach((item) => {
-      item.createTime = formatTime(item.createTime);
+      // item.createTime = formatTime(item.createTime);
+      // item.updateTime = formatTime(item.updateTime);
     })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
@@ -143,29 +168,46 @@ const showEditDetail = async (record) => {
   createShow.value = true;
 }
 
+const filterOption = (inputValue, option) => {
+  return option.label.includes(inputValue);
+};
+
 onMounted(() => {
   getSupplierItemList();
+  fake();
 });
 
-const menus = ["已上架", "已下架"];
 </script>
 
 <template>
   <!-- 用户注册资料 -->
   <main>
     <a-form style="margin: 10px 10px 20px 0" :model="formState" layout="inline" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="项目名称" :wrapperCol="{
+      <a-form-item label="供应商姓名" :wrapperCol="{
         span: 7
       }">
-        <a-input v-model:value="param.param.itemname" placeholder="测试项目" style="width:140px" />
+        <a-select
+        style="width: 200px"
+        show-search
+        allowClear
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data"
+        v-model:value="param.param.supplierItemId"
+      />
       </a-form-item>
-      <a-form-item label="订单状态" :wrapperCol="{
+      <a-form-item label="测试项目" :wrapperCol="{
         span: 7
       }">
-        <a-select v-model:value="param.param.deleted" style="width: 100px">
-          <a-select-option value="-1">全部订单</a-select-option>
-          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
-        </a-select>
+        <a-select
+        allowClear
+        style="width: 200px"
+        show-search
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data1"
+        v-model:value="param.param.supplierId"
+      />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
         <a-button type="primary" @click="() => {
@@ -184,43 +226,24 @@ const menus = ["已上架", "已下架"];
       :pagination="{ pageSize: 5 }"
       bordered
     >
-      <template #deleted="{ text }">
-        <span>
-          {{ menus[text] }}
-        </span>
+      <template #deleted="{ record }">
+        {{ ['存在', '已删除'][record.deleted] }}
+      </template>
+      <template #transfer="{ record }">
+        {{ ['不确定', '对公转账', '对私转账'][record.transferMethod] }}
+      </template>
+      <template #pay="{ record }">
+        {{ ['不确定', '微信', '支付宝', '银行'][record.payMethod] }}
       </template>
       <template #action="{ record }">
         <a-button type="link" @click="showEditDetail(record)"
           >编辑</a-button
         >
-        <a-button type="link" @click="showModal(record.id)"
-          >更多详情</a-button
-        >
-        <a-popconfirm
-          title="确认要删除吗?"
-          ok-text="Yes"
-          cancel-text="No"
-          @confirm="async() => {
-            record.delete = 1;
-            const res = await supplierItemUpdate(record);
-            if (res?.code == 0) {
-              message.success('删除成功');
-            }
-          }"
-          @cancel="cancel"
-        >
-          <a-button type="text" danger>删除</a-button>
-        </a-popconfirm>        
       </template>
     </a-table>
   </main>
-  <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="更多详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
-    visible = false;
-  }">
-    <Detail v-if="visible" :id="id" />
-  </a-modal>
 
-   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建供应商测试项目' :'编辑供应商测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+   <a-modal v-model:visible="createShow" width="50%" title="新增总表" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
     <Create style="margin-top: 20px" :successCallBack="() => {

@@ -1,76 +1,142 @@
 <script setup>
 import { ref, reactive, onMounted, onUpdated } from "vue";
-import {
-  supplierItemAdd,
-  supplierItemUpdate
-} from "../../../../services/supplier";
-const props = defineProps(['detail', 'successCallBack', "isCreate"]);
+// import { addSupplier } from "../../../../services/supplier";
+const props = defineProps(["detail", "successCallBack", "isCreate"]);
 import { message } from "ant-design-vue";
+import {
+  supplierList,
+  supplierItemList,
+  supplierItemDetailAdd
+} from "../../../../services/supplier";
 const formRef = ref();
 const labelCol = { span: 3 };
 const wrapperCol = { span: 24 };
+const data = ref([]);
+const data1 = ref([]);
 const formState = reactive({
   id: "",
-  itemname:  '',
+  itemname: "",
   itemValues: 0,
 });
 const rules = {
-  itemname: [
-    { required: true, message: '请输入项目名称', trigger: 'change' },
-    { min: 1, max: 15, message: '不能为空', trigger: 'blur' },
+  supplierItemId: [
+    { required: true, message: "请输入测试项目名称", trigger: "change" },
   ],
-  itemValues: [{ required: false, message: '请输入对接分值', trigger: 'change' }],
+  supplierId: [
+    { required: true, message: "请输入供应商姓名", trigger: "change" },
+  ],
+  deviceType: [
+    { required: true, message: "请输入设备类型", trigger: "change" },
+  ],
+  costprice: [
+    { required: true, message: "请输入设备类型", trigger: "change" },
+  ],
 };
+async function fake() {
+  const data2 = [];
+  const res = await supplierItemList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res?.code == 0) {
+    Array.isArray(res?.data.list) &&
+      res?.data.list.forEach((item) => {
+        data2.push({
+          label: item.itemname,
+          value: item.id,
+        });
+      });
+    data.value = data2;
+    // callback(data);
+  }
+  const data3 = [];
+  const res1 = await supplierList({
+    pageSize: 999,
+    curPage: 1,
+    param: {
+      itemname: "",
+    },
+  });
+  if (res1?.code == 0) {
+    Array.isArray(res1?.data.list) &&
+      res1?.data.list.forEach((item) => {
+        data3.push({
+          label: item.itemname,
+          value: item.supplierId,
+        });
+      });
+    data1.value = data3;
+    // callback(data);
+  }
+}
 const onSubmit = () => {
   formRef.value
     .validate()
-    .then(async() => {
-       try {
-         if (props.isCreate) {
-          const res = await supplierItemAdd(formState);
-          if (res?.code == 0) {
-            message.success("新建成功");
-            props.successCallBack();
-          }
-         } else {
-           const res = await supplierItemUpdate(formState);
-          if (res?.code == 0) {
-            message.success("编辑成功");
-            props.successCallBack();
-          }
-         }
-          
-        } catch (err) {
-          debugger
+    .then(async () => {
+      try {
+        const res = await supplierItemDetailAdd(formState);
+        if (res?.code == 0) {
+          message.success("新建成功");
+          props.successCallBack();
         }
+      } catch (err) {
+        debugger;
+      }
     })
-    .catch(error => {
-      console.log('error', error);
+    .catch((error) => {
+      console.log("error", error);
     });
 };
 
-onUpdated(() => {
-  Object.assign(formState, props?.detail)
-});
+const filterOption = (inputValue, option) => {
+  return option.label.includes(inputValue);
+};
 
 onMounted(() => {
-  Object.assign(formState, props?.detail)
+  fake();
 });
 </script>
 
 <template>
-    <a-form
+  <a-form
     ref="formRef"
     :model="formState"
     :rules="rules"
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="项目名称" name="itemname">
-      <a-input v-model:value="formState.itemname" />
+    <a-form-item ref="name" label="供应商姓名" name="supplierItemId">
+      <a-select
+        show-search
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data"
+        v-model:value="formState.supplierItemId"
+      />
     </a-form-item>
-    <a-form-item label="对接分值" name="itemValues">
-      <a-input type="number" v-model:value="formState.itemValues" />
+    <a-form-item ref="name" label="测试项目" name="supplierId">
+      <a-select
+        show-search
+        :filterOption="filterOption"
+        :default-active-first-option="false"
+        :options="data1"
+        v-model:value="formState.supplierId"
+      />
+    </a-form-item>
+    <a-form-item ref="deviceType" label="设备类型" name="deviceType">
+      <a-input v-model:value="formState.deviceType" />
+    </a-form-item>
+    <a-form-item ref="deviceNum" label="设备数量" name="deviceNum">
+      <a-input v-model:value="formState.deviceNum" />
+    </a-form-item>
+    <a-form-item ref="costprice" label="成本价" name="costprice">
+      <a-input v-model:value="formState.costprice" />
+    </a-form-item>
+    <a-form-item ref="remark" label="备注" name="remark">
+      <a-input v-model:value="formState.remark" />
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">提交</a-button>
@@ -81,7 +147,7 @@ onMounted(() => {
 .pay-wrap {
   flex-direction: column;
   text-align: center;
-  p{
+  p {
     padding-left: 20px;
     text-align: left;
   }

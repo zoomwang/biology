@@ -60,3 +60,22 @@ export const supplierItemDetailEdit = (param) => {
   return api.post(`/sys/supplier/item-detail/update`, param);
 }
 
+/** 供应商个人信息列表 */
+export const supplierPersonList = (param) => {
+  return api.post(`/sys/supplier/list`, param);
+}
+
+/** 新增供应商总表 */
+export const addSupplier = (param) => {
+  return api.post(`/sys/supplier/item-detail/add`, param);
+}
+
+/** 编辑供应商个人信息表 */
+export const supplierPersonUpdate = (param) => {
+  return api.post(`/sys/supplier/update`, param);
+}
+
+/** 新增供应商个人信息表 */
+export const supplierPersonAdd = (param) => {
+  return api.post(`/sys/supplier/add`, param);
+}
