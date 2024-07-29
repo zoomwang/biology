@@ -6,82 +6,99 @@ import { message } from "ant-design-vue";
 import {
   supplierList,
   supplierItemList,
-  supplierItemDetailAdd
+  supplierItemDetailAdd,
+  supplierPersonUpdate
 } from "../../../../services/supplier";
 const formRef = ref();
-const labelCol = { span: 3 };
+const labelCol = {  style: {
+    width: "100px",
+  }};
 const wrapperCol = { span: 24 };
 const data = ref([]);
 const data1 = ref([]);
+const transferMethod = [
+  {
+    label: '不确定',
+    value: 0
+  },
+  {
+    label: '对公转账',
+    value: 1
+  },
+  {
+    label: '对私转账',
+    value: 2
+  }
+];
+const payMethod = [
+  {
+    label: '不确定',
+    value: 0
+  },
+  {
+    label: '微信',
+    value: 1
+  },
+  {
+    label: '支付宝',
+    value: 2
+  },
+  {
+    label: '银行',
+    value: 3
+  }
+]
+const status = [
+  {
+    label: '已上线',
+    value: 0
+  },
+  {
+    label: '已下线',
+    value: 1
+  }
+]
+
 const formState = reactive({
   id: "",
   itemname: "",
   itemValues: 0,
 });
 const rules = {
-  supplierItemId: [
-    { required: true, message: "请输入测试项目名称", trigger: "change" },
+  telephone: [
+    { required: true, message: "请输入供应商电话", trigger: "change" },
   ],
-  supplierId: [
+  supplierName: [
     { required: true, message: "请输入供应商姓名", trigger: "change" },
   ],
-  deviceType: [
-    { required: true, message: "请输入设备类型", trigger: "change" },
+  company: [
+    { required: true, message: "请输入工作单位", trigger: "change" },
   ],
-  costprice: [
-    { required: true, message: "请输入设备类型", trigger: "change" },
+  head: [
+    { required: true, message: "请输入对接人", trigger: "change" },
+  ],
+  address: [
+    { required: false, message: "请输入寄样地方", trigger: "change" },
   ],
 };
-async function fake() {
-  const data2 = [];
-  const res = await supplierItemList({
-    pageSize: 999,
-    curPage: 1,
-    param: {
-      itemname: "",
-    },
-  });
-  if (res?.code == 0) {
-    Array.isArray(res?.data.list) &&
-      res?.data.list.forEach((item) => {
-        data2.push({
-          label: item.itemname,
-          value: item.id,
-        });
-      });
-    data.value = data2;
-    // callback(data);
-  }
-  const data3 = [];
-  const res1 = await supplierList({
-    pageSize: 999,
-    curPage: 1,
-    param: {
-      itemname: "",
-    },
-  });
-  if (res1?.code == 0) {
-    Array.isArray(res1?.data.list) &&
-      res1?.data.list.forEach((item) => {
-        data3.push({
-          label: item.itemname,
-          value: item.supplierId,
-        });
-      });
-    data1.value = data3;
-    // callback(data);
-  }
-}
 const onSubmit = () => {
   formRef.value
     .validate()
     .then(async () => {
       try {
-        const res = await supplierItemDetailAdd(formState);
-        if (res?.code == 0) {
-          message.success("新建成功");
-          props.successCallBack();
-        }
+        if (props.isCreate) {
+          const res = await supplierItemDetailAdd(formState);
+          if (res?.code == 0) {
+            message.success("新建成功");
+            props.successCallBack();
+          }
+         } else {
+           const res = await supplierPersonUpdate(formState);
+          if (res?.code == 0) {
+            message.success("编辑成功");
+            props.successCallBack();
+          }
+         }
       } catch (err) {
         debugger;
       }
@@ -96,7 +113,12 @@ const filterOption = (inputValue, option) => {
 };
 
 onMounted(() => {
+  Object.assign(formState, props?.detail)
   fake();
+});
+
+onMounted(() => {
+  Object.assign(formState, props?.detail)
 });
 </script>
 
@@ -108,35 +130,44 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="供应商姓名" name="supplierItemId">
+    <a-form-item label="供应商姓名" name="supplierName">
+      <a-input v-model:value="formState.supplierName" />
+    </a-form-item>
+    <a-form-item label="供应商电话" name="telephone">
+      <a-input v-model:value="formState.telephone" />
+    </a-form-item>
+    <a-form-item label="工作单位" name="company">
+      <a-input v-model:value="formState.company" />
+    </a-form-item>
+    <a-form-item label="对接人" name="head">
+      <a-input v-model:value="formState.head" />
+    </a-form-item>
+    <a-form-item label="寄样地方" name="address">
+      <a-input v-model:value="formState.address" />
+    </a-form-item>
+    <a-form-item label="发票信息" name="invoiceInformation">
+      <a-input v-model:value="formState.invoiceInformation" />
+    </a-form-item>
+    <a-form-item label="转账方式" name="transferMethod">
       <a-select
-        show-search
-        :filterOption="filterOption"
-        :default-active-first-option="false"
-        :options="data"
-        v-model:value="formState.supplierItemId"
-      />
+        style="width: 200px"
+        :options="transferMethod"
+        v-model:value="formState.transferMethod"
+      />    
     </a-form-item>
-    <a-form-item ref="name" label="测试项目" name="supplierId">
+    <a-form-item label="支付方式" name="payMethod">
       <a-select
-        show-search
-        :filterOption="filterOption"
-        :default-active-first-option="false"
-        :options="data1"
-        v-model:value="formState.supplierId"
-      />
+        style="width: 200px"
+        :options="payMethod"
+        v-model:value="formState.payMethod"
+      />    
     </a-form-item>
-    <a-form-item ref="deviceType" label="设备类型" name="deviceType">
-      <a-input v-model:value="formState.deviceType" />
-    </a-form-item>
-    <a-form-item ref="deviceNum" label="设备数量" name="deviceNum">
-      <a-input v-model:value="formState.deviceNum" />
-    </a-form-item>
-    <a-form-item ref="costprice" label="成本价" name="costprice">
-      <a-input v-model:value="formState.costprice" />
-    </a-form-item>
-    <a-form-item ref="remark" label="备注" name="remark">
-      <a-input v-model:value="formState.remark" />
+    <a-form-item label="状态" name="status">
+      <a-select
+        style="width: 200px"
+        :options="status"
+        v-model:value="formState.status"
+      />    
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">提交</a-button>

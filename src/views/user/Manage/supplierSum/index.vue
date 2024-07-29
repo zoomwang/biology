@@ -23,6 +23,38 @@ const visible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
 const supplierDetail = ref(null);
+const transferMethod = [
+  {
+    label: '不确定',
+    value: 0,
+  },
+  {
+    label: '对公转账',
+    value: 1,
+  },
+  {
+    label: '对私转账',
+    value: 2,
+  },
+];
+const payMethod = [
+  {
+    label: '不确定',
+    value: 0,
+  },
+  {
+    label: '微信',
+    value: 1,
+  },
+  {
+    label: '支付宝',
+    value: 2,
+  },
+  {
+    label: '银行',
+    value: 3,
+  },
+];
 
 const param = reactive({
   pageSize: 999,
@@ -117,7 +149,7 @@ const columns = [
 
 const labelCol = {
   style: {
-    width: "120px",
+    width: "150px",
   },
 };
 const wrapperCol = {

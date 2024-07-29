@@ -243,7 +243,7 @@ onMounted(() => {
     </a-table>
   </main>
 
-   <a-modal v-model:visible="createShow" width="50%" title="新增总表" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新增供应商' : '编辑供应商'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
     <Create style="margin-top: 20px" :successCallBack="() => {
