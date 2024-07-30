@@ -25,25 +25,23 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    deleted: "",
-    itemname: ""
+    
   }
 });
 
 async function fake() {
   const data2 = [];
-  const res = await supplierItemList({
+  const res = await supplierPersonList({
     pageSize: 999,
     curPage: 1,
     param: {
-      itemname: "",
     },
   });
   if (res?.code == 0) {
     Array.isArray(res?.data.list) &&
       res?.data.list.forEach((item) => {
         data2.push({
-          label: item.itemname,
+          label: item.supplierName,
           value: item.id,
         });
       });
@@ -51,11 +49,10 @@ async function fake() {
     // callback(data);
   }
   const data3 = [];
-  const res1 = await supplierList({
+  const res1 = await supplierItemList({
     pageSize: 999,
     curPage: 1,
     param: {
-      itemname: "",
     },
   });
   if (res1?.code == 0) {
@@ -63,7 +60,7 @@ async function fake() {
       res1?.data.list.forEach((item) => {
         data3.push({
           label: item.itemname,
-          value: item.supplierId,
+          value: item.id,
         });
       });
     data1.value = data3;
@@ -155,8 +152,6 @@ const getSupplierItemList = async () => {
   try {
     const res = await supplierPersonList(param);
     res?.data?.list.forEach((item) => {
-      // item.createTime = formatTime(item.createTime);
-      // item.updateTime = formatTime(item.updateTime);
     })
     if (res?.code == 0) dataSource.value = res?.data?.list;
   } catch (err) {}
@@ -171,6 +166,8 @@ const showEditDetail = async (record) => {
 const filterOption = (inputValue, option) => {
   return option.label.includes(inputValue);
 };
+
+const menus = ["已上架", "已下架"];
 
 onMounted(() => {
   getSupplierItemList();
@@ -193,21 +190,21 @@ onMounted(() => {
         :filterOption="filterOption"
         :default-active-first-option="false"
         :options="data"
-        v-model:value="param.param.supplierItemId"
-      />
-      </a-form-item>
-      <a-form-item label="测试项目" :wrapperCol="{
-        span: 7
-      }">
-        <a-select
-        allowClear
-        style="width: 200px"
-        show-search
-        :filterOption="filterOption"
-        :default-active-first-option="false"
-        :options="data1"
         v-model:value="param.param.supplierId"
       />
+      </a-form-item>
+      <a-form-item label="供应商模糊搜索" :wrapperCol="{
+        span: 7
+      }">
+        <a-input v-model:value="param.param.supplierName" placeholder="请输入" style="width:140px" />
+      </a-form-item>
+      <a-form-item label="状态" :wrapperCol="{
+        span: 7
+      }">
+        <a-select v-model:value="param.param.deleted" allowClear style="width: 100px">
+          <a-select-option value="-1">全部状态</a-select-option>
+          <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">
         <a-button type="primary" @click="() => {
@@ -227,7 +224,7 @@ onMounted(() => {
       bordered
     >
       <template #deleted="{ record }">
-        {{ ['存在', '已删除'][record.deleted] }}
+        {{ ['已上架', '已下架'][record.deleted] }}
       </template>
       <template #transfer="{ record }">
         {{ ['不确定', '对公转账', '对私转账'][record.transferMethod] }}

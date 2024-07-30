@@ -9,7 +9,7 @@ import { message } from "ant-design-vue";
 import {
   supplierList,
   supplierItemList,
-  // supplierPersonList,
+  supplierPersonList,
   supplierItemUpdate
 } from "../../../../services/supplier";
 import { notification } from "ant-design-vue";
@@ -60,25 +60,22 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    deleted: "",
-    itemname: ""
   }
 });
 
 async function fake() {
   const data2 = [];
-  const res = await supplierItemList({
+  const res = await supplierPersonList({
     pageSize: 999,
     curPage: 1,
     param: {
-      itemname: "",
     },
   });
   if (res?.code == 0) {
     Array.isArray(res?.data.list) &&
       res?.data.list.forEach((item) => {
         data2.push({
-          label: item.itemname,
+          label: item.supplierName,
           value: item.id,
         });
       });
@@ -86,11 +83,10 @@ async function fake() {
     // callback(data);
   }
   const data3 = [];
-  const res1 = await supplierList({
+  const res1 = await supplierItemList({
     pageSize: 999,
     curPage: 1,
     param: {
-      itemname: "",
     },
   });
   if (res1?.code == 0) {
@@ -98,7 +94,7 @@ async function fake() {
       res1?.data.list.forEach((item) => {
         data3.push({
           label: item.itemname,
-          value: item.supplierId,
+          value: item.id,
         });
       });
     data1.value = data3;
@@ -198,7 +194,7 @@ onMounted(() => {
         :filterOption="filterOption"
         :default-active-first-option="false"
         :options="data"
-        v-model:value="param.param.supplierItemId"
+        v-model:value="param.param.supplierId"
       />
       </a-form-item>
       <a-form-item label="测试项目" :wrapperCol="{
@@ -211,7 +207,7 @@ onMounted(() => {
         :filterOption="filterOption"
         :default-active-first-option="false"
         :options="data1"
-        v-model:value="param.param.supplierId"
+        v-model:value="param.param.supplierItemId"
       />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 8, span: 7 }">

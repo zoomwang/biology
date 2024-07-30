@@ -6,7 +6,7 @@ import { message } from "ant-design-vue";
 import {
   supplierList,
   supplierItemList,
-  supplierItemDetailAdd,
+  supplierPersonAdd,
   supplierPersonUpdate
 } from "../../../../services/supplier";
 const formRef = ref();
@@ -87,7 +87,7 @@ const onSubmit = () => {
     .then(async () => {
       try {
         if (props.isCreate) {
-          const res = await supplierItemDetailAdd(formState);
+          const res = await supplierPersonAdd(formState);
           if (res?.code == 0) {
             message.success("新建成功");
             props.successCallBack();
