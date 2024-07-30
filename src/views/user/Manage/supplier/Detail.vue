@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import OrderList from "./OrderList.vue"
+// import OrderList from "./OrderList.vue"
 import SupplierList from "./SupplierList.vue"
 
 const activeKey = ref('1');
