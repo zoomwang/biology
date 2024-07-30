@@ -80,7 +80,7 @@
               "label": "否",
               "isPriceMode": false,
               "required": false,
-              "checked": false
+              "checked": true
             },
             {
               "id": "lywqgboygj4gitp7pf",
@@ -434,7 +434,7 @@
               "price": 100.0,
               "isPriceMode": false,
               "required": false,
-              "checked": false
+              "checked": true
             },
             {
               "id": "lywr1ihrrdqhke7238",

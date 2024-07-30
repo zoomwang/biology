@@ -105,6 +105,7 @@ const schema1 = computed(() => {
   const initialValues = {}
   const properties = res.data.sampleQuestions.reduce((sum, item) => {
     console.log(111,item.id, item.label, item.dep, item.options, item)
+    const options = (item.options||[]).map(item => ({ ...item, label: item.label, value: item.id }))
     const property = {
       title: item.label + '-'+QUESTION_TYPES.get(item.type),
       type: "string",
@@ -123,7 +124,7 @@ const schema1 = computed(() => {
         style: {
           // width: "240px",
         },
-        options: item.options.map(item => ({ label: item.label, value: item.id })),
+        options: options,
         placeholder: item.placeholder,
         data: item,
       },
@@ -146,8 +147,16 @@ const schema1 = computed(() => {
       }
     }
     sum[item.id] = property
-    if(item.defaultValue) {
-      initialValues[item.id] = item.defaultValue
+
+    let defaultValue = item.defaultValue
+    if(item.type === QUESTION_TYPES.CHECKBOX) {
+      defaultValue = options.filter(item => item.checked).map(item => item.value)
+    } else if([QUESTION_TYPES.RADIO, QUESTION_TYPES.SELECT].includes(item.type)) {
+      defaultValue = options.find(item => item.checked)?.value
+    }
+    console.log('defaultValue', options, item.label, defaultValue)
+    if(defaultValue) {
+      initialValues[item.id] = defaultValue
     }
     return sum
   }, {})
