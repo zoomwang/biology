@@ -9,21 +9,20 @@ import {
   watch,
 } from "vue";
 import {
-  supplierItemDetailList,
   supplierList,
   getSupplierDetail
 } from "../../../../services/supplier";
-// import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
 import ItemList from "./ItemList.vue"
 import SupplierCreate from "./SupplierCreate.vue"
+import OrderList from "./OrderList.vue"
+
 
 const props = defineProps(['id']);
-// const orderDetail = ref({});
 const visible = ref(false);
-// const isCreate = ref(true);
 const createShow = ref(false);
 const supplierData = ref(null);
+const activeKey = ref('1');
 const showModal = async (orderId) => {
   getOrderInfos(orderId, "detail");
 };
@@ -162,11 +161,6 @@ const menus = ["已上架", "已下架"];
           >{{ record.supplierName }}</a-button
         >
       </template>
-      <!-- <template #deleted="{ text }">
-        <span>
-          {{ menus[text] }}
-        </span>
-      </template> -->
       <template #action="{ record }">
         <a-button type="link" @click="showModal(record.id)"
           >查看</a-button
@@ -174,10 +168,18 @@ const menus = ["已上架", "已下架"];
       </template>
     </a-table>
   </main>
-  <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="供应商测试项目" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+  <a-modal class="modal-tab" v-model:visible="visible" width="80%" title="供应商详情" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
-    <ItemList :id="props.id" />
+  <a-tabs v-model:activeKey="activeKey">
+    <a-tab-pane key="1" tab="测试项目">
+      <ItemList :id="props.id" />
+    </a-tab-pane>
+    <a-tab-pane key="2" tab="订单列表" force-render>
+      <OrderList :id="props.id" />
+    </a-tab-pane>
+  </a-tabs>
+    
   </a-modal>
 
   <a-modal v-model:visible="createShow" width="50%" title="供应商资质" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {

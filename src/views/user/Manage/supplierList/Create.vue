@@ -114,10 +114,9 @@ const filterOption = (inputValue, option) => {
 
 onMounted(() => {
   Object.assign(formState, props?.detail)
-  fake();
 });
 
-onMounted(() => {
+onUpdated(() => {
   Object.assign(formState, props?.detail)
 });
 </script>
