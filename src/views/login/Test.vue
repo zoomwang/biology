@@ -1,15 +1,7 @@
 <template>
   <div class="order-buffet-client-form">
-    <FormProvider  :form="form">
-      <SchemaField :schema="schema1"> </SchemaField>
-      <FormConsumer>
-        <template #default="{ form }">
-          <div style="white-space: pre">
-            {{ JSON.stringify(form.values, null, 2) }}
-          </div>
-        </template>
-      </FormConsumer>
-    </FormProvider>
+    {{ formData }}
+    <ClientForm v-model="formData" :config="res.data.sampleQuestions"></ClientForm>
   </div>
 </template>
 
@@ -24,13 +16,17 @@ import {
   connect,
   mapProps,
 } from "@formily/vue";
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 import Upload from "@/components/Upload.vue"
 import Editor from "@/components/Editor.vue"
 import { QUESTION_TYPES } from "@/utils/const"
-import res from './mock.json'
 import { UploadOutlined } from "@ant-design/icons-vue";
-
+import res from '@/components/DynamicQuestion/ClientForm/mock.json'
+import ClientForm from '@/components/DynamicQuestion/ClientForm/index.vue'
+const formData = reactive({aa: 11, "lywq6mqze2lkeyg0cjg": "444",
+  "lz48nozbxt5uc3cp8vl": "lz48nozbsq3vufzijts",
+  "lywrerwug3g2a8kox88": "lywrerwvfa29mp1ny6e",
+  "lywqmp4elu69q6yc8yf": "lywqnahozwkfvo12rph"})
 setValidateLanguage("en");
 const form = createForm();
 
@@ -97,77 +93,6 @@ const { SchemaField } = createSchemaField({
   },
 });
 
-
-
-
-
-const schema1 = computed(() => {
-  const initialValues = {}
-  const properties = res.data.sampleQuestions.reduce((sum, item) => {
-    console.log(111,item.id, item.label, item.dep, item.options, item)
-    const options = (item.options||[]).map(item => ({ ...item, label: item.label, value: item.id }))
-    const property = {
-      title: item.label + '-'+QUESTION_TYPES.get(item.type),
-      type: "string",
-      "x-decorator": "FormItem",
-      "x-component": {
-        [QUESTION_TYPES.TEXT]: 'Input',
-        [QUESTION_TYPES.TEXTAREA]: 'Input.TextArea',
-        [QUESTION_TYPES.RADIO]: 'Radio.Group',
-        [QUESTION_TYPES.CHECKBOX]: 'Checkbox.Group',
-        [QUESTION_TYPES.SELECT]: 'Select',
-        [QUESTION_TYPES.FILE]: 'NormalUpload',
-        [QUESTION_TYPES.RICH_TEXT]: 'NormalEditor',
-
-      }[item.type],
-      "x-component-props": {
-        style: {
-          // width: "240px",
-        },
-        options: options,
-        placeholder: item.placeholder,
-        data: item,
-      },
-      "x-decorator-props": {
-        // label: item.label,
-        labelCol: {span: 5},
-      },
-      description: item.desc,
-      'x-validator':{ required: true, message: '必填项' },
-
-    }
-    if (item.dep.depId && item.dep.value) {
-      property["x-reactions"] = {
-        dependencies: [item.dep.depId],
-        fulfill: {
-          state: {
-            display: `{{$deps[0] === '${item.dep.value}' ? 'visible' : 'none'}}`,
-          },
-        }
-      }
-    }
-    sum[item.id] = property
-
-    let defaultValue = item.defaultValue
-    if(item.type === QUESTION_TYPES.CHECKBOX) {
-      defaultValue = options.filter(item => item.checked).map(item => item.value)
-    } else if([QUESTION_TYPES.RADIO, QUESTION_TYPES.SELECT].includes(item.type)) {
-      defaultValue = options.find(item => item.checked)?.value
-    }
-    console.log('defaultValue', options, item.label, defaultValue)
-    if(defaultValue) {
-      initialValues[item.id] = defaultValue
-    }
-    return sum
-  }, {})
-  return {
-    type: "object",
-    properties,
-    initialValues,
-  }
-})
-
-form.setInitialValues(schema1.value.initialValues)
 
 </script>
 <style lang="less">
