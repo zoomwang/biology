@@ -10,6 +10,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // import Login from '../views/login/Login.vue';
 // import Register from '../views/login/Register.vue';
 // import FindPassword from '../views/login/FindPassword.vue';
+import buffetRouters from "./buffet";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,9 +71,20 @@ const router = createRouter({
       component: () => import("../views/user/Index.vue"),
     },
     {
+      path: "/user/buffet-build/create-and-update",
+      name: "buffetBuildCreateAndUpdate",
+      component: () => import("../views/user/Manage/BuffetBuild/CreateAndUpdate.vue"),
+    },
+    {
       path: "/user/publish-demand",
       name: "publishDemand",
       component: () => import("../views/user/PostDemand.vue"),
+    },
+    ...buffetRouters,
+    {
+      path: "/login/test",
+      name: "test",
+      component: () => import("../views/login/Test.vue"),
     },
   ],
 });

@@ -21,11 +21,11 @@ const param = reactive({
 });
 
 const columns =[
-  {
-    title: "用户账号",
-    dataIndex: "userName",
-    // key: "age",
-  },
+  // {
+  //   title: "用户账号",
+  //   dataIndex: "userName",
+  //   // key: "age",
+  // },
   {
     title: "用户名",
     dataIndex: "realName",

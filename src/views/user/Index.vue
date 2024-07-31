@@ -12,12 +12,13 @@ import Discount from './Discount.vue';
 import Assets from './Assets.vue';
 import Invoices from './Invoices.vue';
 import Store from './Store.vue';
-import ManageOrder from './Manage/order/Index.vue';
+import ManageOrder from './Manage/order/index.vue';
 import ManageSupplier from './Manage/supplier/index.vue';
 import ManageList from './Manage/supplierList/index.vue';
 import ManageSum from './Manage/supplierSum/index.vue';
 import ManageUser from './Manage/user/index.vue';
 import ManageSQL from './Manage/sql/index.vue';
+import BuffetBuild from './Manage/BuffetBuild/index.vue';
 import { reactive } from "vue";
 import { menus } from './config';
 import router from "../../router";
@@ -113,9 +114,10 @@ onMounted(() => {
         <ManageSupplier v-if="state.selectedKeys.includes('12')" />
         <ManageOrder v-if="state.selectedKeys.includes('13')" />
         <ManageUser v-if="state.selectedKeys.includes('14')" />
-        <ManageSQL v-if="state.selectedKeys.includes('15')" />
+        <ManageSQL v-if="state.selectedKeys.includes('18')" />
         <ManageList v-if="state.selectedKeys.includes('16')" />
         <ManageSum v-if="state.selectedKeys.includes('17')" />
+        <BuffetBuild v-if="state.selectedKeys.includes('15')" />
       </a-card>
     </div>
   </main>

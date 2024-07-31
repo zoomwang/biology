@@ -2,7 +2,8 @@ export const blackList = [
   "/home/register",
   "/home/find-password",
   "/process/index",
-  "/process/1"
+  "/process/1",
+  "/login/test"
   // "/user/prestore",
   // "/user/publish-demand",
   // "/user/userinfo"
@@ -113,3 +114,23 @@ export function trimLeft(s){
   return str; 
   } 
 
+
+export const genUid = () => {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+export const genTreeParent = (list) => {
+  const valueMap = {};
+  const loop = (list, parent) => {
+    return (list || []).map(({ children, value }) => {
+      const node = (valueMap[value] = {
+        parent,
+        value
+      });
+      node.children = loop(children, node);
+      return node;
+    });
+  }
+  loop(list)
+  return valueMap
+}

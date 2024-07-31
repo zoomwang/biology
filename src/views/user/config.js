@@ -90,8 +90,12 @@ export const menus = [{
   value: "14",
   type: "superManage"
 },{
-  label: "sql管理",
+  label: "自动报价",
   value: "15",
+  type: "superManage"
+},{
+  label: "sql管理",
+  value: "18",
   type: "superManage"
 }];
 
