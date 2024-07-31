@@ -191,7 +191,7 @@ const getOrderLists = async function () {
       </template>
       </a-table>
     </a-card>
-    <a-modal v-model:visible="visible" title="【易研易测积分活动宣传单】" @ok="handleOk">
+    <a-modal v-model:visible="visible" title="【快易测积分活动宣传单】" @ok="handleOk">
       <p></p>
       <p>🚀 **积分奖励计划** 🚀</p>
       <p>- **一元一积分，福利随意选：** 每当您委托我们完成一项测试订单，便能根据消费金额获赋相应积分。每消费1元，即可获得1积分的奖励。</p>

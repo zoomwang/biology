@@ -189,8 +189,8 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-checkbox>
             <span class="readme" style="text-align: left">
               <span style="margin-left: 10px">我已阅读并同意</span>
-              <a>《易研易测 服务协议》、</a><a>《隐私政策》、</a>
-              <a style="margin-left: 20px">《易研易测售后协议》</a></span
+              <a>《快易测 服务协议》、</a><a>《隐私政策》、</a>
+              <a style="margin-left: 20px">《快易测售后协议》</a></span
             >
           </div>
 

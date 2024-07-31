@@ -457,8 +457,13 @@ const needRecoveryMenus = ["不需要", "需要"]
       }">
         <a-date-picker v-model:value="param.endTime" style="width:120px" />
       </a-form-item>
+      <a-form-item label="订单号" :wrapperCol="{
+        span: 5
+      }">
+        <a-input v-model:value="param.param.orderId" placeholder="请输入" style="width:160px" />
+      </a-form-item>
       <a-form-item label="订单状态" :wrapperCol="{
-        span: 7
+        span: 6
       }">
         <a-select v-model:value="param.status" style="width: 100px">
           <a-select-option v-for="(item, index) in menus" :key="item" :value="index">{{ item }}</a-select-option>
