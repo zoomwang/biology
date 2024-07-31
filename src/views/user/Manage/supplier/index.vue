@@ -1,41 +1,25 @@
 <script setup>
-// import TheWelcome from '@/components/Wx.vue';
 import {
   ref,
-  computed,
   reactive,
-  defineComponent,
   onMounted,
-  watch,
 } from "vue";
 import { message } from "ant-design-vue";
 import {
-  getOrderLists,
-} from "../../../../services/process";
-import {
   supplierItemList,
-  // supplierItemAdd,
   supplierItemUpdate
 } from "../../../../services/supplier";
-import { notification } from "ant-design-vue";
 import {formatTime} from "@/utils/index";
-import DownLoad from "@/components/DownLoad.vue";
 import Create from "./Create.vue"
 import Detail from "./Detail.vue"
 
 const id = ref('');
-const diffVisible = ref(false);
-const orderDetail = ref({});
 const visible = ref(false);
 const isCreate = ref(true);
 const createShow = ref(false);
 const supplierDetail = ref(null);
 const showModal = async (orderId) => {
   getOrderInfos(orderId, "detail");
-};
-const handleOk = (e) => {
-  console.log(e);
-  visible.value = false;
 };
 const param = reactive({
   pageSize: 999,
@@ -201,9 +185,10 @@ const menus = ["已上架", "已下架"];
           ok-text="Yes"
           cancel-text="No"
           @confirm="async() => {
-            record.delete = 1;
+            record.deleted = 1;
             const res = await supplierItemUpdate(record);
             if (res?.code == 0) {
+              getSupplierItemList();
               message.success('删除成功');
             }
           }"
