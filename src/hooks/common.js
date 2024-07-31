@@ -2,6 +2,7 @@ import { ref } from "vue";
 import config from "../utils/config";
 import { notification, Form } from "ant-design-vue";
 import { sendSysCode,  } from "../services/user";
+import { getOfficeInfo } from "@/services/process";
 
 export function useSendCode(boo) {
   const isSendCode = ref(false);
@@ -19,13 +20,22 @@ export function useSendCode(boo) {
   };
 }
 
+export async function useOfficeInfos() {
+  const res = await getOfficeInfo();
+  return {
+    getValue: () => {
+      return res?.data;
+    }
+  };
+}
+
 export function useCountDown(callback) {
   const count = ref(config.timeCount);
   const countDown = function () {
     let se = setInterval(() => {
       if (count.value <= 1) {
         clearInterval(se);
-        count.value = 6;
+        count.value = config.timeCount;
         typeof callback == 'function' && callback();
         console.log(count)
       }

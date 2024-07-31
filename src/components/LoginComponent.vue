@@ -26,20 +26,6 @@ watch(key, async (newdata, olddata) => {
   console.log('localStorage.isLogin==', localStorage.isLogin)
 })
 
-// const islogged = ref(false);
-// const checkIsLogged = async function() {
-//   // console.log(localStorage.isLogin);
-//   // if (localStorage.isLogin) {
-//   //   islogged.value = true;
-//   // } else {
-//   //   islogged.value = false;
-//   // }
-//   // debugger
-// }
-// onMounted(() => {
-//   checkIsLogged();
-// });
-
 const setLogout = async function () {
   localStorage.clear();
   notification.success({
@@ -48,19 +34,26 @@ const setLogout = async function () {
   setTimeout(() => {
     router.push({name: "login"});
   }, 400)
-  // location.reload();
-  // const res = await logout();
-  // if (res?.code == 0 || res?.code == 401) {
-  //   islogged.value = false;
-  // } 
+}
+
+const toPublishPrestore = () => {
+  router.push({name: "publishPrestore"});
+}
+
+const toPublish = () => {
+  router.push({name: "publishPrestore"});
+}
+
+const toDemand = () => {
+  router.push({name: "publishDemand"});
 }
 
 </script>
 
 <template>
-  <div class="login-component d-flex" v-if="route?.fullPath.includes('userinfo')">
-    <a-button type="primary" class="预存" >预存</a-button>
-    <a-button class="">发布需求</a-button>
+  <div class="login-component d-flex" v-if="!route?.fullPath.includes('home')">
+    <a-button type="primary" class="预存" @click="toPublishPrestore">预存</a-button>
+    <a-button class="" @click="toDemand">发布需求</a-button>
     <div class="new-login" v-if="!islogged">
       <a href="/home/login">登录</a> |
       <a href="/home/register" class="schoolRegister">注册</a>
@@ -68,25 +61,25 @@ const setLogout = async function () {
     <div class="login" v-else>
       <a-dropdown>
         <a class="ant-dropdown-link" @click.prevent>
-          王荣荣
+          
           <DownOutlined />
         </a>
         <template #overlay>
           <a-menu class="menu">
             <a-menu-item>
-              <a href="javascript:;">个人中心</a>
+              <a href="/user/userinfo">个人中心</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">我的发票</a>
+              <a href="/user/userinfo?selectedKeys=8">我的发票</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">我的积分</a>
+              <a href="/user/userinfo?selectedKeys=2">我的积分</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">邀请好友</a>
+              <a href="/user/userinfo?selectedKeys=3">邀请好友</a>
             </a-menu-item>
             <a-menu-item>
-              <a href="javascript:;">优惠券管理</a>
+              <a href="/user/userinfo?selectedKeys=9">优惠券管理</a>
             </a-menu-item>
             <a-menu-item>
               <a href="javascript:;" @click="setLogout">退出</a>

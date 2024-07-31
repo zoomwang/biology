@@ -1,0 +1,39 @@
+预存接口：
+{
+  // layout: "horizontal",
+  payType: 0, //支付类型，0、1表示
+  invoiceNum: 1, // 发票数量
+  payAccount: 0,//预存账户，0、1表示
+  welfare: 0, //福利
+  invoiceType: 0, //发票类型
+  amount: 0, //预存金额
+  rebate: "", //预存返利
+  remind: "", //预存备注
+  addition: ['电子合同', '电子版测试清单', '电子报告'], //附加文件
+  canEdit: false, // 是否可以点击编辑需求方名称，接口无需关注
+  demand: "", //需求方名称
+  detection: "", //项目检测
+  mailBox: "", //收件邮箱
+  invoiceTitle: [{
+    "invoiceid": 174304,
+    "title": "广东工业大学",
+    "registrationo": "12330000470003281H",
+    "depositbank": "招商银行",
+    "banksn": "",
+    "registaddress": "阿时间考虑的",
+    "registphone": "15086726356",
+    "isdefault": 1,
+    "checked": true,
+  },{
+    "invoiceid": 174304,
+    "title": "广东工业大学",
+    "registrationo": "12330000470003281H",
+    "depositbank": "招商银行",
+    "banksn": "",
+    "registaddress": "阿时间考虑的",
+    "registphone": "15086726356",
+    "isdefault": 1,
+    "checked": true,
+  }],
+}
+

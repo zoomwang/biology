@@ -6,16 +6,19 @@ import WxScan from "../../components/WxScan.vue";
 import { notification, Form } from "ant-design-vue";
 import { regitry } from "../../services/user";
 import router from '../../router';
+import { useRoute, useRouter } from "vue-router";
 import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
 const activeKey = ref("1");
+const route = useRoute();
 const formState = reactive({
   layout: "horizontal",
   mobile: "",
   code: "",
   password: "",
   checked: false,
+  inviterMobile: route.query.invitecode
 });
 const state = reactive({
   checked: false,
@@ -119,9 +122,9 @@ const { resetFields, validate, validateInfos } = useForm(
               />
             </a-form-item>
           </div>
-          <div class="l-item">
+          <div class="l-item clear">
             <div class="t-item f-fl"><span class="t-red">*</span> 验证码：</div>
-            <a-form-item style="height: 40px">
+            <a-form-item style="height: 40px;" class="f-fl">
               <div class="code-content clear" style="overflow: hidden; height: 60px">
                 <a-form-item v-bind="validateInfos.code" class="f-fl">
                     <a-input
@@ -137,7 +140,7 @@ const { resetFields, validate, validateInfos } = useForm(
                   ghost
                   :disabled="isSendCode"
                   class="b-base b-gaincode f-fl"
-                  style="width: 120px; text-align: center; padding: 0"
+                  style="width: 120px; margin-left: 10px;text-align: center; padding: 0"
                 >
                   <span class="s-gauncode" v-if="!isSendCode">获取验证码</span>
                   <span class="t-countdown" v-else
@@ -164,6 +167,21 @@ const { resetFields, validate, validateInfos } = useForm(
               </a-form-item>
             </div>
           </div>
+          <div class="l-item clear">
+            <div class="t-item f-fl" style="width: 76px; text-align: right">
+              邀请人：
+            </div>
+            <div class="f-fl">
+              <a-form-item v-bind="validateInfos.inviterMobile">
+                <a-input
+                  disabled
+                  style="width: 403px"
+                  v-model:value="formState.inviterMobile"
+                  placeholder="邀请人手机号"
+                />
+              </a-form-item>
+            </div>
+          </div>
         </div>
         <div class="register-tip" style="width: 400px">
           <div style="overflow: hidden">
@@ -171,8 +189,8 @@ const { resetFields, validate, validateInfos } = useForm(
             </a-checkbox>
             <span class="readme" style="text-align: left">
               <span style="margin-left: 10px">我已阅读并同意</span>
-              <a>《科学指南针服务协议》、</a><a>《隐私政策》、</a>
-              <a style="margin-left: 20px">《科学指南针售后协议》</a></span
+              <a>《快易测 服务协议》、</a><a>《隐私政策》、</a>
+              <a style="margin-left: 20px">《快易测售后协议》</a></span
             >
           </div>
 

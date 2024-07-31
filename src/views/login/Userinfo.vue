@@ -7,13 +7,12 @@ const formState = reactive({
   identity: "2",
   no: "",
   name: "",
+  month: ""
 });
 
-// try {
-//   const data = isLogged();
-// } catch(err) {
-//   alert(err);
-// }
+const handerChange = (data) => {
+  console.log(data);
+}
 
 </script>
 
@@ -112,6 +111,9 @@ const formState = reactive({
         <div class="l-item clear">
            <div class="t-title f-fl">入学年份：</div>
            <a-form-item class="f-fl">
+             <a-space direction="vertical">
+    <a-month-picker v-model:value="formState.month" placeholder="Select month" />
+  </a-space>
             <a-select
                 v-model:value="value2"
                 style="width: 120px; margin-right: 10px"
@@ -159,31 +161,5 @@ const formState = reactive({
   </main>
 </template>
 <style lang="scss">
-.container-userinfo{
-  width: 980px;
-  margin: 30px auto;
-  background-color: #fff;
-  .h2{
-    padding-left: 50px;
-    height: 40px;
-    line-height: 40px;
-    text-align: left;
-    margin-bottom: 30px;
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-  .l-item {
-    width: 500px;
-  }
-  .t-title{
-    width: 150px;
-    text-align: right;
-  }
-  .l-identity{
-    margin-bottom: 20px;
-  }
-}
-#app{
-  background-color: #fff !important;
-  background-image: none; 
-}
+
 </style>

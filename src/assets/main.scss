@@ -1,8 +1,9 @@
-@import './base.css';
+@import './base.scss';
 
 #app{
   width: 100%;
   height: auto;
+  background-color: #F9F9F9;
 }
 body{
   background: #F9F9F9;
@@ -16,6 +17,7 @@ body{
   /* margin: 0 auto; */
   /* padding: 2rem;
 /*  */
+  background-color: #fff;
   font-weight: normal;
 }
 
@@ -41,7 +43,7 @@ a,
   .wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    /* padding: 0 2rem; */
   }
 }
 

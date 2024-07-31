@@ -1,8 +1,11 @@
 <script setup>
+import {
+  useRoute,
+} from "vue-router";
 import { ref, computed, defineComponent, reactive } from "vue";
 // import Logo from "../../assets/login/login_test.jpg";
 import PcPosition from "../../assets/login/pc-position.png";
-// import CodePosition from "../../assets/login/code-position.jpeg";
+// import CodePosition from "../../assets/login/code-position.jpg";
 // import WechatLogo from "../../assets/login/wechat-logo.jpg";
 import PhoneLogo from "../../assets/login/p-phone.png";
 import WxScan from "../../components/WxScan.vue";
@@ -13,7 +16,9 @@ import $localStorage from "../../hooks/localStorage";
 import { useCountDown, useSendCode, useGetVerifiCode } from "../../hooks/common";
 
 const useForm = Form.useForm;
+const route = useRoute();
 const show = ref(false);
+const visible = ref(false);
 const activeKey = ref("password");
 const formState = reactive({
   layout: "horizontal",
@@ -27,6 +32,14 @@ const { getVerifiCode } = useGetVerifiCode(formState, () => {
   changeSt(true);
   countDown.countDown();
 });
+
+const toRegistry = function() {
+  router.push({ name: "register" });
+}
+
+const findPassword = function() {
+  router.push({ name: "findPassword" });
+}
 
 function change(boo) {
   if (typeof boo == "booelan") {
@@ -50,11 +63,12 @@ const checkLogin = async function (type) {
             notification.success({
               description: "登录成功",
             });
+            $localStorage.setItem("phone", formState.mobile);
             $localStorage.setItem("access_token", data?.data?.access_token);
             $localStorage.setItem("refresh_token", data?.data?.refresh_token);
             $localStorage.setItem("isLogin", true);
             setTimeout(() => {
-              router.push({ name: "userinfo" });
+              router.push({ path: "/process/1" });
             }, 400);
           }
         } catch (err) {
@@ -157,7 +171,7 @@ const {
           "
           >手机号登录</a
         >｜
-        <a href="/home/register">立即注册</a>
+        <a @click="toRegistry">立即注册</a>
       </div>
     </div>
     <!-- 微信扫码成功后提示 -->
@@ -191,10 +205,15 @@ const {
                 />
               </a-form-item>
               <a-form-item v-bind="validateInfos.password">
-                <a-input
+                <a-input-password
                   v-model:value="formState.password"
+                  v-model:visible="visible"
                   placeholder="请输入密码"
                 />
+                <!-- <a-input
+                  v-model:value="formState.password"
+                  placeholder="请输入密码"
+                /> -->
               </a-form-item>
               <a-button
                 type="primary"
@@ -249,9 +268,9 @@ const {
         </a-tabs>
         <div class="login-tip" style="overflow: hidden">
           <div class="t-left f-fl">
-            还没账号？<a href="/home/register">立即注册</a>
+            还没账号？<a @click="toRegistry">立即注册</a>
           </div>
-          <div class="f-fr"><a href="/home/find-password">忘记密码？</a></div>
+          <div class="f-fr"><a @click="findPassword">忘记密码？</a></div>
         </div>
         <!-- <div class="weichat-tip" style="margin-top: 20px">
           <div class="t-grey">—— 第三方账号登录 ——</div>
@@ -314,9 +333,6 @@ body {
   background-size: 100% 100%;
   height: auto !important;
   min-height: 100%;
-}
-#app {
-  height: auto;
 }
 .container .public-login {
   position: relative;

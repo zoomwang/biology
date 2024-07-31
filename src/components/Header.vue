@@ -1,9 +1,13 @@
 <script setup>
 import HeaderContent from "./HeaderContent.vue";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/home_logo.jpg";
+import Zheng from "../assets/zhengicon.jpg";
+import Zheng1 from "../assets/zhengicon1.jpg";
+import Zhengshu from "../assets/zhengshu.jpg";
+import Zhengshu1 from "../assets/zhengshu1.jpg";
 import { useRoute } from "vue-router";
 // import SecondLogo from "../assets/secondLogo.jpg";
-import SecondLogo from "../assets/secondLogo.jpg";
+// import SecondLogo from "../assets/secondLogo.jpg";
 import LoginComponent from "../components/LoginComponent.vue";
 
 defineProps({
@@ -18,16 +22,57 @@ const route = useRoute();
 <template>
   <!-- <div class="header-title">
   </div> -->
-  <div class="header d-flex">
-    <div class="logo">
-      <img :src="Logo" style="width: 258px; height: auto" />
+  <div class="header-wrap">
+    <div class="header d-flex">
+      <div class="logo" style="display: inline-block;">
+        <img :src="Logo" style="width: auto; height: 80px;" />
+      </div>
+      <!-- <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
+      <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" /> -->
+
+      <a-popover placement="bottom" style="display: inline-block">
+          <template #content>
+            <img :src="Zhengshu1" style="width: auto; height: 500px" />
+          </template>
+          <template #title>
+            <span></span>
+          </template>
+          <img :src="Zheng" style="width: auto; height: 50px;margin-top: 15px;" />
+        </a-popover>
+      <a-popover placement="bottom" style="display: inline-block">
+        <template #content>
+          <img :src="Zhengshu" style="width: auto; height: 500px" />
+        </template>
+        <template #title>
+          <span></span>
+        </template>
+        <img :src="Zheng1" style="width: auto; height: 50px;margin-top: 15px;" />
+      </a-popover>
+      <LoginComponent class="f-fr" style="flex: 1" />
     </div>
-    <LoginComponent class="f-fr" style="flex: 1" />
   </div>
-  <HeaderContent v-if="!route?.fullPath.includes('home')" />
+  <div v-if="!route?.fullPath.includes('home')">
+    <div class="bg" >
+    <HeaderContent v-if="!route?.fullPath.includes('home')" />
+  </div>
+  
+  </div>
 </template>
 
 <style scoped lang="scss">
+.header-wrap{
+  background: #fff;
+}
+.bg{
+  z-index: 9999;
+	width: 100%;
+	height: 59px;
+	background: #FFF;
+	// padding-top: 29px;
+	transition: all .8s linear;
+	overflow: hidden;
+  box-shadow: 3px 3px 4px 0px rgba(0, 0, 0, 0.1);
+}
 .header-title {
   width: 100%;
   height: 34px;
@@ -45,9 +90,9 @@ const route = useRoute();
   }
 }
 .header {
-  width: 1200px;
+  width: 1280px;
   margin: 0 auto;
-  padding-top: 30px;
+  padding-top: 26px;
 }
 .head-link {
   display: inline-block;
@@ -56,7 +101,7 @@ const route = useRoute();
   // overflow: hidden;
   .logo {
     // float: left;
-    width: 258px;
+    width: 230px;
     height: auto;
     margin: 0 24px 0 0;
     img {
@@ -82,7 +127,7 @@ const route = useRoute();
 
 .header .logo {
   img {
-    display: block;
+    display: inline-block;
     width: 100%;
     height: 100%;
   }

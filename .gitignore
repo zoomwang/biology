@@ -3,6 +3,7 @@ node_modules
 dist
 es
 package-lock.json
+.history
 
 # local env files
 .env.local

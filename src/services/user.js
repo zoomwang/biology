@@ -22,6 +22,11 @@ api.post(`/sys/auth/register`, param);
 export const resetPassword = (param) =>
 api.post(`/sys/auth/resetPassword`, param);
 
+/** 修改密码 */
+export const updatePassword = (param) =>
+api.post(`/sys/user/password`, param);
+
+
 /** 重置密码 */
 export const isLogged = (param) =>
 api.post(`/sys/auth/isLogged`, {
@@ -34,3 +39,27 @@ api.post(`/sys/auth/logout`, {
   refreshToken: localStorage.refresh_token
 });
 
+/** 编辑用户信息 */
+export const editUser = (param) =>
+api.post(`/sys/user`, param);
+
+/** 获取用户信息 */
+export const getUser = () =>
+api.get(`/sys/user/info`);
+
+/**  */
+export const getSchool = () =>
+api.get(`/sys/school/info`);
+
+/** 获取账户信用 */
+export const getCredit = () =>
+api.get(`/sys/user/credit`);
+
+
+/** 获取账户余额 */
+export const getAmount = () =>
+api.get(`/sys/user/amount`);
+
+/** 获取用户是否管理员信息 */
+export const getUserIsPriviage = () =>
+  api.get(`/sys/user/check-priviage`);

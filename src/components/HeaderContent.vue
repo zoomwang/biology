@@ -1,117 +1,90 @@
 <script setup>
+import { ref } from "vue";
+import router from '../router';
+import { onMounted } from "vue";
+import { getMainInfo, getSubMainInfo } from "@/services/process";
+import $localStorage from "@/hooks/localStorage";
+
+const dropdown = ref(null);
 defineProps({
   msg: {
     type: String,
-    required: true
+    required: true,
+  },
+});
+const activeKey = ref($localStorage.getItem('menu'));
+const nav = ref([]);
+const subNav = ref([]);
+const loading = ref(false);
+const select = (nav) => {
+  activeKey.value = nav;
+  router.push({ path: `/process/${nav}` });
+  $localStorage.setItem("menu", nav);
+};
+const mouseOver = async(type) => {
+  getSubMenuInfo(type);
+};
+const getMenuInfo = async function () {
+  try {
+    const res = await getMainInfo();
+    if (res?.code == 0) {
+      nav.value = res?.data;
+      $localStorage.setItem("mainMenu", JSON.stringify(res?.data));
+    }else {
+      nav.value = JSON.parse($localStorage.getItem("mainMenu"));
+    }
+  } catch (err) {
   }
-})
+};
+const getSubMenuInfo = async function (id) {
+  try {
+    const res = await getSubMainInfo(id);
+    if (res?.code == 0) {
+      subNav.value = res?.data?.data;
+    }else {
+    }
+  } catch (err) {
+  }
+};
+const redirct = function (type, id) {
+  activeKey.value = type;
+  $localStorage.setItem("menu", type);
+  router.push({ path: `/process/${type}`});
+  document.getElementById(id)?.scrollIntoView(true);
+}
+
+onMounted(() => {
+  getMenuInfo();
+});
 </script>
 
 <template>
   <div class="header d-flex">
-    <!-- 
-      统一使用antd下拉菜单组件 -->
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        云现场
-        <DownOutlined />
+    <a-dropdown ref="dropdown" v-for="item in nav"
+        :key="item.id" @visibleChange="mouseOver(item.id)">
+      <a
+        :class="activeKey == item.id ? 'active' : ''"
+        @click.prevent="select(item.id)"
+      >
+        {{item.title}}
       </a>
       <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
+      <a-menu class="header-menu">
+        <a-menu-item v-for="inneritem in subNav" :key="inneritem">
+          <a style="color:#000!important;" @click.prevent="redirct(item.id, inneritem.categoryid)">{{inneritem.catename}}</a>
+        </a-menu-item>
+      </a-menu>
+    </template>
     </a-dropdown>
-
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        高端测试
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-
-    <a-dropdown>
-      <a class="ant-dropdown-link" @click.prevent>
-        环境检测
-        <DownOutlined />
-      </a>
-      <template #overlay>
-        <a-menu>
-          <a-menu-item>
-            <a href="javascript:;">1st menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">2nd menu item</a>
-          </a-menu-item>
-          <a-menu-item>
-            <a href="javascript:;">3rd menu item</a>
-          </a-menu-item>
-        </a-menu>
-      </template>
-    </a-dropdown>
-    <!-- <ul class="u-header">
-      <li class="l-header">
-        <a href="">云现场</a>
-      </li>
-      <li class="l-header">
-        <a href="">高端测试</a>
-      </li>
-      <li class="l-header">
-        <a href="">材料测试</a>
-      </li>
-      <li class="l-header">
-        <a href="">生物服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">环境监测</a>
-      </li>
-      <li class="l-header">
-        <a href="">行业服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">科研绘图</a>
-      </li>
-      <li class="l-header">
-        <a href="">模拟计算</a>
-      </li>
-      <li class="l-header">
-        <a href="">数据分析</a>
-      </li>
-      <li class="l-header">
-        <a href="">论文服务</a>
-      </li>
-      <li class="l-header">
-        <a href="">试剂耗材</a>
-      </li>
-      <li class="l-header">
-        <a href="">指南针学院</a>
-      </li>
-    </ul> -->
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.header {
+  .ant-tabs-tab-btn {
+    padding: 0 0 8px !important;
+  }
+}
 h1 {
   font-weight: 500;
   font-size: 2.6rem;
@@ -127,7 +100,33 @@ h3 {
 .greetings h3 {
   text-align: center;
 }
-
+.header {
+  a {
+    padding: 0 0 8px;
+    margin-right: 40px;
+    font-size: 16px;
+    color: #424242 !important;
+    font-weight: bold;
+  }
+  a.active {
+    position: relative;
+    color: #1890ff !important;
+    text-shadow: 0 0 0.25px #1890ff;
+  }
+  a.active:before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #1890ff;
+  }
+  a:last-child {
+    margin-right: 0;
+  }
+}
 @media (min-width: 1024px) {
   .greetings h1,
   .greetings h3 {

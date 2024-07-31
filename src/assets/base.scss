@@ -114,6 +114,21 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
 .t-orange{
   color:#FEA000;
 }
+.t-blue{
+  color:#1677ff;
+}
+.t-label{
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;;
+}
+.b-submit-button{
+  width: 100px;
+  text-align: center;
+  height: 40px;
+  margin-left: 100px;
+}
 .b-base {
   display: block;
   float: right;
@@ -122,8 +137,6 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
   line-height: 44px;
   border-radius: 4px;
   cursor: pointer;
-  /* border: 1px solid #56BEB2!important;
-  color: #56BEB2; */
 }
 .b-base-button{
   display: block;
@@ -150,26 +163,37 @@ button { border: none; outline: none; background-color: transparent; cursor: poi
   color: #fff;
 }
 
+.d-form{
+  .ant-input{
+    height: 40px;
+    line-height: 40px;
+  }
+  .ant-select{
+    height: 40px;
+    line-height: 40px;
+    .ant-select-selector{
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+  .ant-picker{
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
 .b-submit {
   width: 230px;
   height: 42px;
   line-height: 32px;
   text-align: center;
-  /* background: #56BEB2; */
+  /* background: #1890ff; */
   border-radius: 4px !important;
   /* color: #FFF; */
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 16px;
-  /* border: 1px solid #56BEB2!important; */
-}
-.b-submit{
-  /* width: 400px!important; */
-}
-.b-submit:hover {
-  /* background: #18B799;
-  font-weight: bold;
-  color: #fff!important; */
+  /* border: 1px solid #1890ff!important; */
 }
 a{
   cursor: pointer;
@@ -194,4 +218,51 @@ a:hover{
   box-shadow: 0px 4px 8px 0px rgb(86 190 178 / 19%);
   border-radius: 10px;
   padding-top: 30px;
+}
+.ant-form-item-label{
+  min-width: 81px!important;
+}
+
+.ant-modal{
+  width: 420px!important;
+}
+
+
+.ant-modal-wrap{
+  .ant-modal{
+    width: 600px!important;
+  }
+  .ant-modal.width-30{
+    width: 30%!important;
+  }
+  .ant-modal.width-40{
+    width: 40%!important;
+  }
+  .ant-modal.width-50{
+    width: 50%!important;
+  }
+  .ant-modal.width-60{
+    width: 60%!important;
+  }
+  .ant-modal.width-70{
+    width: 70%!important;
+  }
+  .ant-modal.width-80{
+    width: 80%!important;
+  }
+  .modal-tab.ant-modal{
+    width: 90%!important;
+  }
+}
+
+.ant-modal-wrap {
+  .order-modal-wrap.ant-modal{
+    width: 400px!important;
+  }
+}
+
+.project-detail{
+  .ant-card-head-title{
+    font-weight: bold!important;
+  }
 }

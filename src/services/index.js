@@ -11,7 +11,7 @@ const api = axios.create({
 })
 // 请求拦截
 api.interceptors.request.use((config) => {
-    config.headers.Authorization = $localStorage.access_token;
+    config.headers.Authorization = $localStorage.getItem('access_token');
     return config      
 }, error => {
     Promise.reject(error)
@@ -30,7 +30,7 @@ api.interceptors.response.use((res) => {
         //     description: msg || res?.data?.message,
         // });
     } else {
-        if (code == 400) return;
+        if (code == 400 || code == 401) return;
         notification.error({
             message: '失败',
             description: msg ,
