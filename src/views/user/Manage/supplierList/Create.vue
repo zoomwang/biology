@@ -161,11 +161,11 @@ onUpdated(() => {
         v-model:value="formState.payMethod"
       />    
     </a-form-item>
-    <a-form-item label="状态" name="status">
+    <a-form-item label="状态" name="deleted">
       <a-select
         style="width: 200px"
         :options="status"
-        v-model:value="formState.status"
+        v-model:value="formState.deleted"
       />    
     </a-form-item>
     <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
