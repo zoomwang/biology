@@ -66,7 +66,7 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="项目名称" name="itemname">
+    <a-form-item ref="itemname" label="项目名称" name="itemname">
       <a-input v-model:value="formState.itemname" />
     </a-form-item>
     <a-form-item label="对接分值" name="itemValues">

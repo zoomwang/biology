@@ -205,7 +205,7 @@ const menus = ["已上架", "已下架"];
     <Detail v-if="visible" :id="id" />
   </a-modal>
 
-   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建供应商测试项目' :'编辑供应商测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+   <a-modal v-model:visible="createShow" width="50%" :title="isCreate ? '新建测试项目' :'编辑测试项目'" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
     visible = false;
   }">
     <Create style="margin-top: 20px" :successCallBack="() => {
