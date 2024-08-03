@@ -194,7 +194,7 @@ const menus = ["已上架", "已下架"];
           }"
           @cancel="cancel"
         >
-          <a-button type="text" :danger="!record.deleted">{{ record.deleted ? '上线' : '下线'}}</a-button>
+          <a-button type="link" :danger="!record.deleted">{{ record.deleted ? '上线' : '下线'}}</a-button>
         </a-popconfirm>        
       </template>
     </a-table>
