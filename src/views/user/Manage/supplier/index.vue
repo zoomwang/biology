@@ -181,20 +181,20 @@ const menus = ["已上架", "已下架"];
           >更多详情</a-button
         >
         <a-popconfirm
-          title="确认要下线吗?"
+          :title="record.deleted  ? '确认要上线吗?' : '确认要下线吗?'"
           ok-text="确定"
           cancel-text="取消"
           @confirm="async() => {
-            record.deleted = 1;
+            record.deleted = record.deleted ? 0 : 1;
             const res = await supplierItemUpdate(record);
             if (res?.code == 0) {
               getSupplierItemList();
-              message.success('下线成功');
+              message.success(record.deleted ? '上线成功': '下线成功');
             }
           }"
           @cancel="cancel"
         >
-          <a-button type="text" :disabled="record.deleted == 1" danger>下线</a-button>
+          <a-button type="text" :danger="!record.deleted">{{ record.deleted ? '上线' : '下线'}}</a-button>
         </a-popconfirm>        
       </template>
     </a-table>

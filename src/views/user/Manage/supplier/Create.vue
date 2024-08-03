@@ -17,7 +17,6 @@ const formState = reactive({
 const rules = {
   itemname: [
     { required: true, message: '请输入项目名称', trigger: 'change' },
-    { min: 1, max: 15, message: '不能为空', trigger: 'blur' },
   ],
   itemValues: [{ required: false, message: '请输入对接分值', trigger: 'change' }],
 };
