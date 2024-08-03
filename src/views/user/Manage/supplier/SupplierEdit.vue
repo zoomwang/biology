@@ -7,7 +7,7 @@ import {
   supplierList,
   supplierItemList,
   supplierPersonList,
-  supplierItemDetailAdd
+  supplierItemDetailEdit
 } from "../../../../services/supplier";
 const formRef = ref();
 const labelCol = { span: 4 };
@@ -37,6 +37,9 @@ const rules = {
   ],
   maxWeekSampleCapacity: [
     { required: true, message: "请输入截止周容量", trigger: "change" },
+  ],
+  remark: [
+    { required: true, message: "请输入备注", trigger: "change" },
   ],
 };
 async function fake() {
@@ -84,9 +87,10 @@ const onSubmit = () => {
     .validate()
     .then(async () => {
       try {
-        const res = await supplierItemDetailAdd(formState);
+        const res = await supplierItemDetailEdit(formState);
         if (res?.code == 0) {
-          message.success("新建成功");
+          message.success("编辑成功");
+          console.log(props)
           props.successCallBack();
         }
       } catch (err) {
@@ -104,7 +108,15 @@ const filterOption = (inputValue, option) => {
 
 onMounted(() => {
   fake();
+  Object.assign(formState,props?.detail);
+  formState.deleted = !!props?.detail.deleted
 });
+
+onUpdated(() => {
+  Object.assign(formState,props?.detail);
+  formState.deleted = !!props?.detail.deleted
+});
+
 </script>
 
 <template>

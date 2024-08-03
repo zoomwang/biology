@@ -15,23 +15,33 @@ import {
 import {formatTime} from "@/utils/index";
 import ItemList from "./ItemList.vue"
 import SupplierCreate from "./SupplierCreate.vue"
+import SupplierEdit from "./SupplierEdit.vue"
 import OrderList from "./OrderList.vue"
 
 
 const props = defineProps(['id']);
 const visible = ref(false);
 const createShow = ref(false);
+const createShow1 = ref(false);
 const supplierData = ref(null);
 const activeKey = ref('1');
 const showModal = async (orderId) => {
   getOrderInfos(orderId, "detail");
 };
+const supplierDetail = ref(null);
+const supplierEdit = ref(null);
 
 const showDetailModal= async (record) => {
   const res = await getSupplierDetail(record.supplierId);
   createShow.value = true;
   supplierData.value = res.data;
 };
+
+
+const showEditDetail = async (record) => {
+  supplierEdit.value = record;
+  createShow1.value = true;
+}
 const param = reactive({
   pageSize: 999,
   curPage: 1,
@@ -165,6 +175,9 @@ const menus = ["已上架", "已下架"];
         <a-button type="link" @click="showModal(record.id)"
           >查看</a-button
         >
+        <a-button type="link" @click="showEditDetail(record)"
+          >编辑</a-button
+        >
       </template>
     </a-table>
   </main>
@@ -180,6 +193,16 @@ const menus = ["已上架", "已下架"];
     </a-tab-pane>
   </a-tabs>
     
+  </a-modal>
+
+  <a-modal v-model:visible="createShow1" width="50%" title="供应商编辑" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
+    visible = false;
+  }">
+    <SupplierEdit style="margin-top: 20px" :successCallBack="() => {
+      getSupplierList();
+      createShow1 = false;
+    }" :detail="supplierEdit" />
+
   </a-modal>
 
   <a-modal v-model:visible="createShow" width="50%" title="供应商资质" :footer="null" ok-text="确认" cancel-text="取消" @ok="() => {
