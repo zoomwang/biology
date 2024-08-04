@@ -1,7 +1,7 @@
 <template>
   <div class="order-buffet-client-form">
     <FormProvider :form="formInstance">
-      <FormConsumer>
+      <FormConsumer v-if="0">
         <template #default="{ form }">
           <div style="white-space: pre">
             {{ JSON.stringify(form.values, null, 2) }}
@@ -127,7 +127,7 @@ watch(
           dependencies: [item.dep.depId],
           fulfill: {
             state: {
-              display: `{{$deps[0] === '${item.dep.value}' ? 'visible' : 'none'}}`,
+              display: `{{($deps[0]||[]).includes('${item.dep.value}') ? 'visible' : 'none'}}`,
             },
           },
         };
