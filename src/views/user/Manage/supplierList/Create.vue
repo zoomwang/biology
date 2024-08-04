@@ -144,6 +144,9 @@ onUpdated(() => {
     <a-form-item label="寄样地方" name="address">
       <a-input v-model:value="formState.address" />
     </a-form-item>
+    <a-form-item label="支付账号" name="payAccount">
+      <a-input v-model:value="formState.payAccount" />
+    </a-form-item>
     <a-form-item label="发票信息" name="invoiceInformation">
       <a-input v-model:value="formState.invoiceInformation" />
     </a-form-item>

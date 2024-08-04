@@ -16,15 +16,15 @@ const data = ref([]);
 const data1 = ref([]);
 const formState = reactive({
   id: "",
-  itemname: "",
+  // itemname: "",
   itemValues: 0,
 });
 const rules = {
   supplierItemId: [
-    { required: true, message: "请输入测试项目名称", trigger: "change" },
+    { required: true, message: "请输入供应商姓名", trigger: "change" },
   ],
   supplierId: [
-    { required: true, message: "请输入供应商姓名", trigger: "change" },
+    { required: true, message: "请输入测试项目名称", trigger: "change" },
   ],
   deviceNum: [
     { required: true, message: "请输入设备数量", trigger: "change" },
@@ -33,7 +33,7 @@ const rules = {
     { required: true, message: "请输入设备类型", trigger: "change" },
   ],
   costprice: [
-    { required: true, message: "请输入设备类型", trigger: "change" },
+    { required: true, message: "请输入成本价", trigger: "change" },
   ],
   maxWeekSampleCapacity: [
     { required: true, message: "请输入截止周容量", trigger: "change" },
@@ -60,11 +60,11 @@ async function fake() {
     // callback(data);
   }
   const data3 = [];
-  const res1 = await supplierList({
+  const res1 = await supplierItemList({
     pageSize: 999,
     curPage: 1,
     param: {
-      itemname: "",
+      // itemname: "",
     },
   });
   if (res1?.code == 0) {
