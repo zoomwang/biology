@@ -5,6 +5,10 @@ import {
   onMounted,
   reactive
 } from "vue";
+const props = defineProps({
+  pictureUrl: String,
+  toDetail: String,
+})
 const route = useRoute();
 const router = useRouter();
 console.log("当前路由：", route);
@@ -16,6 +20,10 @@ let orderDetails = reactive({
 
 const id = route.query.id;
 const toDetail = () => {
+  if(props.toDetail) {
+      router.push(props.toDetail);
+    return
+  }
   router.push({name: "detail", query: { id: route.query.id } });
 }
 const getOrderDetails = async (id) => {
@@ -26,6 +34,7 @@ const getOrderDetails = async (id) => {
   }
 }
 onMounted(async () => {
+  if(props.pictureUrl) return
   getOrderDetails(id);
 })
 </script>
@@ -34,7 +43,7 @@ onMounted(async () => {
   <div class="sci-buffet-info-section">
     <h3>仪器图片</h3>
     <img
-      :src="orderDetails?.value?.pictureUrl"
+      :src="props.pictureUrl || orderDetails?.value?.pictureUrl"
       alt=""
     />
     <a @click.stop="toDetail" target="_blank">
