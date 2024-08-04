@@ -82,6 +82,10 @@ const columns = [
     dataIndex: "company",
   },
   {
+    title: "支付账号",
+    dataIndex: "payAccount",
+  },
+  {
     title: "寄样地方",
     dataIndex: "address",
   },
