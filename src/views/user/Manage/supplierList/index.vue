@@ -83,7 +83,7 @@ const columns = [
   },
   {
     title: "寄样地方",
-    dataIndex: "deviceNum",
+    dataIndex: "address",
   },
   {
     title: "转账方式",
