@@ -1,6 +1,6 @@
 <template>
   <div class="order-reserve-form-sample-questions-wrap">
-    <a-form v-for="form in formData" :model="form" :key="form.id">
+    <a-form v-for="form in formData" :model="form" :key="form.id" :labelCol="{ span: 5 }">
       <a-form-item label="样品数量" :rules="{
         required: true,
         message: '请输入',

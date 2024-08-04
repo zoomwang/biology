@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-form :model="formData">
+    <a-form :model="formData" :labelCol="{ span: 5 }">
       <a-form-item label="实验有问题联系谁?" :rules="[{ required: true, message: '请输入联系人!' }]">
         <a-input v-model:value="formData.contactName" />
       </a-form-item>

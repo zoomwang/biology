@@ -92,7 +92,8 @@ watch(
         value: item.id,
       }));
       const property = {
-        title: item.label + "-" + QUESTION_TYPES.get(item.type),
+        // title: item.label + "-" + QUESTION_TYPES.get(item.type),
+        title: item.label,
         type: "string",
         "x-decorator": "FormItem",
         "x-component": {

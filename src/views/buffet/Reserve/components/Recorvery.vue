@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-form :model="formData">
+    <a-form :model="formData" :labelCol="{ span: 5 }">
       <a-form-item label="是否回收">
         <a-radio-group v-model:value="formData.needRecovery" button-style="solid">
           <a-radio-button :value="0">
