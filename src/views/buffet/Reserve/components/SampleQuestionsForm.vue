@@ -47,13 +47,13 @@
               }"
             >
               <a-input
-                v-for="(item, idx) in form.sampleNumber"
-                :key="idx"
+                v-for="(item, sampleNumberIdx) in form.sampleNumber"
+                :key="sampleNumberIdx"
                 placeholder="请输入"
                 style="width: 120px; margin-right: 10px; margin-bottom: 10px"
-                v-model:value="form.sampleIds[idx]"
+                v-model:value="form.sampleIds[sampleNumberIdx]"
               >
-                <template #prefix> {{ idx + 1 }}- </template>
+                <template #prefix> {{ genSampleNumberIdx(formData[idx - 1], sampleNumberIdx) }}- </template>
               </a-input>
             </a-form-item>
             <ClientForm :model="form" :config="sampleQuestions"></ClientForm>
@@ -89,18 +89,23 @@ const props = defineProps({
     default: () => [],
   },
 });
+const activeKey = ref([])
 const formData = ref([]);
 watch(
   () => props.model,
   val => {
     formData.value = val;
+    activeKey.value = val[0]?.id ? [val[0].id] : [];
   },
   {
     immediate: true,
   }
 );
 
-const activeKey = ref([formData.value?.[0].id]);
+const genSampleNumberIdx = (prevForm, idx) => {
+  const prevSampleNumber = prevForm?.sampleNumber || 0;
+  return prevSampleNumber + idx + 1;
+}
 
 const genItem = () => {
   return {
