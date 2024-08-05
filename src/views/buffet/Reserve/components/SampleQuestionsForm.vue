@@ -105,6 +105,8 @@ const activeKey = ref([formData.value?.[0].id]);
 const genItem = () => {
   return {
     id: genUid(),
+    sampleNumber: 1,
+    sampleIds: [],
   };
 };
 const addItem = (data = {}) => {
