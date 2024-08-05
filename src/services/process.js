@@ -1,5 +1,6 @@
 
 import api from './index'
+import {stringifyBuffetData, stringify} from '@/utils/buffet-build'
 /** 一级菜单 */
 export const getMainInfo = (param) => {
   console.log("param==", param)
@@ -23,6 +24,11 @@ export const getRecoveryList = (type) => {
 
 /** 下订单 */
 export const addOrder = (params) => {
+  const dynamicFormInfo = {
+   ...(params.dynamicFormInfo || {}),
+   ...stringifyBuffetData(params.dynamicFormInfo || {}),
+  }
+  params = {...params, dynamicFormInfo}
   return api.post(`/sys/order/add`, params);
 }
 
@@ -38,6 +44,11 @@ export const getOrderDetail = (id) => {
 
 /** 预估金额 */
 export const getOrderCostCalc = (params) => {
+  const dynamicFormInfo = {
+    ...(params.dynamicFormInfo || {}),
+    ...stringifyBuffetData(params.dynamicFormInfo || {}),
+   }
+  params = {...params, dynamicFormInfo}
   return api.post(`/sys/order/cost/calc`, params);
 }
 

@@ -195,7 +195,7 @@
 import { reactive, ref, defineProps, watch } from "vue";
 import { message } from "ant-design-vue";
 import areaData from "@/public/area.js";
-import { genUid } from "@/utils";
+// import { genUid } from "@/utils";
 import {
   QuestionCircleTwoTone,
 } from "@ant-design/icons-vue";
@@ -215,7 +215,7 @@ watch(() => props.model, (val) => {
 })
 
 let modelRef = reactive({
-  id: genUid(),
+  id: 0,
   receiver: "",
   phone: "",
   address: [],

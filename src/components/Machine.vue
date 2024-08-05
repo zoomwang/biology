@@ -34,7 +34,7 @@ const getOrderDetails = async (id) => {
   }
 }
 onMounted(async () => {
-  if(props.pictureUrl) return
+  if(!id) return
   getOrderDetails(id);
 })
 </script>
