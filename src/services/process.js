@@ -54,8 +54,13 @@ export const getOrderCostCalc = (params) => {
 
 
 /** 保存草稿 */
-export const draftSave = (param) => {
-  return api.post(`/sys/order/draft/save`, param);
+export const draftSave = (params) => {
+  const dynamicFormInfo = {
+    ...(params.dynamicFormInfo || {}),
+    ...stringifyBuffetData(params.dynamicFormInfo || {}),
+   }
+  params = {...params, dynamicFormInfo}
+  return api.post(`/sys/order/draft/save`, params);
 }
 
 /** 获取办事处信息 */

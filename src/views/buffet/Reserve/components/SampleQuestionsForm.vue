@@ -89,18 +89,18 @@ const props = defineProps({
     default: () => [],
   },
 });
+const activeKey = ref([])
 const formData = ref([]);
 watch(
   () => props.model,
   val => {
     formData.value = val;
+    activeKey.value = val[0]?.id ? [val[0].id] : [];
   },
   {
     immediate: true,
   }
 );
-
-const activeKey = ref([formData.value?.[0].id]);
 
 const genSampleNumberIdx = (prevForm, idx) => {
   const prevSampleNumber = prevForm?.sampleNumber || 0;
