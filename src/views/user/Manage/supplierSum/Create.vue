@@ -72,7 +72,7 @@ async function fake() {
       res1?.data.list.forEach((item) => {
         data3.push({
           label: item.itemname,
-          value: item.supplierId,
+          value: item.id,
         });
       });
     data1.value = data3;

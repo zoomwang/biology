@@ -129,6 +129,7 @@ const columns = [
   {
     title: "操作",
     key: "action",
+    fixed: 'right',
     slots: {
       customRender: "action",
     },
@@ -222,6 +223,8 @@ onMounted(() => {
         }">新建</a-button>
     </a-form>
     <a-table
+      class="supplier-wrap"
+      :scroll="{ x: 1500, y: 300 }"
       :columns="columns"
       :data-source="dataSource"
       :pagination="{ pageSize: 5 }"
@@ -254,4 +257,10 @@ onMounted(() => {
     }" :detail="supplierDetail" :isCreate="isCreate" />
   </a-modal>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+  .supplier-wrap{
+    .ant-table-container{
+      width: 1080px!important;
+    }
+  }
+</style>
