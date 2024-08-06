@@ -51,7 +51,7 @@ import { getOrderCostCalc, addOrder, draftSave, getOrderDraftInfo } from "@/serv
 import { notification } from "ant-design-vue";
 import { useRequest } from "vue-request";
 import { fetchConfig } from "@/services/buffet-build";
-import ReserveForm from "./components/ReserveForm.vue";
+import ReserveForm from "../modules/Buffet-Form/index.vue";
 import {genUid} from '@/utils/index'
 const formRef = ref()
 const current = ref(0);
