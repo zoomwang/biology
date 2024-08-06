@@ -9,10 +9,7 @@
         <template v-if="column.key === 'action'">
           <a-space :size="0">
             <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/preview`">
-              预览自动报价
-            </a-button>
-            <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/detail`">
-              预览详情
+              预览
             </a-button>
             <a-button type="link" :href="`/user/buffet-build/create-and-update?typeId=${record.orderTypeId}`">
               编辑
@@ -71,7 +68,7 @@ const columns = [
     }
   },
   {
-    title: "上下架状态",
+    title: "状态",
     dataIndex: "isListing",
     customRender: ({ record }) => {
       return record.isListing ? <a-tag color="success">已上架</a-tag> : <a-tag color="warning">已下架</a-tag>;
