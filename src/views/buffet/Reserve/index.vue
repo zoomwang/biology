@@ -111,7 +111,9 @@ const fetchData = () => {
 
     // }),
   ])
-    .then(([projectConfig, buffetData] = []) => {
+    .then(([projectConfig, buffetData = {}] = []) => {
+      buffetData.contactsPhone = projectConfig?.extInfo?.contacts || buffetData?.contactsPhone || ''
+      buffetData.contactName = projectConfig?.extInfo?.contactName || buffetData.contactsPhone
       return {
         projectConfig,
         buffetData,

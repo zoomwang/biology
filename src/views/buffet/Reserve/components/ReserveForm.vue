@@ -11,9 +11,9 @@
         <SampleQuestionsForm :model="formData.dynamicFormInfo.sampleQuestions" :sampleQuestions="sampleQuestions"></SampleQuestionsForm>
       </a-collapse-panel>
       <a-collapse-panel key="extInfo" header="支付信息">
-        <SameDevice :model="formData" :config="extInfo"></SameDevice>
-        <Recovery :model="formData" :config="extInfo"></Recovery>
-        <ProblemContact :model="formData" :config="extInfo"></ProblemContact>
+        <SameDevice v-if="extInfo.needSameDevice" :model="formData" :config="extInfo"></SameDevice>
+        <Recovery v-if="extInfo.needRecovery" model="formData" :config="extInfo"></Recovery>
+        <ProblemContact v-if="extInfo.contacts" :model="formData" :config="extInfo"></ProblemContact>
         <ExpressDelivery :model="formData" :config="extInfo"></ExpressDelivery>
       </a-collapse-panel>
       <a-collapse-panel key="remark" header="留言">
