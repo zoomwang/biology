@@ -55,10 +55,10 @@ const columns = [
     title: "设备别名",
     dataIndex: "deviceAliases",
   },
-  {
-    title: "设备型号",
-    dataIndex: "deviceModel",
-  },
+  // {
+  //   title: "设备型号",
+  //   dataIndex: "deviceModel",
+  // },
   {
     title: "品牌",
     dataIndex: "brand",
