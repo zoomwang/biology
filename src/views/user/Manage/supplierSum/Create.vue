@@ -115,22 +115,22 @@ onMounted(() => {
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-item ref="name" label="供应商姓名" name="supplierItemId">
+    <a-form-item ref="name" label="供应商姓名" name="supplierId">
       <a-select
         show-search
         :filterOption="filterOption"
         :default-active-first-option="false"
         :options="data"
-        v-model:value="formState.supplierItemId"
+        v-model:value="formState.supplierId"
       />
     </a-form-item>
-    <a-form-item ref="name" label="测试项目" name="supplierId">
+    <a-form-item ref="name" label="测试项目" name="supplierItemId">
       <a-select
         show-search
         :filterOption="filterOption"
         :default-active-first-option="false"
         :options="data1"
-        v-model:value="formState.supplierId"
+        v-model:value="formState.supplierItemId"
       />
     </a-form-item>
     <a-form-item ref="deviceType" label="设备类型" name="deviceType">
