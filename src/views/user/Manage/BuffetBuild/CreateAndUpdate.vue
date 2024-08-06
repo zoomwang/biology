@@ -5,11 +5,13 @@
         <component ref="formRef" :is="item.comp" :model="buffetBuildData" />
       </a-tab-pane>
     </a-tabs>
-    <a-form-item :wrapper-col="{ span: 24 }" style="margin-top: 16px">
-      <a-button type="primary" :loading="submitting" @click="onSubmit"
-        >保存</a-button
-      >
-    </a-form-item>
+    <a-affix :offset-bottom="20">
+      <a-form-item :wrapper-col="{ span: 24 }" style="margin-top: 16px">
+        <a-button type="primary" :loading="submitting" @click="onSubmit"
+          >保存</a-button
+        >
+      </a-form-item>
+    </a-affix>
   </a-form>
 </template>
 <script setup>

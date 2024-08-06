@@ -44,14 +44,14 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, reactive, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Machine from "@/components/Machine.vue";
 import { getOrderCostCalc, addOrder, draftSave, getOrderDraftInfo } from "@/services/process";
-import { notification } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import { useRequest } from "vue-request";
 import { fetchConfig } from "@/services/buffet-build";
-import ReserveForm from "./components/ReserveForm.vue";
+import ReserveForm from "../modules/Buffet-Form/index.vue";
 import {genUid} from '@/utils/index'
 const formRef = ref()
 const current = ref(0);
@@ -173,14 +173,17 @@ const { data: costData, runAsync: runFetchCost } = useRequest(
 const cost = computed(() => {
   return costData.value?.data || {} //|| { "样品回收费": 50.0, "运费": 15.0, "订单金额": 0, "支付金额": Date.now() };
 })
-watch(() => formData.value, (data) => runFetchCost(data), {
+watch( () => formData.value,async () => {
+  await nextTick()
+  const form = formRef.value.getFormValue()
+  runFetchCost(form)
+}, {
   deep: true,
 })
 
 const saveDraft = async () => {
   try {
     const data = await formRef.value.validate()
-    console.log(111, data)
     const res = await draftSave(data);
     if (res.code == 0) {
       notification.success({
@@ -213,7 +216,21 @@ const handleSubmit = async () => {
 }
 
 onMounted(async () => {
-  await runFetchProject()
+  try {
+    if(!orderTypeId) throw new Error('该项目不存在')
+    await runFetchProject()
+    if(!projectConfig.value.isListing) {
+      throw new Error('该项目未上架')
+    }
+  } catch (error) {
+    if(error) {
+      message.warn(error.message)
+      setTimeout(() => {
+        router.back()
+      }, 1200);
+    }
+  }
+  
 })
 </script>
 

@@ -8,8 +8,8 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <a-space :size="0">
-            <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/detail`">
-              预览详情
+            <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/preview`">
+              预览
             </a-button>
             <a-button type="link" :href="`/user/buffet-build/create-and-update?typeId=${record.orderTypeId}`">
               编辑
@@ -29,7 +29,7 @@
     </a-table>
   </div>
 </template>
-<script setup>
+<script setup lang="jsx">
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { usePagination } from "vue-request";
@@ -52,10 +52,10 @@ const columns = [
     title: "设备别名",
     dataIndex: "deviceAliases",
   },
-  {
-    title: "设备型号",
-    dataIndex: "deviceModel",
-  },
+  // {
+  //   title: "设备型号",
+  //   dataIndex: "deviceModel",
+  // },
   {
     title: "品牌",
     dataIndex: "brand",
@@ -67,7 +67,13 @@ const columns = [
       return `${record.projectTypeName}/${record.projectSubTypeName}`
     }
   },
-
+  {
+    title: "状态",
+    dataIndex: "isListing",
+    customRender: ({ record }) => {
+      return record.isListing ? <a-tag color="success">已上架</a-tag> : <a-tag color="warning">已下架</a-tag>;
+    }
+  },
   {
     title: "操作",
     key: "action",
