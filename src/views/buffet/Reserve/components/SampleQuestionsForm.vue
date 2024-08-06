@@ -22,40 +22,46 @@
             </a-space>
           </template>
           <a-form :model="form" :labelCol="{ span: 5 }">
-            <a-form-item
-              label="样品数量"
-              :rules="{
-                required: true,
-                message: '请输入',
-                trigger: 'change',
-              }"
-            >
-              <a-input
-                type="number"
-                :min="1"
-                v-model:value.number="form.sampleNumber"
-                placeholder="请输入样品数量"
-                :max-length="25"
-                style="width: 120px"
-              />
-            </a-form-item>
-            <a-form-item
-              label="样品编号"
-              :rules="{
-                message: '请输入',
-                trigger: 'change',
-              }"
-            >
-              <a-input
-                v-for="(item, sampleNumberIdx) in form.sampleNumber"
-                :key="sampleNumberIdx"
-                placeholder="请输入"
-                style="width: 120px; margin-right: 10px; margin-bottom: 10px"
-                v-model:value="form.sampleIds[sampleNumberIdx]"
+            <template v-if="extInfo.sampleNumberOption !== SAMPLE_QUALTITY_AFFECT_TYPES.NONE">
+              <a-form-item
+                label="样品数量"
+                :rules="{
+                  required: true,
+                  message: '请输入',
+                  trigger: 'change',
+                }"
               >
-                <template #prefix> {{ genSampleNumberIdx(formData[idx - 1], sampleNumberIdx) }}- </template>
-              </a-input>
-            </a-form-item>
+                <a-input
+                  type="number"
+                  :min="1"
+                  v-model:value.number="form.sampleNumber"
+                  placeholder="请输入样品数量"
+                  :max-length="25"
+                  style="width: 120px"
+                />
+                <template #extra>
+                  <p>1. 样品编号框建议跳过不填，系统默认以1,2,3…简单命名<span style="color: red;">（样品上请标注1,2,3…以便对应）</span>，复杂编号易出错！</p>
+                  <p>2. 如您对样品编号有严格要求，请尽量简化，并在样品编号框内填写。</p>
+                </template>
+              </a-form-item>
+              <a-form-item
+                label="样品编号"
+                :rules="{
+                  message: '请输入',
+                  trigger: 'change',
+                }"
+              >
+                <a-input
+                  v-for="(item, sampleNumberIdx) in form.sampleNumber"
+                  :key="sampleNumberIdx"
+                  placeholder="请输入"
+                  style="width: 120px; margin-right: 10px; margin-bottom: 10px"
+                  v-model:value="form.sampleIds[sampleNumberIdx]"
+                >
+                  <template #prefix> {{ genSampleNumberIdx(formData[idx - 1], sampleNumberIdx) }}- </template>
+                </a-input>
+              </a-form-item>
+            </template>
             <ClientForm :model="form" :config="sampleQuestions"></ClientForm>
           </a-form>
         </a-collapse-panel>
@@ -70,6 +76,7 @@
 <script setup lang="jsx">
 import { ref, defineProps, watch } from "vue";
 import { message } from 'ant-design-vue';
+import { SAMPLE_QUALTITY_AFFECT_TYPES } from "@/utils/const";
 
 import {
   DeleteOutlined,
@@ -88,6 +95,10 @@ const props = defineProps({
     typeof: Array,
     default: () => [],
   },
+  extInfo: {
+    type: Object,
+    default: () => ({}),
+  }
 });
 const activeKey = ref([])
 const formData = ref([]);

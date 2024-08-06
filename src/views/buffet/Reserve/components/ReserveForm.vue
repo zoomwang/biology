@@ -8,7 +8,7 @@
         <ClientForm :model="formData.dynamicFormInfo.globalQuestions" :config="globalQuestions"></ClientForm>
       </a-collapse-panel>
       <a-collapse-panel key="sampleQuestions" header="样品数据">
-        <SampleQuestionsForm :model="formData.dynamicFormInfo.sampleQuestions" :sampleQuestions="sampleQuestions"></SampleQuestionsForm>
+        <SampleQuestionsForm :model="formData.dynamicFormInfo.sampleQuestions" :sampleQuestions="sampleQuestions" :extInfo="extInfo"></SampleQuestionsForm>
       </a-collapse-panel>
       <a-collapse-panel key="extInfo" header="支付信息">
         <SameDevice v-if="extInfo.needSameDevice" :model="formData" :config="extInfo"></SameDevice>
