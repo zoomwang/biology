@@ -62,7 +62,7 @@
                 </a-input>
               </a-form-item>
             </template>
-            <ClientForm :model="form" :config="sampleQuestions"></ClientForm>
+            <ClientForm ref="clientFormRef" :model="form" :config="sampleQuestions"></ClientForm>
           </a-form>
         </a-collapse-panel>
       </a-collapse>
@@ -84,8 +84,9 @@ import {
   CopyOutlined,
 } from "@ant-design/icons-vue";
 import { genUid } from "@/utils";
-
 import ClientForm from "@/components/DynamicQuestion/ClientForm/index.vue";
+
+const clientFormRef = ref()
 const props = defineProps({
   model: {
     type: Array,
@@ -146,6 +147,25 @@ const handleItemRemove = idx => {
 const handleItemAdd = () => {
   addItem();
 };
+
+const getFormValue = () => {
+  return formData.value.map((item, idx) => {
+    const { sampleNumber, sampleIds } = item;
+    const clientForm = clientFormRef.value[idx].getFormValue()
+    return {
+      ...clientForm,
+      sampleNumber,
+      sampleIds,
+    }
+  }) 
+}
+const validate = () => {
+  return getFormValue()
+}
+defineExpose({
+  getFormValue,
+  validate,
+})
 </script>
 <style lang="less" scoped>
 .order-reserve-form-sample-questions-wrap {

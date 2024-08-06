@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, reactive, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Machine from "@/components/Machine.vue";
 import { getOrderCostCalc, addOrder, draftSave, getOrderDraftInfo } from "@/services/process";
@@ -119,7 +119,11 @@ const { data: costData, runAsync: runFetchCost } = useRequest(
 const cost = computed(() => {
   return costData.value?.data || {} //|| { "样品回收费": 50.0, "运费": 15.0, "订单金额": 0, "支付金额": Date.now() };
 })
-watch(() => formData.value, (data) => runFetchCost(data), {
+watch( () => formData.value,async () => {
+  await nextTick()
+  const form = formRef.value.getFormValue()
+  runFetchCost(form)
+}, {
   deep: true,
 })
 

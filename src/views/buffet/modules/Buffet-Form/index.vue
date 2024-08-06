@@ -5,10 +5,10 @@
         <div v-dompurify-html="baseInfo.attention"></div>
       </a-collapse-panel>
       <a-collapse-panel key="globalQuestions" header="全局问题">
-        <ClientForm :model="formData.dynamicFormInfo.globalQuestions" :config="globalQuestions"></ClientForm>
+        <ClientForm ref="globalQuestionsRef" :model="formData.dynamicFormInfo.globalQuestions" :config="globalQuestions"></ClientForm>
       </a-collapse-panel>
       <a-collapse-panel key="sampleQuestions" header="样品数据">
-        <SampleQuestionsForm :model="formData.dynamicFormInfo.sampleQuestions" :sampleQuestions="sampleQuestions" :extInfo="extInfo"></SampleQuestionsForm>
+        <SampleQuestionsForm ref="sampleQuestionsRef" :model="formData.dynamicFormInfo.sampleQuestions" :sampleQuestions="sampleQuestions" :extInfo="extInfo"></SampleQuestionsForm>
       </a-collapse-panel>
       <a-collapse-panel key="extInfo" header="支付信息">
         <SameDevice v-if="extInfo.needSameDevice" :model="formData" :config="extInfo"></SameDevice>
@@ -35,6 +35,9 @@ import Recovery from "./Recovery.vue";
 import ProblemContact from "./ProblemContact.vue";
 import ExpressDelivery from "./ExpressDelivery.vue";
 import { genUid } from "@/utils";
+const globalQuestionsRef = ref()
+const sampleQuestionsRef = ref()
+
 const props = defineProps({
   model: {
     type: Object,
@@ -70,7 +73,14 @@ watch(()=> props.model, (model) => {
 const activeKey = ref(['notice', 'globalQuestions', 'sampleQuestions', 'extInfo', 'remark'])
 
 const getFormValue = () => {
-  return formData.value;
+  return {
+    ...formData.value,
+    dynamicFormInfo: {
+      globalQuestions: globalQuestionsRef.value.getFormValue(),
+      sampleQuestions: sampleQuestionsRef.value.getFormValue(),
+    }
+  };
+
 }
 const validate = async () => {
   return getFormValue()
