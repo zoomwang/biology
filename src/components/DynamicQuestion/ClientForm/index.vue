@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="jsx">
-import { ref, watch, defineProps } from "vue";
+import { ref, watch, defineProps, nextTick } from "vue";
 import { Form, Input, Select, Radio, Checkbox } from "ant-design-vue";
 import { createForm } from "@formily/core";
 import {
@@ -38,19 +38,25 @@ const props = defineProps({
   },
 });
 
-const formModel = ref(props.model);
+const formInstance = createForm({
+  values: {},
+});
+
+const formModel = ref({});
 watch(
   () => props.model,
-  v => {
+  async v => {
     formModel.value = v;
+    await nextTick()
+    formInstance.setValues(formModel.value);
+  },
+  {
+    immediate: true,
   }
 );
 
 const schema = ref({});
 
-const formInstance = createForm({
-  values: {},
-});
 const FormItem = connect(
   Form.Item,
   mapProps(
@@ -121,7 +127,7 @@ watch(
           labelCol: { span: 5 },
         },
         description: item.desc,
-        "x-validator": { required: true, message: "必填项" },
+        "x-validator": { required: item.required, message: "必填项" },
       };
       if (item.dep.depId && item.dep.value) {
         property["x-reactions"] = {
@@ -156,8 +162,9 @@ watch(
       properties,
     };
     //   console.log('initialValues', initialValues, Object.assign(initialValues, model.value))
-    Object.assign(formModel.value, initialValues, formModel.value);
-    formInstance.setValues(formModel.value);
+    // Object.assign(formModel.value, initialValues, formModel.value);
+    // formInstance.setValues(formModel.value);
+    formInstance.setInitialValues(initialValues)
   },
   {
     immediate: true,

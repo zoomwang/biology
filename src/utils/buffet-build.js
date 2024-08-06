@@ -28,8 +28,8 @@ export const stringifyBuffetData = ({globalQuestions = {}, sampleQuestions = [] 
 
 export const parseBuffetData = ({globalQuestions = {}, sampleQuestions = [] } = {}) => {
   return {
-    globalQuestions: tryParse(globalQuestions), 
-    sampleQuestions: tryParse(sampleQuestions),
+    globalQuestions: globalQuestions ? tryParse(globalQuestions) : {}, 
+    sampleQuestions: sampleQuestions ? tryParse(sampleQuestions) : [],
     // sampleQuestions: sampleQuestions.map(tryParse)
   }
 }
