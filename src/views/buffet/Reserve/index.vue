@@ -48,7 +48,7 @@ import { ref, computed, reactive, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Machine from "@/components/Machine.vue";
 import { getOrderCostCalc, addOrder, draftSave, getOrderDraftInfo } from "@/services/process";
-import { notification } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import { useRequest } from "vue-request";
 import { fetchConfig } from "@/services/buffet-build";
 import ReserveForm from "../modules/Buffet-Form/index.vue";
@@ -180,7 +180,6 @@ watch(() => formData.value, (data) => runFetchCost(data), {
 const saveDraft = async () => {
   try {
     const data = await formRef.value.validate()
-    console.log(111, data)
     const res = await draftSave(data);
     if (res.code == 0) {
       notification.success({
@@ -213,7 +212,21 @@ const handleSubmit = async () => {
 }
 
 onMounted(async () => {
-  await runFetchProject()
+  try {
+    if(!orderTypeId) throw new Error('该项目不存在')
+    await runFetchProject()
+    if(!projectConfig.value.isListing) {
+      throw new Error('该项目未上架')
+    }
+  } catch (error) {
+    if(error) {
+      message.warn(error.message)
+      setTimeout(() => {
+        router.back()
+      }, 1200);
+    }
+  }
+  
 })
 </script>
 
