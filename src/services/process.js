@@ -1,6 +1,6 @@
 
 import api from './index'
-import {stringifyBuffetData, stringify} from '@/utils/buffet-build'
+import {stringifyBuffetData, parseBuffetData} from '@/utils/buffet-build'
 /** 一级菜单 */
 export const getMainInfo = (param) => {
   console.log("param==", param)
@@ -54,8 +54,13 @@ export const getOrderCostCalc = (params) => {
 
 
 /** 保存草稿 */
-export const draftSave = (param) => {
-  return api.post(`/sys/order/draft/save`, param);
+export const draftSave = (params) => {
+  const dynamicFormInfo = {
+    ...(params.dynamicFormInfo || {}),
+    ...stringifyBuffetData(params.dynamicFormInfo || {}),
+   }
+  params = {...params, dynamicFormInfo}
+  return api.post(`/sys/order/draft/save`, params);
 }
 
 /** 获取办事处信息 */
@@ -98,7 +103,15 @@ export const getPayPriceDiff = (param) => {
 
 /** 获取草稿信息 */
 export const getOrderDraftInfo = (id) => {
-  return api.get(`/sys/order/draft/info?id=${id}`);
+  return api.get(`/sys/order/draft/info?id=${id}`).then(res => {
+    if(res.code === 0 && res.data) {
+      res.data.dynamicFormInfo = {
+        ...(res.data.dynamicFormInfo || {}),
+        ...parseBuffetData(res.data.dynamicFormInfo || {}),
+      }
+    }
+    return res
+  })
 }
 
 /** 获取订单详情 */

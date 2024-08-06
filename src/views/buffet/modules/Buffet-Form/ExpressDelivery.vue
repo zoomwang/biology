@@ -25,7 +25,7 @@
             {{ item.name }}
           </div>
         </div>
-        <div class="fl addr post_addr_info">
+        <div class="fl addr post_addr_info" v-if="addressList.detail" >
           <div class="addr_title">
             <h1 class="fl">{{ addressList.detail.name }}</h1>
           </div>
@@ -53,6 +53,7 @@
 import { reactive, ref, defineProps, watch, onMounted } from "vue";
 import {
   QuestionCircleTwoTone,
+  EnvironmentOutlined,
 } from "@ant-design/icons-vue";
 import { useOfficeInfos } from "@/hooks/common";
 import { Modal } from "ant-design-vue";
@@ -94,7 +95,8 @@ const selectAdd = (item, index) => {
 
 onMounted(async () => {
   const getValue = await useOfficeInfos();
-  addressList.value = await getValue.getValue();
+  const list = await getValue.getValue();
+  addressList.value = list || []
   const obj = addressList.value.filter((item) => {
     return item.id == formData.value.officeId;
   })[0];
