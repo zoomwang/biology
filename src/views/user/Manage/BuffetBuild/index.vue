@@ -8,6 +8,9 @@
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
           <a-space :size="0">
+            <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/reserve`">
+              下单
+            </a-button>
             <a-button type="link" target="_blank" :href="`/buffet/${record.orderTypeId}/preview`">
               预览
             </a-button>

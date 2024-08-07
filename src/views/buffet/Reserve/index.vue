@@ -57,7 +57,7 @@ const formRef = ref()
 const current = ref(0);
 const router = useRouter();
 const route = useRoute();
-const { orderTypeId } = route.params;
+const orderTypeId = Number(route.params.orderTypeId);
 
 
 const compId = computed(() => {
@@ -128,7 +128,7 @@ const { data, loading, runAsync: runFetchProject } = useRequest(
   }
 );
 const projectConfig = computed(() => data.value?.projectConfig)
-const baseInfo = computed(() => projectConfig.value?.baseInfo || {});
+const baseInfo = computed(() => ({...(projectConfig.value?.baseInfo || {}), orderTypeId}));
 const detailInfo = computed(() => projectConfig.value?.detailInfo || {});
 const sampleQuestions = computed(() => projectConfig.value?.sampleQuestions || []);
 const globalQuestions = computed(() => projectConfig.value?.globalQuestions || []);
