@@ -40,6 +40,10 @@ const props = defineProps({
   type: {
     type: Number
   },
+  baseInfo: {
+    type: Object,
+    default: () => ({}),
+  },
   model: {
     type: Object,
     default: () => ({}),
@@ -54,13 +58,15 @@ watch(() => props.model, (val) => {
 
 const orderOptions = ref([])
 const getOrderLists = async () => {
-  const res = await getOrderList(props.type);
+  const res = await getOrderList();
   if (res?.code == 0) {
-    res?.data?.list?.forEach((item) => {
-      item.value = item.orderId;
-      item.label = `项目名 :${item.itemname} 订单号: ${item.orderId}` + (item.remark ? ` 备注: ${item.remark}` : "");
-    });
-    orderOptions.value = res.data?.list || [];
+    orderOptions.value = (res.data?.list || [])
+      .filter(item => item.id === props.baseInfo.orderTypeId)
+      .map((item) => {
+        item.value = item.orderId;
+        item.label = `项目名 :${item.itemname} 订单号: ${item.orderId}` + (item.remark ? ` 备注: ${item.remark}` : "");
+        return item;
+      });
   }
 };
 

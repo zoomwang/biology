@@ -151,7 +151,7 @@ const handleItemAdd = () => {
 const getFormValue = () => {
   return formData.value.map((item, idx) => {
     const { sampleNumber, sampleIds } = item;
-    const clientForm = clientFormRef.value[idx].getFormValue()
+    const clientForm = clientFormRef.value[idx]?.getFormValue?.() || {}
     return {
       ...clientForm,
       sampleNumber,
