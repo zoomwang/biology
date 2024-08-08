@@ -25,7 +25,9 @@ const createShow = ref(false);
 const createShow1 = ref(false);
 const supplierData = ref(null);
 const activeKey = ref('1');
+const detailId = ref('')
 const showModal = async (orderId) => {
+  detailId.value = orderId;
   getOrderInfos(orderId, "detail");
 };
 const supplierDetail = ref(null);
@@ -46,7 +48,7 @@ const param = reactive({
   pageSize: 999,
   curPage: 1,
   param: {
-    id: props.id
+    supplierItemId: props.id
   }
 });
 
@@ -71,8 +73,8 @@ const columns = [
   },
   {
     title: "仪器台数",
-    dataIndex: "deviceNmu",
-    key: "deviceNmu",
+    dataIndex: "deviceNum",
+    key: "deviceNum",
   },
   {
     title: "负责人",
@@ -104,14 +106,6 @@ const columns = [
     dataIndex: "historyOrderNum",
     key: "historyOrderNum",
   },
-  // {
-  //   title: "状态",
-  //   dataIndex: "deleted",
-  //   key: "deleted",
-  //   slots: {
-  //     customRender: "deleted",
-  //   },
-  // },
   {
     title: "操作",
     key: "action",
@@ -172,7 +166,7 @@ const menus = ["已上架", "已下架"];
         >
       </template>
       <template #action="{ record }">
-        <a-button type="link" @click="showModal(record.id)"
+        <a-button type="link" @click="showModal(record.supplierId)"
           >查看</a-button
         >
         <a-button type="link" @click="showEditDetail(record)"
@@ -186,10 +180,10 @@ const menus = ["已上架", "已下架"];
   }">
   <a-tabs v-model:activeKey="activeKey">
     <a-tab-pane key="1" tab="测试项目">
-      <ItemList :id="props.id" />
+      <ItemList :id="detailId" />
     </a-tab-pane>
     <a-tab-pane key="2" tab="订单列表" force-render>
-      <OrderList :id="props.id" />
+      <OrderList :id="detailId" />
     </a-tab-pane>
   </a-tabs>
     

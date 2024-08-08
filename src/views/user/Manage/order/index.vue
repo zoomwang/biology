@@ -762,8 +762,8 @@ const needRecoveryMenus = ["不需要", "需要"]
         <a-descriptions-item :span="3" label="预约人登录手机号：">{{ orderFee.username }}</a-descriptions-item>
         <a-descriptions-item :span="3" label="预约人姓名：">{{ orderFee.realName }}</a-descriptions-item>
         <a-descriptions-item :span="3" label="供应商名称：">{{ orderFee.supplierName }}</a-descriptions-item>
-        <a-descriptions-item :span="3" label="供应商电话：">{{ orderFee.telephone }}</a-descriptions-item>
-        <a-descriptions-item :span="3" label="寄样地方：">{{ orderFee.address }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="供应商电话：">{{ orderFee.supplierTelephone }}</a-descriptions-item>
+        <a-descriptions-item :span="3" label="寄样地方：">{{ orderFee.supplierCompany }}</a-descriptions-item>
         <a-descriptions-item :span="3" label="优惠前原价：">{{ orderFee.originalPrice }}</a-descriptions-item>
         <a-descriptions-item :span="3" label="优惠：">{{ orderFee.discount }}</a-descriptions-item>
         <a-descriptions-item :span="3" label="用户实付：">{{ orderFee.actualPayment }}</a-descriptions-item>

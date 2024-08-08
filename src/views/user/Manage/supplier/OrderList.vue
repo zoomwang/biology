@@ -38,11 +38,11 @@ const param = reactive({
 });
 
 const columns = [
-  {
-    title: "供应商名称",
-    dataIndex: "supplierName",
-    key: "supplierName",
-  },
+  // {
+  //   title: "供应商名称",
+  //   dataIndex: "supplierName",
+  //   key: "supplierName",
+  // },
   {
     title: "订单编号",
     dataIndex: "orderId",
