@@ -83,8 +83,8 @@ const columns = [
   },
   {
     title: "参考价",
-    dataIndex: "price",
-    key: "price",
+    dataIndex: "costprice",
+    key: "costprice",
   },
   {
     title: "截止周容量",

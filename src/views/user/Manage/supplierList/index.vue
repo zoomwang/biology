@@ -224,7 +224,7 @@ onMounted(() => {
     </a-form>
     <a-table
       class="supplier-wrap"
-      :scroll="{ x: 1500, y: 300 }"
+      :scroll="{ x: 1500 }"
       :columns="columns"
       :data-source="dataSource"
       :pagination="{ pageSize: 5 }"
